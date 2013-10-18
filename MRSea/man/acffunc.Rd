@@ -1,0 +1,16 @@
+\name{acffunc}
+\alias{acffunc}
+\title{calculate correlation for residuals by block}
+\usage{
+  acffunc(block, model)
+}
+\arguments{
+  \item{block}{Vector of blocks that identify data points
+  that are correlated}
+
+  \item{model}{Fitted model object (glm or gam)}
+}
+\description{
+  calculate correlation for residuals by block
+}
+

@@ -1,0 +1,17 @@
+\name{plotacf}
+\alias{plotacf}
+\title{run functions to create acf matrix and plot the results}
+\usage{
+  plotacf(acfmat)
+}
+\arguments{
+  \item{acfmat}{Matrix of output from \code{acffunc}
+  (blocks x max block length).}
+}
+\description{
+  run functions to create acf matrix and plot the results
+}
+\examples{
+plotacf(acfmat)
+}
+

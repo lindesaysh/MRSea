@@ -1,0 +1,39 @@
+\name{timeInfluenceCheck}
+\alias{timeInfluenceCheck}
+\title{Timing check to see how long it will take to run \code{runInfluence}.}
+\usage{
+  timeInfluenceCheck(model, id, d2k = NULL,
+    splineParams = NULL)
+}
+\arguments{
+  \item{model}{Fitted model object (glm or gam)}
+
+  \item{id}{blocking structure}
+
+  \item{d2k}{(\code{default=NULL}). (n x k) Matrix of
+  distances between all data points in \code{model} and all
+  valid knot locations.}
+
+  \item{splineParams}{(\code{default=NULL}). List object
+  containng output from runSALSA (e.g. knot locations for
+  continuous covariates). See
+  \code{\link{makesplineParams}} for more details of this
+  object.}
+}
+\description{
+  Timing check to see how long it will take to run
+  \code{runInfluence}.
+}
+\examples{
+# load data
+data(ns.data.re)
+
+ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$MonthOfYear,
+                     ns.data.re$DayOfMonth, sep='')
+ns.data.re$blockid<-as.factor(ns.data.re$blockid)
+model<-geeglm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),
+               family='poisson', data=ns.data.re, id=blockid)
+
+timeInfluenceCheck(model, ns.data.re$blockid)
+}
+
