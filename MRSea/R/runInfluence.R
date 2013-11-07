@@ -30,9 +30,10 @@
 #' 
 #' timeInfluenceCheck(model, ns.data.re$blockid)
 #' 
+#' \dontrun{
 #' # **WARNING** this example takes a long time
 #' influences<-runInfluence(model, ns.data.re$blockid)
-#'
+#' }
 #' @export
 #' 
 runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE){

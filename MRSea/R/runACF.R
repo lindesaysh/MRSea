@@ -61,8 +61,7 @@ acffunc<-function(block, model){
 #-----------------------------------------------------------------------------
 #' run functions to create acf matrix and plot the results
 #' @param acfmat Matrix of output from \code{acffunc} (blocks x max block length).
-#' @examples plotacf(acfmat)
-#' 
+#'  
 plotacf<-function(acfmat){
   plot(1:length(na.omit(acfmat[1,])), na.omit(acfmat[1,]), xlim=c(0,ncol(acfmat)), ylim=c(-1,1), type='l', col='grey', xlab='Lag', ylab='Auto correlation', cex.lab=1.3, cex.axis=1.3)
   abline(h=0)

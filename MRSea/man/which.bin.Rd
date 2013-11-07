@@ -38,8 +38,4 @@
   \code{dis.data$distance}=2 will be attributed to interval
   2 (and not 3).
 }
-\examples{
-load(dis.data.re)
-dis.data.re<-which.bin(dis.data.re, cutpoints=c(0,50,100,150,200,250))
-}
 

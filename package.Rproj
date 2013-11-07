@@ -16,4 +16,5 @@ BuildType: Package
 PackagePath: MRSea
 PackageInstallArgs: --no-multiarch
 PackageBuildArgs: --resave-data
+PackageCheckArgs: --no-examples --no-clean
 PackageRoxygenize: rd

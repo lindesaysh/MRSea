@@ -6,8 +6,9 @@
 #' @param quants (\code{default = c(0.025, 0.975)}. Vector of length two of quantiles. 
 #' 
 #' @examples 
-#' makeBootCIs(preds)
-#' 
+#' \dontrun{
+#' makeBootCIs(bootPreds)
+#' }
 #' @export
 #' 
 

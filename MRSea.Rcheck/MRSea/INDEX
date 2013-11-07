@@ -1,0 +1,91 @@
+LocalRadialFunction     Function for creating an exponential basis
+                        function for a spatial smooth using the CReSS
+                        method.
+MRSea                   MRSea
+acffunc                 calculate correlation for residuals by block
+bootstrap.orig.data     Obtaining a data frame of bootstrapped data
+                        using resamples
+checkfactorlevelcounts
+                        Factor level response check
+create.NHAT             Estimated number of individuals for each
+                        detection
+create.bootcount.data   Aggregate bootstrapped distance data into count
+                        data
+create.bootstrap.data   Create bootstrap data for non-parametric
+                        bootstrapping
+create.count.data       Aggregate distance data into count data
+dis.data.de             Line transect data with decrease post-impact
+dis.data.no             Line transect data with no post-impact
+                        consequence
+dis.data.re             Line transect data with redistribution
+                        post-impact
+do.bootstrap.cress      Bootstrapping function without model selection
+                        using CReSS/SALSA for fitting the second stage
+                        count model
+do.bootstrap.gam        Bootstrapping function without model selection
+                        using 'gam' as the second stage count model
+getCV_CReSS             Calculate cross-validation score for a CReSS
+                        type model
+getCVids                IDs for running cross validation
+getDifferences          Identify any significant differences between
+                        predicted data before an impact event and
+                        predicted data after an impact event
+getPlotdimensions       find the plotting dimensions for quilt.plot
+                        when using a regular grid
+getPvalues              Calculate marginal p-values from a 'model'.
+getRadiiChoices         Function for obtaining a sequence of range
+                        parameters for the CReSS smoother
+knotgrid.ns             Knot grid data for nearshore example
+knotgrid.off            Knot grid data for offshore example
+makeBootCIs             Calculate percentile confidence intervals from
+                        a matrix of bootstrapped predictions
+makeDists               Make Euclidean distance matrices for use in
+                        CReSS and SALSA model frameworks
+makesplineParams        Constructing an object of spline parameters
+ns.data.de              Nearshore data with decrease post-impact
+ns.data.no              Nearshore data with no effect of impact
+ns.data.re              Nearshore data with redistribution post-impact
+ns.predict.data.de      Prediction grid data for nearshore post-impact
+                        decrease
+ns.predict.data.no      Prediction grid data for nearshore no
+                        post-impact consequence
+ns.predict.data.re      Prediction grid data for nearshore post-impact
+                        redistribution
+plotCumRes              Calculate cumulative residuals and plot.
+plotRunsProfile         Calculate runs test and plot profile plot.  The
+                        output is a plot of runs profiles (with p-value
+                        to indicate level of correlation)
+plotacf                 run functions to create acf matrix and plot the
+                        results
+predict.data.de         Prediction grid data for post-impact decrease
+predict.data.no         Prediction grid data for no post-impact
+                        consequence
+predict.data.re         Prediction grid data for post-impact
+                        redistribution
+return.reg.spline.fit   Code for adaptively spacing knots for a given
+                        covariate.
+return.reg.spline.fit.2d
+                        Code for adaptively spacing knots for a spatial
+                        smooth. The smoothing process uses a CReSS
+                        basis.
+runACF                  run functions to create acf matrix and plot the
+                        results
+runDiagnostics          functions to create observed vs fitted and
+                        fitted vs scaled pearsons residual plots
+runInfluence            Assessing the influece of each correlated block
+                        on both the precision of the parameter
+                        estimates (COVRATIO statistics) and the
+                        sensitivity of model predictions (PRESS
+                        statistics).
+runPartialPlots         Plot partial plots for each of the variables
+                        listed in 'factorlist' or 'varlist'.
+runSALSA1D              Running SALSA for continuous one-dimensional
+                        covariates.
+runSALSA1D_withremoval
+                        Running SALSA for continuous one-dimensional
+                        covariates.
+runSALSA2D              Running SALSA for a spatial smooth with a CReSS
+                        basis
+timeInfluenceCheck      Timing check to see how long it will take to
+                        run 'runInfluence'.
+which.bin               Determining the distance bin

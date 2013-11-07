@@ -16,10 +16,7 @@
 #' The \code{dis.data} data frame to which columns "distbegin" and "distend" were added giving the beginning and end cutpoints 
 #' of the bin that the respective \code{dis.data$distance} belongs to. 
 #' 
-#' @examples
-#' load(dis.data.re)
-#' dis.data.re<-which.bin(dis.data.re, cutpoints=c(0,50,100,150,200,250))
-
+#' 
 which.bin<-function(dis.data,cutpoints){
 bins<-matrix(0,length(cutpoints)-1,2)
 for (i in 1:(length(cutpoints)-1)){

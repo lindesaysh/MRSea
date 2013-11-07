@@ -21,6 +21,9 @@
   regular grid
 }
 \examples{
-getPlotdimensions(data$x.pos, data$y.pos, segmentWidth=500, segmentLength=500)
+#' # load data
+data(ns.data.re)
+
+getPlotdimensions(ns.data.re$x.pos, ns.data.re$y.pos, segmentWidth=500, segmentLength=500)
 }
 

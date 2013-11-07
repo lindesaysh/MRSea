@@ -1,0 +1,78 @@
+\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}
+\contentsline {chapter}{\numberline {2}Worked Example with Distance Sampling}{6}{chapter.2}
+\contentsline {section}{\numberline {2.1}Introduction}{6}{section.2.1}
+\contentsline {section}{\numberline {2.2}Two-Stage Modelling of Distance Sampling Data}{6}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}A brief introduction}{6}{subsection.2.2.1}
+\contentsline {section}{\numberline {2.3}Preparing to conduct an analysis with MRSea}{7}{section.2.3}
+\contentsline {section}{\numberline {2.4}Data Requirements}{8}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Data requirements: columns}{8}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}Data Requirements: rows}{9}{subsection.2.4.2}
+\contentsline {section}{\numberline {2.5}Distance Analysis}{11}{section.2.5}
+\contentsline {subsection}{\numberline {2.5.1}Fitting detection functions}{11}{subsection.2.5.1}
+\contentsline {subsection}{\numberline {2.5.2}Model Selection}{12}{subsection.2.5.2}
+\contentsline {subsection}{\numberline {2.5.3}Goodness of fit}{13}{subsection.2.5.3}
+\contentsline {subsection}{\numberline {2.5.4}Adjusting counts for imperfect detection}{15}{subsection.2.5.4}
+\contentsline {subsection}{\numberline {2.5.5}Creating Count Data from Distance Data}{15}{subsection.2.5.5}
+\contentsline {section}{\numberline {2.6}Introduction to Spatial Modelling}{15}{section.2.6}
+\contentsline {section}{\numberline {2.7}Loading the Data}{16}{section.2.7}
+\contentsline {subsection}{\numberline {2.7.1}Exploratory Data Analysis (EDA)}{16}{subsection.2.7.1}
+\contentsline {subsection}{\numberline {2.7.2}Checking for Collinearity}{19}{subsection.2.7.2}
+\contentsline {section}{\numberline {2.8}Fitting a Model}{20}{section.2.8}
+\contentsline {subsection}{\numberline {2.8.1}Fitting a Smooth Term}{20}{subsection.2.8.1}
+\contentsline {subsection}{\numberline {2.8.2}Checking for Correlation}{21}{subsection.2.8.2}
+\contentsline {subsection}{\numberline {2.8.3}Model Selection}{25}{subsection.2.8.3}
+\contentsline {subsection}{\numberline {2.8.4}Checking $p$-values}{33}{subsection.2.8.4}
+\contentsline {subsection}{\numberline {2.8.5}Assessing covariate relationships}{35}{subsection.2.8.5}
+\contentsline {section}{\numberline {2.9}Diagnostics}{37}{section.2.9}
+\contentsline {subsection}{\numberline {2.9.1}Cumulative Residuals and runs profiles}{40}{subsection.2.9.1}
+\contentsline {subsection}{\numberline {2.9.2}COVRATIO and PRESS statistics}{42}{subsection.2.9.2}
+\contentsline {subsection}{\numberline {2.9.3}Raw Residuals}{45}{subsection.2.9.3}
+\contentsline {section}{\numberline {2.10}Prediction and Inference}{46}{section.2.10}
+\contentsline {subsection}{\numberline {2.10.1}Data requirements for predicting}{46}{subsection.2.10.1}
+\contentsline {subsection}{\numberline {2.10.2}Making predictions}{47}{subsection.2.10.2}
+\contentsline {subsection}{\numberline {2.10.3}Visualising the redistribution using predictions}{48}{subsection.2.10.3}
+\contentsline {section}{\numberline {2.11}Bootstrap Confidence Intervals}{49}{section.2.11}
+\contentsline {subsection}{\numberline {2.11.1}Visualising Bootstrap Confidence Intervals}{50}{subsection.2.11.1}
+\contentsline {section}{\numberline {2.12}Identifying Differences}{51}{section.2.12}
+\contentsline {subsection}{\numberline {2.12.1}Visualising differences}{52}{subsection.2.12.1}
+\contentsline {section}{\numberline {2.13}Comparison to the Truth}{54}{section.2.13}
+\contentsline {subsection}{\numberline {2.13.1}Detection function}{54}{subsection.2.13.1}
+\contentsline {subsection}{\numberline {2.13.2}Overdispersion and correlation}{54}{subsection.2.13.2}
+\contentsline {subsection}{\numberline {2.13.3}Type of impact}{55}{subsection.2.13.3}
+\contentsline {chapter}{\numberline {3}Worked Example without Distance Sampling}{56}{chapter.3}
+\contentsline {section}{\numberline {3.1}Introduction}{56}{section.3.1}
+\contentsline {section}{\numberline {3.2}Preparing to conduct an analysis with MRSea}{57}{section.3.2}
+\contentsline {section}{\numberline {3.3}Loading the Data}{57}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Data Requirements}{57}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.2}Exploratory Data Analysis (EDA)}{58}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Checking for Collinearity}{61}{subsection.3.3.3}
+\contentsline {section}{\numberline {3.4}Fitting a Model}{62}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Fitting a Smooth Term}{62}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Checking for Correlation}{63}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Model Selection}{66}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.4}Checking $p$-values}{72}{subsection.3.4.4}
+\contentsline {subsection}{\numberline {3.4.5}Assessing covariate relationships}{75}{subsection.3.4.5}
+\contentsline {section}{\numberline {3.5}Diagnostics}{78}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}Cumulative Residuals and runs profiles}{80}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}COVRATIO and PRESS statistics}{83}{subsection.3.5.2}
+\contentsline {subsection}{\numberline {3.5.3}Raw Residuals}{85}{subsection.3.5.3}
+\contentsline {section}{\numberline {3.6}Prediction and Inference}{87}{section.3.6}
+\contentsline {subsection}{\numberline {3.6.1}Data requirements for predicting}{87}{subsection.3.6.1}
+\contentsline {subsection}{\numberline {3.6.2}Making predictions}{88}{subsection.3.6.2}
+\contentsline {subsection}{\numberline {3.6.3}Visualising the redistribution using predictions}{88}{subsection.3.6.3}
+\contentsline {section}{\numberline {3.7}Bootstrap confidence intervals}{90}{section.3.7}
+\contentsline {subsection}{\numberline {3.7.1}Visualising bootstrap confidence intervals}{92}{subsection.3.7.1}
+\contentsline {section}{\numberline {3.8}Identifying differences}{93}{section.3.8}
+\contentsline {subsection}{\numberline {3.8.1}Visualising significant differences}{94}{subsection.3.8.1}
+\contentsline {section}{\numberline {3.9}Comparison to the Truth}{94}{section.3.9}
+\contentsline {subsection}{\numberline {3.9.1}Overdispersion and correlation}{95}{subsection.3.9.1}
+\contentsline {subsection}{\numberline {3.9.2}Type of impact}{95}{subsection.3.9.2}
+\contentsline {chapter}{\numberline {4}Tips and Tricks for analyses in R related to the {\tt MRSea} Package}{97}{chapter.4}
+\contentsline {section}{\numberline {4.1}Distance Tips and Tricks}{97}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Analysing binned distance data}{97}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Plotting side by side detection function plots for different factor covariate levels}{97}{subsection.4.1.2}
+\contentsline {section}{\numberline {4.2}Spatial Modelling Tips and Tricks}{98}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}General}{98}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}SALSA}{99}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}SALSA1D with more than one smooth covariate}{102}{subsection.4.2.3}
+\contentsline {subsection}{\numberline {4.2.4}Bootstrapping}{107}{subsection.4.2.4}

@@ -145,7 +145,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL){
   baseModel1D<- model
   baseModel<- baseModel1D
   
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=0, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=0, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10)
   
   baseModel<- output$out.lm
     
@@ -161,7 +161,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL){
   }else{
       radiusIndices<- rep(1, length(output$aR))
   }
-  output_radii<- initialise.measures_2d(k2k, maxIterations=10, salsa2dlist$gap, radii, d2k, gridResp, explData, splineParams[[1]]$startKnots, xvals, yvals, explanatory, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data)
+  output_radii<- initialise.measures_2d(k2k, maxIterations=10, salsa2dlist$gap, radii, d2k, gridResp, explData, splineParams[[1]]$startKnots, xvals, yvals, explanatory, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10)
   
   
   splineParams[[1]]$radii= radii

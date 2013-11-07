@@ -6,7 +6,8 @@
     winHalfWidth, fitnessMeasure = "BIC",
     maxIterations = 100, tol = 0, baseModel = NULL,
     radiusIndices = NULL, initialise = TRUE,
-    initialKnots = NULL, interactionTerm = NULL)
+    initialKnots = NULL, interactionTerm = NULL,
+    knot.seed = 10)
 }
 \arguments{
   \item{splineParams}{List object where the first element

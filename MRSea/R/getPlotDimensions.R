@@ -7,7 +7,11 @@
 #' @param segmentLength Length of each grid cell of data (in same units as \code{y.pos})
 #' 
 #' 
-#' @examples getPlotdimensions(data$x.pos, data$y.pos, segmentWidth=500, segmentLength=500)
+#' @examples 
+#' #' # load data
+#' data(ns.data.re)
+#' 
+#' getPlotdimensions(ns.data.re$x.pos, ns.data.re$y.pos, segmentWidth=500, segmentLength=500)
 #' 
 #' @export
 #' 

@@ -20,7 +20,7 @@
 bref <- c(
   bibentry(
     bibtype = "Manual",
-    title = "MRSea package (version 0.1): Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
+    title = "MRSea package (version 0.0.1): Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
     author = c(
       person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
              email = "lass@st-andrews.ac.uk"),

@@ -38,7 +38,7 @@
 #' \code{gap}: Minimum gap between knots (in unit of measurement of \code{datacoords})
 #' 
 
-"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=100, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL){
+"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=100, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10){
 
 #Where am I?
 # requires splines library and mgcv ibrary to be loaded!!
@@ -110,7 +110,7 @@
       xvals <- max(x)
       yvals <- max(y)
       ###########################initialisation######################################
-      output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,gridResp,explData,startKnots,xvals, yvals, explanatory, response, baseModel, radiusIndices, initialise, initialKnots,fitnessMeasure, interactionTerm, data)
+      output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,gridResp,explData,startKnots,xvals, yvals, explanatory, response, baseModel, radiusIndices, initialise, initialKnots,fitnessMeasure, interactionTerm, data, knot.seed)
 
       
       
@@ -191,7 +191,7 @@
 
 
 ######################################################################################################################
-"initialise.measures_2d" <- function(knotDist,maxIterations,gap,radii,dists,gridResp,explData,startKnots,xvals, yvals, explanatory, response, baseModel,radiusIndices, initialise, initialKnots,fitnessMeasure, interactionTerm, data){
+"initialise.measures_2d" <- function(knotDist,maxIterations,gap,radii,dists,gridResp,explData,startKnots,xvals, yvals, explanatory, response, baseModel,radiusIndices, initialise, initialKnots,fitnessMeasure, interactionTerm, data, knot.seed){
   
   attributes(baseModel$formula)$.Environment<-environment()
   baseModel<-update(baseModel, data=data)
@@ -260,7 +260,7 @@
    #aR <- knotPoint
    #radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
     print("Space-filling knots....")
-    set.seed(10)
+    set.seed(knot.seed)
   if(nrow(explData)<1000){initialKnots<- cover.design(explData, nd=numNeeded, nruns=1)$design
                           }else{SampledPoints<- sample(1:dim(explData)[1], min(1000, dim(explData)[1]))
       #space-fill data (subsample - see line above) to get knot locations

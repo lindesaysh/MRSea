@@ -58,7 +58,9 @@ model<-geeglm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),
 
 timeInfluenceCheck(model, ns.data.re$blockid)
 
+\dontrun{
 # **WARNING** this example takes a long time
 influences<-runInfluence(model, ns.data.re$blockid)
+}
 }
 

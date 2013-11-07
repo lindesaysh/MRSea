@@ -16,6 +16,8 @@
   of bootstrapped predictions
 }
 \examples{
-makeBootCIs(preds)
+\dontrun{
+makeBootCIs(bootPreds)
+}
 }
 

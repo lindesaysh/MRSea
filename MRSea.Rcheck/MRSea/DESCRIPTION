@@ -1,0 +1,43 @@
+Package: MRSea
+Title: Marine Renewables Strategic environmental assessment
+Description: Examines animal survey data for signs of changes in animal
+    abundance and distribution following marine renewables development. The
+    functions of this package can be used to analyse segmented line transect
+    data and nearshore vantage point data. Non-parametric bootstrapping can be
+    used to estimate uncertainty. Several model assessment tools are available.
+    This review constitutes work carried out at the Centre for Research into 
+    Ecological and Environmental Modelling (CREEM) at the University of St. Andrews, 
+    performed under contract for Marine Scotland (SB9 (CR/2012/05)).
+Version: 0.1.1
+Date: 2013-10-04
+Author: Lindesay Scott-Hayward, Cornelia Oedekoven, Monique Mackenzie, Eric
+    Rexstad
+Maintainer: Lindesay Scott-Hayward <lass@st-and.ac.uk>
+Depends: R (>= 3.0.0), calibrate (>= 1.7.2), car (>= 2.0-19), fields
+        (>= 6.8), geepack (>= 1.1-6), ggplot2 (>= 0.9.3.1), lawstat (>=
+        2.4), Matrix (>= 1.0-12), mrds (>= 2.1.4), mvtnorm (>=
+        0.9-9996), splines (>= 3.0.1)
+License: GPL-2
+LazyData: true
+Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and Rexstad E
+        (2013). "MRSea package (version 0.0.1): Statistical Modelling
+        of bird and cetacean distributions in offshore renewables
+        development areas". University of St. Andrews: Contract with
+        Marine Scotland: SB9 (CR/2012/05)
+URL: http://creem2.st-and.ac.uk/software.aspx
+Collate: 'LocalRadialFunction.R' 'MRSea-package.r' 'SALSA1DCode.R'
+        'SALSA2DCode.R' 'bootstrap.orig.data.R' 'create.NHAT.R'
+        'create.bootcount.data.R' 'create.bootstrap.data.R'
+        'create.count.data.R' 'dis.data.de.r' 'dis.data.no.r'
+        'dis.data.re.r' 'do.bootstrap.cress.R' 'do.bootstrap.gam.r'
+        'functions.R' 'getCV_cress.R' 'getCVfoldID.R'
+        'getDifferences.R' 'getPlotDimensions.R' 'getPvalues.R'
+        'knotgrid.ns.r' 'knotgrid.off.r' 'makeBootCIs.R'
+        'makesplineParams.R' 'ns.data.de.r' 'ns.data.no.r'
+        'ns.data.re.r' 'ns.predict.data.de.r' 'ns.predict.data.no.r'
+        'ns.predict.data.re.r' 'plotCumRes.R' 'plotRunsProfile.R'
+        'predict.data.de.r' 'predict.data.no.r' 'predict.data.re.r'
+        'runACF.R' 'runDiagnostics.R' 'runInfluence.R'
+        'runInfluenceCheck.R' 'runPartialPlots.R' 'runSALSA.R'
+        'runSALSA1D_withremoval.R' 'runSALSA2D.R' 'which.bin.R'
+Built: R 3.0.2; ; 2013-11-07 14:17:30 UTC; unix

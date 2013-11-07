@@ -1,0 +1,154 @@
+%\documentclass[ignorenonframetext]{beamer}
+\documentclass[11pt, a4paper]{report}
+\usepackage{graphicx, color}
+\usepackage{beamerarticle}
+
+\usepackage{setspace}
+\usepackage{natbib}
+\usepackage{bm}
+\usepackage{url}
+\usepackage{subfig}
+\usepackage[font=footnotesize, labelfont=bf]{caption}
+
+%\usepackage{newclude}
+%\usepackage{pdfpages}
+
+\mode<article>
+{
+	\usepackage{fancyhdr}
+	\usepackage{pgf}
+%	\usepackage{pifont}
+	\usepackage[colorlinks,
+	pdfauthor="CREEM Univ. of St. Andrews",
+	pdftitle="Guidance workshop statistical modelling Marine Scotland"]{hyperref}
+	\pagestyle{fancy}
+	\renewcommand{\headrulewidth}{0.5pt}
+	\renewcommand{\footrulewidth}{0.5pt}
+	\cfoot{\thepage}
+	\lfoot{University of St.\ Andrews}
+	\rfoot{October 2013}
+	\renewcommand{\familydefault}{\sfdefault}
+	
+	%\newcommand{\hidden}[1]{{#1}}
+	\newcommand{\hidden}[1]{\textcolor{blue}{#1}}
+
+}
+
+\mode<presentation>
+{
+    \setbeamertemplate{navigation symbols}{}
+	\usetheme [height=0.3in] {Rochester}
+	\usefonttheme{structurebold}
+	\usecolortheme{seagull}
+	\beamersetuncovermixins{\opaqueness<1>{25}}{\opaqueness<2->{15}}
+} 
+
+\usepackage{epsf,graphics,graphicx,fancyhdr,color,amsmath, amssymb}
+
+\parskip 0.1 in
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.2, 0.2, 0.2}
+\newcommand{\hlnumber}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlfunctioncall}[1]{\textcolor[rgb]{0.501960784313725,0,0.329411764705882}{\textbf{#1}}}%
+\newcommand{\hlstring}[1]{\textcolor[rgb]{0.6,0.6,1}{#1}}%
+\newcommand{\hlkeyword}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlargument}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hlcomment}[1]{\textcolor[rgb]{0.180392156862745,0.6,0.341176470588235}{#1}}%
+\newcommand{\hlroxygencomment}[1]{\textcolor[rgb]{0.43921568627451,0.47843137254902,0.701960784313725}{#1}}%
+\newcommand{\hlformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hleqformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hlassignement}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlpackage}[1]{\textcolor[rgb]{0.588235294117647,0.709803921568627,0.145098039215686}{#1}}%
+\newcommand{\hlslot}[1]{\textit{#1}}%
+\newcommand{\hlsymbol}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlprompt}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\setbeamertemplate{navigation symbols}{}
+\usetheme [height=0.25in] {Rochester}
+\usefonttheme{structurebold}
+\usecolortheme{seagull}
+\beamersetuncovermixins{\opaqueness<1>{25}}{\opaqueness<2->{15}}
+
+\setbeamertemplate{caption}[numbered]
+%\renewcommand{\refname}{}
+
+\newcommand{\markedchapter}[2]{\chapter[#2]{#2%
+\chaptermark{#1}}
+\chaptermark{#1}}
+
+\newcommand{\markedsection}[2]{\section[#2]{#2%
+\sectionmark{#1}}
+\sectionmark{#1}}
+
+\newcommand{\markedsubsection}[2]{\subsection[#2]{#2%
+\subsectionmark{#1}}
+\subsectionmark{#1}}
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\begin{document}
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+\chapter{Introduction}
+The {\tt MRSea} package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to other studies as well. This user guide consists of three sections following this introduction. 
+
+\vspace{0.3cm}
+We present two worked examples of which one is segmented line transect data (offshore scenario, Chapter 2) and one is grid count data (nearshore scenario, Chapter 3).  Both examples are simulated data based on actual studies. The type of impact artificially imposed for these data sets was a redistribution of animals within the study area and the data are included in the package. The package also includes additional datasets simulated under no impact and overall decrease scenarios. All the coding necessary to reproduce the worked examples is given in the respective sections. 
+
+\vspace{0.3cm}
+Following these examples, Chapter 4 provides extra tips and tricks for coding in R that might be useful in case the user needs to adjust the code for their own purposes.
+
+\vspace{0.3cm}
+A full description of each of the functions within the {\tt MRSea} package can be found in the reference manual at: \href{http://creem2.st-and.ac.uk/software.aspx}{http://creem2.st-and.ac.uk/software.aspx}.  This document may also be found there and both documents use version 0.1.1 of MRSea.
+
+\vspace{0.3cm}
+\begin{block}{Please reference this document as:}
+\noindent Scott-Hayward, L.A.S., Oedekoven, C.S., Mackenzie, M.L. and Rexstad E. (2013). User Guide for the MRSea Package: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas. University of St. Andrews contract for Marine Scotland; SB9 (CR/2012/05).
+\end{block}
+
+\newpage
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+\end{document}

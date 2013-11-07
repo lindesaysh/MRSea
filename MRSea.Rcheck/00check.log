@@ -1,0 +1,132 @@
+* using log directory ‘/Users/Lindesay/Dropbox/research/MarineScotland_LSH/MRSea package/MRSea.Rcheck’
+* using R version 3.0.2 (2013-09-25)
+* using platform: x86_64-apple-darwin10.8.0 (64-bit)
+* using session charset: UTF-8
+* using option ‘--no-examples’
+* checking for file ‘MRSea/DESCRIPTION’ ... OK
+* this is package ‘MRSea’ version ‘0.1.1’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .Rhistory
+  R/.Rhistory
+  data/.Rhistory
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘MRSea’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... WARNING
+‘library’ or ‘require’ calls not declared from:
+  ‘boot’ ‘mgcv’
+‘library’ or ‘require’ calls to packages already attached by Depends:
+  ‘fields’ ‘geepack’ ‘mrds’ ‘mvtnorm’
+  Please remove these calls from your code.
+See the information on DESCRIPTION files in the chapter ‘Creating R
+packages’ of the ‘Writing R Extensions’ manual.
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+QICinternal: no visible binding for '<<-' assignment to ‘ohmy’
+do.bootstrap.cress: no visible global function definition for
+  ‘detectCores’
+do.bootstrap.cress: no visible global function definition for
+  ‘makeCluster’
+do.bootstrap.cress: no visible global function definition for
+  ‘clusterExport’
+do.bootstrap.cress: no visible global function definition for
+  ‘clusterEvalQ’
+do.bootstrap.cress: no visible global function definition for
+  ‘parLapply’
+do.bootstrap.cress : <anonymous>: no visible binding for global
+  variable ‘transect.id2’
+do.bootstrap.cress : <anonymous>: no visible binding for global
+  variable ‘blockid’
+do.bootstrap.cress: no visible global function definition for
+  ‘stopCluster’
+do.bootstrap.cress: no visible binding for global variable
+  ‘transect.id2’
+do.bootstrap.cress: no visible binding for global variable ‘blockid’
+fit.thinPlate_2d: no visible binding for '<<-' assignment to
+  ‘modelinprogress’
+get.measure: no visible global function definition for ‘AICc’
+get.measure: no visible global function definition for ‘QAIC’
+get.measure: no visible global function definition for ‘QAICc’
+get.measure: no visible global function definition for ‘cv.glm’
+get.measure: no visible binding for global variable ‘tempCVFit’
+get.measure: no visible binding for global variable ‘nfolds’
+get.measure: no visible binding for '<<-' assignment to ‘subdata’
+get.measure: no visible binding for global variable ‘combinedData’
+get.measure: no visible binding for global variable ‘subdata’
+get.measure_2d: no visible global function definition for ‘AICc’
+get.measure_2d: no visible binding for global variable ‘baseModel’
+get.measure_2d: no visible global function definition for ‘QAIC’
+get.measure_2d: no visible global function definition for ‘QAICc’
+getCV_type2: no visible binding for global variable ‘tempCVFit’
+initialise.measures: no visible binding for '<<-' assignment to ‘model’
+initialise.measures_2d: no visible global function definition for
+  ‘AICc’
+initialise.measures_2d: no visible global function definition for
+  ‘QAIC’
+initialise.measures_2d: no visible global function definition for
+  ‘QAICc’
+initialise.measures_2d: no visible binding for global variable
+  ‘tempMeasure’
+plotCumRes: no visible binding for global variable ‘covarModelUpdate’
+runDiagnostics: no visible binding for global variable ‘fits’
+runDiagnostics: no visible binding for global variable ‘res’
+runDiagnostics: no visible binding for global variable ‘smx’
+runDiagnostics: no visible binding for global variable ‘smy’
+runPartialPlots: no visible binding for global variable ‘splineParams’
+runSALSA2D: no visible binding for global variable ‘r_seq’
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... WARNING
+‘library’ or ‘require’ call not declared from: ‘mgcv’
+* checking contents of ‘data’ directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... WARNING
+  
+  Note: significantly better compression could be obtained
+        by using R CMD build --resave-data
+                           old_size new_size compress
+  dis.data.de.RData            64Kb     34Kb       xz
+  dis.data.no.RData            66Kb     35Kb       xz
+  dis.data.re.RData            68Kb     36Kb       xz
+  ns.data.de.RData             77Kb     19Kb       xz
+  ns.data.no.RData             78Kb     19Kb       xz
+  ns.data.re.RData             78Kb     19Kb       xz
+  ns.predict.data.de.RData     61Kb     43Kb       xz
+  ns.predict.data.no.RData     36Kb     23Kb       xz
+  ns.predict.data.re.RData     61Kb     43Kb       xz
+  predict.data.de.RData       420Kb    278Kb       xz
+  predict.data.no.RData       420Kb    147Kb       xz
+  predict.data.re.RData       420Kb    278Kb       xz
+* checking examples ... SKIPPED
+* checking PDF version of manual ... OK
+WARNING: There were 3 warnings.
+NOTE: There were 2 notes.
