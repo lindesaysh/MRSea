@@ -5,17 +5,17 @@ library(devtools)
 
 #setwd('../Dropbox/Marine Scotland/package_postWorkshop/MRSea')
 #setwd('/Users/Lindesay/Dropbox/Marine Scotland/package_postWorkshop/MRSea/')
-setwd('/Users/Lindesay/Dropbox/MarineScotland_LSH/package/MRSea/')
+setwd('/Users/Lindesay/Dropbox/Research/MarineScotland_LSH/package/MRSea/')
 #setwd('Dropbox/MarineScotland_LSH/package/MRSea/')
 
-document(pkg=".")  #updates documentation modified via roxygen2
+document(pkg="MRSea/.")  #updates documentation modified via roxygen2
 
 # change namespace file 
 #  this should execute operating system commands to handle the namespace change
 #shell("del NAMESPACE")
 #shell("copy NAMESPACE.txt NAMESPACE")
 
-build(pkg=".", binary=TRUE)
+build(pkg="MRSea/.", binary=TRUE)
 
 # re-install package
 # restart workspace
