@@ -89,6 +89,9 @@
   the study region or on land for a marine species for
   example.
 
+  \code{knotdim}. The dimensions of the knot grid as a
+  vector. (x, y)
+
   \code{startknots}. Starting number of knots (initialised
   as spaced filled locations).
 
@@ -132,8 +135,9 @@ initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(l
                    family='quasipoisson', data=ns.data.re)
 
 # make parameter set for running salsa2d
-salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, startKnots=6, minKnots=4,
-                  maxKnots=20, r_seq=r_seq, gap=1, interactionTerm="as.factor(impact)")
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, knotdim = c(7, 9),
+                  startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1,
+                  interactionTerm="as.factor(impact)")
 
 salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
                             k2k=distMats$knotDist, splineParams=splineParams)

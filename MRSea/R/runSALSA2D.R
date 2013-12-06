@@ -23,6 +23,8 @@
 #'    
 #'    \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example.
 #'    
+#'    \code{knotdim}. The dimensions of the knot grid as a vector. (x, y)
+#'    
 #'    \code{startknots}. Starting number of knots (initialised as spaced filled locations).
 #'    
 #'    \code{minKnots}. Minimum number of knots to be tried.
@@ -79,8 +81,9 @@
 #'                    family='quasipoisson', data=ns.data.re)
 #' 
 #' # make parameter set for running salsa2d
-#' salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, startKnots=6, minKnots=4,
-#'                   maxKnots=20, r_seq=r_seq, gap=1, interactionTerm="as.factor(impact)")
+#' salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, knotdim = c(7, 9), 
+#'                   startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1, 
+#'                   interactionTerm="as.factor(impact)")
 #' 
 #' salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, 
 #'                             k2k=distMats$knotDist, splineParams=splineParams) 
@@ -102,7 +105,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL){
   #specify the full grid (including NAs where knots cannot go)
   explanatory<- salsa2dlist$knotgrid
   #this sets the index of grid positions
-  grid<-expand.grid(1:length(unique(na.omit(salsa2dlist$knotgrid[,1]))),1:length(unique(na.omit(salsa2dlist$knotgrid[,2]))))
+  grid<-salsa2dlist$knotdim
   gridResp<-salsa2dlist$knotgrid[,1]
   
   if(length(r_seq)>1){
