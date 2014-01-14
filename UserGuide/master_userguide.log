@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.10.8)  21 OCT 2013 13:18
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.10.8)  14 JAN 2014 15:20
 entering extended mode
 **master_userguide.tex
 
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\master_userguide.te
-x"
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.tex"
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
 abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
@@ -695,8 +695,8 @@ Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\alltt.sty"
 Package: alltt 1997/06/16 v2.0g defines alltt environment
 )
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\master_userguide.au
-x"
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.aux"
 
 LaTeX Warning: Label `tab:fitstats' multiply defined.
 
@@ -802,19 +802,21 @@ LaTeX Info: Redefining \ref on input line 127.
 LaTeX Info: Redefining \pageref on input line 127.
 LaTeX Info: Redefining \nameref on input line 127.
 
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\master_userguide.ou
-t")
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\master_userguide.ou
-t")
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.out")
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.out")
 \@outlinefile=\write4
- ("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\title.tex"
-[1
+
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\title.tex" [1
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}])
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\master_userguide.to
-c"
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.toc"
 LaTeX Font Info:    Try loading font information for U+msa on input line 3.
- ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 3.
@@ -842,8 +844,8 @@ Chapter 1.
 [5
 
 ]
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\danish/Offshore_Wor
-kedExample_master.tex"
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\danish/Offshore_WorkedExample_master.tex"
 Chapter 2.
 
 Underfull \hbox (badness 10000) in paragraph at lines 20--21
@@ -1009,8 +1011,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 257--260
 
  []
 
-[12 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/HN_alldat
-acombined.png>]
+[12 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/HN_alldatacombined.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 288--289
 
  []
@@ -1031,8 +1033,8 @@ Underfull \hbox (badness 10000) in paragraph at lines 335--336
 
  []
 
-[14 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/qqresult.
-png>] [15]
+[14 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/qqresult.png>] [15]
 Overfull \hbox (17.67992pt too wide) in paragraph at lines 422--423
 []\OT1/cmss/m/n/10.95 Either con-tinue from the pre-vi-ous sec-tion with \OT1/c
 mtt/m/n/10.95 count.data \OT1/cmss/m/n/10.95 or, load \OT1/cmtt/m/n/10.95 count
@@ -1069,11 +1071,12 @@ Package pdftex.def Info: danish/impact.png used on input line 499.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[17 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/nhats.png
-> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/depth.png>]
-[18 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/season.pn
-g> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/impact.png
->] [19] [20]
+[17 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/nhats.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MR
+Sea package/UserGuide/danish/depth.png>] [18 <C:/Users/lindesay/Dropbox/Researc
+h/MarineScotland_LSH/MRSea package/UserGuide/danish/season.png> <C:/Users/linde
+say/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuide/danish/impact.p
+ng>] [19] [20]
 Overfull \hbox (4.42177pt too wide) in paragraph at lines 615--616
 []\OT1/cmss/m/n/10.95 Note: The smooth one di-men-sional co-vari-ates ap-pear i
 n the \OT1/cmtt/m/n/10.95 splineParams
@@ -1106,18 +1109,20 @@ Package pdftex.def Info: danish/RunsProfile_Index_glmk1.png used on input line
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[22] [23 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/Runs
-Profile_depth_glmk1.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/G
-uide/danish/RunsProfile_Predicted_glmk1.png> <C:/Users/lindesay/Dropbox/Marine 
-Scotland/UserGuide/Guide/danish/RunsProfile_Index_glmk1.png>]
+[22] [23 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/danish/RunsProfile_depth_glmk1.png> <C:/Users/lindesay/Dropbox/Researc
+h/MarineScotland_LSH/MRSea package/UserGuide/danish/RunsProfile_Predicted_glmk1
+.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/User
+Guide/danish/RunsProfile_Index_glmk1.png>]
 <danish/acfPlot.png, id=612, 602.25pt x 501.875pt>
 File: danish/acfPlot.png Graphic file (type png)
  <use danish/acfPlot.png>
 Package pdftex.def Info: danish/acfPlot.png used on input line 781.
 (pdftex.def)             Requested size: 256.0748pt x 213.40509pt.
 
-[24 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/acfPlot.p
-ng>] <danish/CumRes_depth_glm.png, id=621, 702.625pt x 602.25pt>
+[24 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/acfPlot.png>]
+<danish/CumRes_depth_glm.png, id=621, 702.625pt x 602.25pt>
 File: danish/CumRes_depth_glm.png Graphic file (type png)
 
 <use danish/CumRes_depth_glm.png>
@@ -1132,9 +1137,9 @@ Package pdftex.def Info: danish/CumRes_depth_glmk1.png used on input line 831.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
  [25
 
- <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/CumRes_depth
-_glm.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/Cum
-Res_depth_glmk1.png>]
+ <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuide
+/danish/CumRes_depth_glm.png> <C:/Users/lindesay/Dropbox/Research/MarineScotlan
+d_LSH/MRSea package/UserGuide/danish/CumRes_depth_glmk1.png>]
 Overfull \hbox (2.08958pt too wide) in paragraph at lines 858--859
 []\OT1/cmtt/m/n/10.95 fitnessMeasure\OT1/cmss/m/n/10.95 . The cri-te-rion for s
 e-lect-ing the `best' model. Avail-
@@ -1156,21 +1161,27 @@ Package pdftex.def Info: danish/knotgrid.png used on input line 982.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[28] [29 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/knot
-grid.png>]
-Overfull \hbox (27.4455pt too wide) in paragraph at lines 1061--1061
+[28] [29 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/danish/knotgrid.png>]
+Overfull \hbox (32.17044pt too wide) in paragraph at lines 1048--1048
+[]    \OT1/cmtt/m/n/9 knotdim = c(26,14), startKnots = 6, minKnots = 4, maxKnot
+s = 20, r_seq = r_seq,[] 
+ []
+
+
+Overfull \hbox (27.4455pt too wide) in paragraph at lines 1062--1062
 []    \OT1/cmtt/m/n/9 d2k = distMats$dataDist, k2k = distMats$knotDist, splineP
 arams = splineParams)[] 
  []
 
 [30]
-Overfull \hbox (3.82077pt too wide) in paragraph at lines 1121--1121
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 1122--1122
 []  \OT1/cmtt/m/n/9 ..$ knotDist     : num [1:290, 1:290] 0 2000 4000 6000 8000
  10000 12000 ...[] 
  []
 
 
-Overfull \hbox (3.82077pt too wide) in paragraph at lines 1121--1121
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 1122--1122
 []  \OT1/cmtt/m/n/9 ..$ datacoords   : num [1:9232, 1:2] 656250 656250 656250 6
 56250 656250 ...[] 
  []
@@ -1178,14 +1189,14 @@ Overfull \hbox (3.82077pt too wide) in paragraph at lines 1121--1121
 [31] [32]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1223.
+(hyperref)                removing `math shift' on input line 1233.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 1223.
+(hyperref)                removing `math shift' on input line 1233.
 
 [33]
-Overfull \hbox (3.82077pt too wide) in paragraph at lines 1274--1274
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 1284--1284
 [][]\OT1/cmtt/m/n/9 # N.B. for the GEE formula, the data must be ordered by blo
 ck (which this is)[][] 
  []
@@ -1194,35 +1205,35 @@ ck (which this is)[][]
 File: danish/PartialFits1.png Graphic file (type png)
 
 <use danish/PartialFits1.png>
-Package pdftex.def Info: danish/PartialFits1.png used on input line 1400.
+Package pdftex.def Info: danish/PartialFits1.png used on input line 1410.
 (pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
 
 <danish/PartialFits3.png, id=732, 652.4375pt x 602.25pt>
 File: danish/PartialFits3.png Graphic file (type png)
 
 <use danish/PartialFits3.png>
-Package pdftex.def Info: danish/PartialFits3.png used on input line 1403.
+Package pdftex.def Info: danish/PartialFits3.png used on input line 1413.
 (pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
- [36 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/PartialF
-its1.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/Par
-tialFits3.png>] [37]
-<danish/FitPlots_fitted.png, id=759, 433.62pt x 433.62pt>
+ [36 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/PartialFits1.png> <C:/Users/lindesay/Dropbox/Research/MarineScotlan
+d_LSH/MRSea package/UserGuide/danish/PartialFits3.png>] [37] <danish/FitPlots_f
+itted.png, id=759, 433.62pt x 433.62pt>
 File: danish/FitPlots_fitted.png Graphic file (type png)
 
 <use danish/FitPlots_fitted.png>
-Package pdftex.def Info: danish/FitPlots_fitted.png used on input line 1483.
+Package pdftex.def Info: danish/FitPlots_fitted.png used on input line 1493.
 (pdftex.def)             Requested size: 199.16928pt x 199.16988pt.
- [38 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/FitPlots
-_fitted.png>]
+ [38 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/FitPlots_fitted.png>]
 <danish/FitPlots_resids.png, id=771, 433.62pt x 433.62pt>
 File: danish/FitPlots_resids.png Graphic file (type png)
 
 <use danish/FitPlots_resids.png>
-Package pdftex.def Info: danish/FitPlots_resids.png used on input line 1520.
+Package pdftex.def Info: danish/FitPlots_resids.png used on input line 1530.
 (pdftex.def)             Requested size: 199.16928pt x 199.16988pt.
- [39 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/FitPlots
-_resids.png>]
-Overfull \hbox (8.54572pt too wide) in paragraph at lines 1550--1550
+ [39 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/FitPlots_resids.png>]
+Overfull \hbox (8.54572pt too wide) in paragraph at lines 1560--1560
 [][]\OT1/cmtt/m/n/9 plotCumRes[](geeModel, varlist=[]c[]([]'depth'[]), splinePa
 rams=splineParams, d2k=dists)[] 
  []
@@ -1231,7 +1242,7 @@ rams=splineParams, d2k=dists)[]
 File: danish/CumRes_depth_gee.png Graphic file (type png)
 
 <use danish/CumRes_depth_gee.png>
-Package pdftex.def Info: danish/CumRes_depth_gee.png used on input line 1564.
+Package pdftex.def Info: danish/CumRes_depth_gee.png used on input line 1574.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 <danish/RunsProfile_depth_gee.png, id=785, 702.625pt x 602.25pt>
@@ -1239,16 +1250,16 @@ File: danish/RunsProfile_depth_gee.png Graphic file (type png)
 
 <use danish/RunsProfile_depth_gee.png>
 Package pdftex.def Info: danish/RunsProfile_depth_gee.png used on input line 15
-67.
+77.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
- [40 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/CumRes_d
-epth_gee.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish
-/RunsProfile_depth_gee.png>]
+ [40 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/CumRes_depth_gee.png> <C:/Users/lindesay/Dropbox/Research/MarineSco
+tland_LSH/MRSea package/UserGuide/danish/RunsProfile_depth_gee.png>]
 <danish/CumRes_Predicted_gee.png, id=801, 702.625pt x 602.25pt>
 File: danish/CumRes_Predicted_gee.png Graphic file (type png)
 
 <use danish/CumRes_Predicted_gee.png>
-Package pdftex.def Info: danish/CumRes_Predicted_gee.png used on input line 159
+Package pdftex.def Info: danish/CumRes_Predicted_gee.png used on input line 160
 0.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
@@ -1257,14 +1268,14 @@ File: danish/RunsProfile_Predicted_gee.png Graphic file (type png)
 
 <use danish/RunsProfile_Predicted_gee.png>
 Package pdftex.def Info: danish/RunsProfile_Predicted_gee.png used on input lin
-e 1593.
+e 1603.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 <danish/CumRes_Index_gee.png, id=804, 702.625pt x 602.25pt>
 File: danish/CumRes_Index_gee.png Graphic file (type png)
 
 <use danish/CumRes_Index_gee.png>
-Package pdftex.def Info: danish/CumRes_Index_gee.png used on input line 1615.
+Package pdftex.def Info: danish/CumRes_Index_gee.png used on input line 1625.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 <danish/RunsProfile_Index_gee.png, id=805, 702.625pt x 602.25pt>
@@ -1272,23 +1283,24 @@ File: danish/RunsProfile_Index_gee.png Graphic file (type png)
 
 <use danish/RunsProfile_Index_gee.png>
 Package pdftex.def Info: danish/RunsProfile_Index_gee.png used on input line 16
-18.
+28.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[41 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/CumRes_Pr
-edicted_gee.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/dan
-ish/RunsProfile_Predicted_gee.png>] [42 <C:/Users/lindesay/Dropbox/Marine Scotl
-and/UserGuide/Guide/danish/CumRes_Index_gee.png> <C:/Users/lindesay/Dropbox/Mar
-ine Scotland/UserGuide/Guide/danish/RunsProfile_Index_gee.png>]
+[41 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/CumRes_Predicted_gee.png> <C:/Users/lindesay/Dropbox/Research/Marine
+Scotland_LSH/MRSea package/UserGuide/danish/RunsProfile_Predicted_gee.png>]
+[42 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/CumRes_Index_gee.png> <C:/Users/lindesay/Dropbox/Research/MarineScot
+land_LSH/MRSea package/UserGuide/danish/RunsProfile_Index_gee.png>]
 <danish/InfluenceMeasures_covratio.png, id=834, 602.25pt x 602.25pt>
 File: danish/InfluenceMeasures_covratio.png Graphic file (type png)
 
 <use danish/InfluenceMeasures_covratio.png>
 Package pdftex.def Info: danish/InfluenceMeasures_covratio.png used on input li
-ne 1695.
+ne 1705.
 (pdftex.def)             Requested size: 227.62204pt x 227.62596pt.
 
 
@@ -1299,34 +1311,34 @@ File: danish/InfluenceMeasures_press.png Graphic file (type png)
 
 <use danish/InfluenceMeasures_press.png>
 Package pdftex.def Info: danish/InfluenceMeasures_press.png used on input line 
-1720.
+1730.
 (pdftex.def)             Requested size: 170.71652pt x 170.71487pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[44 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/Influence
-Measures_covratio.png>]
+[44 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/InfluenceMeasures_covratio.png>]
 <danish/residualPlot.png, id=857, 903.375pt x 301.125pt>
 File: danish/residualPlot.png Graphic file (type png)
 
 <use danish/residualPlot.png>
-Package pdftex.def Info: danish/residualPlot.png used on input line 1757.
+Package pdftex.def Info: danish/residualPlot.png used on input line 1767.
 (pdftex.def)             Requested size: 312.9803pt x 104.32933pt.
- [45 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/Influenc
-eMeasures_press.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide
-/danish/residualPlot.png>]
-Overfull \hbox (19.73146pt too wide) in paragraph at lines 1792--1808
+ [45 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/InfluenceMeasures_press.png> <C:/Users/lindesay/Dropbox/Research/Ma
+rineScotland_LSH/MRSea package/UserGuide/danish/residualPlot.png>]
+Overfull \hbox (19.73146pt too wide) in paragraph at lines 1802--1818
 [][]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1816--1818
+Underfull \hbox (badness 10000) in paragraph at lines 1826--1828
 
  []
 
 [46] [47]
-Overfull \hbox (17.9956pt too wide) in paragraph at lines 1883--1883
+Overfull \hbox (17.9956pt too wide) in paragraph at lines 1893--1893
 [][]\OT1/cmtt/m/n/9 # round up dimensions if necessary - in this case our grid 
 is not quite regular.[][] 
  []
@@ -1335,25 +1347,25 @@ is not quite regular.[][]
 File: danish/pointEstimate.png Graphic file (type png)
 
 <use danish/pointEstimate.png>
-Package pdftex.def Info: danish/pointEstimate.png used on input line 1907.
+Package pdftex.def Info: danish/pointEstimate.png used on input line 1917.
 (pdftex.def)             Requested size: 341.43306pt x 113.81297pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[48] [49 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/poin
-tEstimate.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1944--1946
+[48] [49 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/danish/pointEstimate.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1954--1956
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1947--1948
+Underfull \hbox (badness 10000) in paragraph at lines 1957--1958
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1966--1968
+Underfull \hbox (badness 10000) in paragraph at lines 1976--1978
 
  []
 
@@ -1361,34 +1373,34 @@ Underfull \hbox (badness 10000) in paragraph at lines 1966--1968
 File: danish/cis_upper.png Graphic file (type png)
 
 <use danish/cis_upper.png>
-Package pdftex.def Info: danish/cis_upper.png used on input line 1991.
+Package pdftex.def Info: danish/cis_upper.png used on input line 2001.
 (pdftex.def)             Requested size: 341.43306pt x 113.81297pt.
 
 <danish/cis_lower.png, id=901, 903.375pt x 301.125pt>
 File: danish/cis_lower.png Graphic file (type png)
 
 <use danish/cis_lower.png>
-Package pdftex.def Info: danish/cis_lower.png used on input line 1995.
+Package pdftex.def Info: danish/cis_lower.png used on input line 2005.
 (pdftex.def)             Requested size: 341.43306pt x 113.81297pt.
  [50]
-Underfull \hbox (badness 10000) in paragraph at lines 2016--2017
+Underfull \hbox (badness 10000) in paragraph at lines 2026--2027
 
  []
 
-[51 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/cis_upper
-.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/cis_low
-er.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 2021--2023
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 2024--2025
+[51 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/cis_upper.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LS
+H/MRSea package/UserGuide/danish/cis_lower.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 2031--2033
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 2049--2050
+Underfull \hbox (badness 10000) in paragraph at lines 2034--2035
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2059--2060
 
  []
 
@@ -1396,22 +1408,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 2049--2050
 File: danish/differencePlot.png Graphic file (type png)
 
 <use danish/differencePlot.png>
-Package pdftex.def Info: danish/differencePlot.png used on input line 2080.
+Package pdftex.def Info: danish/differencePlot.png used on input line 2090.
 (pdftex.def)             Requested size: 284.52756pt x 213.4005pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 2097--2098
+Underfull \hbox (badness 10000) in paragraph at lines 2107--2108
 
  []
 
-[53 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/danish/differenc
-ePlot.png (PNG copy)>] [54]
-Underfull \hbox (badness 10000) in paragraph at lines 2151--2153
+[53 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/differencePlot.png (PNG copy)>] [54]
+Underfull \hbox (badness 10000) in paragraph at lines 2161--2163
 
  []
 
 )
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\bc/Tutorial_BC_mode
-lfitting_beamer_finaltxt_master.tex" [55]
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\bc/Tutorial_BC_modelfitting_beamer_finaltxt_master.tex" [55]
 Chapter 3.
 [56
 
@@ -1463,12 +1475,13 @@ Package pdftex.def Info: bc/impact.png used on input line 134.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[58 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/vpgridcells.p
-ng>] [59 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/birds.pn
-g> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/obshour.png>]
-[60 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/floodebb.png>
- <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/impact.png>]
-[61
+[58 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/vpgridcells.png>] [59 <C:/Users/lindesay/Dropbox/Research/MarineScotland
+_LSH/MRSea package/UserGuide/bc/birds.png> <C:/Users/lindesay/Dropbox/Research/
+MarineScotland_LSH/MRSea package/UserGuide/bc/obshour.png>] [60 <C:/Users/linde
+say/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuide/bc/floodebb.png
+> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuid
+e/bc/impact.png>] [61
 
 ]
 Overfull \hbox (4.42177pt too wide) in paragraph at lines 254--255
@@ -1505,22 +1518,23 @@ File: bc/RunsProfile_Index_glmk1.png Graphic file (type png)
 Package pdftex.def Info: bc/RunsProfile_Index_glmk1.png used on input line 360.
 
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
- [64 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/RunsProfile_
-observationhour_glmk1.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide
-/Guide/bc/RunsProfile_Predicted_glmk1.png> <C:/Users/lindesay/Dropbox/Marine Sc
-otland/UserGuide/Guide/bc/RunsProfile_Index_glmk1.png>] <bc/acfPlot.png, id=104
-1, 602.25pt x 501.875pt>
+ [64 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/bc/RunsProfile_observationhour_glmk1.png> <C:/Users/lindesay/Dropbox/Resea
+rch/MarineScotland_LSH/MRSea package/UserGuide/bc/RunsProfile_Predicted_glmk1.p
+ng> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/RunsProfile_Index_glmk1.png>]
+<bc/acfPlot.png, id=1041, 602.25pt x 501.875pt>
 File: bc/acfPlot.png Graphic file (type png)
-
-<use bc/acfPlot.png>
+ <use bc/acfPlot.png>
 Package pdftex.def Info: bc/acfPlot.png used on input line 420.
 (pdftex.def)             Requested size: 256.0748pt x 213.40509pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[65] [66 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/acfPlot.
-png>] <bc/CumRes_observationhour_glm.png, id=1063, 702.625pt x 602.25pt>
+[65] [66 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/bc/acfPlot.png>]
+<bc/CumRes_observationhour_glm.png, id=1063, 702.625pt x 602.25pt>
 File: bc/CumRes_observationhour_glm.png Graphic file (type png)
 
 <use bc/CumRes_observationhour_glm.png>
@@ -1541,37 +1555,49 @@ Overfull \hbox (2.08958pt too wide) in paragraph at lines 495--496
 e-lect-ing the `best' model. Avail-
  []
 
-[67 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/CumRes_observ
-ationhour_glm.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/b
-c/CumRes_observationhour_glmk1.png>] [68]
+[67 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/CumRes_observationhour_glm.png> <C:/Users/lindesay/Dropbox/Research/Mari
+neScotland_LSH/MRSea package/UserGuide/bc/CumRes_observationhour_glmk1.png>]
+[68]
 Overfull \hbox (4.78728pt too wide) in paragraph at lines 588--589
 []\OT1/cmss/m/n/10.95 Next we add a two di-men-sional smooth of ge-o-graphic co
 -or-di-nates (s(\OT1/cmtt/m/n/10.95 x.pos\OT1/cmss/m/n/10.95 ,
  []
 
-[69] [70] [71]
+[69] [70]
+Overfull \hbox (13.27066pt too wide) in paragraph at lines 681--681
+[]    \OT1/cmtt/m/n/9 knotdim=c(7,9), startKnots = 6, minKnots = 4, maxKnots = 
+20, r_seq = r_seq,[] 
+ []
+
+[71]
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 721--721
+[]\OT1/cmtt/m/n/9 cv1 <- []getCV_CReSS[](data, salsa1dOutput$bestModel, salsa1d
+Output$splineParams)[] 
+ []
+
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 769.
+(hyperref)                removing `math shift' on input line 770.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 769.
+(hyperref)                removing `math shift' on input line 770.
 
 [72]
-Overfull \hbox (3.82077pt too wide) in paragraph at lines 818--818
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 819--819
 [][]\OT1/cmtt/m/n/9 # N.B. for the GEE formula, the data must be ordered by blo
 ck (which this is)[][] 
  []
 
 [73]
-Overfull \hbox (13.27066pt too wide) in paragraph at lines 855--855
+Overfull \hbox (13.27066pt too wide) in paragraph at lines 856--856
 [][]\OT1/cmtt/m/n/9 getPvalues[](geeModel, varlist = []c[]([]"observationhour"[
 ]), factorlist = []c[]([]"floodebb"[],[] 
  []
 
 [74]
-Overfull \hbox (27.4455pt too wide) in paragraph at lines 895--895
+Overfull \hbox (27.4455pt too wide) in paragraph at lines 896--896
 [][]\OT1/cmtt/m/n/9 getPvalues[](noint.model, varlist = []c[]([]"observationhou
 r"[]), factorlist = []c[]([]"floodebb"[],[] 
  []
@@ -1580,45 +1606,45 @@ r"[]), factorlist = []c[]([]"floodebb"[],[]
 File: bc/PartialFits1.png Graphic file (type png)
 
 <use bc/PartialFits1.png>
-Package pdftex.def Info: bc/PartialFits1.png used on input line 944.
+Package pdftex.def Info: bc/PartialFits1.png used on input line 945.
 (pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
 
 <bc/PartialFits2.png, id=1156, 652.4375pt x 602.25pt>
 File: bc/PartialFits2.png Graphic file (type png)
 
 <use bc/PartialFits2.png>
-Package pdftex.def Info: bc/PartialFits2.png used on input line 947.
+Package pdftex.def Info: bc/PartialFits2.png used on input line 948.
 (pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
 
 <bc/PartialFits3.png, id=1157, 652.4375pt x 602.25pt>
 File: bc/PartialFits3.png Graphic file (type png)
 
 <use bc/PartialFits3.png>
-Package pdftex.def Info: bc/PartialFits3.png used on input line 951.
+Package pdftex.def Info: bc/PartialFits3.png used on input line 952.
 (pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
- [76 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/PartialFits1
-.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/PartialFits
-2.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/PartialFit
-s3.png>] [77] [78
+ [76 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/bc/PartialFits1.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LS
+H/MRSea package/UserGuide/bc/PartialFits2.png> <C:/Users/lindesay/Dropbox/Resea
+rch/MarineScotland_LSH/MRSea package/UserGuide/bc/PartialFits3.png>] [77] [78
 
 ]
 <bc/FitPlots_fitted.png, id=1186, 433.62pt x 433.62pt>
 File: bc/FitPlots_fitted.png Graphic file (type png)
 
 <use bc/FitPlots_fitted.png>
-Package pdftex.def Info: bc/FitPlots_fitted.png used on input line 1032.
+Package pdftex.def Info: bc/FitPlots_fitted.png used on input line 1033.
 (pdftex.def)             Requested size: 199.16928pt x 199.16988pt.
- [79 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/FitPlots_fit
-ted.png>]
+ [79 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/bc/FitPlots_fitted.png>]
 <bc/FitPlots_resids.png, id=1199, 433.62pt x 433.62pt>
 File: bc/FitPlots_resids.png Graphic file (type png)
 
 <use bc/FitPlots_resids.png>
-Package pdftex.def Info: bc/FitPlots_resids.png used on input line 1068.
+Package pdftex.def Info: bc/FitPlots_resids.png used on input line 1069.
 (pdftex.def)             Requested size: 199.16928pt x 199.16988pt.
- [80 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/FitPlots_res
-ids.png>]
-Overfull \hbox (3.82077pt too wide) in paragraph at lines 1097--1097
+ [80 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/bc/FitPlots_resids.png>]
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 1098--1098
 [][]\OT1/cmtt/m/n/9 plotCumRes[](geeModel, varlist=[]c[]([]'observationhour'[])
 , splineParams=splineParams,[] 
  []
@@ -1628,7 +1654,7 @@ File: bc/CumRes_observationhour_gee.png Graphic file (type png)
 
 <use bc/CumRes_observationhour_gee.png>
 Package pdftex.def Info: bc/CumRes_observationhour_gee.png used on input line 1
-112.
+113.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 <bc/RunsProfile_observationhour_gee.png, id=1211, 702.625pt x 602.25pt>
@@ -1636,14 +1662,14 @@ File: bc/RunsProfile_observationhour_gee.png Graphic file (type png)
 
 <use bc/RunsProfile_observationhour_gee.png>
 Package pdftex.def Info: bc/RunsProfile_observationhour_gee.png used on input l
-ine 1115.
+ine 1116.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 <bc/CumRes_Predicted_gee.png, id=1214, 702.625pt x 602.25pt>
 File: bc/CumRes_Predicted_gee.png Graphic file (type png)
 
 <use bc/CumRes_Predicted_gee.png>
-Package pdftex.def Info: bc/CumRes_Predicted_gee.png used on input line 1142.
+Package pdftex.def Info: bc/CumRes_Predicted_gee.png used on input line 1143.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 <bc/RunsProfile_Predicted_gee.png, id=1215, 702.625pt x 602.25pt>
@@ -1651,59 +1677,60 @@ File: bc/RunsProfile_Predicted_gee.png Graphic file (type png)
 
 <use bc/RunsProfile_Predicted_gee.png>
 Package pdftex.def Info: bc/RunsProfile_Predicted_gee.png used on input line 11
-45.
+46.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[81 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/CumRes_observ
-ationhour_gee.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/b
-c/RunsProfile_observationhour_gee.png>]
+[81 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/CumRes_observationhour_gee.png> <C:/Users/lindesay/Dropbox/Research/Mari
+neScotland_LSH/MRSea package/UserGuide/bc/RunsProfile_observationhour_gee.png>]
 <bc/CumRes_Index_gee.png, id=1230, 702.625pt x 602.25pt>
 File: bc/CumRes_Index_gee.png Graphic file (type png)
 
 <use bc/CumRes_Index_gee.png>
-Package pdftex.def Info: bc/CumRes_Index_gee.png used on input line 1168.
+Package pdftex.def Info: bc/CumRes_Index_gee.png used on input line 1169.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 <bc/RunsProfile_Index_gee.png, id=1231, 702.625pt x 602.25pt>
 File: bc/RunsProfile_Index_gee.png Graphic file (type png)
 
 <use bc/RunsProfile_Index_gee.png>
-Package pdftex.def Info: bc/RunsProfile_Index_gee.png used on input line 1171.
+Package pdftex.def Info: bc/RunsProfile_Index_gee.png used on input line 1172.
 (pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
 
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[82 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/CumRes_Predic
-ted_gee.png> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/Runs
-Profile_Predicted_gee.png>] [83 <C:/Users/lindesay/Dropbox/Marine Scotland/User
-Guide/Guide/bc/CumRes_Index_gee.png> <C:/Users/lindesay/Dropbox/Marine Scotland
-/UserGuide/Guide/bc/RunsProfile_Index_gee.png>]
+[82 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/CumRes_Predicted_gee.png> <C:/Users/lindesay/Dropbox/Research/MarineScot
+land_LSH/MRSea package/UserGuide/bc/RunsProfile_Predicted_gee.png>] [83 <C:/Use
+rs/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuide/bc/CumR
+es_Index_gee.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea 
+package/UserGuide/bc/RunsProfile_Index_gee.png>]
 <bc/InfluenceMeasures_covratio.png, id=1262, 602.25pt x 602.25pt>
 File: bc/InfluenceMeasures_covratio.png Graphic file (type png)
 
 <use bc/InfluenceMeasures_covratio.png>
 Package pdftex.def Info: bc/InfluenceMeasures_covratio.png used on input line 1
-236.
+237.
 (pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
 
 <bc/InfluenceMeasures_press.png, id=1264, 602.25pt x 602.25pt>
 File: bc/InfluenceMeasures_press.png Graphic file (type png)
 
 <use bc/InfluenceMeasures_press.png>
-Package pdftex.def Info: bc/InfluenceMeasures_press.png used on input line 1261
+Package pdftex.def Info: bc/InfluenceMeasures_press.png used on input line 1262
 .
 (pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[84 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/InfluenceMeas
-ures_covratio.png (PNG copy)>]
-Overfull \hbox (7.91893pt too wide) in paragraph at lines 1273--1274
+[84 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/InfluenceMeasures_covratio.png (PNG copy)>]
+Overfull \hbox (7.91893pt too wide) in paragraph at lines 1274--1275
 []\OT1/cmss/m/n/10.95 Predictions are sen-si-tive to sev-eral blocks: \OT1/cmtt
 /m/n/10.95 c710213 c710210 \OT1/cmss/m/n/10.95 and \OT1/cmtt/m/n/10.95 d6111116
 
@@ -1712,27 +1739,27 @@ Overfull \hbox (7.91893pt too wide) in paragraph at lines 1273--1274
 <bc/residualPlot.png, id=1278, 903.375pt x 602.25pt>
 File: bc/residualPlot.png Graphic file (type png)
  <use bc/residualPlot.png>
-Package pdftex.def Info: bc/residualPlot.png used on input line 1297.
+Package pdftex.def Info: bc/residualPlot.png used on input line 1298.
 (pdftex.def)             Requested size: 341.43306pt x 227.62596pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[85 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/InfluenceMeas
-ures_press.png (PNG copy)>] [86 <C:/Users/lindesay/Dropbox/Marine Scotland/User
-Guide/Guide/bc/residualPlot.png>]
-Overfull \hbox (19.73146pt too wide) in paragraph at lines 1332--1349
+[85 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/InfluenceMeasures_press.png (PNG copy)>] [86 <C:/Users/lindesay/Dropbox/
+Research/MarineScotland_LSH/MRSea package/UserGuide/bc/residualPlot.png>]
+Overfull \hbox (19.73146pt too wide) in paragraph at lines 1333--1350
  [][] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1359--1362
+Underfull \hbox (badness 10000) in paragraph at lines 1360--1363
 
  []
 
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <12> not available
-(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 1363
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 1364
 .
 
 [87
@@ -1741,60 +1768,60 @@ LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <12> not available
 File: bc/pointEstimate.png Graphic file (type png)
 
 <use bc/pointEstimate.png>
-Package pdftex.def Info: bc/pointEstimate.png used on input line 1459.
+Package pdftex.def Info: bc/pointEstimate.png used on input line 1460.
 (pdftex.def)             Requested size: 341.43306pt x 227.62596pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
 [89]
-Overfull \hbox (1.24153pt too wide) in paragraph at lines 1490--1492
+Overfull \hbox (1.24153pt too wide) in paragraph at lines 1491--1493
 \OT1/cmss/m/n/12 This ap-proach in-cor-po-rates the un-cer-tainty as-so-ci-ated
  with the count model
  []
 
-[90 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/pointEstimate
-.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1493--1495
+[90 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/pointEstimate.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1494--1496
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1496--1497
+Underfull \hbox (badness 10000) in paragraph at lines 1497--1498
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1513--1515
+Underfull \hbox (badness 10000) in paragraph at lines 1514--1516
 
  []
 
 [91] <bc/cis_upper.png, id=1329, 903.375pt x 602.25pt>
 File: bc/cis_upper.png Graphic file (type png)
  <use bc/cis_upper.png>
-Package pdftex.def Info: bc/cis_upper.png used on input line 1564.
+Package pdftex.def Info: bc/cis_upper.png used on input line 1565.
 (pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
 
 <bc/cis_lower.png, id=1330, 903.375pt x 602.25pt>
 File: bc/cis_lower.png Graphic file (type png)
  <use bc/cis_lower.png>
-Package pdftex.def Info: bc/cis_lower.png used on input line 1568.
+Package pdftex.def Info: bc/cis_lower.png used on input line 1569.
 (pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
 
-[92 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/cis_upper.png
-> <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/cis_lower.png>]
-
-Underfull \hbox (badness 10000) in paragraph at lines 1584--1585
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1588--1590
+[92 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/cis_upper.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MR
+Sea package/UserGuide/bc/cis_lower.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1585--1586
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1612--1613
+Underfull \hbox (badness 10000) in paragraph at lines 1589--1591
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1613--1614
 
  []
 
@@ -1802,20 +1829,21 @@ Underfull \hbox (badness 10000) in paragraph at lines 1612--1613
 File: bc/differencePlot.png Graphic file (type png)
 
 <use bc/differencePlot.png>
-Package pdftex.def Info: bc/differencePlot.png used on input line 1645.
+Package pdftex.def Info: bc/differencePlot.png used on input line 1646.
 (pdftex.def)             Requested size: 227.62204pt x 170.71487pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[94] [95 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/bc/differen
-cePlot.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 1689--1691
+[94] [95 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/bc/differencePlot.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1690--1692
 
  []
 
-) ("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\Tipstricks.tex"
-[96]
+)
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\Tipstricks.tex" [96]
 Chapter 4.
 
 Underfull \hbox (badness 10000) in paragraph at lines 25--26
@@ -1847,37 +1875,39 @@ Package Fancyhdr Warning: \headheight is too small (13.59999pt):
  We now make it that large for the rest of the document.
  This may cause the page layout to be inconsistent, however.
 
-[98 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/impactdetplot.pn
-g>] [99] <knot1.png, id=1379, 903.375pt x 602.25pt>
+[98 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/impactdetplot.png>] [99] <knot1.png, id=1379, 903.375pt x 602.25pt>
 File: knot1.png Graphic file (type png)
- <use knot1.png>
-Package pdftex.def Info: knot1.png used on input line 143.
+
+<use knot1.png>
+Package pdftex.def Info: knot1.png used on input line 144.
 (pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
- [100 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/knot1.png>]
-<knot3.png, id=1387, 903.375pt x 602.25pt>
+ [100 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/User
+Guide/knot1.png>] <knot3.png, id=1387, 903.375pt x 602.25pt>
 File: knot3.png Graphic file (type png)
- <use knot3.png>
-Package pdftex.def Info: knot3.png used on input line 165.
+
+<use knot3.png>
+Package pdftex.def Info: knot3.png used on input line 166.
 (pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 182--183
+Underfull \hbox (badness 10000) in paragraph at lines 183--184
 
  []
 
-[101 <C:/Users/lindesay/Dropbox/Marine Scotland/UserGuide/Guide/knot3.png>]
-[102]
-Underfull \hbox (badness 10000) in paragraph at lines 235--236
+[101 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/knot3.png>] [102]
+Underfull \hbox (badness 10000) in paragraph at lines 236--237
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 239--241
+Underfull \hbox (badness 10000) in paragraph at lines 240--242
 
  []
 
 [103] [104] [105] [106])
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\master_userguide.bb
-l" [107]
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.bbl" [107]
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/sc' in size <12> not available
 (Font)              Font shape `OT1/cmr/m/sc' tried instead on input line 19.
@@ -1889,8 +1919,8 @@ Package atveryend Info: Empty hook `BeforeClearDocument' on input line 163.
 ]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 163.
 
-("C:\Users\lindesay\Dropbox\Marine Scotland\UserGuide\Guide\master_userguide.au
-x")
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.aux")
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 163.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 163.
 Package rerunfilecheck Info: File `master_userguide.out' has not changed.
@@ -1906,12 +1936,12 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 163.
  ) 
 Here is how much of TeX's memory you used:
  16544 strings out of 494045
- 289398 string characters out of 3145960
- 358637 words of memory out of 3000000
+ 289898 string characters out of 3145960
+ 358624 words of memory out of 3000000
  18863 multiletter control sequences out of 15000+200000
  24239 words of font info for 90 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 56i,12n,56p,696b,557s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,12n,56p,696b,566s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
 ><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmitt10.pfb>
 <C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C
@@ -1939,7 +1969,7 @@ lic/amsfonts/cm/cmsy9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public
 msfonts/cm/cmtt12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/ams
 fonts/cm/cmtt8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfon
 ts/cm/cmtt9.pfb>
-Output written on master_userguide.pdf (109 pages, 1336335 bytes).
+Output written on master_userguide.pdf (109 pages, 1337966 bytes).
 PDF statistics:
  1625 PDF objects out of 1728 (max. 8388607)
  509 named destinations out of 1000 (max. 500000)

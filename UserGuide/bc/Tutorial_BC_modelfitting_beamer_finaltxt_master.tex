@@ -97,7 +97,7 @@ Assess the data inputs for the modelling process.
 \begin{figure}[h!]
 \centering
   \includegraphics[width=9cm]{bc/birds.png}
-\caption{Estimated bird counts before (left) and after (right) an impact event.  Each cell is 1 km$^2$ and the colour represents bird count.}
+\caption{Raw bird counts before (left) and after (right) an impact event.  Each cell is 1 km$^2$ and the colour represents bird count.}
 \label{fig:rawnhats}
 \end{figure}
 \end{frame}
@@ -115,7 +115,7 @@ Assessing the relationships of available covariates and our response (animal cou
 \begin{figure}[h!]
   \centering
   \includegraphics[width=7cm]{bc/obshour.png}
-\caption{Plot of observation hour against the estimated bird counts.}
+\caption{Plot of observation hour against the raw bird counts.}
 \label{fig:nsexploratory1}
 \end{figure}
 \end{frame}
@@ -124,7 +124,7 @@ Assessing the relationships of available covariates and our response (animal cou
 \begin{figure}[h!]
   \centering
   \includegraphics[width=7cm]{bc/floodebb.png}
-\caption{Plot of tide state against the estimated bird counts.}
+\caption{Plot of tide state against the raw bird counts.}
 \label{fig:nsexploratory2}
 \end{figure}
 \end{frame}
@@ -132,7 +132,7 @@ Assessing the relationships of available covariates and our response (animal cou
 \begin{figure}[h!]
   \centering
   \includegraphics[width=7cm]{bc/impact.png}
-\caption{Plot of Impact against the estimated bird counts. Zero is pre impact and one is post impact.}
+\caption{Plot of Impact against the raw bird counts. Zero is pre impact and one is post impact.}
 \label{fig:nsexploratory3}
 \end{figure}
 \end{frame}
@@ -466,7 +466,7 @@ Select what one-dimensional covariates to include in the model and use SALSA to 
         \includegraphics[width=6cm]{bc/CumRes_observationhour_glmk1.png}
 \label{fig:sub:nscumres1b}
 }	
-\caption{Cumulative residual plots residuals ordered by observation hour. (a) observation hour modelled as a linear term and (b) depth modelled with one knot at the mean observation hour.  The blue points are the residual values, the black line represents the cumulative residuals. The grey line in the background is what we would expect the cumulative residuals to be if observation hour was modelled correctly.}
+\caption{Cumulative residual plots residuals ordered by observation hour. (a) observation hour modelled as a linear term and (b) observation hour modelled with one knot at the mean observation hour.  The blue points are the residual values, the black line represents the cumulative residuals. The grey line in the background is what we would expect the cumulative residuals to be if observation hour was modelled correctly.}
 \label{fig:nscumres1}
 \end{figure}
 \end{frame}
@@ -664,6 +664,7 @@ r_seq <- \hlfunctioncall{getRadiiChoices}(numberofradii=8, distMats$dataDist)
 \begin{itemize}
 \item {\tt fitnessMeasure}. The fitness measures available are the same as for {\tt runSALSA1D}.
 \item {\tt knotgrid}. $(k \times 2)$ matrix of knot coordinates.  Rows of {\tt NA}'s identify illegal knot locations
+\item {\tt knotdim}. $(x \times y)$ dimensions of the knot grid.
 \item {\tt startKnots}. Number of space-filled knots to start with (between minKnots and maxKnots)
 \item {\tt minKnots}.  Minimum number of knots to fit
 \item {\tt maxKnots}.  Maximum number of knots to fit
@@ -677,7 +678,7 @@ r_seq <- \hlfunctioncall{getRadiiChoices}(numberofradii=8, distMats$dataDist)
 \begin{alltt}
 \hlcomment{# make parameter set for running salsa2d}
 salsa2dlist <- \hlfunctioncall{list}(fitnessMeasure = \hlstring{"QICb"}, knotgrid = knotgrid, 
-    startKnots = 6, minKnots = 4, maxKnots = 20, r_seq = r_seq, 
+    knotdim=c(7,9), startKnots = 6, minKnots = 4, maxKnots = 20, r_seq = r_seq, 
     gap = 1, interactionTerm = \hlstring{"\hlfunctioncall{as.factor}(impact)"})
 \end{alltt}
 \end{kframe}
@@ -717,7 +718,7 @@ data$foldid <- \hlfunctioncall{getCVids}(data, folds = 5, block = \hlstring{"blo
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-cv1 <- \hlfunctioncall{getCV_CReSS}(salsa1dOutput$bestModel, salsa1dOutput$splineParams)
+cv1 <- \hlfunctioncall{getCV_CReSS}(data, salsa1dOutput$bestModel, salsa1dOutput$splineParams)
 \end{alltt}
 \begin{verbatim}
 [1] 33.91

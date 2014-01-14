@@ -95,7 +95,7 @@ Requirements for the SALSA2D knot grid:
 \end{itemize}
 \end{block}
 
-\noindent Make a grid that covers the study region
+\noindent Make a grid that covers the study region and make a note of the grid dimensions as these are a parameter in {\tt salsa2dlist}.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -108,6 +108,7 @@ Requirements for the SALSA2D knot grid:
 x<-\hlfunctioncall{seq}(\hlfunctioncall{min}(dis.data.re$x.pos), \hlfunctioncall{max}(dis.data.re$x.pos), by=2000)
 y<-\hlfunctioncall{seq}(\hlfunctioncall{min}(dis.data.re$y.pos), \hlfunctioncall{max}(dis.data.re$y.pos), by=2000)
 grid<-\hlfunctioncall{expand.grid}(x.pos=x, y.pos=y)
+\hlcomment{# make a note of the grid dimensions - here they are 7x9}
 
 \hlfunctioncall{plot}(dis.data.re$x.pos, dis.data.re$y.pos, pch=20, cex=0.5, asp=1, 
      xlab=\hlstring{x.pos'}, ylab=\hlstring{'y.pos'})

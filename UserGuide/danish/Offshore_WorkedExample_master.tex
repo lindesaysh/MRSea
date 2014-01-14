@@ -810,7 +810,7 @@ Select what one-dimensional covariates to include in the model and use SALSA to 
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcomment{# plotting cumulative residuals for the model with depth as a smooth term}
-\hlfunctioncall{plotCumRes}(fullModel, varlist= \hlfunctioncall{c}(\hlstring{"depth"}), splineParams)
+\hlfunctioncall{plotCumRes}(fullModel, varlist= \hlfunctioncall{c}(\hlstring{"depth"}), splineParams=splineParams)
 \end{alltt}
 \begin{verbatim}
 "Calculating cumulative residuals"
@@ -870,7 +870,7 @@ Select what one-dimensional covariates to include in the model and use SALSA to 
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcomment{# info for SALSA}
-data$response <- data$NHAT
+countdata$response <- countdata$NHAT
 
 \hlcomment{# set initial model without the spline terms}
 initialModel <- \hlfunctioncall{glm}(response ~ \hlfunctioncall{as.factor}(season) + \hlfunctioncall{as.factor}(impact) + 
@@ -951,7 +951,7 @@ salsa1dOutput$splineParams[[2]]$knots
 \begin{frame}
 \begin{block}{SALSA 2D requirements}
 \begin{itemize}
-\item A grid of knot locations
+\item A grid of knot locations and the dimensions of the grid
 \item Matrix of knot to knot distances 
 \item Matrix of data to knot distances
 \item Vector of range parameters for CReSS (determines the range of effectiveness of each knot basis).  See \citep{ScottH2013} for more details.
@@ -1029,6 +1029,7 @@ r_seq <- \hlfunctioncall{getRadiiChoices}(numberofradii=8, distMats$dataDist)
 \begin{itemize}
 \item {\tt fitnessMeasure}. The fitness measures available are the same as for {\tt runSALSA1D}.
 \item {\tt knotgrid}. $(k \times 2)$ matrix of knot coordinates.  Rows of {\tt NA}'s identify illegal knot locations
+\item {\tt knotdim}. $(x \times y)$ dimensions of the knot grid.
 \item {\tt startKnots}. Number of space-filled knots to start with (between minKnots and maxKnots)
 \item {\tt minKnots}.  Minimum number of knots to fit
 \item {\tt maxKnots}.  Maximum number of knots to fit
@@ -1044,7 +1045,7 @@ r_seq <- \hlfunctioncall{getRadiiChoices}(numberofradii=8, distMats$dataDist)
 \begin{alltt}
 \hlcomment{# make parameter set for running salsa2d}
 salsa2dlist <- \hlfunctioncall{list}(fitnessMeasure = \hlstring{"QICb"}, knotgrid = knotgrid, 
-    startKnots = 6, minKnots = 4, maxKnots = 20, r_seq = r_seq, 
+    knotdim = c(26,14), startKnots = 6, minKnots = 4, maxKnots = 20, r_seq = r_seq, 
     gap = 4000, interactionTerm = \hlstring{"as.factor(impact)"})
 \end{alltt}
 \end{kframe}
@@ -1151,7 +1152,7 @@ count.data$foldid <- \hlfunctioncall{getCVids}(count.data, folds = 5, block = \h
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-cv1 <- \hlfunctioncall{getCV_CReSS}(salsa1dOutput$bestModel, 
+cv1 <- \hlfunctioncall{getCV_CReSS}(countdata, salsa1dOutput$bestModel, 
            salsa1dOutput$splineParams)
 \end{alltt}
 \begin{verbatim}
@@ -1181,7 +1182,16 @@ cv1 <- \hlfunctioncall{getCV_CReSS}(salsa1dOutput$bestModel,
 \end{frame}
 
 \begin{frame}[fragile]
-\noindent The best model chosen using CV score is the model that uses a spatial smooth with 5 spatial knots.
+\noindent To find the end knot numbers look in the {\tt splineParams} object:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+salsa2dOutput$splineParams[[1]]$knotPos
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+The best model chosen using CV score is the model that uses a spatial smooth with 5 spatial knots.
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
