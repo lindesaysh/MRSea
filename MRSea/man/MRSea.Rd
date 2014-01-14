@@ -4,6 +4,6 @@
 \alias{MRSea-package}
 \title{MRSea}
 \description{
-  MRSea
+MRSea
 }
 

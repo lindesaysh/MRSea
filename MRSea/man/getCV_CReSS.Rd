@@ -2,7 +2,7 @@
 \alias{getCV_CReSS}
 \title{Calculate cross-validation score for a CReSS type model}
 \usage{
-  getCV_CReSS(data, baseModel, splineParams)
+getCV_CReSS(data, baseModel, splineParams)
 }
 \arguments{
   \item{data}{Data frame containing columns of covariates
@@ -15,12 +15,12 @@
   \code{\link{makesplineParams}} for more details.}
 }
 \description{
-  Calculate cross-validation score for a CReSS type model
+Calculate cross-validation score for a CReSS type model
 }
 \details{
-  There must be a column in the data called \code{foldid},
-  which can be created using \code{\link{getCVids}}.  This
-  column defines the folds of data for the CV calculation.
+There must be a column in the data called \code{foldid},
+which can be created using \code{\link{getCVids}}.  This
+column defines the folds of data for the CV calculation.
 }
 \examples{
 # load data

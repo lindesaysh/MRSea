@@ -37,8 +37,9 @@
 #' 
 #' \code{gap}: Minimum gap between knots (in unit of measurement of \code{datacoords})
 #' 
-
-"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=100, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10){
+#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#' 
+"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10){
 
 #Where am I?
 # requires splines library and mgcv ibrary to be loaded!!
@@ -96,7 +97,7 @@
   minKnots <- splineParams[[1]]$minKnots
   maxKnots <- splineParams[[1]]$maxKnots
   gap <- splineParams[[1]]$gap
-  
+
   
   
   attributes(baseModel$formula)$.Environment<-environment()
@@ -602,7 +603,7 @@ models = out$models
            if (tempMeasure +tol < fitStat) {
               out.lm <- tempOut.lm
               fitStat<-tempMeasure
-              print("move ***********************************")
+              print("knot added ***********************************")
               #print(length(as.vector(coefficients(out.lm))))
               #print(tempR)
               #print(fitStat)

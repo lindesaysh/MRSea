@@ -15,6 +15,9 @@
 #' @param bd the x-coordinate of the boundary knots of \code{explanatory}
 #' @param spl "bs" uses b-spline, "cc" uses cyclic cubic, "ns" uses natural cubic spline for fitting smooth to \code{explanatory}
 #' @param winHalfWidth Half-width of window used to calculate region with biggest average residual magnitude
+#' 
+#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#'
 
 "return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl){
 

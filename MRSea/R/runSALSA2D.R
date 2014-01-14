@@ -8,10 +8,9 @@
 #' #' @param k2k (k x k) Matrix of distances between all valid knot locations specified in \code{knotgrid}
 #' @param splineParams (default \code{=NULL}) List object containng output from runSALSA (e.g. knot locations for continuous covariates)
 #' 
-#' @references 
-#' Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
+#' @references Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
 #' 
-#' Scott-Hayward, L.. Novel Methods for species distribution mapping including spatial models in complex regions: Chapter 5 for SALSA2D methods. PhD Thesis submitted to University of St. Andrews. 2013
+#' @references Scott-Hayward, L.. Novel Methods for species distribution mapping including spatial models in complex regions: Chapter 5 for SALSA2D methods. PhD Thesis, University of St Andrews. 2013
 #' 
 #' @details
 #' 
@@ -88,9 +87,11 @@
 #' salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, 
 #'                             k2k=distMats$knotDist, splineParams=splineParams) 
 #'
+#'@author Cameron Walker
+#'
 #' @export
 #' 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   
   data<-model$data
   
@@ -105,7 +106,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL){
   #specify the full grid (including NAs where knots cannot go)
   explanatory<- salsa2dlist$knotgrid
   #this sets the index of grid positions
-  grid<-salsa2dlist$knotdim
+  grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
   gridResp<-salsa2dlist$knotgrid[,1]
   
   if(length(r_seq)>1){
@@ -148,7 +149,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL){
   baseModel1D<- model
   baseModel<- baseModel1D
   
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=0, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10)
   
   baseModel<- output$out.lm
     

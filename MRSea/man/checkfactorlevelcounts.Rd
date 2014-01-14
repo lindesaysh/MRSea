@@ -2,7 +2,7 @@
 \alias{checkfactorlevelcounts}
 \title{Factor level response check}
 \usage{
-  checkfactorlevelcounts(factorlist, data, response)
+checkfactorlevelcounts(factorlist, data, response)
 }
 \arguments{
   \item{factorlist}{Vector of factor variables specified in
@@ -16,9 +16,9 @@
   \item{response}{A vector of response values}
 }
 \description{
-  This function checks that there are some non-zero counts
-  in each level of each factor variable for consideration
-  in a model
+This function checks that there are some non-zero counts in
+each level of each factor variable for consideration in a
+model
 }
 \examples{
 # load data

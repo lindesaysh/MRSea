@@ -2,11 +2,10 @@
 \alias{do.bootstrap.cress}
 \title{Bootstrapping function without model selection using CReSS/SALSA for fitting the second stage count model}
 \usage{
-  do.bootstrap.cress(orig.data, predict.data,
-    ddf.obj = NULL, model.obj, splineParams, g2k,
-    resample = "transect.id", rename = "segment.id",
-    stratum = NULL, B, name = NULL, save.data = FALSE,
-    nhats = FALSE, seed = 12345, nCores = 1)
+do.bootstrap.cress(orig.data, predict.data, ddf.obj = NULL, model.obj,
+  splineParams, g2k, resample = "transect.id", rename = "segment.id",
+  stratum = NULL, B, name = NULL, save.data = FALSE, nhats = FALSE,
+  seed = 12345, nCores = 1)
 }
 \arguments{
   \item{orig.data}{The original data. In case
@@ -79,44 +78,44 @@
   the parallel code does not compute so use nCores=1.}
 }
 \value{
-  The function returns a matrix of bootstrap predictions.
-  The number of rows is equal to the number of rows in
-  predict.data.  The number of columns is equal to
-  \code{B}.  The matrix may be very large and so is stored
-  directly into the working directory as a workspace
-  object: '"name"predictionboot.RObj'.  The object inside
-  is called \code{bootPreds}.
+The function returns a matrix of bootstrap predictions. The
+number of rows is equal to the number of rows in
+predict.data.  The number of columns is equal to \code{B}.
+The matrix may be very large and so is stored directly into
+the working directory as a workspace object:
+'"name"predictionboot.RObj'.  The object inside is called
+\code{bootPreds}.
 }
 \description{
-  This fuction performs a specified number of bootstrapping
-  iterations using CReSS/SALSA for fitting the second stage
-  count model. See below for details.
+This fuction performs a specified number of bootstrapping
+iterations using CReSS/SALSA for fitting the second stage
+count model. See below for details.
 }
 \details{
-  In case of distance sampling data, the following steps
-  are performed for each iteration:
+In case of distance sampling data, the following steps are
+performed for each iteration:
 
-  - the original data is bootstrapped
+- the original data is bootstrapped
 
-  - a detection function is fitted to the bootstrapped data
+- a detection function is fitted to the bootstrapped data
 
-  - a count model is fitted to the bootstrapped data
+- a count model is fitted to the bootstrapped data
 
-  - coefficients are resampled from a multivariate normal
-  distribution defined by MLE and COV from count model
+- coefficients are resampled from a multivariate normal
+distribution defined by MLE and COV from count model
 
-  - predictions are made to the prediction data using the
-  resampled coefficients
+- predictions are made to the prediction data using the
+resampled coefficients
 
-  In case of count data, the following steps are performed
-  for each iteration:
+In case of count data, the following steps are performed
+for each iteration:
 
-  - coefficients are resampled from a multivariate normal
-  distribution defined by MLE and COV from the best fitting
-  count model
+- coefficients are resampled from a multivariate normal
+distribution defined by MLE and COV from the best fitting
+count model
 
-  - predictions are made to the prediction data using the
-  resampled coefficients
+- predictions are made to the prediction data using the
+resampled coefficients
 }
 \examples{
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

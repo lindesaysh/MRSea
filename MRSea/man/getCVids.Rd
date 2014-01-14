@@ -2,7 +2,7 @@
 \alias{getCVids}
 \title{IDs for running cross validation}
 \usage{
-  getCVids(data, folds, block = NULL)
+getCVids(data, folds, block = NULL)
 }
 \arguments{
   \item{data}{data used in regression model}
@@ -14,14 +14,14 @@
   individual observations will be used as blocks)}
 }
 \description{
-  This function creates a string of integers which will be
-  used for pointing to the right subsets of data for cross
-  validation of regression objects
+This function creates a string of integers which will be
+used for pointing to the right subsets of data for cross
+validation of regression objects
 }
 \details{
-  The function returns a random sequence of 1:folds of the
-  same length as observations in data. It is called by
-  other functions, e.g. \code{\link{getCV_CReSS}}.
+The function returns a random sequence of 1:folds of the
+same length as observations in data. It is called by other
+functions, e.g. \code{\link{getCV_CReSS}}.
 }
 \examples{
 # load data

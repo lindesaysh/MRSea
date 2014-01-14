@@ -2,11 +2,10 @@
 \alias{return.reg.spline.fit}
 \title{Code for adaptively spacing knots for a given covariate.}
 \usage{
-  return.reg.spline.fit(response, explanatory, degree,
-    minKnots, maxKnots, startKnots, gap, winHalfWidth,
-    fitnessMeasure = "BIC", maxIterations = 100,
-    initialise = TRUE, initialKnots = NULL,
-    baseModel = NULL, bd, spl)
+return.reg.spline.fit(response, explanatory, degree, minKnots, maxKnots,
+  startKnots, gap, winHalfWidth, fitnessMeasure = "BIC",
+  maxIterations = 100, initialise = TRUE, initialKnots = NULL,
+  baseModel = NULL, bd, spl)
 }
 \arguments{
   \item{response}{vector of response data for the modelling
@@ -56,6 +55,10 @@
   calculate region with biggest average residual magnitude}
 }
 \description{
-  Code for adaptively spacing knots for a given covariate.
+Code for adaptively spacing knots for a given covariate.
+}
+\author{
+Cameron Walker, Department of Enginering Science,
+University of Auckland.
 }
 

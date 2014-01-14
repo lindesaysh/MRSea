@@ -2,9 +2,8 @@
 \alias{runSALSA1D_withremoval}
 \title{Running SALSA for continuous one-dimensional covariates.}
 \usage{
-  runSALSA1D_withremoval(initialModel, salsa1dlist,
-    varlist, factorlist = NULL, predictionData,
-    varlist_cyclicSplines = NULL, splineParams = NULL)
+runSALSA1D_withremoval(initialModel, salsa1dlist, varlist, factorlist = NULL,
+  predictionData, varlist_cyclicSplines = NULL, splineParams = NULL)
 }
 \arguments{
   \item{initialModel}{The best fitting \code{CReSS} model
@@ -41,95 +40,93 @@
   details.}
 }
 \value{
-  A list object is returned containing 4 elements:
+A list object is returned containing 4 elements:
 
-  \item{bestModel}{A glm model object from the best model
-  fitted} \item{modelFits1D}{A list object with an element
-  for each new term fitted to the model.  The first element
-  is a model fitted with a knot at the mean for each of the
-  covariates (startmodel) in \code{varlist}.  Within the
-  first element, the current fit and formula of the start
-  model.
+\item{bestModel}{A glm model object from the best model
+fitted} \item{modelFits1D}{A list object with an element
+for each new term fitted to the model.  The first element
+is a model fitted with a knot at the mean for each of the
+covariates (startmodel) in \code{varlist}.  Within the
+first element, the current fit and formula of the start
+model.
 
-  The second element is the result of SALSA on the first
-  term in \code{varlist}.  Within this element: \itemize{
-  \item \code{term}: term of interest \item \code{kept}:
-  Statement of whether the term is kept in the model (yes-
-  initial knots, yes - new knots, yes -linear or no) \item
-  \code{basemodelformula}: the resulting model formula.  If
-  \code{kept=yes} or \code{kept=linear} then the term of
-  interest is included in the model otherwise it is
-  removed. \item \code{knotSelected}: the knots chosen for
-  the term of interest (NA if term removed or linear) \item
-  \code{baseModelFits}: fit statistics for the resulting
-  formula \item \code{modelfits}: fit statistics for the
-  model with the term included (same as resulting formula
-  if \code{kept=yes}) }
+The second element is the result of SALSA on the first term
+in \code{varlist}.  Within this element: \itemize{ \item
+\code{term}: term of interest \item \code{kept}: Statement
+of whether the term is kept in the model (yes- initial
+knots, yes - new knots, yes -linear or no) \item
+\code{basemodelformula}: the resulting model formula.  If
+\code{kept=yes} or \code{kept=linear} then the term of
+interest is included in the model otherwise it is removed.
+\item \code{knotSelected}: the knots chosen for the term of
+interest (NA if term removed or linear) \item
+\code{baseModelFits}: fit statistics for the resulting
+formula \item \code{modelfits}: fit statistics for the
+model with the term included (same as resulting formula if
+\code{kept=yes}) }
 
-  This continues till all covariates in \code{varlist} have
-  been through SALSA.} \item{splineParams}{The updated
-  spline parameter object, with the new (if chosen) knot
-  locations for each covariate in \code{varlist}}
-  \item{fitstat}{The final fit statistic of
-  \code{bestModel}.  The type of statistic was specified in
-  \code{salsa1dlist}.} \item{keptvarlist}{The covariates
-  from \code{varlist} that have been retained in the model}
+This continues till all covariates in \code{varlist} have
+been through SALSA.} \item{splineParams}{The updated spline
+parameter object, with the new (if chosen) knot locations
+for each covariate in \code{varlist}} \item{fitstat}{The
+final fit statistic of \code{bestModel}.  The type of
+statistic was specified in \code{salsa1dlist}.}
+\item{keptvarlist}{The covariates from \code{varlist} that
+have been retained in the model}
 }
 \description{
-  This function finds spatially adaptive knot locations for
-  one or more continuous one-dimensional covariates.  It
-  differs to \code{\link{runSALSA1D}} in that if the CV
-  score of a model does not improve with the addition of a
-  covariate in \code{varlist} then that term is either
-  reduced to linear or removed from the model.
+This function finds spatially adaptive knot locations for
+one or more continuous one-dimensional covariates.  It
+differs to \code{\link{runSALSA1D}} in that if the CV score
+of a model does not improve with the addition of a
+covariate in \code{varlist} then that term is either
+reduced to linear or removed from the model.
 }
 \details{
-  There must be columns called \code{response} (response
-  variable) and \code{foldid} (for cross-validation
-  calculation) in the data used in the initial model to be
-  fitted.
+There must be columns called \code{response} (response
+variable) and \code{foldid} (for cross-validation
+calculation) in the data used in the initial model to be
+fitted.
 
-  The object \code{salsa1dlist} contains parameters for the
-  \code{runSALSA1D} function.
+The object \code{salsa1dlist} contains parameters for the
+\code{runSALSA1D} function.
 
-  \code{fitnessMeasure}. The criterion for selecting the
-  `best' model.  Available options: AIC, AIC_c, BIC, QIC_b.
+\code{fitnessMeasure}. The criterion for selecting the
+`best' model.  Available options: AIC, AIC_c, BIC, QIC_b.
 
-  \code{minKnots_1d}. Minimum number of knots to be tried.
+\code{minKnots_1d}. Minimum number of knots to be tried.
 
-  \code{maxKnots_1d}. Maximum number of knots to be tried.
+\code{maxKnots_1d}. Maximum number of knots to be tried.
 
-  \code{startKnots_1d}. Starting number of knots (spaced at
-  quantiles of the data).
+\code{startKnots_1d}. Starting number of knots (spaced at
+quantiles of the data).
 
-  \code{degree}. The degree of the B-spline. Does not need
-  to be specified if \code{splineParams} is a parameter in
-  \code{runSALSA1D}.
+\code{degree}. The degree of the B-spline. Does not need to
+be specified if \code{splineParams} is a parameter in
+\code{runSALSA1D}.
 
-  \code{maxIterations}.The exchange/improve steps will
-  terminate after maxIterations if still running.
+\code{maxIterations}.The exchange/improve steps will
+terminate after maxIterations if still running.
 
-  \code{gaps}. The minimum gap between knots (in unit of
-  measurement of explanatory).
+\code{gaps}. The minimum gap between knots (in unit of
+measurement of explanatory).
 
-  \code{minKnots_1d}, \code{maxKnots_1d},
-  \code{startKnots_1d} and \code{gaps} are vectors the same
-  length as \code{varlist}.  This enables differing values
-  of these parameters for each covariate.
+\code{minKnots_1d}, \code{maxKnots_1d},
+\code{startKnots_1d} and \code{gaps} are vectors the same
+length as \code{varlist}.  This enables differing values of
+these parameters for each covariate.
 
-  The initial model contains all the factor level
-  covariates and any covariates of interest that are not
-  specified in the \code{varlist} argument of
-  \code{runSALSA1D}
+The initial model contains all the factor level covariates
+and any covariates of interest that are not specified in
+the \code{varlist} argument of \code{runSALSA1D}
 
-  \emph{Note:} The algorithm may remove variables in
-  \code{varlist} (but not the variables in
-  \code{factorlist}.  If there is no better model than with
-  a knot at the mean, the output will include that
-  covariate with a knot at the mean.  The best model with a
-  given smooth term is tested both against a model with the
-  term as linear or removed. Cross-Validation is used in
-  the selection process.
+\emph{Note:} The algorithm may remove variables in
+\code{varlist} (but not the variables in \code{factorlist}.
+If there is no better model than with a knot at the mean,
+the output will include that covariate with a knot at the
+mean.  The best model with a given smooth term is tested
+both against a model with the term as linear or removed.
+Cross-Validation is used in the selection process.
 }
 \examples{
 # load data
@@ -159,9 +156,9 @@ salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlist, varlist=c('obse
                  factorlist=c('floodebb', 'impact'), ns.predict.data.re, splineParams=splineParams)
 }
 \references{
-  Walker, C.; M. Mackenzie, C. Donovan and M. O'Sullivan.
-  SALSA - a Spatially Adaptive Local Smoothing Algorithm.
-  Journal of Statistical Computation and Simulation,
-  81(2):179-191, 2010
+Walker, C.; M. Mackenzie, C. Donovan and M. O'Sullivan.
+SALSA - a Spatially Adaptive Local Smoothing Algorithm.
+Journal of Statistical Computation and Simulation,
+81(2):179-191, 2010
 }
 

@@ -2,8 +2,7 @@
 \alias{runInfluence}
 \title{Assessing the influece of each correlated block on both the precision of the parameter estimates (COVRATIO statistics) and the sensitivity of model predictions (PRESS statistics).}
 \usage{
-  runInfluence(model, id, d2k = NULL, splineParams = NULL,
-    save = FALSE)
+runInfluence(model, id, d2k = NULL, splineParams = NULL, save = FALSE)
 }
 \arguments{
   \item{model}{Fitted model object (glm or gam)}
@@ -24,26 +23,26 @@
   whether plot should be saved into working directory.}
 }
 \value{
-  Two plots one each for COVRATIO and PRESS statistics,
-  giving the influence of each block on precision of the
-  parameter estimates and the sensitivity of model
-  predictions. List object: \item{influenceData}{List of
-  \code{blocks}, COVRATIO statistics and PRESS statistics
-  used for making the plot of PRESS and COVRATIO
-  statistics.} \item{influencePoints}{Row id of blocks in
-  \code{influenceData} that lie outside the 95\% quantile
-  of COVRATIO statistics and above the 95\% quantile of
-  PRESS statistics.}
+Two plots one each for COVRATIO and PRESS statistics,
+giving the influence of each block on precision of the
+parameter estimates and the sensitivity of model
+predictions. List object: \item{influenceData}{List of
+\code{blocks}, COVRATIO statistics and PRESS statistics
+used for making the plot of PRESS and COVRATIO statistics.}
+\item{influencePoints}{Row id of blocks in
+\code{influenceData} that lie outside the 95\% quantile of
+COVRATIO statistics and above the 95\% quantile of PRESS
+statistics.}
 }
 \description{
-  Assessing the influece of each correlated block on both
-  the precision of the parameter estimates (COVRATIO
-  statistics) and the sensitivity of model predictions
-  (PRESS statistics).
+Assessing the influece of each correlated block on both the
+precision of the parameter estimates (COVRATIO statistics)
+and the sensitivity of model predictions (PRESS
+statistics).
 }
 \details{
-  Always run \code{\link{timeInfluenceCheck}} first to see
-  how long it will take to produce the plots.
+Always run \code{\link{timeInfluenceCheck}} first to see
+how long it will take to produce the plots.
 }
 \examples{
 # load data

@@ -2,7 +2,7 @@
 \alias{LocalRadialFunction}
 \title{Function for creating an exponential basis function for a spatial smooth using the CReSS method.}
 \usage{
-  LocalRadialFunction(radiusIndices, dists, radii, aR)
+LocalRadialFunction(radiusIndices, dists, radii, aR)
 }
 \arguments{
   \item{radiusIndices}{Vector of length startKnots
@@ -24,18 +24,18 @@
   the basis matrix.}
 }
 \value{
-  Returns a basis matrix with one column for each knot in
-  \code{aR} and one row for every observation (i.e. same
-  number of rows as \code{dists})
+Returns a basis matrix with one column for each knot in
+\code{aR} and one row for every observation (i.e. same
+number of rows as \code{dists})
 }
 \description{
-  This function calculates a local radial exponential basis
-  matrix for use in \code{\link{runSALSA2D}}.
+This function calculates a local radial exponential basis
+matrix for use in \code{\link{runSALSA2D}}.
 }
 \details{
-  Calculate a local radial basis matrix for use in
-  \code{\link{runSALSA2D}}.  The distance matrix input may
-  be Euclidean or geodesic distances.
+Calculate a local radial basis matrix for use in
+\code{\link{runSALSA2D}}.  The distance matrix input may be
+Euclidean or geodesic distances.
 }
 \examples{
 # load data

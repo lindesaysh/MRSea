@@ -2,7 +2,7 @@
 \alias{makeDists}
 \title{Make Euclidean distance matrices for use in CReSS and SALSA model frameworks}
 \usage{
-  makeDists(datacoords, knotcoords, knotmat = TRUE)
+makeDists(datacoords, knotcoords, knotmat = TRUE)
 }
 \arguments{
   \item{datacoords}{Coordinates of the data locations}
@@ -14,15 +14,15 @@
   knot-knot distances be created}
 }
 \description{
-  This function makes two Euclidean distance matrices.  One
-  for the distances between all spatial observations and
-  all spatial knot locations.  The other, if specified, is
-  the distances between knot locations.
+This function makes two Euclidean distance matrices.  One
+for the distances between all spatial observations and all
+spatial knot locations.  The other, if specified, is the
+distances between knot locations.
 }
 \details{
-  The data-knot matrix is used in the CReSS basis and the
-  knot-knot matrix is used in SALSA to determine where a
-  nearest knot to `move' should be.
+The data-knot matrix is used in the CReSS basis and the
+knot-knot matrix is used in SALSA to determine where a
+nearest knot to `move' should be.
 }
 \examples{
 # load data

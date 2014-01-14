@@ -2,7 +2,7 @@
 \alias{getPvalues}
 \title{Calculate marginal p-values from a \code{model}.}
 \usage{
-  getPvalues(model, varlist = NULL, factorlist = NULL)
+getPvalues(model, varlist = NULL, factorlist = NULL)
 }
 \arguments{
   \item{model}{Fitted model object (gee)}
@@ -18,14 +18,14 @@
   are specified in the model.}
 }
 \value{
-  Print out table of each variable and its associated
-  marginal p-value.
+Print out table of each variable and its associated
+marginal p-value.
 }
 \description{
-  An ANOVA is fitted repeatedly with each covariate being
-  the last so that the output is marginal.  \code{varlist}
-  and \code{factorlist} are optional and shorten the
-  variable names in the output.
+An ANOVA is fitted repeatedly with each covariate being the
+last so that the output is marginal.  \code{varlist} and
+\code{factorlist} are optional and shorten the variable
+names in the output.
 }
 \examples{
 # load data

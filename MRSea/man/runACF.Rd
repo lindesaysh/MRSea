@@ -2,7 +2,7 @@
 \alias{runACF}
 \title{run functions to create acf matrix and plot the results}
 \usage{
-  runACF(block, model, store = FALSE, save = F)
+runACF(block, model, store = FALSE, save = F)
 }
 \arguments{
   \item{block}{Vector of blocks that identify data points
@@ -18,16 +18,16 @@
   whether plot should be saved into working directory.}
 }
 \value{
-  Plot of lag vs correlation.  Each grey line is the
-  correlation for each individual block in \code{block}.
-  The red line is the mean values for each lag.
+Plot of lag vs correlation.  Each grey line is the
+correlation for each individual block in \code{block}.  The
+red line is the mean values for each lag.
 
-  If \code{store=TRUE} then the matrix of correlations
-  (nblocks x length_max_block) is returned and
-  \code{plotacf} may be used to plot the acf.
+If \code{store=TRUE} then the matrix of correlations
+(nblocks x length_max_block) is returned and \code{plotacf}
+may be used to plot the acf.
 }
 \description{
-  run functions to create acf matrix and plot the results
+run functions to create acf matrix and plot the results
 }
 \examples{
 # load data

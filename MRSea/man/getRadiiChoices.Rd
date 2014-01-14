@@ -2,7 +2,7 @@
 \alias{getRadiiChoices}
 \title{Function for obtaining a sequence of range parameters for the CReSS smoother}
 \usage{
-  getRadiiChoices(numberofradii = 8, distMatrix)
+getRadiiChoices(numberofradii = 8, distMatrix)
 }
 \arguments{
   \item{numberofradii}{The number of range parameters for
@@ -16,17 +16,17 @@
   \code{\link{makeDists}}.}
 }
 \value{
-  This function returns a vector containing a sequence of
-  range parameters.
+This function returns a vector containing a sequence of
+range parameters.
 }
 \description{
-  Function for obtaining a sequence of range parameters for
-  the CReSS smoother
+Function for obtaining a sequence of range parameters for
+the CReSS smoother
 }
 \details{
-  The range parameter determines the range of the influence
-  of each knot.  Small numbers indicate local influence and
-  large ones, global influence.
+The range parameter determines the range of the influence
+of each knot.  Small numbers indicate local influence and
+large ones, global influence.
 }
 \examples{
 # load data
@@ -41,9 +41,9 @@ distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.
 r_seq<-getRadiiChoices(8, distMats$dataDist)
 }
 \references{
-  Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and
-  E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal
-  of computational and Graphical Statistics. 2013. DOI:
-  10.1080/10618600.2012.762920
+Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and
+E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal
+of computational and Graphical Statistics. 2013. DOI:
+10.1080/10618600.2012.762920
 }
 

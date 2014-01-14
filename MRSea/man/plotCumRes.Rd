@@ -2,8 +2,8 @@
 \alias{plotCumRes}
 \title{Calculate cumulative residuals and plot.}
 \usage{
-  plotCumRes(model, varlist, d2k = NULL,
-    splineParams = NULL, label = "", save = FALSE)
+plotCumRes(model, varlist, d2k = NULL, splineParams = NULL, label = "",
+  save = FALSE)
 }
 \arguments{
   \item{model}{Fitted model object (glm or gam)}
@@ -30,21 +30,21 @@
   whether plot should be saved into working directory.}
 }
 \value{
-  Cumulative residual plots are returned for residuals
-  ordered by each covariate in \code{varlist}, predicted
-  value and index of observations (temporally). The blue
-  dots are the residuals The black line is the line of
-  cumulative residual. On the covariate plots (those in
-  \code{varlist}) the grey line indicates what we would
-  expect from a well fitted covariate. i.e. one that is
-  fitted with excessive knots.
+Cumulative residual plots are returned for residuals
+ordered by each covariate in \code{varlist}, predicted
+value and index of observations (temporally). The blue dots
+are the residuals The black line is the line of cumulative
+residual. On the covariate plots (those in \code{varlist})
+the grey line indicates what we would expect from a well
+fitted covariate. i.e. one that is fitted with excessive
+knots.
 
-  Note: if the covariate is discrete in nature (like the
-  example below), there will be a lot of overplotting of
-  residuals.
+Note: if the covariate is discrete in nature (like the
+example below), there will be a lot of overplotting of
+residuals.
 }
 \description{
-  The output is plots of cumulative residuals.
+The output is plots of cumulative residuals.
 }
 \examples{
 # load data

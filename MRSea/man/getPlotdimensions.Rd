@@ -2,8 +2,7 @@
 \alias{getPlotdimensions}
 \title{find the plotting dimensions for quilt.plot when using a regular grid}
 \usage{
-  getPlotdimensions(x.pos, y.pos, segmentWidth,
-    segmentLength)
+getPlotdimensions(x.pos, y.pos, segmentWidth, segmentLength)
 }
 \arguments{
   \item{x.pos}{Vector of x-coordinates in dataset}
@@ -17,8 +16,8 @@
   same units as \code{y.pos})}
 }
 \description{
-  find the plotting dimensions for quilt.plot when using a
-  regular grid
+find the plotting dimensions for quilt.plot when using a
+regular grid
 }
 \examples{
 #' # load data

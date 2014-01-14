@@ -2,8 +2,7 @@
 \alias{bootstrap.orig.data}
 \title{Obtaining a data frame of bootstrapped data using resamples}
 \usage{
-  bootstrap.orig.data(orig.data, resample, new.resamples,
-    resamples.no)
+bootstrap.orig.data(orig.data, resample, new.resamples, resamples.no)
 }
 \arguments{
   \item{orig.data}{Original data to be bootstrapped}
@@ -19,13 +18,13 @@
   \item{resamples.no}{Length of new.resamples}
 }
 \value{
-  Returns bootstrapped data. Internal function called by
-  function \code{create.bootstrap.data}.
+Returns bootstrapped data. Internal function called by
+function \code{create.bootstrap.data}.
 }
 \description{
-  This function extracts the records corresponding to each
-  resample from the original distance data and pastes them
-  together in a new data frame which is returned.
+This function extracts the records corresponding to each
+resample from the original distance data and pastes them
+together in a new data frame which is returned.
 }
 \examples{
 data(dis.data.re)

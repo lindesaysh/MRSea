@@ -2,8 +2,8 @@
 \alias{runPartialPlots}
 \title{Plot partial plots for each of the variables listed in \code{factorlist} or \code{varlist}.}
 \usage{
-  runPartialPlots(model, data, factorlist = NULL,
-    varlist = NULL, showKnots = FALSE, save = FALSE)
+runPartialPlots(model, data, factorlist = NULL, varlist = NULL,
+  showKnots = FALSE, save = FALSE)
 }
 \arguments{
   \item{model}{Fitted model object (glm or gam)}
@@ -24,12 +24,12 @@
   whether plot should be saved into working directory.}
 }
 \value{
-  Partial plots, one for each covariate in
-  \code{factorlist} and \code{varlist}
+Partial plots, one for each covariate in \code{factorlist}
+and \code{varlist}
 }
 \description{
-  Plot partial plots for each of the variables listed in
-  \code{factorlist} or \code{varlist}.
+Plot partial plots for each of the variables listed in
+\code{factorlist} or \code{varlist}.
 }
 \examples{
 #' # load data

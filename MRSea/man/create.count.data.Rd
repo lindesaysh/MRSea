@@ -2,7 +2,7 @@
 \alias{create.count.data}
 \title{Aggregate distance data into count data}
 \usage{
-  create.count.data(dis.data, column.numbers = NULL)
+create.count.data(dis.data, column.numbers = NULL)
 }
 \arguments{
   \item{dis.data}{Data frame containing distance data (one
@@ -26,22 +26,21 @@
   recorded value will be transferred.}
 }
 \value{
-  This function returns count data that is suited for
-  second stage count modelling of distance sampling data.
-  The data includes the columns \code{NHAT} and \code{area}
-  which are the response and the offset required by
-  functions concerned with second stage modelling from this
-  package.
+This function returns count data that is suited for second
+stage count modelling of distance sampling data. The data
+includes the columns \code{NHAT} and \code{area} which are
+the response and the offset required by functions concerned
+with second stage modelling from this package.
 }
 \description{
-  This function creates a new data set where
-  \code{dis.data} is aggregated for each visit to a segment
-  (\code{segment.id}). The sum of the estimated number of
-  individuals for each segment from \code{dis.data$NHAT} is
-  given in the column \code{NHAT} in the new data. Only
-  columns from the segment or higher layers should be
-  carried over into \code{count.data} from \code{dis.data}.
-  Use argument \code{column.numbers} to identify these.
+This function creates a new data set where \code{dis.data}
+is aggregated for each visit to a segment
+(\code{segment.id}). The sum of the estimated number of
+individuals for each segment from \code{dis.data$NHAT} is
+given in the column \code{NHAT} in the new data. Only
+columns from the segment or higher layers should be carried
+over into \code{count.data} from \code{dis.data}. Use
+argument \code{column.numbers} to identify these.
 }
 \examples{
 data(dis.data.re)

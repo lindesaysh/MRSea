@@ -2,7 +2,7 @@
 \alias{runDiagnostics}
 \title{functions to create observed vs fitted and fitted vs scaled pearsons residual plots}
 \usage{
-  runDiagnostics(model, plotting = "b", save = FALSE)
+runDiagnostics(model, plotting = "b", save = FALSE)
 }
 \arguments{
   \item{model}{Fitted model object (glm or gam)}
@@ -16,16 +16,15 @@
   whether plot should be saved into working directory.}
 }
 \value{
-  Two plots: \item{Observed vs Fitted}{Plot of observed vs
-  fitted with concordence correlation and marginal
-  R-squared printed in the plot title.} \item{Fitted vs
-  scaled Pearsons residuals}{The red line is a locally
-  weighted least squares regression line of all of the
-  residuals.}
+Two plots: \item{Observed vs Fitted}{Plot of observed vs
+fitted with concordence correlation and marginal R-squared
+printed in the plot title.} \item{Fitted vs scaled Pearsons
+residuals}{The red line is a locally weighted least squares
+regression line of all of the residuals.}
 }
 \description{
-  functions to create observed vs fitted and fitted vs
-  scaled pearsons residual plots
+functions to create observed vs fitted and fitted vs scaled
+pearsons residual plots
 }
 \examples{
 # load data

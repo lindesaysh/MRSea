@@ -2,12 +2,10 @@
 \alias{return.reg.spline.fit.2d}
 \title{Code for adaptively spacing knots for a spatial smooth. The smoothing process uses a CReSS basis.}
 \usage{
-  return.reg.spline.fit.2d(splineParams, startKnots,
-    winHalfWidth, fitnessMeasure = "BIC",
-    maxIterations = 100, tol = 0, baseModel = NULL,
-    radiusIndices = NULL, initialise = TRUE,
-    initialKnots = NULL, interactionTerm = NULL,
-    knot.seed = 10)
+return.reg.spline.fit.2d(splineParams, startKnots, winHalfWidth,
+  fitnessMeasure = "BIC", maxIterations = 10, tol = 0, baseModel = NULL,
+  radiusIndices = NULL, initialise = TRUE, initialKnots = NULL,
+  interactionTerm = NULL, knot.seed = 10)
 }
 \arguments{
   \item{splineParams}{List object where the first element
@@ -56,48 +54,50 @@
   different}
 }
 \description{
-  Code for adaptively spacing knots for a spatial smooth.
-  The smoothing process uses a CReSS basis.
+Code for adaptively spacing knots for a spatial smooth. The
+smoothing process uses a CReSS basis.
 }
 \details{
-  The following are the details of the splineParams[[1]]
-  objects.  Note.  If salsa1D has been run then details for
-  those covariates will sit in splineParams[[2]] and
-  onward.
+The following are the details of the splineParams[[1]]
+objects.  Note.  If salsa1D has been run then details for
+those covariates will sit in splineParams[[2]] and onward.
 
-  \code{knotDist}: matrix of knot to knot distances (k x
-  k).  May be Euclidean or geodesic distances. Must be
-  square and the same dimensions as
-  \code{nrows(na.omit(knotgrid))}
+\code{knotDist}: matrix of knot to knot distances (k x k).
+May be Euclidean or geodesic distances. Must be square and
+the same dimensions as \code{nrows(na.omit(knotgrid))}
 
-  \code{radii} Sequence of range parameters for the CReSS
-  basis from local (small) to global (large).  Determines
-  the range of the influence of each knot.
+\code{radii} Sequence of range parameters for the CReSS
+basis from local (small) to global (large).  Determines the
+range of the influence of each knot.
 
-  \code{dist}: matrix of distances between data locations
-  and knot locations (n x k). May be Euclidean or geodesic
-  distances.
+\code{dist}: matrix of distances between data locations and
+knot locations (n x k). May be Euclidean or geodesic
+distances.
 
-  \code{gridresp} The first column of knotgrid
+\code{gridresp} The first column of knotgrid
 
-  \code{grid} Index of knotgrid locations.  Should be same
-  length as \code{knotgrid} but with x=integer values from
-  1 to number of unique x-locations and y= integer values
-  from 1 to number of unique y-locations.
+\code{grid} Index of knotgrid locations.  Should be same
+length as \code{knotgrid} but with x=integer values from 1
+to number of unique x-locations and y= integer values from
+1 to number of unique y-locations.
 
-  \code{datacoords}: Coordinates of the data locations
+\code{datacoords}: Coordinates of the data locations
 
-  \code{response}: vector of response data for the
-  modelling process
+\code{response}: vector of response data for the modelling
+process
 
-  \code{knotgrid}: grid of legal knot locations.  Must be a
-  regular grid with c(NA, NA) for rows with an illegal knot
+\code{knotgrid}: grid of legal knot locations.  Must be a
+regular grid with c(NA, NA) for rows with an illegal knot
 
-  \code{minKnots}: minimum number of knots to fit
+\code{minKnots}: minimum number of knots to fit
 
-  \code{maxKnots}: maximum number of knots to fit
+\code{maxKnots}: maximum number of knots to fit
 
-  \code{gap}: Minimum gap between knots (in unit of
-  measurement of \code{datacoords})
+\code{gap}: Minimum gap between knots (in unit of
+measurement of \code{datacoords})
+}
+\author{
+Cameron Walker, Department of Enginering Science,
+University of Auckland.
 }
 

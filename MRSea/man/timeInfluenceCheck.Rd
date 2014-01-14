@@ -2,8 +2,7 @@
 \alias{timeInfluenceCheck}
 \title{Timing check to see how long it will take to run \code{runInfluence}.}
 \usage{
-  timeInfluenceCheck(model, id, d2k = NULL,
-    splineParams = NULL)
+timeInfluenceCheck(model, id, d2k = NULL, splineParams = NULL)
 }
 \arguments{
   \item{model}{Fitted model object (glm or gam)}
@@ -21,8 +20,8 @@
   object.}
 }
 \description{
-  Timing check to see how long it will take to run
-  \code{runInfluence}.
+Timing check to see how long it will take to run
+\code{runInfluence}.
 }
 \examples{
 # load data

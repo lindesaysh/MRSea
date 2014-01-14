@@ -26,7 +26,8 @@ bref <- c(
              email = "lass@st-andrews.ac.uk"),
       person(c("Cornelia", "S."), "Oedekoven", role = c("aut", "ctb")),
       person(c("Monique", "L."), "Mackenzie", role = c("ctb")),
-      person("Eric", "Rexstad", role = c("ctb"))
+      person("Eric", "Rexstad", role = c("ctb")),
+      person("Cameron", "Walker", role=c("aut", "ctb"))
     ),
     Institution = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
     year = "2013",

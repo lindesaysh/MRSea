@@ -14,7 +14,7 @@ LaTeX: pdfLaTeX
 
 BuildType: Package
 PackagePath: MRSea
-PackageInstallArgs: --no-multiarch
+PackageInstallArgs: --no-multiarch --with-keep.source
 PackageBuildArgs: --resave-data
 PackageCheckArgs: --no-examples --no-clean
 PackageRoxygenize: rd

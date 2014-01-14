@@ -2,8 +2,8 @@
 \alias{create.bootstrap.data}
 \title{Create bootstrap data for non-parametric bootstrapping}
 \usage{
-  create.bootstrap.data(dis.data, resample = "transect.id",
-    rename = "segment.id", stratum = NULL)
+create.bootstrap.data(dis.data, resample = "transect.id",
+  rename = "segment.id", stratum = NULL)
 }
 \arguments{
   \item{dis.data}{Original data to be bootstrapped.
@@ -28,23 +28,23 @@
   matches argument \code{stratum} exactly}
 }
 \value{
-  Returns one realisation of bootstrapped distance data.
-  Note that a new column (in addition to those listed under
-  argument \code{rename}) is created. If the default for
-  \code{resample} is used, a column with new unique ids
-  called \code{transect.id2}. Note that a new column is
-  created with renamed bootstrap resamples to preserve the
-  number of unique bootstrap resamples. If the default for
-  \code{resample} is used, i.e. \code{transect.id}, this
-  new column is called \code{transect.id2}. In addition, a
-  new column \code{segment.id2} is created which is
-  required for other bootstrap functions.
+Returns one realisation of bootstrapped distance data. Note
+that a new column (in addition to those listed under
+argument \code{rename}) is created. If the default for
+\code{resample} is used, a column with new unique ids
+called \code{transect.id2}. Note that a new column is
+created with renamed bootstrap resamples to preserve the
+number of unique bootstrap resamples. If the default for
+\code{resample} is used, i.e. \code{transect.id}, this new
+column is called \code{transect.id2}. In addition, a new
+column \code{segment.id2} is created which is required for
+other bootstrap functions.
 }
 \description{
-  This function creates one realisation of bootstrapped
-  data based on \code{dis.data}. The default resampling
-  unit is \code{transect.id} which may be modified using
-  the argument \code{resample}.
+This function creates one realisation of bootstrapped data
+based on \code{dis.data}. The default resampling unit is
+\code{transect.id} which may be modified using the argument
+\code{resample}.
 }
 \examples{
 data(dis.data.re)

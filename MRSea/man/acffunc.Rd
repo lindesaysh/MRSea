@@ -2,7 +2,7 @@
 \alias{acffunc}
 \title{calculate correlation for residuals by block}
 \usage{
-  acffunc(block, model)
+acffunc(block, model)
 }
 \arguments{
   \item{block}{Vector of blocks that identify data points
@@ -11,6 +11,6 @@
   \item{model}{Fitted model object (glm or gam)}
 }
 \description{
-  calculate correlation for residuals by block
+calculate correlation for residuals by block
 }
 

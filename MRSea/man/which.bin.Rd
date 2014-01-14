@@ -2,7 +2,7 @@
 \alias{which.bin}
 \title{Determining the distance bin}
 \usage{
-  which.bin(dis.data, cutpoints)
+which.bin(dis.data, cutpoints)
 }
 \arguments{
   \item{dis.data}{A data frame with distance data for which
@@ -14,28 +14,27 @@
   left-truncation)}
 }
 \value{
-  The \code{dis.data} data frame to which columns
-  "distbegin" and "distend" were added giving the beginning
-  and end cutpoints of the bin that the respective
-  \code{dis.data$distance} belongs to.
+The \code{dis.data} data frame to which columns "distbegin"
+and "distend" were added giving the beginning and end
+cutpoints of the bin that the respective
+\code{dis.data$distance} belongs to.
 }
 \description{
-  For a vector of perpendicular (or radial) distances, this
-  function determines which distance bin it belongs to
-  (given the input of cut points) and adds the beginning
-  and end points of the respective distance bins in new
-  colunns in \code{dis.data} called "distbegin" and
-  "distend".
+For a vector of perpendicular (or radial) distances, this
+function determines which distance bin it belongs to (given
+the input of cut points) and adds the beginning and end
+points of the respective distance bins in new colunns in
+\code{dis.data} called "distbegin" and "distend".
 }
 \details{
-  If a value in \code{dis.data$distance} matches a cut
-  point in \code{cutpoints} exactly, the value of
-  \code{dis.data.re$distance} will be attributed to the bin
-  that is closer to the line/point unless the value of
-  \code{dis.data.re$distance} is 0.
+If a value in \code{dis.data$distance} matches a cut point
+in \code{cutpoints} exactly, the value of
+\code{dis.data.re$distance} will be attributed to the bin
+that is closer to the line/point unless the value of
+\code{dis.data.re$distance} is 0.
 
-  E.g. if \code{cutpoints=c(0,1,2,3)},
-  \code{dis.data$distance}=2 will be attributed to interval
-  2 (and not 3).
+E.g. if \code{cutpoints=c(0,1,2,3)},
+\code{dis.data$distance}=2 will be attributed to interval 2
+(and not 3).
 }
 

@@ -2,8 +2,7 @@
 \alias{makesplineParams}
 \title{Constructing an object of spline parameters}
 \usage{
-  makesplineParams(data, varlist, predictionData = NULL,
-    degree = NULL)
+makesplineParams(data, varlist, predictionData = NULL, degree = NULL)
 }
 \arguments{
   \item{data}{Data frame containing columns of covariates
@@ -24,32 +23,31 @@
   If unspecified, degree 2 is stored.}
 }
 \description{
-  This function makes a list object containing all of the
-  information to fit splines to continuous data.
+This function makes a list object containing all of the
+information to fit splines to continuous data.
 }
 \details{
-  The information is stored in list slots \code{[[2]]} and
-  onward (slot \code{[[1]]} is reserved for a spatial
-  term). Specifically:
+The information is stored in list slots \code{[[2]]} and
+onward (slot \code{[[1]]} is reserved for a spatial term).
+Specifically:
 
-  \code{covar}. Name of covariate.
+\code{covar}. Name of covariate.
 
-  \code{explanatory}. Vector of covariate data.
+\code{explanatory}. Vector of covariate data.
 
-  \code{knots}. Knot(s) for spline fitting.  This function
-  initialises with a knot at the mean covariate value.
+\code{knots}. Knot(s) for spline fitting.  This function
+initialises with a knot at the mean covariate value.
 
-  \code{bd}. This specifies the boundary knots.  If
-  \code{predictionData} is \code{NULL} then this is the
-  range of the covariate data.  Otherwise, the boundary
-  knots are the maximum combined range of the data and
-  prediction data.
+\code{bd}. This specifies the boundary knots.  If
+\code{predictionData} is \code{NULL} then this is the range
+of the covariate data.  Otherwise, the boundary knots are
+the maximum combined range of the data and prediction data.
 
-  \code{degree}. The degree of a B-spline. This function
-  retuns 2 by default.
+\code{degree}. The degree of a B-spline. This function
+retuns 2 by default.
 
-  See \code{\link{runSALSA2D}} for details on the spatial
-  slot (\code{[[1]]})
+See \code{\link{runSALSA2D}} for details on the spatial
+slot (\code{[[1]]})
 }
 \examples{
 # load data

@@ -2,7 +2,7 @@
 \alias{create.bootcount.data}
 \title{Aggregate bootstrapped distance data into count data}
 \usage{
-  create.bootcount.data(dis.data, column.numbers = NULL)
+create.bootcount.data(dis.data, column.numbers = NULL)
 }
 \arguments{
   \item{dis.data}{Data frame containing distance data (one
@@ -18,33 +18,33 @@
   data.}
 }
 \value{
-  This function returns bootstrapped count data that is
-  suited for second stage count modelling of distance
-  sampling data. The data includes the columns \code{NHAT}
-  and \code{area} which are the response and the offset
-  required by functions concerned with second stage
-  modelling from this package.
+This function returns bootstrapped count data that is
+suited for second stage count modelling of distance
+sampling data. The data includes the columns \code{NHAT}
+and \code{area} which are the response and the offset
+required by functions concerned with second stage modelling
+from this package.
 }
 \description{
-  This function creates a new data set where
-  \code{dis.data} is aggregated for each visit to a
-  segment. For bootstrapped data, the column with the ids
-  for visits to a segment is \code{segment.id2} which is
-  created by \code{create.bootstrap.data} using the default
-  for argument \code{rename}. The sum of the estimated
-  number of individuals for each segment from
-  \code{dis.data$NHAT} is given in the column \code{NHAT}
-  in the new data. All other columns from the observation
-  layer should be discarded. This is achieved by specifying
-  the columns that should be retained using the argument
-  \code{column.numbers}. Generally, all columns from the
-  segment and higher levels should be kept. If the default
-  is used, \code{column.numbers=NULL}, the columns
-  \code{distance}, \code{object}, \code{size},
-  \code{distbegin} and \code{distend} from the observation
-  level are automatically discarded. Note that for those
-  columns from the observation layer that are kept, only
-  the first recorded value will be transferred.
+This function creates a new data set where \code{dis.data}
+is aggregated for each visit to a segment. For bootstrapped
+data, the column with the ids for visits to a segment is
+\code{segment.id2} which is created by
+\code{create.bootstrap.data} using the default for argument
+\code{rename}. The sum of the estimated number of
+individuals for each segment from \code{dis.data$NHAT} is
+given in the column \code{NHAT} in the new data. All other
+columns from the observation layer should be discarded.
+This is achieved by specifying the columns that should be
+retained using the argument \code{column.numbers}.
+Generally, all columns from the segment and higher levels
+should be kept. If the default is used,
+\code{column.numbers=NULL}, the columns \code{distance},
+\code{object}, \code{size}, \code{distbegin} and
+\code{distend} from the observation level are automatically
+discarded. Note that for those columns from the observation
+layer that are kept, only the first recorded value will be
+transferred.
 }
 \examples{
 data(dis.data.re)
