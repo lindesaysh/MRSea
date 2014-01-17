@@ -109,7 +109,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
   gridResp<-salsa2dlist$knotgrid[,1]
   
-  if(length(r_seq)>1){
+  if(length(salsa2dlist$r_seq)>1){
     radii<- salsa2dlist$r_seq[round(length(salsa2dlist$r_seq)/2)]  
   }else{
     radii<- salsa2dlist$r_seq[1]
