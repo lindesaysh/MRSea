@@ -39,6 +39,8 @@
 #' 
 #' @author Cameron Walker, Department of Enginering Science, University of Auckland.
 #' 
+#' @export
+#' 
 "return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10){
 
 #Where am I?

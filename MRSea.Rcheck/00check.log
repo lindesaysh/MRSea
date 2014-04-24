@@ -4,7 +4,7 @@
 * using session charset: UTF-8
 * using option ‘--no-examples’
 * checking for file ‘MRSea/DESCRIPTION’ ... OK
-* this is package ‘MRSea’ version ‘0.1.1’
+* this is package ‘MRSea’ version ‘0.1.2’
 * checking package namespace information ... OK
 * checking package dependencies ... OK
 * checking if this is a source package ... OK
@@ -103,7 +103,18 @@ runSALSA2D: no visible binding for global variable ‘r_seq’
 * checking Rd cross-references ... OK
 * checking for missing documentation entries ... OK
 * checking for code/documentation mismatches ... OK
-* checking Rd \usage sections ... OK
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in documentation object 'return.reg.spline.fit.2d'
+  ‘knot.seed’
+
+Undocumented arguments in documentation object 'runSALSA2D'
+  ‘tol’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See the chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
 * checking Rd contents ... OK
 * checking for unstated dependencies in examples ... WARNING
 ‘library’ or ‘require’ call not declared from: ‘mgcv’
@@ -128,5 +139,5 @@ runSALSA2D: no visible binding for global variable ‘r_seq’
   predict.data.re.RData       420Kb    278Kb       xz
 * checking examples ... SKIPPED
 * checking PDF version of manual ... OK
-WARNING: There were 3 warnings.
+WARNING: There were 4 warnings.
 NOTE: There were 2 notes.

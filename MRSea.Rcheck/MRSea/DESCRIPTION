@@ -5,13 +5,12 @@ Description: Examines animal survey data for signs of changes in animal
     functions of this package can be used to analyse segmented line transect
     data and nearshore vantage point data. Non-parametric bootstrapping can be
     used to estimate uncertainty. Several model assessment tools are available.
-    This review constitutes work carried out at the Centre for Research into 
-    Ecological and Environmental Modelling (CREEM) at the University of St. Andrews, 
-    performed under contract for Marine Scotland (SB9 (CR/2012/05)).
-Version: 0.1.1
-Date: 2013-10-04
-Author: Lindesay Scott-Hayward, Cornelia Oedekoven, Monique Mackenzie, Eric
-    Rexstad
+    This review constitutes work carried out at the Centre for Research into
+    Ecological and Environmental Modelling (CREEM) at the University of St.
+    Andrews, performed under contract for Marine Scotland (SB9 (CR/2012/05)).
+Version: 0.1.2
+Date: 2014-01-14
+Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique Mackenzie, Cameron Walker <cameron.walker@auckland.ac.nz>
 Maintainer: Lindesay Scott-Hayward <lass@st-and.ac.uk>
 Depends: R (>= 3.0.0), calibrate (>= 1.7.2), car (>= 2.0-19), fields
         (>= 6.8), geepack (>= 1.1-6), ggplot2 (>= 0.9.3.1), lawstat (>=
@@ -19,11 +18,11 @@ Depends: R (>= 3.0.0), calibrate (>= 1.7.2), car (>= 2.0-19), fields
         0.9-9996), splines (>= 3.0.1)
 License: GPL-2
 LazyData: true
-Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and Rexstad E
-        (2013). "MRSea package (version 0.0.1): Statistical Modelling
-        of bird and cetacean distributions in offshore renewables
-        development areas". University of St. Andrews: Contract with
-        Marine Scotland: SB9 (CR/2012/05)
+Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML, Walker, CG and
+        Rexstad E (2013). "MRSea package (version 0.1.2): Statistical
+        Modelling of bird and cetacean distributions in offshore
+        renewables development areas". University of St. Andrews:
+        Contract with Marine Scotland: SB9 (CR/2012/05)
 URL: http://creem2.st-and.ac.uk/software.aspx
 Collate: 'LocalRadialFunction.R' 'MRSea-package.r' 'SALSA1DCode.R'
         'SALSA2DCode.R' 'bootstrap.orig.data.R' 'create.NHAT.R'
@@ -40,4 +39,4 @@ Collate: 'LocalRadialFunction.R' 'MRSea-package.r' 'SALSA1DCode.R'
         'runACF.R' 'runDiagnostics.R' 'runInfluence.R'
         'runInfluenceCheck.R' 'runPartialPlots.R' 'runSALSA.R'
         'runSALSA1D_withremoval.R' 'runSALSA2D.R' 'which.bin.R'
-Built: R 3.0.2; ; 2013-11-07 14:17:30 UTC; unix
+Built: R 3.0.2; ; 2014-01-14 12:28:35 UTC; unix

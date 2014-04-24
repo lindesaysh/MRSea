@@ -133,9 +133,9 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   terms1D <- list(length(varlist))
   
   for(i in 2:(length(varlist)+1))
-    if(varlist[varID[(i-1)]]%in%varlist_cyclicSplines){
+    if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
       require(mgcv)
-      terms1D[[(i-1)]]<- paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])),fit=F)$X[,-1]))", sep="")  
+      terms1D[[(i-1)]]<- paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])),fit=F)$X[,-1]))", sep="")  
     }else{
       terms1D[[(i-1)]]<- paste("bs(", varlist[(i-1)], ", knots = splineParams[[", varID[(i-1)], "]]$knots, degree=splineParams[[", varID[(i-1)], "]]$degree, Boundary.knots=splineParams[[",varID[(i-1)], "]]$bd)", sep='')
     }

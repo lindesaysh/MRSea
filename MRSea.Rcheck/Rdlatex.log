@@ -3,8 +3,8 @@ Hmm ... looks like a package
 This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009)
 entering extended mode
 
-(/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/RtmptLPYbw/Rd2pdffda2
-7ece04/Rd2.tex
+(/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/RtmpMvaF2d/Rd2pdf1026
+5304544b/Rd2.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, german-x-2009-06-19, ngerman-x-2009-06-19, ancientgreek, ibycus, ar
@@ -87,7 +87,7 @@ exlive/2009/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/psnfss/t1phv.fd)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (54.6192pt too wide) in paragraph at lines 104--107
+Overfull \hbox (54.6192pt too wide) in paragraph at lines 102--105
 []\T1/ptm/m/n/10 String of re-sam-pled units from \T1/fi4/m/n/10 data[,"resampl
 e"]\T1/ptm/m/n/10 . Cre-ated by \T1/fi4/m/n/10 create.bootstrap.data() 
 [2] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
@@ -95,7 +95,7 @@ e"]\T1/ptm/m/n/10 . Cre-ated by \T1/fi4/m/n/10 create.bootstrap.data()
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [3]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [4]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (11.41821pt too wide) in paragraph at lines 312--320
+Overfull \hbox (11.41821pt too wide) in paragraph at lines 310--318
 \T1/ptm/m/n/10 (\T1/fi4/m/n/10 segment.id\T1/ptm/m/n/10 ). The sum of the es-ti
 -mated num-ber of in-di-vid-u-als for each seg-ment from \T1/fi4/m/n/10 dis.dat
 a$NHAT
@@ -104,65 +104,65 @@ a$NHAT
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [7]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [8] [9] [10]
-Overfull \hbox (3.78088pt too wide) in paragraph at lines 679--679
+Overfull \hbox (3.78088pt too wide) in paragraph at lines 669--669
  []\T1/fi4/m/n/9 salsa2dlist<-list(fitnessMeasure = QICb, knotgrid = knotgrid.o
 ff, startKnots=4, minKnots=4,[] 
 
-Overfull \hbox (18.78088pt too wide) in paragraph at lines 690--690
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 680--680
  []\T1/fi4/m/n/9 count.data$blockid<-paste(count.data$transect.id, count.data$s
 eason, count.data$impact, sep=)[] 
 
-Overfull \hbox (44.28088pt too wide) in paragraph at lines 692--692
+Overfull \hbox (44.28088pt too wide) in paragraph at lines 682--682
  []\T1/fi4/m/n/9 geeModel<- geeglm(formula(salsa2dOutput_k6$bestModel), data=co
 unt.data, family=poisson, id=blockid)[] 
 
-Overfull \hbox (15.78088pt too wide) in paragraph at lines 693--693
+Overfull \hbox (15.78088pt too wide) in paragraph at lines 683--683
  []\T1/fi4/m/n/9 dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$
 y.pos), na.omit(knotgrid.off),[] 
 
 Underfull \vbox (badness 10000) has occurred while \output is active [11]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [12]
-Overfull \hbox (0.78088pt too wide) in paragraph at lines 852--852
+Overfull \hbox (0.78088pt too wide) in paragraph at lines 841--841
  []\T1/fi4/m/n/9 gam.2<-gam(NHAT~as.factor(impact)+s(x.pos,y.pos,by=as.factor(i
 mpact))+offset(log(area)),[] 
 
-Overfull \hbox (50.28088pt too wide) in paragraph at lines 854--854
+Overfull \hbox (50.28088pt too wide) in paragraph at lines 843--843
  []\T1/fi4/m/n/9 do.bootstrap.gam(dis.data.re,predict.data.re,ddf.obj=result,mo
 del.obj=gam.2,resample="transect.id",[] 
 
-Overfull \hbox (9.78088pt too wide) in paragraph at lines 865--865
+Overfull \hbox (9.78088pt too wide) in paragraph at lines 854--854
  []\T1/fi4/m/n/9 gam.ns2=gam(birds~as.factor(impact)+s(x.pos,y.pos,by=as.factor
 (impact))+offset(log(area)),[] 
 
-Overfull \hbox (18.78088pt too wide) in paragraph at lines 867--867
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 856--856
  []\T1/fi4/m/n/9 do.bootstrap.gam(ns.data.re,ns.predict.data.re,ddf.obj=NULL,mo
 del.obj=gam.ns2,resample=NULL,[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [13]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [14]
-Overfull \hbox (11.28088pt too wide) in paragraph at lines 968--968
+Overfull \hbox (11.28088pt too wide) in paragraph at lines 957--957
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=c
 (observationhour,DayOfMonth),[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [15]
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [16]
-Overfull \hbox (5.28088pt too wide) in paragraph at lines 1074--1074
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (5.28088pt too wide) in paragraph at lines 1060--1060
  []\T1/fi4/m/n/9 getPlotdimensions(ns.data.re$x.pos, ns.data.re$y.pos, segmentW
 idth=500, segmentLength=500)[] 
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (26.28088pt too wide) in paragraph at lines 1124--1124
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [16]
+Overfull \hbox (26.28088pt too wide) in paragraph at lines 1110--1110
  []\T1/fi4/m/n/9 initialModel<- geeglm(birds ~ as.factor(floodebb) + as.factor(
 impact) + observationhour + x.pos +[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [17]
-Overfull \hbox (63.5374pt too wide) in paragraph at lines 1173--1177
+Overfull \hbox (63.5374pt too wide) in paragraph at lines 1159--1163
 \T1/ptm/m/n/10 Smoother (CReSS). Jour-nal of com-pu-ta-tional and Graph-i-cal S
 tatis-tics. 2013. DOI: 10.1080/10618600.2012.762920 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [18]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [19]
-Overfull \hbox (45.78088pt too wide) in paragraph at lines 1268--1268
+Overfull \hbox (45.78088pt too wide) in paragraph at lines 1252--1252
  []\T1/fi4/m/n/9 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos),
  na.omit(knotgrid.ns), knotmat=FALSE)[] 
 
-Overfull \hbox (6.78088pt too wide) in paragraph at lines 1274--1274
+Overfull \hbox (6.78088pt too wide) in paragraph at lines 1258--1258
  []\T1/fi4/m/n/9 basis<-LocalRadialFunction(radiusIndices=rep(4, 5), dists=dist
 Mats$dataDist, radii = r_seq,[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
@@ -182,15 +182,15 @@ Mats$dataDist, radii = r_seq,[]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [29]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [30]
-Overfull \hbox (1.81773pt too wide) in paragraph at lines 1914--1916
+Overfull \hbox (1.81773pt too wide) in paragraph at lines 1889--1891
 []\T1/ptm/m/n/10 starting model for SALSA to use. Must not con-tain the co-vari
 -ate in \T1/fi4/m/n/10 explanatory 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (11.83942pt too wide) in paragraph at lines 1969--1972
+Overfull \hbox (11.83942pt too wide) in paragraph at lines 1948--1951
 []\T1/ptm/m/n/10 vector of length \T1/fi4/m/n/10 startKnots \T1/ptm/m/n/10 iden
 -ti-fy-ing which radii (\T1/fi4/m/n/10 splineParams[[1]]$radii\T1/ptm/m/n/10 )
 [31] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [32]
-Overfull \hbox (3.86746pt too wide) in paragraph at lines 2070--2073
+Overfull \hbox (3.86746pt too wide) in paragraph at lines 2052--2055
 []\T1/ptm/m/n/10 If \T1/fi4/m/n/10 store=TRUE \T1/ptm/m/n/10 then the ma-trix o
 f cor-re-la-tions (nblocks x length_max_block) is re-turned and \T1/fi4/m/n/10 
 plotacf
@@ -198,91 +198,90 @@ plotacf
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [34]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [35]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (12.41872pt too wide) in paragraph at lines 2308--2311
+Overfull \hbox (12.41872pt too wide) in paragraph at lines 2287--2290
 []\T1/ptm/m/n/10 The data to be pre-dicted for. col-umn names cor-re-spond to t
 he data in \T1/fi4/m/n/10 initialModel 
 
-Overfull \hbox (1.1476pt too wide) in paragraph at lines 2317--2322
+Overfull \hbox (1.1476pt too wide) in paragraph at lines 2296--2301
 []\T1/ptm/m/n/10 List ob-ject con-tain-ing in-for-ma-tion for fit-ting splines 
 to the co-vari-ates in \T1/fi4/m/n/10 varlist\T1/ptm/m/n/10 .
 
-Overfull \hbox (4.72797pt too wide) in paragraph at lines 2317--2322
+Overfull \hbox (4.72797pt too wide) in paragraph at lines 2296--2301
 \T1/ptm/m/n/10 If not spec-i-fied (\T1/fi4/m/n/10 NULL\T1/ptm/m/n/10 ) this ob-
 ject is cre-ated and re-turned. See [][]\T1/fi4/m/n/10 makesplineParams[][][]
 [36]
-Overfull \hbox (23.74786pt too wide) in paragraph at lines 2388--2391
+Overfull \hbox (23.74786pt too wide) in paragraph at lines 2366--2369
 []\T1/ptm/m/n/10 The fi-nal fit statis-tic of \T1/fi4/m/n/10 bestModel\T1/ptm/m
 /n/10 . The type of statis-tic was spec-i-fied in \T1/fi4/m/n/10 salsa1dlist\T1
 /ptm/m/n/10 . 
 [37]
-Overfull \hbox (14.28088pt too wide) in paragraph at lines 2420--2420
+Overfull \hbox (14.28088pt too wide) in paragraph at lines 2398--2398
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=c
 (observationhour, DayOfMonth),[] 
 
-Overfull \hbox (2.28088pt too wide) in paragraph at lines 2421--2421
+Overfull \hbox (2.28088pt too wide) in paragraph at lines 2399--2399
  []                 \T1/fi4/m/n/9 factorlist=c(floodebb, impact), ns.predict.da
 ta.re, splineParams=splineParams)[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (12.41872pt too wide) in paragraph at lines 2464--2467
+Overfull \hbox (12.41872pt too wide) in paragraph at lines 2441--2444
 []\T1/ptm/m/n/10 The data to be pre-dicted for. col-umn names cor-re-spond to t
 he data in \T1/fi4/m/n/10 initialModel 
 
-Overfull \hbox (1.1476pt too wide) in paragraph at lines 2473--2478
+Overfull \hbox (1.1476pt too wide) in paragraph at lines 2450--2455
 []\T1/ptm/m/n/10 List ob-ject con-tain-ing in-for-ma-tion for fit-ting splines 
 to the co-vari-ates in \T1/fi4/m/n/10 varlist\T1/ptm/m/n/10 .
 
-Overfull \hbox (4.72797pt too wide) in paragraph at lines 2473--2478
+Overfull \hbox (4.72797pt too wide) in paragraph at lines 2450--2455
 \T1/ptm/m/n/10 If not spec-i-fied (\T1/fi4/m/n/10 NULL\T1/ptm/m/n/10 ) this ob-
 ject is cre-ated and re-turned. See [][]\T1/fi4/m/n/10 makesplineParams[][][]
 [38]
-Overfull \hbox (16.99939pt too wide) in paragraph at lines 2548--2551
+Overfull \hbox (16.99939pt too wide) in paragraph at lines 2523--2526
 []\T1/fi4/m/n/10 basemodelformula\T1/ptm/m/n/10 : the re-sult-ing model for-mul
 a. If \T1/fi4/m/n/10 kept=yes \T1/ptm/m/n/10 or \T1/fi4/m/n/10 kept=linear
 
-Overfull \hbox (23.74786pt too wide) in paragraph at lines 2564--2566
+Overfull \hbox (23.74786pt too wide) in paragraph at lines 2538--2541
 []\T1/ptm/m/n/10 The fi-nal fit statis-tic of \T1/fi4/m/n/10 bestModel\T1/ptm/m
 /n/10 . The type of statis-tic was spec-i-fied in \T1/fi4/m/n/10 salsa1dlist\T1
 /ptm/m/n/10 . 
 [39]
-Overfull \hbox (120.78088pt too wide) in paragraph at lines 2588--2588
+Overfull \hbox (120.78088pt too wide) in paragraph at lines 2563--2563
  []\T1/fi4/m/n/9 ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year
 , ns.data.re$MonthOfYear, ns.data.re$DayOfMonth, sep=)[] 
 
-Overfull \hbox (68.28088pt too wide) in paragraph at lines 2603--2603
+Overfull \hbox (68.28088pt too wide) in paragraph at lines 2578--2578
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlis
 t, varlist=c(observationhour, DayOfMonth),[] 
 
-Overfull \hbox (2.28088pt too wide) in paragraph at lines 2604--2604
+Overfull \hbox (2.28088pt too wide) in paragraph at lines 2579--2579
  []                 \T1/fi4/m/n/9 factorlist=c(floodebb, impact), ns.predict.da
 ta.re, splineParams=splineParams)[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (25.50977pt too wide) in paragraph at lines 2627--2632
+Overfull \hbox (25.50977pt too wide) in paragraph at lines 2601--2606
 []\T1/ptm/m/n/10 Vector of ob-jects re-quired for \T1/fi4/m/n/10 runSALSA2D\T1/
 ptm/m/n/10 : \T1/fi4/m/n/10 fitnessMeasure\T1/ptm/m/n/10 , \T1/fi4/m/n/10 knotg
 rid\T1/ptm/m/n/10 , \T1/fi4/m/n/10 startKnots\T1/ptm/m/n/10 ,
 
-Overfull \hbox (0.90794pt too wide) in paragraph at lines 2637--2639
+Overfull \hbox (0.90794pt too wide) in paragraph at lines 2611--2613
 []\T1/ptm/m/n/10 (k x k) Ma-trix of dis-tances be-tween all valid knot lo-ca-ti
 ons spec-i-fied in \T1/fi4/m/n/10 knotgrid 
 [40]
-Overfull \hbox (4.20862pt too wide) in paragraph at lines 2712--2716
+Overfull \hbox (4.20862pt too wide) in paragraph at lines 2688--2691
 []\T1/ptm/m/n/10 Vector of length start-Knots iden-ti-fy-ing which radii (\T1/f
 i4/m/n/10 splineParams[[1]]$radii\T1/ptm/m/n/10 )
 [41]
-Overfull \hbox (59.44736pt too wide) in paragraph at lines 2728--2732
+Overfull \hbox (59.44736pt too wide) in paragraph at lines 2707--2711
 \T1/ptm/m/n/10 Smoother (CReSS). Jour-nal of com-pu-ta-tional and Graph-i-cal S
 tatis-tics. 2013. doi: 10.1080/10618600.2012.762920 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [42]
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (53.99908pt too wide) in paragraph at lines 2850--2855
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [43]
+Overfull \hbox (53.99908pt too wide) in paragraph at lines 2828--2833
 []\T1/ptm/m/n/10 If a value in \T1/fi4/m/n/10 dis.data$distance \T1/ptm/m/n/10 
 matches a cut point in \T1/fi4/m/n/10 cutpoints \T1/ptm/m/n/10 ex-actly, the va
 lue of \T1/fi4/m/n/10 dis.data.re$distance
 
-Overfull \hbox (1.93738pt too wide) in paragraph at lines 2850--2855
+Overfull \hbox (1.93738pt too wide) in paragraph at lines 2828--2833
 \T1/ptm/m/n/10 will be at-tributed to the bin that is closer to the line/point 
 un-less the value of \T1/fi4/m/n/10 dis.data.re$distance
-[43]
 No file Rd2.ind.
 [44] (./Rd2.aux) )
 (see the transcript file for additional information)pdfTeX warning (dest): name
@@ -297,19 +296,19 @@ live/2009/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/20
 ist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/
 type1/urw/times/utmr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/urw/
 times/utmri8a.pfb>
-Output written on Rd2.pdf (44 pages, 216204 bytes).
+Output written on Rd2.pdf (44 pages, 216757 bytes).
 Transcript written on Rd2.log.
 This is makeindex, version 2.15 [TeX Live 2009] (kpathsea + Thai support).
-Scanning input file ./Rd2.idx....done (82 entries accepted, 0 rejected).
-Sorting entries....done (540 comparisons).
-Generating output file ./Rd2.ind....done (111 lines written, 1 warning).
+Scanning input file ./Rd2.idx....done (80 entries accepted, 0 rejected).
+Sorting entries....done (507 comparisons).
+Generating output file ./Rd2.ind....done (109 lines written, 1 warning).
 Output written in ./Rd2.ind.
 Transcript written in ./Rd2.ilg.
 This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009)
 entering extended mode
 
-(/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/RtmptLPYbw/Rd2pdffda2
-7ece04/Rd2.tex
+(/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/RtmpMvaF2d/Rd2pdf1026
+5304544b/Rd2.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, german-x-2009-06-19, ngerman-x-2009-06-19, ancientgreek, ibycus, ar
@@ -392,7 +391,7 @@ exlive/2009/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/psnfss/t1phv.fd) (./Rd2.toc
 [2]) (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (54.6192pt too wide) in paragraph at lines 104--107
+Overfull \hbox (54.6192pt too wide) in paragraph at lines 102--105
 []\T1/ptm/m/n/10 String of re-sam-pled units from \T1/fi4/m/n/10 data[,"resampl
 e"]\T1/ptm/m/n/10 . Cre-ated by \T1/fi4/m/n/10 create.bootstrap.data() 
 [3] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
@@ -400,7 +399,7 @@ e"]\T1/ptm/m/n/10 . Cre-ated by \T1/fi4/m/n/10 create.bootstrap.data()
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [4]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [5]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (11.41821pt too wide) in paragraph at lines 312--320
+Overfull \hbox (11.41821pt too wide) in paragraph at lines 310--318
 \T1/ptm/m/n/10 (\T1/fi4/m/n/10 segment.id\T1/ptm/m/n/10 ). The sum of the es-ti
 -mated num-ber of in-di-vid-u-als for each seg-ment from \T1/fi4/m/n/10 dis.dat
 a$NHAT
@@ -409,65 +408,65 @@ a$NHAT
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [8]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [9] [10] [11]
-Overfull \hbox (3.78088pt too wide) in paragraph at lines 679--679
+Overfull \hbox (3.78088pt too wide) in paragraph at lines 669--669
  []\T1/fi4/m/n/9 salsa2dlist<-list(fitnessMeasure = QICb, knotgrid = knotgrid.o
 ff, startKnots=4, minKnots=4,[] 
 
-Overfull \hbox (18.78088pt too wide) in paragraph at lines 690--690
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 680--680
  []\T1/fi4/m/n/9 count.data$blockid<-paste(count.data$transect.id, count.data$s
 eason, count.data$impact, sep=)[] 
 
-Overfull \hbox (44.28088pt too wide) in paragraph at lines 692--692
+Overfull \hbox (44.28088pt too wide) in paragraph at lines 682--682
  []\T1/fi4/m/n/9 geeModel<- geeglm(formula(salsa2dOutput_k6$bestModel), data=co
 unt.data, family=poisson, id=blockid)[] 
 
-Overfull \hbox (15.78088pt too wide) in paragraph at lines 693--693
+Overfull \hbox (15.78088pt too wide) in paragraph at lines 683--683
  []\T1/fi4/m/n/9 dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$
 y.pos), na.omit(knotgrid.off),[] 
 
 Underfull \vbox (badness 10000) has occurred while \output is active [12]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [13]
-Overfull \hbox (0.78088pt too wide) in paragraph at lines 852--852
+Overfull \hbox (0.78088pt too wide) in paragraph at lines 841--841
  []\T1/fi4/m/n/9 gam.2<-gam(NHAT~as.factor(impact)+s(x.pos,y.pos,by=as.factor(i
 mpact))+offset(log(area)),[] 
 
-Overfull \hbox (50.28088pt too wide) in paragraph at lines 854--854
+Overfull \hbox (50.28088pt too wide) in paragraph at lines 843--843
  []\T1/fi4/m/n/9 do.bootstrap.gam(dis.data.re,predict.data.re,ddf.obj=result,mo
 del.obj=gam.2,resample="transect.id",[] 
 
-Overfull \hbox (9.78088pt too wide) in paragraph at lines 865--865
+Overfull \hbox (9.78088pt too wide) in paragraph at lines 854--854
  []\T1/fi4/m/n/9 gam.ns2=gam(birds~as.factor(impact)+s(x.pos,y.pos,by=as.factor
 (impact))+offset(log(area)),[] 
 
-Overfull \hbox (18.78088pt too wide) in paragraph at lines 867--867
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 856--856
  []\T1/fi4/m/n/9 do.bootstrap.gam(ns.data.re,ns.predict.data.re,ddf.obj=NULL,mo
 del.obj=gam.ns2,resample=NULL,[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [14]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [15]
-Overfull \hbox (11.28088pt too wide) in paragraph at lines 968--968
+Overfull \hbox (11.28088pt too wide) in paragraph at lines 957--957
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=c
 (observationhour,DayOfMonth),[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [16]
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [17]
-Overfull \hbox (5.28088pt too wide) in paragraph at lines 1074--1074
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (5.28088pt too wide) in paragraph at lines 1060--1060
  []\T1/fi4/m/n/9 getPlotdimensions(ns.data.re$x.pos, ns.data.re$y.pos, segmentW
 idth=500, segmentLength=500)[] 
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (26.28088pt too wide) in paragraph at lines 1124--1124
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [17]
+Overfull \hbox (26.28088pt too wide) in paragraph at lines 1110--1110
  []\T1/fi4/m/n/9 initialModel<- geeglm(birds ~ as.factor(floodebb) + as.factor(
 impact) + observationhour + x.pos +[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [18]
-Overfull \hbox (63.5374pt too wide) in paragraph at lines 1173--1177
+Overfull \hbox (63.5374pt too wide) in paragraph at lines 1159--1163
 \T1/ptm/m/n/10 Smoother (CReSS). Jour-nal of com-pu-ta-tional and Graph-i-cal S
 tatis-tics. 2013. DOI: 10.1080/10618600.2012.762920 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [19]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [20]
-Overfull \hbox (45.78088pt too wide) in paragraph at lines 1268--1268
+Overfull \hbox (45.78088pt too wide) in paragraph at lines 1252--1252
  []\T1/fi4/m/n/9 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos),
  na.omit(knotgrid.ns), knotmat=FALSE)[] 
 
-Overfull \hbox (6.78088pt too wide) in paragraph at lines 1274--1274
+Overfull \hbox (6.78088pt too wide) in paragraph at lines 1258--1258
  []\T1/fi4/m/n/9 basis<-LocalRadialFunction(radiusIndices=rep(4, 5), dists=dist
 Mats$dataDist, radii = r_seq,[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
@@ -487,15 +486,15 @@ Mats$dataDist, radii = r_seq,[]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [30]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [31]
-Overfull \hbox (1.81773pt too wide) in paragraph at lines 1914--1916
+Overfull \hbox (1.81773pt too wide) in paragraph at lines 1889--1891
 []\T1/ptm/m/n/10 starting model for SALSA to use. Must not con-tain the co-vari
 -ate in \T1/fi4/m/n/10 explanatory 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (11.83942pt too wide) in paragraph at lines 1969--1972
+Overfull \hbox (11.83942pt too wide) in paragraph at lines 1948--1951
 []\T1/ptm/m/n/10 vector of length \T1/fi4/m/n/10 startKnots \T1/ptm/m/n/10 iden
 -ti-fy-ing which radii (\T1/fi4/m/n/10 splineParams[[1]]$radii\T1/ptm/m/n/10 )
 [32] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [33]
-Overfull \hbox (3.86746pt too wide) in paragraph at lines 2070--2073
+Overfull \hbox (3.86746pt too wide) in paragraph at lines 2052--2055
 []\T1/ptm/m/n/10 If \T1/fi4/m/n/10 store=TRUE \T1/ptm/m/n/10 then the ma-trix o
 f cor-re-la-tions (nblocks x length_max_block) is re-turned and \T1/fi4/m/n/10 
 plotacf
@@ -503,94 +502,94 @@ plotacf
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [35]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [36]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (12.41872pt too wide) in paragraph at lines 2308--2311
+Overfull \hbox (12.41872pt too wide) in paragraph at lines 2287--2290
 []\T1/ptm/m/n/10 The data to be pre-dicted for. col-umn names cor-re-spond to t
 he data in \T1/fi4/m/n/10 initialModel 
 
-Overfull \hbox (1.1476pt too wide) in paragraph at lines 2317--2322
+Overfull \hbox (1.1476pt too wide) in paragraph at lines 2296--2301
 []\T1/ptm/m/n/10 List ob-ject con-tain-ing in-for-ma-tion for fit-ting splines 
 to the co-vari-ates in \T1/fi4/m/n/10 varlist\T1/ptm/m/n/10 .
 
-Overfull \hbox (4.72797pt too wide) in paragraph at lines 2317--2322
+Overfull \hbox (4.72797pt too wide) in paragraph at lines 2296--2301
 \T1/ptm/m/n/10 If not spec-i-fied (\T1/fi4/m/n/10 NULL\T1/ptm/m/n/10 ) this ob-
 ject is cre-ated and re-turned. See [][]\T1/fi4/m/n/10 makesplineParams[][][]
 [37]
-Overfull \hbox (23.74786pt too wide) in paragraph at lines 2388--2391
+Overfull \hbox (23.74786pt too wide) in paragraph at lines 2366--2369
 []\T1/ptm/m/n/10 The fi-nal fit statis-tic of \T1/fi4/m/n/10 bestModel\T1/ptm/m
 /n/10 . The type of statis-tic was spec-i-fied in \T1/fi4/m/n/10 salsa1dlist\T1
 /ptm/m/n/10 . 
 [38]
-Overfull \hbox (14.28088pt too wide) in paragraph at lines 2420--2420
+Overfull \hbox (14.28088pt too wide) in paragraph at lines 2398--2398
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=c
 (observationhour, DayOfMonth),[] 
 
-Overfull \hbox (2.28088pt too wide) in paragraph at lines 2421--2421
+Overfull \hbox (2.28088pt too wide) in paragraph at lines 2399--2399
  []                 \T1/fi4/m/n/9 factorlist=c(floodebb, impact), ns.predict.da
 ta.re, splineParams=splineParams)[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (12.41872pt too wide) in paragraph at lines 2464--2467
+Overfull \hbox (12.41872pt too wide) in paragraph at lines 2441--2444
 []\T1/ptm/m/n/10 The data to be pre-dicted for. col-umn names cor-re-spond to t
 he data in \T1/fi4/m/n/10 initialModel 
 
-Overfull \hbox (1.1476pt too wide) in paragraph at lines 2473--2478
+Overfull \hbox (1.1476pt too wide) in paragraph at lines 2450--2455
 []\T1/ptm/m/n/10 List ob-ject con-tain-ing in-for-ma-tion for fit-ting splines 
 to the co-vari-ates in \T1/fi4/m/n/10 varlist\T1/ptm/m/n/10 .
 
-Overfull \hbox (4.72797pt too wide) in paragraph at lines 2473--2478
+Overfull \hbox (4.72797pt too wide) in paragraph at lines 2450--2455
 \T1/ptm/m/n/10 If not spec-i-fied (\T1/fi4/m/n/10 NULL\T1/ptm/m/n/10 ) this ob-
 ject is cre-ated and re-turned. See [][]\T1/fi4/m/n/10 makesplineParams[][][]
 [39]
-Overfull \hbox (16.99939pt too wide) in paragraph at lines 2548--2551
+Overfull \hbox (16.99939pt too wide) in paragraph at lines 2523--2526
 []\T1/fi4/m/n/10 basemodelformula\T1/ptm/m/n/10 : the re-sult-ing model for-mul
 a. If \T1/fi4/m/n/10 kept=yes \T1/ptm/m/n/10 or \T1/fi4/m/n/10 kept=linear
 
-Overfull \hbox (23.74786pt too wide) in paragraph at lines 2564--2566
+Overfull \hbox (23.74786pt too wide) in paragraph at lines 2538--2541
 []\T1/ptm/m/n/10 The fi-nal fit statis-tic of \T1/fi4/m/n/10 bestModel\T1/ptm/m
 /n/10 . The type of statis-tic was spec-i-fied in \T1/fi4/m/n/10 salsa1dlist\T1
 /ptm/m/n/10 . 
 [40]
-Overfull \hbox (120.78088pt too wide) in paragraph at lines 2588--2588
+Overfull \hbox (120.78088pt too wide) in paragraph at lines 2563--2563
  []\T1/fi4/m/n/9 ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year
 , ns.data.re$MonthOfYear, ns.data.re$DayOfMonth, sep=)[] 
 
-Overfull \hbox (68.28088pt too wide) in paragraph at lines 2603--2603
+Overfull \hbox (68.28088pt too wide) in paragraph at lines 2578--2578
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlis
 t, varlist=c(observationhour, DayOfMonth),[] 
 
-Overfull \hbox (2.28088pt too wide) in paragraph at lines 2604--2604
+Overfull \hbox (2.28088pt too wide) in paragraph at lines 2579--2579
  []                 \T1/fi4/m/n/9 factorlist=c(floodebb, impact), ns.predict.da
 ta.re, splineParams=splineParams)[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (25.50977pt too wide) in paragraph at lines 2627--2632
+Overfull \hbox (25.50977pt too wide) in paragraph at lines 2601--2606
 []\T1/ptm/m/n/10 Vector of ob-jects re-quired for \T1/fi4/m/n/10 runSALSA2D\T1/
 ptm/m/n/10 : \T1/fi4/m/n/10 fitnessMeasure\T1/ptm/m/n/10 , \T1/fi4/m/n/10 knotg
 rid\T1/ptm/m/n/10 , \T1/fi4/m/n/10 startKnots\T1/ptm/m/n/10 ,
 
-Overfull \hbox (0.90794pt too wide) in paragraph at lines 2637--2639
+Overfull \hbox (0.90794pt too wide) in paragraph at lines 2611--2613
 []\T1/ptm/m/n/10 (k x k) Ma-trix of dis-tances be-tween all valid knot lo-ca-ti
 ons spec-i-fied in \T1/fi4/m/n/10 knotgrid 
 [41]
-Overfull \hbox (4.20862pt too wide) in paragraph at lines 2712--2716
+Overfull \hbox (4.20862pt too wide) in paragraph at lines 2688--2691
 []\T1/ptm/m/n/10 Vector of length start-Knots iden-ti-fy-ing which radii (\T1/f
 i4/m/n/10 splineParams[[1]]$radii\T1/ptm/m/n/10 )
 [42]
-Overfull \hbox (59.44736pt too wide) in paragraph at lines 2728--2732
+Overfull \hbox (59.44736pt too wide) in paragraph at lines 2707--2711
 \T1/ptm/m/n/10 Smoother (CReSS). Jour-nal of com-pu-ta-tional and Graph-i-cal S
 tatis-tics. 2013. doi: 10.1080/10618600.2012.762920 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [43]
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (53.99908pt too wide) in paragraph at lines 2850--2855
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [44]
+Overfull \hbox (53.99908pt too wide) in paragraph at lines 2828--2833
 []\T1/ptm/m/n/10 If a value in \T1/fi4/m/n/10 dis.data$distance \T1/ptm/m/n/10 
 matches a cut point in \T1/fi4/m/n/10 cutpoints \T1/ptm/m/n/10 ex-actly, the va
 lue of \T1/fi4/m/n/10 dis.data.re$distance
 
-Overfull \hbox (1.93738pt too wide) in paragraph at lines 2850--2855
+Overfull \hbox (1.93738pt too wide) in paragraph at lines 2828--2833
 \T1/ptm/m/n/10 will be at-tributed to the bin that is closer to the line/point 
 un-less the value of \T1/fi4/m/n/10 dis.data.re$distance
-[44] (./Rd2.ind [45]
+(./Rd2.ind [45]
 
 LaTeX Font Warning: Font shape `T1/fi4/m/it' undefined
-(Font)              using `T1/fi4/m/n' instead on input line 69.
+(Font)              using `T1/fi4/m/n' instead on input line 67.
 
 [46]) (./Rd2.aux)
 
@@ -610,19 +609,19 @@ ive/2009/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/200
 st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/t
 ype1/urw/times/utmr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/urw/t
 imes/utmri8a.pfb>
-Output written on Rd2.pdf (46 pages, 260583 bytes).
+Output written on Rd2.pdf (46 pages, 260838 bytes).
 Transcript written on Rd2.log.
 This is makeindex, version 2.15 [TeX Live 2009] (kpathsea + Thai support).
-Scanning input file ./Rd2.idx....done (82 entries accepted, 0 rejected).
-Sorting entries....done (540 comparisons).
-Generating output file ./Rd2.ind....done (111 lines written, 1 warning).
+Scanning input file ./Rd2.idx....done (80 entries accepted, 0 rejected).
+Sorting entries....done (507 comparisons).
+Generating output file ./Rd2.ind....done (109 lines written, 1 warning).
 Output written in ./Rd2.ind.
 Transcript written in ./Rd2.ilg.
 This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009)
 entering extended mode
 
-(/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/RtmptLPYbw/Rd2pdffda2
-7ece04/Rd2.tex
+(/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/RtmpMvaF2d/Rd2pdf1026
+5304544b/Rd2.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, german-x-2009-06-19, ngerman-x-2009-06-19, ancientgreek, ibycus, ar
@@ -705,7 +704,7 @@ exlive/2009/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/psnfss/t1phv.fd) (./Rd2.toc
 [2]) (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (54.6192pt too wide) in paragraph at lines 104--107
+Overfull \hbox (54.6192pt too wide) in paragraph at lines 102--105
 []\T1/ptm/m/n/10 String of re-sam-pled units from \T1/fi4/m/n/10 data[,"resampl
 e"]\T1/ptm/m/n/10 . Cre-ated by \T1/fi4/m/n/10 create.bootstrap.data() 
 [3] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
@@ -713,7 +712,7 @@ e"]\T1/ptm/m/n/10 . Cre-ated by \T1/fi4/m/n/10 create.bootstrap.data()
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [4]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [5]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (11.41821pt too wide) in paragraph at lines 312--320
+Overfull \hbox (11.41821pt too wide) in paragraph at lines 310--318
 \T1/ptm/m/n/10 (\T1/fi4/m/n/10 segment.id\T1/ptm/m/n/10 ). The sum of the es-ti
 -mated num-ber of in-di-vid-u-als for each seg-ment from \T1/fi4/m/n/10 dis.dat
 a$NHAT
@@ -722,65 +721,65 @@ a$NHAT
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [8]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [9] [10] [11]
-Overfull \hbox (3.78088pt too wide) in paragraph at lines 679--679
+Overfull \hbox (3.78088pt too wide) in paragraph at lines 669--669
  []\T1/fi4/m/n/9 salsa2dlist<-list(fitnessMeasure = QICb, knotgrid = knotgrid.o
 ff, startKnots=4, minKnots=4,[] 
 
-Overfull \hbox (18.78088pt too wide) in paragraph at lines 690--690
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 680--680
  []\T1/fi4/m/n/9 count.data$blockid<-paste(count.data$transect.id, count.data$s
 eason, count.data$impact, sep=)[] 
 
-Overfull \hbox (44.28088pt too wide) in paragraph at lines 692--692
+Overfull \hbox (44.28088pt too wide) in paragraph at lines 682--682
  []\T1/fi4/m/n/9 geeModel<- geeglm(formula(salsa2dOutput_k6$bestModel), data=co
 unt.data, family=poisson, id=blockid)[] 
 
-Overfull \hbox (15.78088pt too wide) in paragraph at lines 693--693
+Overfull \hbox (15.78088pt too wide) in paragraph at lines 683--683
  []\T1/fi4/m/n/9 dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$
 y.pos), na.omit(knotgrid.off),[] 
 
 Underfull \vbox (badness 10000) has occurred while \output is active [12]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [13]
-Overfull \hbox (0.78088pt too wide) in paragraph at lines 852--852
+Overfull \hbox (0.78088pt too wide) in paragraph at lines 841--841
  []\T1/fi4/m/n/9 gam.2<-gam(NHAT~as.factor(impact)+s(x.pos,y.pos,by=as.factor(i
 mpact))+offset(log(area)),[] 
 
-Overfull \hbox (50.28088pt too wide) in paragraph at lines 854--854
+Overfull \hbox (50.28088pt too wide) in paragraph at lines 843--843
  []\T1/fi4/m/n/9 do.bootstrap.gam(dis.data.re,predict.data.re,ddf.obj=result,mo
 del.obj=gam.2,resample="transect.id",[] 
 
-Overfull \hbox (9.78088pt too wide) in paragraph at lines 865--865
+Overfull \hbox (9.78088pt too wide) in paragraph at lines 854--854
  []\T1/fi4/m/n/9 gam.ns2=gam(birds~as.factor(impact)+s(x.pos,y.pos,by=as.factor
 (impact))+offset(log(area)),[] 
 
-Overfull \hbox (18.78088pt too wide) in paragraph at lines 867--867
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 856--856
  []\T1/fi4/m/n/9 do.bootstrap.gam(ns.data.re,ns.predict.data.re,ddf.obj=NULL,mo
 del.obj=gam.ns2,resample=NULL,[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [14]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [15]
-Overfull \hbox (11.28088pt too wide) in paragraph at lines 968--968
+Overfull \hbox (11.28088pt too wide) in paragraph at lines 957--957
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=c
 (observationhour,DayOfMonth),[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [16]
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [17]
-Overfull \hbox (5.28088pt too wide) in paragraph at lines 1074--1074
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (5.28088pt too wide) in paragraph at lines 1060--1060
  []\T1/fi4/m/n/9 getPlotdimensions(ns.data.re$x.pos, ns.data.re$y.pos, segmentW
 idth=500, segmentLength=500)[] 
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (26.28088pt too wide) in paragraph at lines 1124--1124
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [17]
+Overfull \hbox (26.28088pt too wide) in paragraph at lines 1110--1110
  []\T1/fi4/m/n/9 initialModel<- geeglm(birds ~ as.factor(floodebb) + as.factor(
 impact) + observationhour + x.pos +[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [18]
-Overfull \hbox (63.5374pt too wide) in paragraph at lines 1173--1177
+Overfull \hbox (63.5374pt too wide) in paragraph at lines 1159--1163
 \T1/ptm/m/n/10 Smoother (CReSS). Jour-nal of com-pu-ta-tional and Graph-i-cal S
 tatis-tics. 2013. DOI: 10.1080/10618600.2012.762920 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [19]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [20]
-Overfull \hbox (45.78088pt too wide) in paragraph at lines 1268--1268
+Overfull \hbox (45.78088pt too wide) in paragraph at lines 1252--1252
  []\T1/fi4/m/n/9 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos),
  na.omit(knotgrid.ns), knotmat=FALSE)[] 
 
-Overfull \hbox (6.78088pt too wide) in paragraph at lines 1274--1274
+Overfull \hbox (6.78088pt too wide) in paragraph at lines 1258--1258
  []\T1/fi4/m/n/9 basis<-LocalRadialFunction(radiusIndices=rep(4, 5), dists=dist
 Mats$dataDist, radii = r_seq,[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
@@ -800,15 +799,15 @@ Mats$dataDist, radii = r_seq,[]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [30]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [31]
-Overfull \hbox (1.81773pt too wide) in paragraph at lines 1914--1916
+Overfull \hbox (1.81773pt too wide) in paragraph at lines 1889--1891
 []\T1/ptm/m/n/10 starting model for SALSA to use. Must not con-tain the co-vari
 -ate in \T1/fi4/m/n/10 explanatory 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (11.83942pt too wide) in paragraph at lines 1969--1972
+Overfull \hbox (11.83942pt too wide) in paragraph at lines 1948--1951
 []\T1/ptm/m/n/10 vector of length \T1/fi4/m/n/10 startKnots \T1/ptm/m/n/10 iden
 -ti-fy-ing which radii (\T1/fi4/m/n/10 splineParams[[1]]$radii\T1/ptm/m/n/10 )
 [32] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [33]
-Overfull \hbox (3.86746pt too wide) in paragraph at lines 2070--2073
+Overfull \hbox (3.86746pt too wide) in paragraph at lines 2052--2055
 []\T1/ptm/m/n/10 If \T1/fi4/m/n/10 store=TRUE \T1/ptm/m/n/10 then the ma-trix o
 f cor-re-la-tions (nblocks x length_max_block) is re-turned and \T1/fi4/m/n/10 
 plotacf
@@ -816,94 +815,94 @@ plotacf
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [35]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [36]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (12.41872pt too wide) in paragraph at lines 2308--2311
+Overfull \hbox (12.41872pt too wide) in paragraph at lines 2287--2290
 []\T1/ptm/m/n/10 The data to be pre-dicted for. col-umn names cor-re-spond to t
 he data in \T1/fi4/m/n/10 initialModel 
 
-Overfull \hbox (1.1476pt too wide) in paragraph at lines 2317--2322
+Overfull \hbox (1.1476pt too wide) in paragraph at lines 2296--2301
 []\T1/ptm/m/n/10 List ob-ject con-tain-ing in-for-ma-tion for fit-ting splines 
 to the co-vari-ates in \T1/fi4/m/n/10 varlist\T1/ptm/m/n/10 .
 
-Overfull \hbox (4.72797pt too wide) in paragraph at lines 2317--2322
+Overfull \hbox (4.72797pt too wide) in paragraph at lines 2296--2301
 \T1/ptm/m/n/10 If not spec-i-fied (\T1/fi4/m/n/10 NULL\T1/ptm/m/n/10 ) this ob-
 ject is cre-ated and re-turned. See [][]\T1/fi4/m/n/10 makesplineParams[][][]
 [37]
-Overfull \hbox (23.74786pt too wide) in paragraph at lines 2388--2391
+Overfull \hbox (23.74786pt too wide) in paragraph at lines 2366--2369
 []\T1/ptm/m/n/10 The fi-nal fit statis-tic of \T1/fi4/m/n/10 bestModel\T1/ptm/m
 /n/10 . The type of statis-tic was spec-i-fied in \T1/fi4/m/n/10 salsa1dlist\T1
 /ptm/m/n/10 . 
 [38]
-Overfull \hbox (14.28088pt too wide) in paragraph at lines 2420--2420
+Overfull \hbox (14.28088pt too wide) in paragraph at lines 2398--2398
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=c
 (observationhour, DayOfMonth),[] 
 
-Overfull \hbox (2.28088pt too wide) in paragraph at lines 2421--2421
+Overfull \hbox (2.28088pt too wide) in paragraph at lines 2399--2399
  []                 \T1/fi4/m/n/9 factorlist=c(floodebb, impact), ns.predict.da
 ta.re, splineParams=splineParams)[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (12.41872pt too wide) in paragraph at lines 2464--2467
+Overfull \hbox (12.41872pt too wide) in paragraph at lines 2441--2444
 []\T1/ptm/m/n/10 The data to be pre-dicted for. col-umn names cor-re-spond to t
 he data in \T1/fi4/m/n/10 initialModel 
 
-Overfull \hbox (1.1476pt too wide) in paragraph at lines 2473--2478
+Overfull \hbox (1.1476pt too wide) in paragraph at lines 2450--2455
 []\T1/ptm/m/n/10 List ob-ject con-tain-ing in-for-ma-tion for fit-ting splines 
 to the co-vari-ates in \T1/fi4/m/n/10 varlist\T1/ptm/m/n/10 .
 
-Overfull \hbox (4.72797pt too wide) in paragraph at lines 2473--2478
+Overfull \hbox (4.72797pt too wide) in paragraph at lines 2450--2455
 \T1/ptm/m/n/10 If not spec-i-fied (\T1/fi4/m/n/10 NULL\T1/ptm/m/n/10 ) this ob-
 ject is cre-ated and re-turned. See [][]\T1/fi4/m/n/10 makesplineParams[][][]
 [39]
-Overfull \hbox (16.99939pt too wide) in paragraph at lines 2548--2551
+Overfull \hbox (16.99939pt too wide) in paragraph at lines 2523--2526
 []\T1/fi4/m/n/10 basemodelformula\T1/ptm/m/n/10 : the re-sult-ing model for-mul
 a. If \T1/fi4/m/n/10 kept=yes \T1/ptm/m/n/10 or \T1/fi4/m/n/10 kept=linear
 
-Overfull \hbox (23.74786pt too wide) in paragraph at lines 2564--2566
+Overfull \hbox (23.74786pt too wide) in paragraph at lines 2538--2541
 []\T1/ptm/m/n/10 The fi-nal fit statis-tic of \T1/fi4/m/n/10 bestModel\T1/ptm/m
 /n/10 . The type of statis-tic was spec-i-fied in \T1/fi4/m/n/10 salsa1dlist\T1
 /ptm/m/n/10 . 
 [40]
-Overfull \hbox (120.78088pt too wide) in paragraph at lines 2588--2588
+Overfull \hbox (120.78088pt too wide) in paragraph at lines 2563--2563
  []\T1/fi4/m/n/9 ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year
 , ns.data.re$MonthOfYear, ns.data.re$DayOfMonth, sep=)[] 
 
-Overfull \hbox (68.28088pt too wide) in paragraph at lines 2603--2603
+Overfull \hbox (68.28088pt too wide) in paragraph at lines 2578--2578
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlis
 t, varlist=c(observationhour, DayOfMonth),[] 
 
-Overfull \hbox (2.28088pt too wide) in paragraph at lines 2604--2604
+Overfull \hbox (2.28088pt too wide) in paragraph at lines 2579--2579
  []                 \T1/fi4/m/n/9 factorlist=c(floodebb, impact), ns.predict.da
 ta.re, splineParams=splineParams)[] 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (25.50977pt too wide) in paragraph at lines 2627--2632
+Overfull \hbox (25.50977pt too wide) in paragraph at lines 2601--2606
 []\T1/ptm/m/n/10 Vector of ob-jects re-quired for \T1/fi4/m/n/10 runSALSA2D\T1/
 ptm/m/n/10 : \T1/fi4/m/n/10 fitnessMeasure\T1/ptm/m/n/10 , \T1/fi4/m/n/10 knotg
 rid\T1/ptm/m/n/10 , \T1/fi4/m/n/10 startKnots\T1/ptm/m/n/10 ,
 
-Overfull \hbox (0.90794pt too wide) in paragraph at lines 2637--2639
+Overfull \hbox (0.90794pt too wide) in paragraph at lines 2611--2613
 []\T1/ptm/m/n/10 (k x k) Ma-trix of dis-tances be-tween all valid knot lo-ca-ti
 ons spec-i-fied in \T1/fi4/m/n/10 knotgrid 
 [41]
-Overfull \hbox (4.20862pt too wide) in paragraph at lines 2712--2716
+Overfull \hbox (4.20862pt too wide) in paragraph at lines 2688--2691
 []\T1/ptm/m/n/10 Vector of length start-Knots iden-ti-fy-ing which radii (\T1/f
 i4/m/n/10 splineParams[[1]]$radii\T1/ptm/m/n/10 )
 [42]
-Overfull \hbox (59.44736pt too wide) in paragraph at lines 2728--2732
+Overfull \hbox (59.44736pt too wide) in paragraph at lines 2707--2711
 \T1/ptm/m/n/10 Smoother (CReSS). Jour-nal of com-pu-ta-tional and Graph-i-cal S
 tatis-tics. 2013. doi: 10.1080/10618600.2012.762920 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [43]
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def)
-Overfull \hbox (53.99908pt too wide) in paragraph at lines 2850--2855
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def) [44]
+Overfull \hbox (53.99908pt too wide) in paragraph at lines 2828--2833
 []\T1/ptm/m/n/10 If a value in \T1/fi4/m/n/10 dis.data$distance \T1/ptm/m/n/10 
 matches a cut point in \T1/fi4/m/n/10 cutpoints \T1/ptm/m/n/10 ex-actly, the va
 lue of \T1/fi4/m/n/10 dis.data.re$distance
 
-Overfull \hbox (1.93738pt too wide) in paragraph at lines 2850--2855
+Overfull \hbox (1.93738pt too wide) in paragraph at lines 2828--2833
 \T1/ptm/m/n/10 will be at-tributed to the bin that is closer to the line/point 
 un-less the value of \T1/fi4/m/n/10 dis.data.re$distance
-[44] (./Rd2.ind [45]
+(./Rd2.ind [45]
 
 LaTeX Font Warning: Font shape `T1/fi4/m/it' undefined
-(Font)              using `T1/fi4/m/n' instead on input line 69.
+(Font)              using `T1/fi4/m/n' instead on input line 67.
 
 [46]) (./Rd2.aux)
 
@@ -923,8 +922,8 @@ ive/2009/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/200
 st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/t
 ype1/urw/times/utmr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/urw/t
 imes/utmri8a.pfb>
-Output written on Rd2.pdf (46 pages, 261854 bytes).
+Output written on Rd2.pdf (46 pages, 262111 bytes).
 Transcript written on Rd2.log.
 Saving output to 'MRSea-manual.pdf' ...
 Done
-You may want to clean up by 'rm -rf /var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T//RtmptLPYbw/Rd2pdffda27ece04'
+You may want to clean up by 'rm -rf /var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T//RtmpMvaF2d/Rd2pdf10265304544b'

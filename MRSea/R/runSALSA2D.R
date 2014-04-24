@@ -160,7 +160,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   xvals <- max(x)
   yvals <- max(y)
   
-  if(length(r_seq)>1){
+  if(length(salsa2dlist$r_seq)>1){
     radiusIndices<- rep(round(length(salsa2dlist$r_seq)/2), (length(output$aR)))
   }else{
       radiusIndices<- rep(1, length(output$aR))

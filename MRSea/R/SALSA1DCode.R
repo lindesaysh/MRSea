@@ -18,6 +18,8 @@
 #' 
 #' @author Cameron Walker, Department of Enginering Science, University of Auckland.
 #'
+#'@export
+#'
 
 "return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl){
 
