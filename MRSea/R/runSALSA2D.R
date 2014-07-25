@@ -93,7 +93,12 @@
 #' 
 runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   
-  data<-model$data
+  if(class(model)=='glm'){
+    data<-model$data  
+  }
+  if(class(model=='lm')){
+    data<-model$model
+  }
   
   attributes(model$formula)$.Environment<-environment()
   

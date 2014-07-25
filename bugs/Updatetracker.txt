@@ -1,0 +1,10 @@
+*** Update tracker for MRSea package ***
+
+23/07/2014 	Updated runSALSA2D to take an initial model that is lm or glm
+		not updated version. updated github
+
+		included knotdim argument in salsa2dlist in do.bootstrap.cress example
+
+25/07/2014	added new function (predict.cress) to deal with the centering of basis functions 
+		when the model is first fitted. 
+		not updated package. updated github
