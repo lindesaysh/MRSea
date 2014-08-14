@@ -69,6 +69,10 @@
   data<- baseModel$data
   #family<-baseModel$family$family
   baseModel<-update(baseModel, data=data)
+
+if(fitnessMeasure=='QAIC' | fitnessMeasure=='QAICc'){
+  require(MuMIn)
+}
     
 ####deal with multiple unordered x-values
 knotSites <- sort(unique(explanatory))
@@ -594,19 +598,19 @@ print("Getting measure...")
 
   if(fitnessMeasure=="QAIC"){   
       if(out.lm$family[1]=='quasipoisson'){
-          fitStat <- QAIC(update(out.lm, .~., family=poisson), chat = summary(out.lm)$dispersion)
+          fitStat <- QAIC(update(out.lm, family=poisson), chat = summary(out.lm)$dispersion)
       }
       if(out.lm$family[1]=='quasibinomial'){
-          fitStat <- QAIC(update(out.lm, .~., family=binomial), chat = summary(out.lm)$dispersion)
+          fitStat <- QAIC(update(out.lm, family=binomial), chat = summary(out.lm)$dispersion)
       }
   }
 
   if(fitnessMeasure=="QAICc"){       
     if(out.lm$family[1]=='quasipoisson'){
-       fitStat <- QAICc(update(out.lm, .~., family=poisson), chat = summary(out.lm)$dispersion)
+       fitStat <- QAICc(update(out.lm, family=poisson), chat = summary(out.lm)$dispersion)
     }
     if(out.lm$family[1]=='quasibinomial'){
-       fitStat <- QAICc(update(out.lm, .~., family=binomial), chat = summary(out.lm)$dispersion)
+       fitStat <- QAICc(update(out.lm, family=binomial), chat = summary(out.lm)$dispersion)
     }
   }
 

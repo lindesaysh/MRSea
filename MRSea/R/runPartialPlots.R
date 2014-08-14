@@ -55,6 +55,7 @@ runPartialPlots<-function(model, data, factorlist=NULL, varlist=NULL, showKnots=
       
       rpreds<- rcoefs[,coefpos]
       quant.func<- function(x){quantile(x, probs=c(0.025, 0.975))}  
+      # factor variables have rpreds vector
       if(is.null(dim(rpreds))){
         cis<-quant.func(rpreds)
         plot(newX, partialfit, pch=20,
@@ -63,6 +64,7 @@ runPartialPlots<-function(model, data, factorlist=NULL, varlist=NULL, showKnots=
         segments(newX,cis[1], newX , cis[2], lwd=2)
         abline(h=0, lwd=2)
       }else{
+        # cts variables have matrix of rpreds
         cis<- t(apply(rpreds, 2,quant.func))
         plot(newX, partialfit, pch=20,
              xlab=factorlist[i], ylab="Partial Fit", lwd=2, xaxt="n", ylim=c(range(0,cis)), cex.lab=1.3, cex.axis=1.3)

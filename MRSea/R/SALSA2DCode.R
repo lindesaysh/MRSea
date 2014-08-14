@@ -40,7 +40,7 @@
 #' @author Cameron Walker, Department of Enginering Science, University of Auckland.
 #' 
 #' @export
-#' 
+
 "return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10){
 
 #Where am I?
@@ -264,18 +264,36 @@
    #radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
     print("Space-filling knots....")
     set.seed(knot.seed)
-  if(nrow(explData)<1000){initialKnots<- cover.design(explData, nd=numNeeded, nruns=1)$design
-                          }else{SampledPoints<- sample(1:dim(explData)[1], min(1000, dim(explData)[1]))
-      #space-fill data (subsample - see line above) to get knot locations
-      # remove any duplicated points as doesnt work in cover design
-       dupPoints <-paste(explData[SampledPoints,1], explData[SampledPoints,2], sep='E')
+  
+   
+   
+   
+   if(nrow(explData)<1000){
+  
+      dupPoints <-paste(explData[,1], explData[,2], sep='E')
+      
+      if(length(which(duplicated(dupPoints)==T))>0){                                
+        initialKnots<- cover.design((explData)[-which(duplicated(dupPoints)==T),], nd=numNeeded, nruns=1)$design
+      }                      
+      if(length(which(duplicated(dupPoints)==T))==0){                                
+        initialKnots<- cover.design(explData, nd=numNeeded, nruns=1)$design
+      }
+      
+      
+   }else{
+          SampledPoints<- sample(1:dim(explData)[1], min(1000, dim(explData)[1]))
+                            
+          #space-fill data (subsample - see line above) to get knot locations
+          # remove any duplicated points as doesnt work in cover design
+          dupPoints <-paste(explData[SampledPoints,1], explData[SampledPoints,2], sep='E')
                                 
-    if(length(which(duplicated(dupPoints)==T))>0){                                
-  initialKnots<- cover.design((explData)[SampledPoints,][-which(duplicated(dupPoints)==T),], nd=numNeeded, nruns=1)$design}
-                                
-  if(length(which(duplicated(dupPoints)==T))==0){                                
-initialKnots<- cover.design((explData)[SampledPoints,], nd=numNeeded, nruns=1)$design}
-        }
+          if(length(which(duplicated(dupPoints)==T))>0){                                
+              initialKnots<- cover.design((explData)[SampledPoints,][-which(duplicated(dupPoints)==T),], nd=numNeeded, nruns=1)$design
+          }                      
+          if(length(which(duplicated(dupPoints)==T))==0){                                
+            initialKnots<- cover.design((explData)[SampledPoints,], nd=numNeeded, nruns=1)$design
+          }
+  }
     
   posKnots = cbind()
   legPos=mapInd
@@ -429,7 +447,7 @@ initialKnots<- cover.design((explData)[SampledPoints,], nd=numNeeded, nruns=1)$d
 # 
   
   if(fitnessMeasure=="QICb"){       
-          fitStat <- QICb(baseModel$data$response, fitted(baseModel), length(baseModel$coeff), length(baseModel$data$response))
+          fitStat <- QICb(baseModel)
     }
   
   
@@ -810,21 +828,21 @@ models = out$models
   
   if(fitnessMeasure=="QAIC"){       
     
-    if(baseModel$family[1]=="quasipoisson"){
+    if(out.lm$family[1]=="quasipoisson"){
     PoisMod<-update(out.lm, round(.)~., family=poisson)
           fitStat <- QAIC(PoisMod, chat = summary(out.lm)$dispersion)}
     
-    if(baseModel$family[1]=="quasibinomial"){
+    if(out.lm$family[1]=="quasibinomial"){
     BinMod<-update(out.lm, family=binomial)
           fitStat <- QAIC(BinMod, chat = summary(out.lm)$dispersion)}
   }
     
   if(fitnessMeasure=="QAICc"){       
-     if(baseModel$family[1]=="quasipoisson"){
+     if(out.lm$family[1]=="quasipoisson"){
     PoisMod<-update(out.lm, family=poisson)
           fitStat <- QAICc(PoisMod, chat = summary(out.lm)$dispersion)}
     
-  if(baseModel$family[1]=="quasibinomial"){
+  if(out.lm$family[1]=="quasibinomial"){
     BinMod<-update(out.lm, family=binomial)
           fitStat <- QAICc(BinMod, chat = summary(out.lm)$dispersion)}
      
@@ -857,7 +875,7 @@ models = out$models
       foldedFit<- update(out.lm, .~., data=data[data$foldid!=f,])
       if(length(coef(foldedFit))==1){
         dists<-d2k[data$foldid==f,]
-        predscv<- exp(as.matrix(model.matrix(out.lm)[data$foldid==f])%*%coef(foldedFit)) * exp(baseModel$offset)[data$foldid==f]
+        predscv<- exp(as.matrix(model.matrix(out.lm)[data$foldid==f])%*%coef(foldedFit)) * exp(out.lm$offset)[data$foldid==f]
       }else{  
         dists<-d2k[data$foldid==f,]
         predscv<- exp(model.matrix(out.lm)[data$foldid==f,]%*%coef(foldedFit)) * exp(out.lm$offset)[data$foldid==f]
@@ -870,7 +888,7 @@ models = out$models
   
   # calculate a QIC with bayesian penalty
   if(fitnessMeasure=="QICb"){       
-    fitStat <- QICb(out.lm$data$response, fitted(out.lm), length(out.lm$coeff), length(out.lm$data$response))
+    fitStat <- QICb(out.lm)
   }
   
  # cat("Evaluating new fit: ", fitStat, "\n")
@@ -1083,7 +1101,18 @@ thinModels<- function(models){
 # k: number of parameters estimated (length(coefficients))
 # n: number of data points
 
-QICb<-function(data, fits, k, n){
-  ql<-sum(data*log(fits) - fits)
-  -2*ql + k*log(n)
+QICb<-function(model){
+  data<-model$data$response
+  fits<-fitted(model)
+  k<-length(model$coeff)
+  n<-length(data)
+
+if(model$family$family=='poisson'){
+  ql<-sum(data*log(fits) - fits)  
+}
+if(model$family$family=='binomial'){
+  ql<-sum(data*(log(fits/(1-fits))) + log(1-fits))  
+}
+
+-2*ql + k*log(n)
 }

@@ -3,12 +3,14 @@
 #' This function calculates vector of predictions on the scale of the response or link.
 #' 
 #' @param predict.data Data frame of covariate values to make predictions to
+#' @param splineParams spline parameter object that describes the fitting of 2D and 1D splines in the model object
 #' @param g2k Matrix of distances between prediction locations and knot locations (n x k). May be Euclidean or geodesic distances.
 #' @param model Object from a GEE or GLM model
 #' @param type Type of predictions required. (default=`response`, may also use `link`.
+#' @param coeff Vector of coefficients (default = NULL). To be used when bootstrapping and sampling coefficients from a distribution e.g. in \code{do.bootstrap.cress}.
 #' 
 #' @details
-#' Calculate predictions for a model whilst centering the CReSS bases in the same way as the fitted model
+#' Calculate predictions for a model whilst centering the CReSS bases in the same way as the fitted model. Note, if there is an offset in the model it must be called 'area'.
 #' 
 #' @return
 #' Returns a vector of predictions on either the response or link scale
@@ -61,16 +63,22 @@
 #'        knotmat=FALSE)$dataDist
 #'        
 #' # make predictions on response scale
-#' preds<-predict.cress(predict.data.re, dists, geeModel)
+#' preds<-predict.cress(predict.data.re, splineParams, dists, geeModel)
 #' 
 #' @export
 #' 
 
-predict.cress<-function(predict.data, g2k, model, type='response'){
+predict.cress<-function(predict.data, splineParams, g2k, model, type='response', coeff=NULL){
+  
+  attributes(model$formula)$.Environment<-environment()
+  radii<-splineParams[[1]]$radii
+  radiusIndices<-splineParams[[1]]$radiusIndices
+  aR<- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
   
   dists<- g2k
   x2<- data.frame(response=rpois(nrow(predict.data),lambda = 5), predict.data)
-  fakemodel<- glm(model$formula, data=x2, family=quasipoisson)
+  #fakemodel<- eval(parse(text=paste("glm(model$formula, data=x2, family=", model$family$family,"(link='", model$family$link, "'))", sep='')))
+  fakemodel<- glm(model$formula, data=x2, family='poisson')
   modmat<- model.matrix(fakemodel)
   head(modmat[,6:9])
   
@@ -105,9 +113,17 @@ predict.cress<-function(predict.data, g2k, model, type='response'){
     modmat[,intcol]<-modmat[,intcol]+bad_cntr.mat-cntr.mat
   }
   
-  modcoef<- as.vector(model$coefficients)
+  if(is.null(coeff)){
+    modcoef<- as.vector(model$coefficients)  
+  }else{
+    modcoef<-coeff
+  }
   if(type=='response'){
-    preds<- exp(modmat%*%modcoef)* predict.data$area  
+    if(length(model$offset)>0 & sum(model$offset)!=0){
+      preds<- model$family$linkinv(modmat%*%modcoef)* predict.data$area  
+    }else{
+      preds<- model$family$linkinv(modmat%*%modcoef)
+    }
   }
   
   if(type=='link'){

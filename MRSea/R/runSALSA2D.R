@@ -93,10 +93,10 @@
 #' 
 runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   
-  if(class(model)=='glm'){
+  if(class(model)[1]=='glm'){
     data<-model$data  
   }
-  if(class(model=='lm')){
+  if(class(model)[1]=='lm'){
     data<-model$model
   }
   
@@ -146,6 +146,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   splineParams[[1]][['maxKnots']]= salsa2dlist$maxKnots
   splineParams[[1]][['gap']]= salsa2dlist$gap
   splineParams[[1]][[14]]= NULL                       #this will be invInd
+  
+  if(dim(k2k)[2]==salsa2dlist$minKnots & dim(k2k)[2]==salsa2dlist$maxKnots & dim(k2k)[2]==salsa2dlist$startKnots){stop('Min, Max and Start knots all identical and equal to the total number of valid knots\n Please add more valid knot locations (knotgrid) or reduce min/max/start')}
+  
+  if(dim(k2k)[2]<salsa2dlist$minKnots | dim(k2k)[2]<salsa2dlist$startKnots){stop('Starting number of knots or min knots more than number of valid knot locations in knotgrid')}
+  
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ 2D SALSA RUN ~~~~~~~~~~~~~~~~~~~~~~~

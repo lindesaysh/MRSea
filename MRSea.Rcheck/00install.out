@@ -4,34 +4,8 @@
 *** moving datasets to lazyload DB
 ** inst
 ** preparing package for lazy loading
-Warning: replacing previous import by ‘VGAM::case.names’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::coef’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::coefficients’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::df.residual’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::dfbeta’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::fitted’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::fitted.values’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::formula’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::hatvalues’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::poly’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::residuals’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::variable.names’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::weights’ when loading ‘lawstat’
 ** help
 *** installing help indices
 ** building package indices
 ** testing if installed package can be loaded
-Warning: replacing previous import by ‘VGAM::case.names’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::coef’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::coefficients’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::df.residual’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::dfbeta’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::fitted’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::fitted.values’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::formula’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::hatvalues’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::poly’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::residuals’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::variable.names’ when loading ‘lawstat’
-Warning: replacing previous import by ‘VGAM::weights’ when loading ‘lawstat’
 * DONE (MRSea)

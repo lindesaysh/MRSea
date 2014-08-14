@@ -5,7 +5,7 @@
 #' 
 #' @param orig.data The original data. In case \code{ddf.obj} is specified, this should be the original distance data. In case \code{ddf.obj} is \code{NULL}, it should have the format equivalent to \code{count.data} where each record represents the summed up counts at the segments. 
 #' @param predict.data The prediction grid data 
-#' @param ddf.obj The ddf object created for the best fitting detection model. Defaults to \code{NULL} for nearshore data. 
+#' @param ddf.obj The ddf object created for the best fitting detection model. Defaults to \code{NULL} for when nodetection function object available. 
 #' @param model.obj The best fitting \code{CReSS} model for the original count data
 #' @param splineParams The object describing the parameters for fitting the one and two dimensional splines
 #' @param g2k (N x k) matrix of distances between all prediction points (N) and all knot points (k)
@@ -162,118 +162,151 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
       require(mvtnorm)
     })
     
-    Routputs<-parLapply(myCluster, 1:B, function(b){
+    # only do parametric boostrap if no data re-sampling and no nhats provided
+    if(is.null(ddf.obj) & nhats==FALSE){
       
-      set.seed(seed + b)
       
-      if((b/10)%%1 == 0){cat(b, '\n')}
-      
-      # setting up CReSS related variables
-      attributes(model.obj$formula)$.Environment<-environment()
-      radii<-splineParams[[1]]$radii
-      d2k<-splineParams[[1]]$dist
-      radiusIndices<-splineParams[[1]]$radiusIndices
-      aR<- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
-      
-      if(is.null(ddf.obj)==F){
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # ~~~~~~~~~~~ DISTANCE BOOTSTRAP  ~~~~~~~~~~~~~~~~~~~
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      Routputs<-parLapply(myCluster, 1:B, function(b){
         
-        # create bootstrap data
-        bootstrap.data<-create.bootstrap.data(orig.data, stratum = stratum)
-        
-        if (save.data==T){
-          filename=paste("bootstrap.data_",b,".RData",sep="")
-          save(bootstrap.data,file=filename)
-        }
-        
-        # fit the same detection model as in ddf.obj to the bootstrap data
-        result.boot<-ddf(dsmodel=as.formula(my.formula), data=bootstrap.data, method="ds", meta.data=list(width=width, binned=binned, breaks=breaks))
-        
-        # create count data
-        bootstrap.data<-create.NHAT(bootstrap.data, result.boot)
-        boot.count.data<-create.bootcount.data(bootstrap.data)
-        #if(is.null(boot.count.data$response)){stop('No column in orig.data called response')}
-        boot.count.data$response<-boot.count.data$NHAT
-        boot.count.data$transect.id2<-as.factor(boot.count.data$transect.id2)
-        
-        # sort by segment.id2 and then update dist accordingly
-        gamsort<-boot.count.data[order(boot.count.data$segment.id),]
-        newid<-NULL
-        for(n in 1:length(unique(boot.count.data$transect.id2))){
-          newid<-c(newid, which(match(x=gamsort$transect.id2, table=unique(gamsort$transect.id2)[n])==1))
-        }
-        gamsort<-gamsort[newid,]
-        boot.count.data<-gamsort
-        
-        # ******** Fit models ********** #
-        #print(paste('zeroblocks:', length(which(tapply(boot.count.data$response, boot.count.data$transect.id2, sum)==0)), sep=''))
-        
-        dists<- d2k[boot.count.data$segment.id,]
-        geefit<- geeglm(model.obj$formula, id=transect.id2, family=poisson, data=boot.count.data)
+        set.seed(seed + b)
+        # setting up CReSS related variables
+        attributes(model.obj$formula)$.Environment<-environment()
+        radii<-splineParams[[1]]$radii
+        d2k<-splineParams[[1]]$dist
+        radiusIndices<-splineParams[[1]]$radiusIndices
+        aR<- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
         
         # sample from multivariate normal
-        est<- coefficients(geefit)
-        varcov<-as.matrix(summary(geefit)$cov.unscaled)
-        samplecoeff<-NULL
-        try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')), silent=T)
-        if(is.null(samplecoeff)){
-          varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
-          samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
-          #cat('*')
-        }
-        
-        # make predictions
-        dists<- g2k
-        x2<- data.frame(response=rep(1,nrow(predict.data)), predict.data)
-        fakemodel<- glm(geefit$formula, data=x2, family=quasipoisson)
-        rpreds<- exp(model.matrix(fakemodel)%*%samplecoeff)* predict.data$area
-        bootPreds<- rpreds
-        
-      }else{
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # ~~~~~~~~~~~ NO DISTANCE BOOTSTRAP  ~~~~~~~~~~~~~~~~
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-        #orig.data$response<-orig.data$count
-        if(is.null(orig.data$response)){stop('No column in orig.data called response')}
-        
-        if(nhats==TRUE){
-          orig.data$response<-nhats[,b]
-        }
-        
-        # ******** Fit models ********** #
-        
-        dists<- d2k
-        geefit<- geeglm(model.obj$formula, id=blockid, family=poisson, data=orig.data)
-        
-        # sample from multivariate normal
-        est<- coefficients(geefit)
-        varcov<-as.matrix(summary(geefit)$cov.unscaled)
+        est<- coefficients(model.obj)
+        varcov<-as.matrix(summary(model.obj)$cov.unscaled)
         samplecoeff<-NULL
         try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
         if(is.null(samplecoeff)){
-          varcov<-as.matrix(nearPD(vcov(geefit))$mat)
+          varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
           samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
         }
         
         # make predictions
         dists<- g2k
-        x2<- data.frame(response=rep(1,nrow(predict.data)), predict.data)
-        fakemodel<- glm(geefit$formula, data=x2, family=quasipoisson)
-        rpreds<- exp(model.matrix(fakemodel)%*%samplecoeff)* predict.data$area
+        rpreds<-predict.cress(predict.data, splineParams, dists, model.obj, type='response', coeff=samplecoeff)
         bootPreds<- rpreds
-      }  # end of else statement
+        return(bootPreds)
+      })
       
-      return(bootPreds)
-      # end of for loop
-    })
-    
-    stopCluster(myCluster)
-    
-    bootPreds<- matrix(unlist(Routputs), ncol=B)
-  }
+      stopCluster(myCluster)
+      bootPreds<- matrix(unlist(Routputs), ncol=B)
+      
+    }else{
+      Routputs<-parLapply(myCluster, 1:B, function(b){
+        
+        set.seed(seed + b)
+      
+        # setting up CReSS related variables
+        attributes(model.obj$formula)$.Environment<-environment()
+        radii<-splineParams[[1]]$radii
+        d2k<-splineParams[[1]]$dist
+        radiusIndices<-splineParams[[1]]$radiusIndices
+        aR<- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
+        
+        if(is.null(ddf.obj)==F){
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          # ~~~~~~~~~~~ DISTANCE BOOTSTRAP  ~~~~~~~~~~~~~~~~~~~
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          
+          # create bootstrap data
+          bootstrap.data<-create.bootstrap.data(orig.data, stratum = stratum)
+          
+          if (save.data==T){
+            filename=paste("bootstrap.data_",b,".RData",sep="")
+            save(bootstrap.data,file=filename)
+          }
+          
+          # fit the same detection model as in ddf.obj to the bootstrap data
+          result.boot<-ddf(dsmodel=as.formula(my.formula), data=bootstrap.data, method="ds", meta.data=list(width=width, binned=binned, breaks=breaks))
+          
+          # create count data
+          bootstrap.data<-create.NHAT(bootstrap.data, result.boot)
+          boot.count.data<-create.bootcount.data(bootstrap.data)
+          #if(is.null(boot.count.data$response)){stop('No column in orig.data called response')}
+          boot.count.data$response<-boot.count.data$NHAT
+          boot.count.data$transect.id2<-as.factor(boot.count.data$transect.id2)
+          
+          # sort by segment.id2 and then update dist accordingly
+          gamsort<-boot.count.data[order(boot.count.data$segment.id),]
+          newid<-NULL
+          for(n in 1:length(unique(boot.count.data$transect.id2))){
+            newid<-c(newid, which(match(x=gamsort$transect.id2, table=unique(gamsort$transect.id2)[n])==1))
+          }
+          gamsort<-gamsort[newid,]
+          boot.count.data<-gamsort
+          
+          # ******** Fit models ********** #
+          #print(paste('zeroblocks:', length(which(tapply(boot.count.data$response, boot.count.data$transect.id2, sum)==0)), sep=''))
+          
+          dists<- d2k[boot.count.data$segment.id,]
+          #geefit<- geeglm(model.obj$formula, id=transect.id2, family=model.obj$family$family, data=boot.count.data)
+          geefit<- eval(parse(text=paste("geeglm(model.obj$formula, id=transect.id2, family=", model.obj$family$family,"(link='", model.obj$family$link, "'), data=boot.count.data)", sep='')))
+          
+          # sample from multivariate normal
+          est<- coefficients(geefit)
+          varcov<-as.matrix(summary(geefit)$cov.unscaled)
+          samplecoeff<-NULL
+          try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')), silent=T)
+          if(is.null(samplecoeff)){
+            varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
+            samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
+            #cat('*')
+          }
+          
+          # make predictions
+          dists<- g2k
+          rpreds<-predict.cress(predict.data, splineParams, dists, geefit, type='response', coeff=samplecoeff)
+          #x2<- data.frame(response=rep(1,nrow(predict.data)), predict.data)
+          #fakemodel<- glm(geefit$formula, data=x2, family=quasipoisson)
+          #rpreds<- exp(model.matrix(fakemodel)%*%samplecoeff)* predict.data$area
+          bootPreds<- rpreds
+          
+        }else{
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          # ~~~~~~~~~~~ NO DISTANCE BOOTSTRAP  ~~~~~~~~~~~~~~~~
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          
+          #orig.data$response<-orig.data$count
+          if(is.null(orig.data$response)){stop('No column in orig.data called response')}
+          
+          orig.data$response<-nhats[,b]
+        
+          # ******** Fit models ********** #
+          
+          dists<- d2k
+          geefit<- eval(parse(text=paste("geeglm(model.obj$formula, id=blockid, family=", model.obj$family$family,"(link='", model.obj$family$link, "'), data=orig.data)", sep='')))
+          
+          # sample from multivariate normal
+          est<- coefficients(geefit)
+          varcov<-as.matrix(summary(geefit)$cov.unscaled)
+          samplecoeff<-NULL
+          try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
+          if(is.null(samplecoeff)){
+            varcov<-as.matrix(nearPD(vcov(geefit))$mat)
+            samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
+          }
+          
+          # make predictions
+          dists<- g2k
+          rpreds<-predict.cress(predict.data, splineParams, dists, geefit, type='response', coeff=samplecoeff)
+          bootPreds<- rpreds
+        }  # end of else statement
+        
+        return(bootPreds)
+        # end of cluster for loop
+      })
+      
+      stopCluster(myCluster)
+      
+      bootPreds<- matrix(unlist(Routputs), ncol=B)
+    } # end else statement
+  
+  } # end ncores >1 loop
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~ SINGLE CORE CODE ~~~~~~~~~~~~~~~~~~~~~~
@@ -289,104 +322,132 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
     radiusIndices<-splineParams[[1]]$radiusIndices
     aR<- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
     
-    for (b in 1:B){
+    
+    if(is.null(ddf.obj) & nhats==FALSE){
       
-      set.seed(seed + b)
-      
-      if((b/10)%%1 == 0){cat(b, '\n')}else{cat('.')}
-      
-      if(is.null(ddf.obj)==F){
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # ~~~~~~~~~~~ DISTANCE BOOTSTRAP  ~~~~~~~~~~~~~~~~~~~
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # create bootstrap data
-        bootstrap.data<-create.bootstrap.data(orig.data, stratum = stratum)
+      for(b in 1:B){#
+        set.seed(seed + b)
+        #cat('Parametric boostrp only')
         
-        if (save.data==T){
-          filename=paste("bootstrap.data_",b,".RData",sep="")
-          save(bootstrap.data,file=filename)
-        }
-        
-        # fit the same detection model as in ddf.obj to the bootstrap data
-        result.boot<-ddf(dsmodel=as.formula(my.formula), data=bootstrap.data, method="ds", meta.data=list(width=width, binned=binned, breaks=breaks))
-        
-        # create count data
-        bootstrap.data<-create.NHAT(bootstrap.data, result.boot)
-        boot.count.data<-create.bootcount.data(bootstrap.data)
-        #if(is.null(boot.count.data$response)){stop('No column in orig.data called response')}
-        boot.count.data$response<-boot.count.data$NHAT
-        boot.count.data$transect.id2<-as.factor(boot.count.data$transect.id2)
-        
-        # sort by segment.id2 and then update dist accordingly
-        gamsort<-boot.count.data[order(boot.count.data$segment.id),]
-        newid<-NULL
-        for(n in 1:length(unique(boot.count.data$transect.id2))){
-          newid<-c(newid, which(match(x=gamsort$transect.id2, table=unique(gamsort$transect.id2)[n])==1))
-        }
-        gamsort<-gamsort[newid,]
-        boot.count.data<-gamsort
-        
-        # ******** Fit models ********** #
-        #print(paste('zeroblocks:', length(which(tapply(boot.count.data$response, boot.count.data$transect.id2, sum)==0)), sep=''))
-        
-        dists<- d2k[boot.count.data$segment.id,]
-        geefit<- geeglm(model.obj$formula, id=transect.id2, family=poisson, data=boot.count.data)
+        if((b/10)%%1 == 0){cat(b, '\n')}else{cat('.')}
         
         # sample from multivariate normal
-        est<- coefficients(geefit)
-        varcov<-as.matrix(summary(geefit)$cov.unscaled)
-        samplecoeff<-NULL
-        try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')), silent=T)
-        if(is.null(samplecoeff)){
-          varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
-          samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
-          cat('*')
-        }
-        
-        # make predictions
-        dists<- g2k
-        x2<- data.frame(response=rep(1,nrow(predict.data)), predict.data)
-        fakemodel<- glm(geefit$formula, data=x2, family=quasipoisson)
-        rpreds<- exp(model.matrix(fakemodel)%*%samplecoeff)* predict.data$area
-        bootPreds[,b]<- rpreds
-        
-      }else{
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # ~~~~~~~~~~~ NO DISTANCE BOOTSTRAP  ~~~~~~~~~~~~~~~~
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        #orig.data$response<-orig.data$count
-        if(is.null(orig.data$response)){stop('No column in orig.data called response')}
-        
-        if(nhats==TRUE){
-          orig.data$response<-nhats[,b]
-        }
-        
-        # ******** Fit models ********** #
-        
-        dists<- d2k
-        geefit<- geeglm(model.obj$formula, id=blockid, family=poisson, data=orig.data)
-        
-        # sample from multivariate normal
-        est<- coefficients(geefit)
-        varcov<-as.matrix(summary(geefit)$cov.unscaled)
+        est<- coefficients(model.obj)
+        varcov<-as.matrix(summary(model.obj)$cov.unscaled)
         samplecoeff<-NULL
         try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
         if(is.null(samplecoeff)){
-          varcov<-as.matrix(nearPD(vcov(geefit))$mat)
+          varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
           samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
         }
-        
         # make predictions
         dists<- g2k
-        x2<- data.frame(response=rep(1,nrow(predict.data)), predict.data)
-        fakemodel<- glm(geefit$formula, data=x2, family=quasipoisson)
-        rpreds<- exp(model.matrix(fakemodel)%*%samplecoeff)* predict.data$area
+        rpreds<-predict.cress(predict.data, splineParams, dists, model.obj, type='response', coeff=samplecoeff)
         bootPreds[,b]<- rpreds
-      }  # end of else statement
-      
-    } # end of for loop
-  }
-  
+      }
+    }else{
+      for (b in 1:B){
+        
+        set.seed(seed + b)
+        
+        if((b/10)%%1 == 0){cat(b, '\n')}else{cat('.')}
+        
+        if(is.null(ddf.obj)==F){
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          # ~~~~~~~~~~~ DISTANCE BOOTSTRAP  ~~~~~~~~~~~~~~~~~~~
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          # create bootstrap data
+          bootstrap.data<-create.bootstrap.data(orig.data, stratum = stratum)
+          
+          if (save.data==T){
+            filename=paste("bootstrap.data_",b,".RData",sep="")
+            save(bootstrap.data,file=filename)
+          }
+          
+          # fit the same detection model as in ddf.obj to the bootstrap data
+          result.boot<-ddf(dsmodel=as.formula(my.formula), data=bootstrap.data, method="ds", meta.data=list(width=width, binned=binned, breaks=breaks))
+          
+          # create count data
+          bootstrap.data<-create.NHAT(bootstrap.data, result.boot)
+          boot.count.data<-create.bootcount.data(bootstrap.data)
+          #if(is.null(boot.count.data$response)){stop('No column in orig.data called response')}
+          boot.count.data$response<-boot.count.data$NHAT
+          boot.count.data$transect.id2<-as.factor(boot.count.data$transect.id2)
+          
+          # sort by segment.id2 and then update dist accordingly
+          gamsort<-boot.count.data[order(boot.count.data$segment.id),]
+          newid<-NULL
+          for(n in 1:length(unique(boot.count.data$transect.id2))){
+            newid<-c(newid, which(match(x=gamsort$transect.id2, table=unique(gamsort$transect.id2)[n])==1))
+          }
+          gamsort<-gamsort[newid,]
+          boot.count.data<-gamsort
+          
+          # ******** Fit models ********** #
+          #print(paste('zeroblocks:', length(which(tapply(boot.count.data$response, boot.count.data$transect.id2, sum)==0)), sep=''))
+          
+          dists<- d2k[boot.count.data$segment.id,]
+          #geefit<- geeglm(model.obj$formula, id=transect.id2, family=model.obj$family$family, data=boot.count.data)
+          geefit<- eval(parse(text=paste("geeglm(model.obj$formula, id=transect.id2, family=", model.obj$family$family,"(link='", model.obj$family$link, "'), data=boot.count.data)", sep='')))
+          
+          # sample from multivariate normal
+          est<- coefficients(geefit)
+          varcov<-as.matrix(summary(geefit)$cov.unscaled)
+          samplecoeff<-NULL
+          try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')), silent=T)
+          if(is.null(samplecoeff)){
+            varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
+            samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
+            cat('*')
+          }
+          
+          # make predictions
+          dists<- g2k
+          rpreds<-predict.cress(predict.data, splineParams, dists, geefit, type='response', coeff=samplecoeff)
+          #x2<- data.frame(response=rep(1,nrow(predict.data)), predict.data)
+          #fakemodel<- glm(geefit$formula, data=x2, family=quasipoisson)
+          #rpreds<- exp(model.matrix(fakemodel)%*%samplecoeff)* predict.data$area
+          bootPreds[,b]<- rpreds
+          
+        }else{
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          # ~~~~~~~~~~~ NO DISTANCE BOOTSTRAP  ~~~~~~~~~~~~~~~~
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          #orig.data$response<-orig.data$count
+          if(is.null(orig.data$response)){stop('No column in orig.data called response')}
+          
+          #if(nhats==TRUE){
+          orig.data$response<-nhats[,b]
+          #}
+          
+          # ******** Fit models ********** #
+          
+          dists<- d2k
+          #geefit<- geeglm(model.obj$formula, id=blockid, family=model.obj$family$family, data=orig.data)
+          geefit<- eval(parse(text=paste("geeglm(model.obj$formula, id=blockid, family=", model.obj$family$family,"(link='", model.obj$family$link, "'), data=orig.data)", sep='')))
+          
+          # sample from multivariate normal
+          est<- coefficients(geefit)
+          varcov<-as.matrix(summary(geefit)$cov.unscaled)
+          samplecoeff<-NULL
+          try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
+          if(is.null(samplecoeff)){
+            varcov<-as.matrix(nearPD(vcov(geefit))$mat)
+            samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
+          }
+          
+          # make predictions
+          dists<- g2k
+          rpreds<-predict.cress(predict.data, splineParams, dists, geefit, type='response', coeff=samplecoeff)
+          #x2<- data.frame(response=rep(1,nrow(predict.data)), predict.data)
+          #fakemodel<- glm(geefit$formula, data=x2, family=quasipoisson)
+          #rpreds<- exp(model.matrix(fakemodel)%*%samplecoeff)* predict.data$area
+          bootPreds[,b]<- rpreds
+        }  # end of else statement
+        
+      } # end of for loop
+    } # end of else statement
+  } # end ncores=1 loop
   
   # save predictions  -  and other data? e.g. parameter values?
   save(bootPreds, file=paste(name,"predictionboot.RData",sep=""), compress='bzip2')

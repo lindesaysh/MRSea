@@ -57,6 +57,9 @@ plotRunsProfile         Calculate runs test and plot profile plot.  The
                         to indicate level of correlation)
 plotacf                 run functions to create acf matrix and plot the
                         results
+predict.cress           Function for making predictions for a model
+                        containing a CReSS basis (two dimensional local
+                        smooth).
 predict.data.de         Prediction grid data for post-impact decrease
 predict.data.no         Prediction grid data for no post-impact
                         consequence

@@ -4,9 +4,12 @@
 #' @param data Data frame containing columns of covariates contained in \code{baseModel}.
 #' @param baseModel glm or CReSS type model object
 #' @param splineParams list object containing information for fitting one and two dimensional splines. See \code{\link{makesplineParams}} for more details.
+#' @param vector Logical indicating whether the vector of scores is returned (TRUE) or if the mean score is returned (FALSE).
 #' 
 #' @details
 #' There must be a column in the data called \code{foldid}, which can be created using \code{\link{getCVids}}.  This column defines the folds of data for the CV calculation.
+#' 
+#' The cost function for this CV is a mean squared error.
 #' 
 #' @examples
 #' # load data
@@ -40,7 +43,7 @@
 #' 
 #' @export
 #' 
-getCV_CReSS<-function(data, baseModel, splineParams){
+getCV_CReSS<-function(data, baseModel, splineParams, vector=FALSE){
 
   #data<-baseModel$data
   
@@ -63,13 +66,25 @@ getCV_CReSS<-function(data, baseModel, splineParams){
     foldedFit<- update(baseModel, .~., data=data[data$foldid!=f,])
     if(length(coef(foldedFit))==1){
       dists<-d2k[data$foldid==f,]
-      predscv<- exp(as.matrix(model.matrix(baseModel)[data$foldid==f])%*%coef(foldedFit)) * exp(baseModel$offset)[data$foldid==f]
+      if(is.null(baseModel$offset)){
+        predscv<- baseModel$family$linkinv(as.matrix(model.matrix(baseModel)[data$foldid==f])%*%coef(foldedFit))
+      }else{
+        predscv<- baseModel$family$linkinv(as.matrix(model.matrix(baseModel)[data$foldid==f])%*%coef(foldedFit)) * baseModel$family$linkinv(baseModel$offset)[data$foldid==f]  
+      }
     }else{  
       dists<-d2k[data$foldid==f,]
-      predscv<- exp(model.matrix(baseModel)[data$foldid==f,]%*%coef(foldedFit)) * exp(baseModel$offset)[data$foldid==f]
+      if(is.null(baseModel$offset)){
+      predscv<- baseModel$family$linkinv(model.matrix(baseModel)[data$foldid==f,]%*%coef(foldedFit))
+      }else{
+        predscv<- baseModel$family$linkinv(model.matrix(baseModel)[data$foldid==f,]%*%coef(foldedFit)) * baseModel$family$linkinv(baseModel$offset)[data$foldid==f]
+      }
     }        
     store[f]<- mean((data$response[data$foldid==f]-predscv)**2)
   }
-  return(mean(store))
+  if(vector==TRUE){
+    return(store)
+  }else{
+    return(mean(store))
+  }
 }
 

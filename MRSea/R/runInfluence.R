@@ -90,7 +90,7 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE){
   abline(h=1)
   abline(h=quant[1], col='grey', lty=2)
   abline(h=quant[2], col='grey', lty=2)
-  textxy(X=numericblock[outblocka], Y=a[outblocka],labs=unique(id)[outblocka], cx=0.8)
+  textxy(X=numericblock[outblocka], Y=a[outblocka],labs=unique(id)[outblocka], cex=0.8)
   if(save==T){dev.off()}
   
   
@@ -103,7 +103,7 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE){
   plot(numericblock, inflStore[,ncol(inflStore)], pch=20 , xlab="Omitted Block", ylab="PRESS Statistic", cex.lab=1.3, cex.axis=1.3, xaxt='n')
   axis(1, at=numericblock, labels=unique(id), las=0)
   abline(h=quant, col='grey', lty=2)
-  textxy(numericblock[outblockb], b[outblockb],unique(id)[outblockb], cx=0.8)
+  textxy(X=numericblock[outblockb], Y=b[outblockb],unique(id)[outblockb], cex=0.8)
   if(save==T){dev.off()}else{devAskNewPage(ask=FALSE)}
   
   if(length(which(b=='Inf'))>0){
