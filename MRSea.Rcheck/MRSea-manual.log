@@ -1,12 +1,12 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009) (format=pdflatex 2010.2.14)  14 JAN 2014 12:31
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009) (format=pdflatex 2010.2.14)  14 AUG 2014 16:28
 entering extended mode
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/RtmpMvaF2d/Rd2pdf102
-65304544b/Rd2.tex
+**/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/Rtmpg0aGoz/Rd2pdfc20
+7f922768/Rd2.tex
 
-(/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/RtmpMvaF2d/Rd2pdf1026
-5304544b/Rd2.tex
+(/private/var/folders/tc/2_52fw_n3c96nfzvzk4krwqm0000gn/T/Rtmpg0aGoz/Rd2pdfc207
+f922768/Rd2.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, german-x-2009-06-19, ngerman-x-2009-06-19, ancientgreek, ibycus, ar
@@ -685,8 +685,8 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 {/usr/local/texlive/2009/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 57.
-LaTeX Font Info:    Try loading font information for T1+phv on input line 57.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 58.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 58.
 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
@@ -701,7 +701,7 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-Overfull \hbox (54.6192pt too wide) in paragraph at lines 102--105
+Overfull \hbox (54.6192pt too wide) in paragraph at lines 99--100
 []\T1/ptm/m/n/10 String of re-sam-pled units from \T1/fi4/m/n/10 data[,"resampl
 e"]\T1/ptm/m/n/10 . Cre-ated by \T1/fi4/m/n/10 create.bootstrap.data() 
  []
@@ -709,7 +709,7 @@ e"]\T1/ptm/m/n/10 . Cre-ated by \T1/fi4/m/n/10 create.bootstrap.data()
 [3] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-LaTeX Font Info:    Try loading font information for TS1+fi4 on input line 159.
+LaTeX Font Info:    Try loading font information for TS1+fi4 on input line 147.
 
 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/inconsolata/ts1fi4.fd
@@ -729,7 +729,7 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-Overfull \hbox (11.41821pt too wide) in paragraph at lines 310--318
+Overfull \hbox (11.41821pt too wide) in paragraph at lines 262--269
 \T1/ptm/m/n/10 (\T1/fi4/m/n/10 segment.id\T1/ptm/m/n/10 ). The sum of the es-ti
 -mated num-ber of in-di-vid-u-als for each seg-ment from \T1/fi4/m/n/10 dis.dat
 a$NHAT
@@ -758,27 +758,27 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (3.78088pt too wide) in paragraph at lines 669--669
+Overfull \hbox (83.28088pt too wide) in paragraph at lines 542--542
  []\T1/fi4/m/n/9 salsa2dlist<-list(fitnessMeasure = QICb, knotgrid = knotgrid.o
-ff, startKnots=4, minKnots=4,[] 
+ff, knotdim=c(26,14), startKnots=4, minKnots=4,[] 
  []
 
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (18.78088pt too wide) in paragraph at lines 680--680
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 553--553
  []\T1/fi4/m/n/9 count.data$blockid<-paste(count.data$transect.id, count.data$s
 eason, count.data$impact, sep=)[] 
  []
 
 
-Overfull \hbox (44.28088pt too wide) in paragraph at lines 682--682
+Overfull \hbox (44.28088pt too wide) in paragraph at lines 555--555
  []\T1/fi4/m/n/9 geeModel<- geeglm(formula(salsa2dOutput_k6$bestModel), data=co
 unt.data, family=poisson, id=blockid)[] 
  []
 
 
-Overfull \hbox (15.78088pt too wide) in paragraph at lines 683--683
+Overfull \hbox (15.78088pt too wide) in paragraph at lines 556--556
  []\T1/fi4/m/n/9 dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$
 y.pos), na.omit(knotgrid.off),[] 
  []
@@ -806,13 +806,13 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [13]
-Overfull \hbox (0.78088pt too wide) in paragraph at lines 841--841
+Overfull \hbox (0.78088pt too wide) in paragraph at lines 671--671
  []\T1/fi4/m/n/9 gam.2<-gam(NHAT~as.factor(impact)+s(x.pos,y.pos,by=as.factor(i
 mpact))+offset(log(area)),[] 
  []
 
 
-Overfull \hbox (50.28088pt too wide) in paragraph at lines 843--843
+Overfull \hbox (50.28088pt too wide) in paragraph at lines 673--673
  []\T1/fi4/m/n/9 do.bootstrap.gam(dis.data.re,predict.data.re,ddf.obj=result,mo
 del.obj=gam.2,resample="transect.id",[] 
  []
@@ -822,13 +822,13 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (9.78088pt too wide) in paragraph at lines 854--854
+Overfull \hbox (9.78088pt too wide) in paragraph at lines 684--684
  []\T1/fi4/m/n/9 gam.ns2=gam(birds~as.factor(impact)+s(x.pos,y.pos,by=as.factor
 (impact))+offset(log(area)),[] 
  []
 
 
-Overfull \hbox (18.78088pt too wide) in paragraph at lines 856--856
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 686--686
  []\T1/fi4/m/n/9 do.bootstrap.gam(ns.data.re,ns.predict.data.re,ddf.obj=NULL,mo
 del.obj=gam.ns2,resample=NULL,[] 
  []
@@ -854,7 +854,7 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (11.28088pt too wide) in paragraph at lines 957--957
+Overfull \hbox (11.28088pt too wide) in paragraph at lines 780--780
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=c
 (observationhour,DayOfMonth),[] 
  []
@@ -875,18 +875,18 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (5.28088pt too wide) in paragraph at lines 1060--1060
+Overfull \hbox (5.28088pt too wide) in paragraph at lines 867--867
  []\T1/fi4/m/n/9 getPlotdimensions(ns.data.re$x.pos, ns.data.re$y.pos, segmentW
 idth=500, segmentLength=500)[] 
  []
 
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
+[17] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [17]
+)
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (26.28088pt too wide) in paragraph at lines 1110--1110
+Overfull \hbox (26.28088pt too wide) in paragraph at lines 907--907
  []\T1/fi4/m/n/9 initialModel<- geeglm(birds ~ as.factor(floodebb) + as.factor(
 impact) + observationhour + x.pos +[] 
  []
@@ -906,7 +906,7 @@ Missing character: There is no ' in font ts1-inconsolata!
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [18]
-Overfull \hbox (63.5374pt too wide) in paragraph at lines 1159--1163
+Overfull \hbox (63.5374pt too wide) in paragraph at lines 946--948
 \T1/ptm/m/n/10 Smoother (CReSS). Jour-nal of com-pu-ta-tional and Graph-i-cal S
 tatis-tics. 2013. DOI: 10.1080/10618600.2012.762920 
  []
@@ -923,13 +923,13 @@ File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (45.78088pt too wide) in paragraph at lines 1252--1252
+Overfull \hbox (45.78088pt too wide) in paragraph at lines 1022--1022
  []\T1/fi4/m/n/9 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos),
  na.omit(knotgrid.ns), knotmat=FALSE)[] 
  []
 
 
-Overfull \hbox (6.78088pt too wide) in paragraph at lines 1258--1258
+Overfull \hbox (6.78088pt too wide) in paragraph at lines 1028--1028
  []\T1/fi4/m/n/9 basis<-LocalRadialFunction(radiusIndices=rep(4, 5), dists=dist
 Mats$dataDist, radii = r_seq,[] 
  []
@@ -991,32 +991,68 @@ Missing character: There is no ' in font ts1-inconsolata!
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 ) [29]
+Missing character: There is no ' in font ts1-inconsolata!
+Missing character: There is no ' in font ts1-inconsolata!
+ [30]
+Missing character: There is no ' in font ts1-inconsolata!
+Missing character: There is no ' in font ts1-inconsolata!
+Missing character: There is no ' in font ts1-inconsolata!
+Missing character: There is no ' in font ts1-inconsolata!
+
+Overfull \hbox (83.28088pt too wide) in paragraph at lines 1529--1529
+ []\T1/fi4/m/n/9 salsa2dlist<-list(fitnessMeasure = QICb, knotgrid = knotgrid.o
+ff, knotdim=c(26,14), startKnots=4, minKnots=4,[] 
+ []
+
+Missing character: There is no ' in font ts1-inconsolata!
+Missing character: There is no ' in font ts1-inconsolata!
+
+Overfull \hbox (18.78088pt too wide) in paragraph at lines 1540--1540
+ []\T1/fi4/m/n/9 count.data$blockid<-paste(count.data$transect.id, count.data$s
+eason, count.data$impact, sep=)[] 
+ []
+
+
+Overfull \hbox (44.28088pt too wide) in paragraph at lines 1542--1542
+ []\T1/fi4/m/n/9 geeModel<- geeglm(formula(salsa2dOutput_k6$bestModel), data=co
+unt.data, family=poisson, id=blockid)[] 
+ []
+
+
+Overfull \hbox (15.78088pt too wide) in paragraph at lines 1543--1543
+ []\T1/fi4/m/n/9 dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$
+y.pos), na.omit(knotgrid.off),[] 
+ []
+
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [30]
+) [31]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [31]
-Overfull \hbox (1.81773pt too wide) in paragraph at lines 1889--1891
+)
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+) [32]
+Overfull \hbox (1.81773pt too wide) in paragraph at lines 1674--1675
 []\T1/ptm/m/n/10 starting model for SALSA to use. Must not con-tain the co-vari
 -ate in \T1/fi4/m/n/10 explanatory 
  []
 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-)
-Overfull \hbox (11.83942pt too wide) in paragraph at lines 1948--1951
+) [33]
+Overfull \hbox (11.83942pt too wide) in paragraph at lines 1715--1716
 []\T1/ptm/m/n/10 vector of length \T1/fi4/m/n/10 startKnots \T1/ptm/m/n/10 iden
 -ti-fy-ing which radii (\T1/fi4/m/n/10 splineParams[[1]]$radii\T1/ptm/m/n/10 )
  []
 
-[32] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
+[34] (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [33]
-Overfull \hbox (3.86746pt too wide) in paragraph at lines 2052--2055
+)
+Overfull \hbox (3.86746pt too wide) in paragraph at lines 1786--1787
 []\T1/ptm/m/n/10 If \T1/fi4/m/n/10 store=TRUE \T1/ptm/m/n/10 then the ma-trix o
 f cor-re-la-tions (nblocks x length_max_block) is re-turned and \T1/fi4/m/n/10 
 plotacf
@@ -1024,20 +1060,12 @@ plotacf
 
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
+[35]
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
+ (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-Missing character: There is no ' in font ts1-inconsolata!
-Missing character: There is no ' in font ts1-inconsolata!
- [34]
-Missing character: There is no ' in font ts1-inconsolata!
-Missing character: There is no ' in font ts1-inconsolata!
-
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
-File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [35]
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
@@ -1050,6 +1078,14 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
+ [37]
+(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
+File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
+)
+Missing character: There is no ' in font ts1-inconsolata!
+Missing character: There is no ' in font ts1-inconsolata!
+Missing character: There is no ' in font ts1-inconsolata!
+Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
@@ -1058,26 +1094,26 @@ Missing character: There is no ' in font ts1-inconsolata!
 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-)
-Overfull \hbox (12.41872pt too wide) in paragraph at lines 2287--2290
+) [38]
+Overfull \hbox (12.41872pt too wide) in paragraph at lines 1977--1978
 []\T1/ptm/m/n/10 The data to be pre-dicted for. col-umn names cor-re-spond to t
 he data in \T1/fi4/m/n/10 initialModel 
  []
 
 
-Overfull \hbox (1.1476pt too wide) in paragraph at lines 2296--2301
+Overfull \hbox (1.1476pt too wide) in paragraph at lines 1981--1982
 []\T1/ptm/m/n/10 List ob-ject con-tain-ing in-for-ma-tion for fit-ting splines 
 to the co-vari-ates in \T1/fi4/m/n/10 varlist\T1/ptm/m/n/10 .
  []
 
 
-Overfull \hbox (4.72797pt too wide) in paragraph at lines 2296--2301
+Overfull \hbox (4.72797pt too wide) in paragraph at lines 1981--1982
 \T1/ptm/m/n/10 If not spec-i-fied (\T1/fi4/m/n/10 NULL\T1/ptm/m/n/10 ) this ob-
 ject is cre-ated and re-turned. See [][]\T1/fi4/m/n/10 makesplineParams[][][]
  []
 
-[37]
-Overfull \hbox (23.74786pt too wide) in paragraph at lines 2366--2369
+[39]
+Overfull \hbox (23.74786pt too wide) in paragraph at lines 2019--2020
 []\T1/ptm/m/n/10 The fi-nal fit statis-tic of \T1/fi4/m/n/10 bestModel\T1/ptm/m
 /n/10 . The type of statis-tic was spec-i-fied in \T1/fi4/m/n/10 salsa1dlist\T1
 /ptm/m/n/10 . 
@@ -1087,7 +1123,6 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
-[38]
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
@@ -1098,7 +1133,7 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (14.28088pt too wide) in paragraph at lines 2398--2398
+Overfull \hbox (14.28088pt too wide) in paragraph at lines 2046--2046
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=c
 (observationhour, DayOfMonth),[] 
  []
@@ -1108,45 +1143,44 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (2.28088pt too wide) in paragraph at lines 2399--2399
+Overfull \hbox (2.28088pt too wide) in paragraph at lines 2047--2047
  []                 \T1/fi4/m/n/9 factorlist=c(floodebb, impact), ns.predict.da
 ta.re, splineParams=splineParams)[] 
  []
 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-)
-Overfull \hbox (12.41872pt too wide) in paragraph at lines 2441--2444
+) [40]
+Overfull \hbox (12.41872pt too wide) in paragraph at lines 2074--2075
 []\T1/ptm/m/n/10 The data to be pre-dicted for. col-umn names cor-re-spond to t
 he data in \T1/fi4/m/n/10 initialModel 
  []
 
 
-Overfull \hbox (1.1476pt too wide) in paragraph at lines 2450--2455
+Overfull \hbox (1.1476pt too wide) in paragraph at lines 2078--2079
 []\T1/ptm/m/n/10 List ob-ject con-tain-ing in-for-ma-tion for fit-ting splines 
 to the co-vari-ates in \T1/fi4/m/n/10 varlist\T1/ptm/m/n/10 .
  []
 
 
-Overfull \hbox (4.72797pt too wide) in paragraph at lines 2450--2455
+Overfull \hbox (4.72797pt too wide) in paragraph at lines 2078--2079
 \T1/ptm/m/n/10 If not spec-i-fied (\T1/fi4/m/n/10 NULL\T1/ptm/m/n/10 ) this ob-
 ject is cre-ated and re-turned. See [][]\T1/fi4/m/n/10 makesplineParams[][][]
  []
 
-[39]
-Overfull \hbox (16.99939pt too wide) in paragraph at lines 2523--2526
+[41]
+Overfull \hbox (16.99939pt too wide) in paragraph at lines 2121--2122
 []\T1/fi4/m/n/10 basemodelformula\T1/ptm/m/n/10 : the re-sult-ing model for-mul
 a. If \T1/fi4/m/n/10 kept=yes \T1/ptm/m/n/10 or \T1/fi4/m/n/10 kept=linear
  []
 
 
-Overfull \hbox (23.74786pt too wide) in paragraph at lines 2538--2541
+Overfull \hbox (23.74786pt too wide) in paragraph at lines 2131--2132
 []\T1/ptm/m/n/10 The fi-nal fit statis-tic of \T1/fi4/m/n/10 bestModel\T1/ptm/m
 /n/10 . The type of statis-tic was spec-i-fied in \T1/fi4/m/n/10 salsa1dlist\T1
 /ptm/m/n/10 . 
  []
 
-[40]
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
@@ -1154,11 +1188,12 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (120.78088pt too wide) in paragraph at lines 2563--2563
+Overfull \hbox (120.78088pt too wide) in paragraph at lines 2150--2150
  []\T1/fi4/m/n/9 ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year
 , ns.data.re$MonthOfYear, ns.data.re$DayOfMonth, sep=)[] 
  []
 
+[42]
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
@@ -1171,7 +1206,7 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (68.28088pt too wide) in paragraph at lines 2578--2578
+Overfull \hbox (68.28088pt too wide) in paragraph at lines 2165--2165
  []\T1/fi4/m/n/9 salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlis
 t, varlist=c(observationhour, DayOfMonth),[] 
  []
@@ -1181,7 +1216,7 @@ Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 
-Overfull \hbox (2.28088pt too wide) in paragraph at lines 2579--2579
+Overfull \hbox (2.28088pt too wide) in paragraph at lines 2166--2166
  []                 \T1/fi4/m/n/9 factorlist=c(floodebb, impact), ns.predict.da
 ta.re, splineParams=splineParams)[] 
  []
@@ -1189,39 +1224,40 @@ ta.re, splineParams=splineParams)[]
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
 )
-Overfull \hbox (25.50977pt too wide) in paragraph at lines 2601--2606
+Overfull \hbox (25.50977pt too wide) in paragraph at lines 2186--2187
 []\T1/ptm/m/n/10 Vector of ob-jects re-quired for \T1/fi4/m/n/10 runSALSA2D\T1/
 ptm/m/n/10 : \T1/fi4/m/n/10 fitnessMeasure\T1/ptm/m/n/10 , \T1/fi4/m/n/10 knotg
 rid\T1/ptm/m/n/10 , \T1/fi4/m/n/10 startKnots\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (0.90794pt too wide) in paragraph at lines 2611--2613
+Overfull \hbox (0.90794pt too wide) in paragraph at lines 2191--2192
 []\T1/ptm/m/n/10 (k x k) Ma-trix of dis-tances be-tween all valid knot lo-ca-ti
 ons spec-i-fied in \T1/fi4/m/n/10 knotgrid 
  []
 
-[41]
-Overfull \hbox (4.20862pt too wide) in paragraph at lines 2688--2691
+[43]
+Overfull \hbox (4.20862pt too wide) in paragraph at lines 2235--2236
 []\T1/ptm/m/n/10 Vector of length start-Knots iden-ti-fy-ing which radii (\T1/f
 i4/m/n/10 splineParams[[1]]$radii\T1/ptm/m/n/10 )
  []
 
-[42]
-Overfull \hbox (59.44736pt too wide) in paragraph at lines 2707--2711
+
+Overfull \hbox (59.44736pt too wide) in paragraph at lines 2246--2247
 \T1/ptm/m/n/10 Smoother (CReSS). Jour-nal of com-pu-ta-tional and Graph-i-cal S
 tatis-tics. 2013. doi: 10.1080/10618600.2012.762920 
  []
 
+[44]
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
-(/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
+ (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [43]
+) [45]
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
 Missing character: There is no ' in font ts1-inconsolata!
@@ -1229,20 +1265,20 @@ Missing character: There is no ' in font ts1-inconsolata!
 
 (/usr/local/texlive/2009/texmf-dist/tex/latex/base/utf8.def
 File: utf8.def 2008/04/05 v1.1m UTF-8 support for inputenc
-) [44]
-Overfull \hbox (53.99908pt too wide) in paragraph at lines 2828--2833
+)
+Overfull \hbox (53.99908pt too wide) in paragraph at lines 2348--2349
 []\T1/ptm/m/n/10 If a value in \T1/fi4/m/n/10 dis.data$distance \T1/ptm/m/n/10 
 matches a cut point in \T1/fi4/m/n/10 cutpoints \T1/ptm/m/n/10 ex-actly, the va
 lue of \T1/fi4/m/n/10 dis.data.re$distance
  []
 
 
-Overfull \hbox (1.93738pt too wide) in paragraph at lines 2828--2833
+Overfull \hbox (1.93738pt too wide) in paragraph at lines 2348--2349
 \T1/ptm/m/n/10 will be at-tributed to the bin that is closer to the line/point 
 un-less the value of \T1/fi4/m/n/10 dis.data.re$distance
  []
 
-(./Rd2.ind [45]
+(./Rd2.ind [46] [47]
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 3.
 
@@ -1250,7 +1286,7 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <12> not available
 LaTeX Font Warning: Font shape `T1/fi4/m/it' undefined
 (Font)              using `T1/fi4/m/n' instead on input line 67.
 
-[46
+[48
 
 ]) (./Rd2.aux)
 
@@ -1258,13 +1294,13 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 5977 strings out of 493848
- 89201 string characters out of 3149207
+ 5990 strings out of 493848
+ 89457 string characters out of 3149207
  148547 words of memory out of 3000000
- 8676 multiletter control sequences out of 15000+200000
+ 8677 multiletter control sequences out of 15000+200000
  44466 words of font info for 54 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 47i,6n,34p,359b,568s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 47i,6n,34p,740b,568s stack positions out of 5000i,500n,10000p,200000b,50000s
 pdfTeX warning (dest): name{Rfn.runs.test} has been referenced but does not e
 xist, replaced by a fixed one
 
@@ -1277,9 +1313,9 @@ ive/2009/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/200
 st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/t
 ype1/urw/times/utmr8a.pfb></usr/local/texlive/2009/texmf-dist/fonts/type1/urw/t
 imes/utmri8a.pfb>
-Output written on Rd2.pdf (46 pages, 262111 bytes).
+Output written on Rd2.pdf (48 pages, 267680 bytes).
 PDF statistics:
- 890 PDF objects out of 1000 (max. 8388607)
- 356 named destinations out of 1000 (max. 500000)
- 393 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 913 PDF objects out of 1000 (max. 8388607)
+ 366 named destinations out of 1000 (max. 500000)
+ 401 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -40,4 +40,4 @@ Collate: 'LocalRadialFunction.R' 'MRSea-package.r' 'SALSA1DCode.R'
         'runInfluence.R' 'runInfluenceCheck.R' 'runPartialPlots.R'
         'runSALSA.R' 'runSALSA1D_withremoval.R' 'runSALSA2D.R'
         'which.bin.R'
-Built: R 3.1.1; ; 2014-08-14 13:31:32 UTC; unix
+Built: R 3.1.1; ; 2014-08-14 14:53:48 UTC; unix

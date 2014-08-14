@@ -33,6 +33,7 @@ ns.predict.data.re	ns.predict.data.re
 plotacf	plotacf
 plotCumRes	plotCumRes
 plotRunsProfile	plotRunsProfile
+predict.cress	predict.cress
 predict.data.de	predict.data.de
 predict.data.no	predict.data.no
 predict.data.re	predict.data.re
