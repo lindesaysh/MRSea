@@ -14,11 +14,12 @@ result <- ddf(dsmodel=~mcds(key="hn", formula=~1),
 dis.data <- create.NHAT(dis.data,result)
 count.data <- create.count.data(dis.data)
 data <- count.data
+data$response<-data$NHAT
 attach(data)
 fullModel <- glm(NHAT ~ as.factor(season) + as.factor(impact) +
                    depth + x.pos + y.pos, family = poisson, data = data)
 vif(fullModel)
-checkfactorlevelcounts(c("season", "impact"), data, fullModel)
+checkfactorlevelcounts(c("season", "impact"), data, data$response)
 knots <- mean(depth) # must be specified as an object
 fullModel <- glm(NHAT ~ as.factor(season) + as.factor(impact) +
                    bs(depth, knots = knots) + x.pos + y.pos, family = quasipoisson,
@@ -37,15 +38,79 @@ predictData <- predict.data.no
 initialModel <- glm(response ~ as.factor(season) + as.factor(impact) +offset(area), family = "quasipoisson", data = data)
 # run SALSA
 salsa1dOutput <- runSALSA1D(initialModel, salsa1dlist, c("depth"),
-                            predictData)
+                            predictionData=predictData)
 salsa1dOutput$splineParams[[2]]$knots
 
-data(knotgrid) # knotgrid <- read.csv("data/Danishknotgrid_salsa.csv")
-knotgrid <- knotgrid.off
+
+
+#data(knotgrid.off) # knotgrid <- read.csv("data/Danishknotgrid_salsa.csv")
+#knotgrid <- knotgrid.off
+require(splancs)
+XGridPoints<- seq(min(data$x.pos),
+                  (max(data$x.pos)), length=100)
+YGridPoints<- seq(min(data$y.pos),
+                  (max(data$y.pos)), length=100)
+Grid<- as.points(expand.grid(x=XGridPoints,y=YGridPoints))
+dataXandY<- as.points(x.pos=data$x.pos,y.pos=data$y.pos)
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~
+
+#visualise the candidate knots
+par(mfrow=c(1,1))
+plot(data$x.pos, data$y.pos, col="grey", pch=16)
+points(Grid, pch=20, col=2)
+#points(data$x.pos, data$y.pos, col="grey", pch=16)
+dim(Grid)
+
+# ~~~~~~~~~~~~~~~~~~~~~~
+# remove knots inside land and way outside boundary
+# ~~~~~~~~~~~~~~~~~~~~~~
+#find the grid point closest to each candidate knot on the grid
+d<- c()
+for(i in 1:nrow(data)){
+  d[i]<- which.min(sqrt((data$x.pos[i]-Grid[,1])**2+(data$y.pos[i]-Grid[,2])**2))
+}
+
+RowsToKeep<- rep(0,nrow(Grid))
+RowsToKeep[d]<-1
+
+GridPosIncludingNAs<- cbind(ifelse(RowsToKeep!=1, NA, RowsToKeep*Grid[,1]), ifelse(RowsToKeep!=1, NA, RowsToKeep*Grid[,2]))
+Grid <- as.data.frame(GridPosIncludingNAs)
+
+knotgrid<-Grid
+
+points(knotgrid, pch=20)
+
+dim(knotgrid)
+dim(na.omit(knotgrid))
+
+require(fields)
+naid<- which(is.na(knotgrid))
+spaceid<-cover.design(R = na.omit(knotgrid), nd = 400, nruns = 5)$best.id
+
+realid<-(1:nrow(knotgrid))[-naid]
+
+points(knotgrid[realid[spaceid],], pch=20, col='purple')
+
+knotgrid[realid[-spaceid],]<- c(NA, NA)
+
+plot(data$x.pos, data$y.pos, pch=20, cex=0.2)
+points(knotgrid, pch=20, cex=0.5, col='red')
+
+#write.csv(knotgrid, file='Data/knotgrid_fullanalysis.csv', row.names=F)
+
 # make distance matrices for datatoknots and knottoknots
 distMats <- makeDists(cbind(data$x.pos, data$y.pos), na.omit(knotgrid))
 
-r_seq <- getRadiiChoices(8, distMats$dataDist)
+#r_seq <- getRadiiChoices(8, distMats$dataDist)
+
+mindist<-mean(apply(distMats$dataDist, 2, min))
+maxdist<-mean(apply(distMats$dataDist, 2, max))
+
+#r_seq=exp(seq(log(1/mindist), log(1/maxdist),length=50))[10:50]
+r_seq=1/(seq((mindist), (maxdist),length=50))
+
 
 salsa2dlist <- list(fitnessMeasure = "QICb", knotgrid = knotgrid,startKnots = 6, minKnots = 4, maxKnots = 20, r_seq = r_seq,gap = 1, interactionTerm = "as.factor(impact)")
 
