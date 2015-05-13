@@ -1,6 +1,6 @@
-#' Function for creating an exponential basis function for a spatial smooth using the CReSS method.
+#' Function for creating an Gaussian basis function for a spatial smooth using the CReSS method.
 #' 
-#' This function calculates a local radial exponential basis matrix for use in \code{\link{runSALSA2D}}.
+#' This function calculates a local radial Gausiian basis matrix for use in \code{\link{runSALSA2D}}.
 #' 
 #' @param radiusIndices Vector of length startKnots identifying which radii (splineParams[[1]]$radii) will be used to initialise the model
 #' @param dists Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances.
@@ -40,7 +40,10 @@
 LocalRadialFunction<- function(radiusIndices, dists, radii,aR){
   for (i in 1:length(aR)){
     zhold<- dists[,aR[i]]
-    zhold<- exp(-zhold/(radii[radiusIndices[i]]**2)) 
+    r<- radii[radiusIndices[i]]
+    zhold<- exp(-(zhold*radii[radiusIndices[i]])**2) 
+    #zhold<- (1/r*sqrt(2*pi))*exp(-(zhold**2)/                                                        (2*r**2))
+    
     if (i==1) {B<- zhold} else {B<- cbind(B,zhold)}
   }
   B <- data.frame(B)
@@ -48,6 +51,6 @@ LocalRadialFunction<- function(radiusIndices, dists, radii,aR){
     names(B)[i] <- paste('b', i, sep='')
   }
   B=as.matrix(B)
-  B<-scale(B, center=T, scale=F)
+  #B<-scale(B, center=T, scale=F)
   return(B)
 }

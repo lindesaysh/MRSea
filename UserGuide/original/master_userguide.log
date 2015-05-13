@@ -1,0 +1,1977 @@
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.10.8)  20 JAN 2014 15:01
+entering extended mode
+**master_userguide.tex
+
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.tex"
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, afrikaans, ancientgreek, ar
+abic, armenian, assamese, basque, bengali, bokmal, bulgarian, catalan, coptic, 
+croatian, czech, danish, dutch, esperanto, estonian, farsi, finnish, french, ga
+lician, german, german-x-2009-06-19, greek, gujarati, hindi, hungarian, iceland
+ic, indonesian, interlingua, irish, italian, kannada, kurmanji, lao, latin, lat
+vian, lithuanian, malayalam, marathi, mongolian, mongolianlmc, monogreek, ngerm
+an, ngerman-x-2009-06-19, nynorsk, oriya, panjabi, pinyin, polish, portuguese, 
+romanian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, swis
+sgerman, tamil, telugu, turkish, turkmen, ukenglish, ukrainian, uppersorbian, u
+senglishmax, welsh, loaded.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\report.cls"
+Document Class: report 2007/10/19 v1.4h Standard LaTeX document class
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\size11.clo"
+File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\graphics.sty"
+Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 91.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pdftex-def\pdftex.def"
+File: pdftex.def 2011/05/27 v0.06d Graphics/color for pdfTeX
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\infwarerr.sty"
+Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\ltxcmds.sty"
+Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+)
+\Gread@gobject=\count88
+))
+\Gin@req@height=\dimen103
+\Gin@req@width=\dimen104
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\graphics\color.sty"
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerarticle.sty"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasercs.sty"
+Package: beamerbasercs 2012/09/19 (rcs-revision 9cdb60d8ebed)
+)
+Package: beamerarticle 2012/04/15 (rcs-revision cc6557182d97)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasemodes.sty"
+Package: beamerbasemodes 2012/04/15 (rcs-revision cc6557182d97)
+\beamer@tempbox=\box26
+\beamer@tempcount=\count89
+\c@beamerpauses=\count90
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasedecode.sty"
+Package: beamerbasedecode 2010/05/01 (rcs-revision efa082c6111d)
+\beamer@slideinframe=\count91
+\beamer@minimum=\count92
+)
+\beamer@commentbox=\box27
+\beamer@modecount=\count93
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasearticle.sty
+"
+Package: beamerbasearticle 2012/04/15 (rcs-revision cc6557182d97)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaseoptions.sty
+"
+Package: beamerbaseoptions 2010/04/27 (rcs-revision 982469101dd6)
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\xcolor\xcolor.sty"
+Package: xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package xcolor Info: Package option `override' ignored on input line 216.
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+LaTeX Info: Redefining \color on input line 702.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1337.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1341.
+Package xcolor Info: Model `RGB' extended on input line 1353.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1355.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1356.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1357.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1358.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1359.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1360.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaserequires.st
+y"
+Package: beamerbaserequires 2010/05/01 (rcs-revision efa082c6111d)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasecompatibili
+ty.sty"
+Package: beamerbasecompatibility 2012/05/01 (rcs-revision 67c48b3b652d)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasefont.sty"
+Package: beamerbasefont 2012/09/19 (rcs-revision 733629cd0c6c)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\amssymb.sty"
+Package: amssymb 2009/06/22 v3.00
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\amsfonts.sty"
+Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+\@emptytoks=\toks15
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+)))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasetranslator.
+sty"
+Package: beamerbasetranslator 2010/06/11 (rcs-revision 85fd1cc7fc42)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\translator\translator
+.sty"
+Package: translator 2010/06/12 ver 1.10
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\translator\translator
+-language-mappings.tex")))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasemisc.sty"
+Package: beamerbasemisc 2012/02/24 (rcs-revision 2ff5461be705)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasetwoscreens.
+sty"
+Package: beamerbasetwoscreens 2010/05/01 (rcs-revision efa082c6111d)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaseoverlay.sty
+"
+Package: beamerbaseoverlay 2012/04/03 (rcs-revision 45744d9ae88b)
+\beamer@argscount=\count94
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasetitle.sty
+"
+Package: beamerbasetitle 2010/09/21 (rcs-revision f0446ed0b6ae)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasesection.sty
+"
+Package: beamerbasesection 2012/05/30 (rcs-revision 22ff49def670)
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaseframe.sty
+"
+Package: beamerbaseframe 2012/09/13 (rcs-revision dcd846607320)
+\c@framenumber=\count95
+LaTeX Info: Redefining \\ on input line 756.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaseverbatim.st
+y"
+Package: beamerbaseverbatim 2012/08/30 (rcs-revision dfdb135076b3)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaseframesize.s
+ty"
+Package: beamerbaseframesize 2011/09/12 (rcs-revision 70f9d8411e54)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaseframecompon
+ents.sty"
+Package: beamerbaseframecomponents 2012/09/13 (rcs-revision dcd846607320)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasecolor.sty"
+Package: beamerbasecolor 2010/06/06 (rcs-revision d1a9b48be06d)
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasenotes.sty
+"
+Package: beamerbasenotes 2010/05/01 (rcs-revision efa082c6111d)
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasetoc.sty"
+Package: beamerbasetoc 2012/02/28 (rcs-revision 138681b92320)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasetemplates.s
+ty"
+Package: beamerbasetemplates 2010/05/01 (rcs-revision efa082c6111d)
+\beamer@sbttoks=\toks16
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaseauxtemplate
+s.sty"
+Package: beamerbaseauxtemplates 2012/05/01 (rcs-revision 67c48b3b652d)
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbaselocalstruct
+ure.sty"
+Package: beamerbaselocalstructure 2012/05/25 (rcs-revision 5ff5e8ed7c0e)
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\enumerate.sty"
+Package: enumerate 1999/03/05 v3.00 enumerate extensions (DPC)
+\@enLab=\toks17
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasenavigation.
+sty"
+Package: beamerbasenavigation 2012/04/03 (rcs-revision 42a0f21a412d)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasetheorems.st
+y"
+Package: beamerbasetheorems 2010/06/06 (rcs-revision 7e7cc5e53e9d)
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ams\math\amsmath.sty"
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ams\math\amstext.sty"
+Package: amstext 2000/06/29 v2.01
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ams\math\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks18
+\ex@=\dimen105
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ams\math\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen106
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ams\math\amsopn.sty"
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count96
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count97
+\leftroot@=\count98
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count99
+\DOTSCASE@=\count100
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box28
+\strutbox@=\box29
+\big@size=\dimen107
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count101
+\c@MaxMatrixCols=\count102
+\dotsspace@=\muskip10
+\c@parentequation=\count103
+\dspbrk@lvl=\count104
+\tag@help=\toks19
+\row@=\count105
+\column@=\count106
+\maxfields@=\count107
+\andhelp@=\toks20
+\eqnshift@=\dimen108
+\alignsep@=\dimen109
+\tagshift@=\dimen110
+\tagwidth@=\dimen111
+\totwidth@=\dimen112
+\lineht@=\dimen113
+\@envbody=\toks21
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks22
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ams\classes\amsthm.sty"
+Package: amsthm 2004/08/06 v2.20
+\thm@style=\toks23
+\thm@bodyfont=\toks24
+\thm@headfont=\toks25
+\thm@notefont=\toks26
+\thm@headpunct=\toks27
+\thm@preskip=\skip46
+\thm@postskip=\skip47
+\thm@headsep=\skip48
+\dth@everypar=\toks28
+)
+\c@theorem=\count108
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\beamerbasethemes.sty"
+Package: beamerbasethemes 2010/05/01 (rcs-revision efa082c6111d)
+))) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\setspace\setspace.sty"
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\natbib\natbib.sty"
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip49
+\bibsep=\skip50
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count109
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\tools\bm.sty"
+Package: bm 2004/02/26 v1.1c Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup6
+\symboldletters=\mathgroup7
+\symboldsymbols=\mathgroup8
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 138.
+LaTeX Info: Redefining \bm on input line 204.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ltxmisc\url.sty"
+\Urlmuskip=\muskip11
+Package: url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\subfig\subfig.sty"
+Package: subfig 2005/06/28 ver: 1.3 subfig package
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption.sty"
+Package: caption 2012/02/19 v3.2f Customizing captions (AR)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\caption\caption3.sty"
+Package: caption3 2012/01/12 v1.4b caption3 kernel (AR)
+\captionmargin=\dimen114
+\captionmargin@=\dimen115
+\captionwidth=\dimen116
+\caption@indent=\dimen117
+\caption@parindent=\dimen118
+\caption@hangindent=\dimen119
+)
+\c@ContinuedFloat=\count110
+)
+\c@KVtest=\count111
+\sf@farskip=\skip51
+\sf@captopadj=\dimen120
+\sf@capskip=\skip52
+\sf@nearskip=\skip53
+\c@subfigure=\count112
+\c@subfigure@save=\count113
+\c@lofdepth=\count114
+\c@subtable=\count115
+\c@subtable@save=\count116
+\c@lotdepth=\count117
+\sf@top=\skip54
+\sf@bottom=\skip55
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\fancyhdr\fancyhdr.sty"
+\fancy@headwidth=\skip56
+\f@ncyO@elh=\skip57
+\f@ncyO@erh=\skip58
+\f@ncyO@olh=\skip59
+\f@ncyO@orh=\skip60
+\f@ncyO@elf=\skip61
+\f@ncyO@erf=\skip62
+\f@ncyO@olf=\skip63
+\f@ncyO@orf=\skip64
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgf.sty"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pgf\utilities\pgfrcs.sty"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\utilities\pgfutil-common.te
+x"
+\pgfutil@everybye=\toks29
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\utilities\pgfutil-latex.def
+"
+\pgfutil@abb=\box30
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\ms\everyshi.sty"
+Package: everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\utilities\pgfrcs.code.tex"
+Package: pgfrcs 2010/10/25 v2.10 (rcs-revision 1.24)
+))
+Package: pgf 2008/01/15 v2.10 (rcs-revision 1.12)
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgfcore.sty"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pgf\systemlayer\pgfsys.sty"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsys.code.tex
+"
+Package: pgfsys 2010/06/30 v2.10 (rcs-revision 1.37)
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\utilities\pgfkeys.code.tex
+"
+\pgfkeys@pathtoks=\toks30
+\pgfkeys@temptoks=\toks31
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\utilities\pgfkeysfiltered.c
+ode.tex"
+\pgfkeys@tmptoks=\toks32
+))
+\pgf@x=\dimen121
+\pgf@y=\dimen122
+\pgf@xa=\dimen123
+\pgf@ya=\dimen124
+\pgf@xb=\dimen125
+\pgf@yb=\dimen126
+\pgf@xc=\dimen127
+\pgf@yc=\dimen128
+\w@pgf@writea=\write3
+\r@pgf@reada=\read1
+\c@pgf@counta=\count118
+\c@pgf@countb=\count119
+\c@pgf@countc=\count120
+\c@pgf@countd=\count121
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgf.cfg"
+File: pgf.cfg 2008/05/14  (rcs-revision 1.7)
+)
+Package pgfsys Info: Driver file for pgf: pgfsys-pdftex.def on input line 900.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsys-pdftex.d
+ef"
+File: pgfsys-pdftex.def 2009/05/22  (rcs-revision 1.26)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsys-common-p
+df.def"
+File: pgfsys-common-pdf.def 2008/05/19  (rcs-revision 1.10)
+)))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsyssoftpath.
+code.tex"
+File: pgfsyssoftpath.code.tex 2008/07/18  (rcs-revision 1.7)
+\pgfsyssoftpath@smallbuffer@items=\count122
+\pgfsyssoftpath@bigbuffer@items=\count123
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\systemlayer\pgfsysprotocol.
+code.tex"
+File: pgfsysprotocol.code.tex 2006/10/16  (rcs-revision 1.4)
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcore.code.tex
+"
+Package: pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmath.code.tex"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathcalc.code.tex"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathutil.code.tex")
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathparser.code.tex
+"
+\pgfmath@dimen=\dimen129
+\pgfmath@count=\count124
+\pgfmath@box=\box31
+\pgfmath@toks=\toks33
+\pgfmath@stack@operand=\toks34
+\pgfmath@stack@operation=\toks35
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.code.
+tex"
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.basic
+.code.tex")
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.trigo
+nometric.code.tex")
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.rando
+m.code.tex")
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.compa
+rison.code.tex")
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.base.
+code.tex")
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.round
+.code.tex")
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfunctions.misc.
+code.tex")))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\math\pgfmathfloat.code.tex"
+\c@pgfmathroundto@lastzeros=\count125
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepoints.co
+de.tex"
+File: pgfcorepoints.code.tex 2010/04/09  (rcs-revision 1.20)
+\pgf@picminx=\dimen130
+\pgf@picmaxx=\dimen131
+\pgf@picminy=\dimen132
+\pgf@picmaxy=\dimen133
+\pgf@pathminx=\dimen134
+\pgf@pathmaxx=\dimen135
+\pgf@pathminy=\dimen136
+\pgf@pathmaxy=\dimen137
+\pgf@xx=\dimen138
+\pgf@xy=\dimen139
+\pgf@yx=\dimen140
+\pgf@yy=\dimen141
+\pgf@zx=\dimen142
+\pgf@zy=\dimen143
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepathconst
+ruct.code.tex"
+File: pgfcorepathconstruct.code.tex 2010/08/03  (rcs-revision 1.24)
+\pgf@path@lastx=\dimen144
+\pgf@path@lasty=\dimen145
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepathusage
+.code.tex"
+File: pgfcorepathusage.code.tex 2008/04/22  (rcs-revision 1.12)
+\pgf@shorten@end@additional=\dimen146
+\pgf@shorten@start@additional=\dimen147
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorescopes.co
+de.tex"
+File: pgfcorescopes.code.tex 2010/09/08  (rcs-revision 1.34)
+\pgfpic=\box32
+\pgf@hbox=\box33
+\pgf@layerbox@main=\box34
+\pgf@picture@serial@count=\count126
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoregraphicst
+ate.code.tex"
+File: pgfcoregraphicstate.code.tex 2008/04/22  (rcs-revision 1.9)
+\pgflinewidth=\dimen148
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoretransform
+ations.code.tex"
+File: pgfcoretransformations.code.tex 2009/06/10  (rcs-revision 1.11)
+\pgf@pt@x=\dimen149
+\pgf@pt@y=\dimen150
+\pgf@pt@temp=\dimen151
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorequick.cod
+e.tex"
+File: pgfcorequick.code.tex 2008/10/09  (rcs-revision 1.3)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoreobjects.c
+ode.tex"
+File: pgfcoreobjects.code.tex 2006/10/11  (rcs-revision 1.2)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepathproce
+ssing.code.tex"
+File: pgfcorepathprocessing.code.tex 2008/10/09  (rcs-revision 1.8)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorearrows.co
+de.tex"
+File: pgfcorearrows.code.tex 2008/04/23  (rcs-revision 1.11)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoreshade.cod
+e.tex"
+File: pgfcoreshade.code.tex 2008/11/23  (rcs-revision 1.13)
+\pgf@max=\dimen152
+\pgf@sys@shading@range@num=\count127
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoreimage.cod
+e.tex"
+File: pgfcoreimage.code.tex 2010/03/25  (rcs-revision 1.16)
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoreexternal.
+code.tex"
+File: pgfcoreexternal.code.tex 2010/09/01  (rcs-revision 1.17)
+\pgfexternal@startupbox=\box35
+))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorelayers.co
+de.tex"
+File: pgfcorelayers.code.tex 2010/08/27  (rcs-revision 1.2)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcoretranspare
+ncy.code.tex"
+File: pgfcoretransparency.code.tex 2008/01/17  (rcs-revision 1.2)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\basiclayer\pgfcorepatterns.
+code.tex"
+File: pgfcorepatterns.code.tex 2009/07/02  (rcs-revision 1.3)
+)))
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\modules\pgfmoduleshapes.cod
+e.tex"
+File: pgfmoduleshapes.code.tex 2010/09/09  (rcs-revision 1.13)
+\pgfnodeparttextbox=\box36
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\pgf\modules\pgfmoduleplot.code.
+tex"
+File: pgfmoduleplot.code.tex 2010/10/22  (rcs-revision 1.8)
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pgf\compatibility\pgfcomp-version
+-0-65.sty"
+Package: pgfcomp-version-0-65 2007/07/03 v2.10 (rcs-revision 1.7)
+\pgf@nodesepstart=\dimen153
+\pgf@nodesepend=\dimen154
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\pgf\compatibility\pgfcomp-version
+-1-18.sty"
+Package: pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
+)) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\hyperref.sty"
+Package: hyperref 2012/05/13 v6.82q Hypertext links for LaTeX
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\hobsub-hyperref.sty"
+Package: hobsub-hyperref 2012/04/25 v1.12 Bundle oberdiek, subset hyperref (HO)
+
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\hobsub-generic.sty"
+Package: hobsub-generic 2012/04/25 v1.12 Bundle oberdiek, subset generic (HO)
+Package: hobsub 2012/04/25 v1.12 Construct package bundles (HO)
+Package hobsub Info: Skipping package `infwarerr' (already loaded).
+Package hobsub Info: Skipping package `ltxcmds' (already loaded).
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+Package: intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+Package: pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Package: bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO
+)
+Package: bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Package: uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+)
+Package hobsub Info: Skipping package `hobsub' (already loaded).
+Package: letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Package: hopatch 2011/06/24 v1.1 Wrapper for package hooks (HO)
+Package: xcolor-patch 2011/01/30 xcolor patch
+Package: atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package atveryend Info: \enddocument detected (standard20110627).
+Package: atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+Package: refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Package: hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\oberdiek\kvoptions.sty"
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+)
+\@linkdim=\dimen155
+\Hy@linkcounter=\count128
+\Hy@pagecounter=\count129
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\pd1enc.def"
+File: pd1enc.def 2012/05/13 v6.82q Hyperref: PDFDocEncoding definition (HO)
+)
+\Hy@SavedSpaceFactor=\count130
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\00miktex\hyperref.cfg"
+File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 3941.
+Package hyperref Info: Hyper figures OFF on input line 4062.
+Package hyperref Info: Link nesting OFF on input line 4067.
+Package hyperref Info: Hyper index ON on input line 4070.
+Package hyperref Info: Plain pages OFF on input line 4077.
+Package hyperref Info: Backreferencing OFF on input line 4082.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4300.
+\c@Hy@tempcnt=\count131
+LaTeX Info: Redefining \url on input line 4653.
+\Fld@menulength=\count132
+\Field@Width=\dimen156
+\Fld@charsize=\dimen157
+Package hyperref Info: Hyper figures OFF on input line 5773.
+Package hyperref Info: Link nesting OFF on input line 5778.
+Package hyperref Info: Hyper index ON on input line 5781.
+Package hyperref Info: backreferencing OFF on input line 5788.
+Package hyperref Info: Link coloring ON on input line 5791.
+Package hyperref Info: Link coloring with OCG OFF on input line 5798.
+Package hyperref Info: PDF/A mode OFF on input line 5803.
+LaTeX Info: Redefining \ref on input line 5843.
+LaTeX Info: Redefining \pageref on input line 5847.
+\Hy@abspage=\count133
+\c@Item=\count134
+\c@Hfootnote=\count135
+)
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\hpdftex.def"
+File: hpdftex.def 2012/05/13 v6.82q Hyperref driver for pdfTeX
+\Fld@listcount=\count136
+\c@bookmark@seq@number=\count137
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\oberdiek\rerunfilecheck.sty"
+Package: rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+82.
+)
+\Hy@SectionHShift=\skip65
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\epsf\epsf.sty"
+This is `epsf.tex' v2.7.4 <14 February 2011>
+\epsffilein=\read2
+\epsfframemargin=\dimen158
+\epsfframethickness=\dimen159
+\epsfrsize=\dimen160
+\epsftmp=\dimen161
+\epsftsize=\dimen162
+\epsfxsize=\dimen163
+\epsfysize=\dimen164
+\pspoints=\dimen165
+) ("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\framed\framed.sty"
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip66
+\fb@frw=\dimen166
+\fb@frh=\dimen167
+\FrameRule=\dimen168
+\FrameSep=\dimen169
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\base\alltt.sty"
+Package: alltt 1997/06/16 v2.0g defines alltt environment
+)
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.aux"
+
+LaTeX Warning: Label `tab:fitstats' multiply defined.
+
+
+LaTeX Warning: Label `fig:rawnhats' multiply defined.
+
+
+LaTeX Warning: Label `fig:sub:runs1a' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sub:runs1a' multiply defined.
+
+
+LaTeX Warning: Label `fig:sub:runs1b' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sub:runs1b' multiply defined.
+
+
+LaTeX Warning: Label `fig:sub:runs1c' multiply defined.
+
+
+LaTeX Warning: Label `sub@fig:sub:runs1c' multiply defined.
+
+
+LaTeX Warning: Label `fig:partials' multiply defined.
+
+
+LaTeX Warning: Label `tab:fitstats' multiply defined.
+
+)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 127.
+LaTeX Font Info:    ... okay on input line 127.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 127.
+LaTeX Font Info:    ... okay on input line 127.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 127.
+LaTeX Font Info:    ... okay on input line 127.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 127.
+LaTeX Font Info:    ... okay on input line 127.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 127.
+LaTeX Font Info:    ... okay on input line 127.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 127.
+LaTeX Font Info:    ... okay on input line 127.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 127.
+LaTeX Font Info:    ... okay on input line 127.
+ ("C:\Program Files (x86)\MiKTeX 2.9\tex\context\base\supp-pdf.mkii"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count138
+\scratchdimen=\dimen170
+\scratchbox=\box37
+\nofMPsegments=\count139
+\nofMParguments=\count140
+\everyMPshowfont=\toks36
+\MPscratchCnt=\count141
+\MPscratchDim=\dimen171
+\MPnumerator=\count142
+\makeMPintoPDFobject=\count143
+\everyMPtoPDFconversion=\toks37
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\tran
+slator-basic-dictionary\translator-basic-dictionary-English.dict"
+Dictionary: translator-basic-dictionary, Language: English 
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\tran
+slator-bibliography-dictionary\translator-bibliography-dictionary-English.dict"
+Dictionary: translator-bibliography-dictionary, Language: English 
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\tran
+slator-environment-dictionary\translator-environment-dictionary-English.dict"
+Dictionary: translator-environment-dictionary, Language: English 
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\tran
+slator-months-dictionary\translator-months-dictionary-English.dict"
+Dictionary: translator-months-dictionary, Language: English 
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\tran
+slator-numbers-dictionary\translator-numbers-dictionary-English.dict"
+Dictionary: translator-numbers-dictionary, Language: English 
+)
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\tran
+slator-theorem-dictionary\translator-theorem-dictionary-English.dict"
+Dictionary: translator-theorem-dictionary, Language: English 
+)
+LaTeX Info: Redefining \includegraphics on input line 127.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: subfig package v1.3 is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+
+ABD: EveryShipout initializing macros
+\AtBeginShipoutBox=\box38
+Package hyperref Info: Link coloring ON on input line 127.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
+Package: nameref 2010/04/30 v2.40 Cross-referencing by name of section
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
+Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+)
+\c@section@level=\count144
+)
+LaTeX Info: Redefining \ref on input line 127.
+LaTeX Info: Redefining \pageref on input line 127.
+LaTeX Info: Redefining \nameref on input line 127.
+
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.out")
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.out")
+\@outlinefile=\write4
+
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\title.tex" [1
+
+{C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}])
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.toc"
+LaTeX Font Info:    Try loading font information for U+msa on input line 3.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2009/06/22 v3.00 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 3.
+
+("C:\Program Files (x86)\MiKTeX 2.9\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2009/06/22 v3.00 AMS symbols B
+)pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
+ been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.22 ...ing for Correlation}{21}{subsection.2.8.2}
+                                                   [1
+
+]
+
+Package Fancyhdr Warning: \headheight is too small (12.0pt): 
+ Make it at least 13.59999pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[2] [3])
+\tf@toc=\write5
+ [4]
+Chapter 1.
+[5
+
+]
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\danish/Offshore_WorkedExample_master.tex"
+Chapter 2.
+
+Underfull \hbox (badness 10000) in paragraph at lines 20--21
+
+ []
+
+[6
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 22--23
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--25
+
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmss on input line 28.
+
+LaTeX Font Info:    No file OMScmss.fd. on input line 28.
+
+LaTeX Font Warning: Font shape `OMS/cmss/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbullet' on input line 28.
+
+[7]
+Missing character: There is no â in font cmtt9!
+Missing character: There is no € in font cmtt9!
+Missing character: There is no ˜ in font cmtt9!
+Missing character: There is no â in font cmtt9!
+Missing character: There is no € in font cmtt9!
+Missing character: There is no ™ in font cmtt9!
+
+Overfull \hbox (8.54572pt too wide) in paragraph at lines 73--73
+[]\OT1/cmtt/m/n/9 dis.data.no                 Line transect data with no post-i
+mpact consequence[] 
+ []
+
+
+Overfull \hbox (8.54572pt too wide) in paragraph at lines 73--73
+[]\OT1/cmtt/m/n/9 dis.data.re                 Line transect data with redistrib
+ution post-impact[] 
+ []
+
+
+Overfull \hbox (32.17044pt too wide) in paragraph at lines 73--73
+[]\OT1/cmtt/m/n/9 ns.predict.data.de          Prediction grid data for nearshor
+e post-impact decrease[] 
+ []
+
+
+Overfull \hbox (60.52011pt too wide) in paragraph at lines 73--73
+[]\OT1/cmtt/m/n/9 ns.predict.data.no          Prediction grid data for nearshor
+e no post-impact consequence[] 
+ []
+
+
+Overfull \hbox (60.52011pt too wide) in paragraph at lines 73--73
+[]\OT1/cmtt/m/n/9 ns.predict.data.re          Prediction grid data for nearshor
+e post-impact redistribution[] 
+ []
+
+
+Overfull \hbox (13.27066pt too wide) in paragraph at lines 73--73
+[]\OT1/cmtt/m/n/9 predict.data.no             Prediction grid data for no post-
+impact consequence[] 
+ []
+
+
+Overfull \hbox (13.27066pt too wide) in paragraph at lines 73--73
+[]\OT1/cmtt/m/n/9 predict.data.re             Prediction grid data for post-imp
+act redistribution[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
+
+ []
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <10.95> not available
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 88.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--93
+
+ []
+
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 93--94
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 96--98
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 98--99
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--100
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 100--101
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 101--102
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 104--106
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 106--107
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 107--108
+
+ []
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 122.
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 164--165
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 174--175
+
+ []
+
+[10]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <9> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 182.
+ [11] <danish/HN_alldatacombined.png, id=475, 376.40625pt x 170.88844pt>
+File: danish/HN_alldatacombined.png Graphic file (type png)
+
+<use danish/HN_alldatacombined.png>
+Package pdftex.def Info: danish/HN_alldatacombined.png used on input line 234.
+(pdftex.def)             Requested size: 312.9803pt x 142.10333pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 257--260
+
+ []
+
+[12 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/HN_alldatacombined.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 288--289
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 312--313
+
+ []
+
+[13] <danish/qqresult.png, id=490, 186.6975pt x 159.59625pt>
+File: danish/qqresult.png Graphic file (type png)
+
+<use danish/qqresult.png>
+Package pdftex.def Info: danish/qqresult.png used on input line 326.
+(pdftex.def)             Requested size: 199.16928pt x 170.26462pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 335--336
+
+ []
+
+[14 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/qqresult.png>] [15]
+Overfull \hbox (17.67992pt too wide) in paragraph at lines 422--423
+[]\OT1/cmss/m/n/10.95 Either con-tinue from the pre-vi-ous sec-tion with \OT1/c
+mtt/m/n/10.95 count.data \OT1/cmss/m/n/10.95 or, load \OT1/cmtt/m/n/10.95 count
+.data
+ []
+
+[16] <danish/nhats.png, id=513, 903.375pt x 301.125pt>
+File: danish/nhats.png Graphic file (type png)
+ <use danish/nhats.png>
+Package pdftex.def Info: danish/nhats.png used on input line 467.
+(pdftex.def)             Requested size: 341.43306pt x 113.81297pt.
+
+<danish/depth.png, id=514, 602.25pt x 602.25pt>
+File: danish/depth.png Graphic file (type png)
+ <use danish/depth.png>
+Package pdftex.def Info: danish/depth.png used on input line 481.
+(pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
+
+<danish/season.png, id=515, 602.25pt x 602.25pt>
+File: danish/season.png Graphic file (type png)
+ <use danish/season.png>
+Package pdftex.def Info: danish/season.png used on input line 490.
+(pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<danish/impact.png, id=516, 602.25pt x 602.25pt>
+File: danish/impact.png Graphic file (type png)
+ <use danish/impact.png>
+Package pdftex.def Info: danish/impact.png used on input line 499.
+(pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[17 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/nhats.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MR
+Sea package/UserGuide/danish/depth.png>] [18 <C:/Users/lindesay/Dropbox/Researc
+h/MarineScotland_LSH/MRSea package/UserGuide/danish/season.png> <C:/Users/linde
+say/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuide/danish/impact.p
+ng>] [19] [20]
+Overfull \hbox (4.42177pt too wide) in paragraph at lines 615--616
+[]\OT1/cmss/m/n/10.95 Note: The smooth one di-men-sional co-vari-ates ap-pear i
+n the \OT1/cmtt/m/n/10.95 splineParams
+ []
+
+[21] <danish/RunsProfile_depth_glmk1.png, id=583, 702.625pt x 602.25pt>
+File: danish/RunsProfile_depth_glmk1.png Graphic file (type png)
+
+<use danish/RunsProfile_depth_glmk1.png>
+Package pdftex.def Info: danish/RunsProfile_depth_glmk1.png used on input line 
+711.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<danish/RunsProfile_Predicted_glmk1.png, id=584, 702.625pt x 602.25pt>
+File: danish/RunsProfile_Predicted_glmk1.png Graphic file (type png)
+
+<use danish/RunsProfile_Predicted_glmk1.png>
+Package pdftex.def Info: danish/RunsProfile_Predicted_glmk1.png used on input l
+ine 716.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<danish/RunsProfile_Index_glmk1.png, id=585, 702.625pt x 602.25pt>
+File: danish/RunsProfile_Index_glmk1.png Graphic file (type png)
+
+<use danish/RunsProfile_Index_glmk1.png>
+Package pdftex.def Info: danish/RunsProfile_Index_glmk1.png used on input line 
+721.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[22] [23 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/danish/RunsProfile_depth_glmk1.png> <C:/Users/lindesay/Dropbox/Researc
+h/MarineScotland_LSH/MRSea package/UserGuide/danish/RunsProfile_Predicted_glmk1
+.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/User
+Guide/danish/RunsProfile_Index_glmk1.png>]
+<danish/acfPlot.png, id=612, 602.25pt x 501.875pt>
+File: danish/acfPlot.png Graphic file (type png)
+ <use danish/acfPlot.png>
+Package pdftex.def Info: danish/acfPlot.png used on input line 781.
+(pdftex.def)             Requested size: 256.0748pt x 213.40509pt.
+
+[24 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/acfPlot.png>]
+<danish/CumRes_depth_glm.png, id=621, 702.625pt x 602.25pt>
+File: danish/CumRes_depth_glm.png Graphic file (type png)
+
+<use danish/CumRes_depth_glm.png>
+Package pdftex.def Info: danish/CumRes_depth_glm.png used on input line 826.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<danish/CumRes_depth_glmk1.png, id=622, 702.625pt x 602.25pt>
+File: danish/CumRes_depth_glmk1.png Graphic file (type png)
+
+<use danish/CumRes_depth_glmk1.png>
+Package pdftex.def Info: danish/CumRes_depth_glmk1.png used on input line 831.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+ [25
+
+ <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuide
+/danish/CumRes_depth_glm.png> <C:/Users/lindesay/Dropbox/Research/MarineScotlan
+d_LSH/MRSea package/UserGuide/danish/CumRes_depth_glmk1.png>]
+Overfull \hbox (2.08958pt too wide) in paragraph at lines 858--859
+[]\OT1/cmtt/m/n/10.95 fitnessMeasure\OT1/cmss/m/n/10.95 . The cri-te-rion for s
+e-lect-ing the `best' model. Avail-
+ []
+
+[26]
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 891--891
+[]    \OT1/cmtt/m/n/9 factorlist=[]c[]([]"Season"[], []"Impact"[]), predictData
+, splineParams=splineParams)[] 
+ []
+
+[27] <danish/knotgrid.png, id=655, 903.375pt x 602.25pt>
+File: danish/knotgrid.png Graphic file (type png)
+
+<use danish/knotgrid.png>
+Package pdftex.def Info: danish/knotgrid.png used on input line 982.
+(pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[28] [29 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/danish/knotgrid.png>]
+Overfull \hbox (32.17044pt too wide) in paragraph at lines 1048--1048
+[]    \OT1/cmtt/m/n/9 knotdim = c(26,14), startKnots = 6, minKnots = 4, maxKnot
+s = 20, r_seq = r_seq,[] 
+ []
+
+
+Overfull \hbox (27.4455pt too wide) in paragraph at lines 1062--1062
+[]    \OT1/cmtt/m/n/9 d2k = distMats$dataDist, k2k = distMats$knotDist, splineP
+arams = splineParams)[] 
+ []
+
+[30]
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 1122--1122
+[]  \OT1/cmtt/m/n/9 ..$ knotDist     : num [1:290, 1:290] 0 2000 4000 6000 8000
+ 10000 12000 ...[] 
+ []
+
+
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 1122--1122
+[]  \OT1/cmtt/m/n/9 ..$ datacoords   : num [1:9232, 1:2] 656250 656250 656250 6
+56250 656250 ...[] 
+ []
+
+[31] [32]
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1233.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 1233.
+
+[33]
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 1284--1284
+[][]\OT1/cmtt/m/n/9 # N.B. for the GEE formula, the data must be ordered by blo
+ck (which this is)[][] 
+ []
+
+[34] [35] <danish/PartialFits1.png, id=731, 652.4375pt x 602.25pt>
+File: danish/PartialFits1.png Graphic file (type png)
+
+<use danish/PartialFits1.png>
+Package pdftex.def Info: danish/PartialFits1.png used on input line 1410.
+(pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
+
+<danish/PartialFits3.png, id=732, 652.4375pt x 602.25pt>
+File: danish/PartialFits3.png Graphic file (type png)
+
+<use danish/PartialFits3.png>
+Package pdftex.def Info: danish/PartialFits3.png used on input line 1413.
+(pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
+ [36 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/PartialFits1.png> <C:/Users/lindesay/Dropbox/Research/MarineScotlan
+d_LSH/MRSea package/UserGuide/danish/PartialFits3.png>] [37] <danish/FitPlots_f
+itted.png, id=759, 433.62pt x 433.62pt>
+File: danish/FitPlots_fitted.png Graphic file (type png)
+
+<use danish/FitPlots_fitted.png>
+Package pdftex.def Info: danish/FitPlots_fitted.png used on input line 1493.
+(pdftex.def)             Requested size: 199.16928pt x 199.16988pt.
+ [38 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/FitPlots_fitted.png>]
+<danish/FitPlots_resids.png, id=771, 433.62pt x 433.62pt>
+File: danish/FitPlots_resids.png Graphic file (type png)
+
+<use danish/FitPlots_resids.png>
+Package pdftex.def Info: danish/FitPlots_resids.png used on input line 1530.
+(pdftex.def)             Requested size: 199.16928pt x 199.16988pt.
+ [39 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/FitPlots_resids.png>]
+Overfull \hbox (8.54572pt too wide) in paragraph at lines 1560--1560
+[][]\OT1/cmtt/m/n/9 plotCumRes[](geeModel, varlist=[]c[]([]'depth'[]), splinePa
+rams=splineParams, d2k=dists)[] 
+ []
+
+<danish/CumRes_depth_gee.png, id=784, 702.625pt x 602.25pt>
+File: danish/CumRes_depth_gee.png Graphic file (type png)
+
+<use danish/CumRes_depth_gee.png>
+Package pdftex.def Info: danish/CumRes_depth_gee.png used on input line 1574.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<danish/RunsProfile_depth_gee.png, id=785, 702.625pt x 602.25pt>
+File: danish/RunsProfile_depth_gee.png Graphic file (type png)
+
+<use danish/RunsProfile_depth_gee.png>
+Package pdftex.def Info: danish/RunsProfile_depth_gee.png used on input line 15
+77.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+ [40 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/CumRes_depth_gee.png> <C:/Users/lindesay/Dropbox/Research/MarineSco
+tland_LSH/MRSea package/UserGuide/danish/RunsProfile_depth_gee.png>]
+<danish/CumRes_Predicted_gee.png, id=801, 702.625pt x 602.25pt>
+File: danish/CumRes_Predicted_gee.png Graphic file (type png)
+
+<use danish/CumRes_Predicted_gee.png>
+Package pdftex.def Info: danish/CumRes_Predicted_gee.png used on input line 160
+0.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<danish/RunsProfile_Predicted_gee.png, id=802, 702.625pt x 602.25pt>
+File: danish/RunsProfile_Predicted_gee.png Graphic file (type png)
+
+<use danish/RunsProfile_Predicted_gee.png>
+Package pdftex.def Info: danish/RunsProfile_Predicted_gee.png used on input lin
+e 1603.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<danish/CumRes_Index_gee.png, id=804, 702.625pt x 602.25pt>
+File: danish/CumRes_Index_gee.png Graphic file (type png)
+
+<use danish/CumRes_Index_gee.png>
+Package pdftex.def Info: danish/CumRes_Index_gee.png used on input line 1625.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<danish/RunsProfile_Index_gee.png, id=805, 702.625pt x 602.25pt>
+File: danish/RunsProfile_Index_gee.png Graphic file (type png)
+
+<use danish/RunsProfile_Index_gee.png>
+Package pdftex.def Info: danish/RunsProfile_Index_gee.png used on input line 16
+28.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[41 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/CumRes_Predicted_gee.png> <C:/Users/lindesay/Dropbox/Research/Marine
+Scotland_LSH/MRSea package/UserGuide/danish/RunsProfile_Predicted_gee.png>]
+[42 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/CumRes_Index_gee.png> <C:/Users/lindesay/Dropbox/Research/MarineScot
+land_LSH/MRSea package/UserGuide/danish/RunsProfile_Index_gee.png>]
+<danish/InfluenceMeasures_covratio.png, id=834, 602.25pt x 602.25pt>
+File: danish/InfluenceMeasures_covratio.png Graphic file (type png)
+
+<use danish/InfluenceMeasures_covratio.png>
+Package pdftex.def Info: danish/InfluenceMeasures_covratio.png used on input li
+ne 1705.
+(pdftex.def)             Requested size: 227.62204pt x 227.62596pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[43] <danish/InfluenceMeasures_press.png, id=844, 602.25pt x 602.25pt>
+File: danish/InfluenceMeasures_press.png Graphic file (type png)
+
+<use danish/InfluenceMeasures_press.png>
+Package pdftex.def Info: danish/InfluenceMeasures_press.png used on input line 
+1730.
+(pdftex.def)             Requested size: 170.71652pt x 170.71487pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[44 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/InfluenceMeasures_covratio.png>]
+<danish/residualPlot.png, id=857, 903.375pt x 301.125pt>
+File: danish/residualPlot.png Graphic file (type png)
+
+<use danish/residualPlot.png>
+Package pdftex.def Info: danish/residualPlot.png used on input line 1767.
+(pdftex.def)             Requested size: 312.9803pt x 104.32933pt.
+ [45 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/danish/InfluenceMeasures_press.png> <C:/Users/lindesay/Dropbox/Research/Ma
+rineScotland_LSH/MRSea package/UserGuide/danish/residualPlot.png>]
+Overfull \hbox (19.73146pt too wide) in paragraph at lines 1802--1818
+[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1826--1828
+
+ []
+
+[46] [47]
+Overfull \hbox (17.9956pt too wide) in paragraph at lines 1893--1893
+[][]\OT1/cmtt/m/n/9 # round up dimensions if necessary - in this case our grid 
+is not quite regular.[][] 
+ []
+
+<danish/pointEstimate.png, id=884, 903.375pt x 301.125pt>
+File: danish/pointEstimate.png Graphic file (type png)
+
+<use danish/pointEstimate.png>
+Package pdftex.def Info: danish/pointEstimate.png used on input line 1917.
+(pdftex.def)             Requested size: 341.43306pt x 113.81297pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[48] [49 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/danish/pointEstimate.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1954--1956
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1957--1958
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1976--1978
+
+ []
+
+<danish/cis_upper.png, id=900, 903.375pt x 301.125pt>
+File: danish/cis_upper.png Graphic file (type png)
+
+<use danish/cis_upper.png>
+Package pdftex.def Info: danish/cis_upper.png used on input line 2001.
+(pdftex.def)             Requested size: 341.43306pt x 113.81297pt.
+
+<danish/cis_lower.png, id=901, 903.375pt x 301.125pt>
+File: danish/cis_lower.png Graphic file (type png)
+
+<use danish/cis_lower.png>
+Package pdftex.def Info: danish/cis_lower.png used on input line 2005.
+(pdftex.def)             Requested size: 341.43306pt x 113.81297pt.
+ [50]
+Underfull \hbox (badness 10000) in paragraph at lines 2026--2027
+
+ []
+
+[51 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/cis_upper.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LS
+H/MRSea package/UserGuide/danish/cis_lower.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 2031--2033
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2034--2035
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2059--2060
+
+ []
+
+[52] <danish/differencePlot.png, id=919, 803.0pt x 602.25pt>
+File: danish/differencePlot.png Graphic file (type png)
+
+<use danish/differencePlot.png>
+Package pdftex.def Info: danish/differencePlot.png used on input line 2090.
+(pdftex.def)             Requested size: 284.52756pt x 213.4005pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 2107--2108
+
+ []
+
+[53 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/danish/differencePlot.png (PNG copy)>] [54]
+Underfull \hbox (badness 10000) in paragraph at lines 2161--2163
+
+ []
+
+)
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\bc/Tutorial_BC_modelfitting_beamer_finaltxt_master.tex" [55]
+Chapter 3.
+[56
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 36--37
+
+ []
+
+[57] <bc/vpgridcells.png, id=952, 501.875pt x 602.25pt>
+File: bc/vpgridcells.png Graphic file (type png)
+
+<use bc/vpgridcells.png>
+Package pdftex.def Info: bc/vpgridcells.png used on input line 90.
+(pdftex.def)             Requested size: 170.71652pt x 204.86337pt.
+ <bc/birds.png, id=953, 903.375pt x 602.25pt>
+File: bc/birds.png Graphic file (type png)
+
+<use bc/birds.png>
+Package pdftex.def Info: bc/birds.png used on input line 99.
+(pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<bc/obshour.png, id=955, 602.25pt x 602.25pt>
+File: bc/obshour.png Graphic file (type png)
+ <use bc/obshour.png>
+Package pdftex.def Info: bc/obshour.png used on input line 117.
+(pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<bc/floodebb.png, id=956, 602.25pt x 602.25pt>
+File: bc/floodebb.png Graphic file (type png)
+ <use bc/floodebb.png>
+Package pdftex.def Info: bc/floodebb.png used on input line 126.
+(pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<bc/impact.png, id=957, 602.25pt x 602.25pt>
+File: bc/impact.png Graphic file (type png)
+ <use bc/impact.png>
+Package pdftex.def Info: bc/impact.png used on input line 134.
+(pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[58 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/vpgridcells.png>] [59 <C:/Users/lindesay/Dropbox/Research/MarineScotland
+_LSH/MRSea package/UserGuide/bc/birds.png> <C:/Users/lindesay/Dropbox/Research/
+MarineScotland_LSH/MRSea package/UserGuide/bc/obshour.png>] [60 <C:/Users/linde
+say/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuide/bc/floodebb.png
+> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuid
+e/bc/impact.png>] [61
+
+]
+Overfull \hbox (4.42177pt too wide) in paragraph at lines 254--255
+[]\OT1/cmss/m/n/10.95 Note: The smooth one di-men-sional co-vari-ates ap-pear i
+n the \OT1/cmtt/m/n/10.95 splineParams
+ []
+
+[62]
+Overfull \hbox (13.27066pt too wide) in paragraph at lines 313--313
+[][]\OT1/cmtt/m/n/9 runs.test[]([]residuals[](fullModel, type = []"pearson"[]),
+ alternative = []c[]([]"two.sided"[]))[] 
+ []
+
+[63] <bc/RunsProfile_observationhour_glmk1.png, id=1023, 702.625pt x 602.25pt>
+File: bc/RunsProfile_observationhour_glmk1.png Graphic file (type png)
+
+<use bc/RunsProfile_observationhour_glmk1.png>
+Package pdftex.def Info: bc/RunsProfile_observationhour_glmk1.png used on input
+ line 350.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<bc/RunsProfile_Predicted_glmk1.png, id=1024, 702.625pt x 602.25pt>
+File: bc/RunsProfile_Predicted_glmk1.png Graphic file (type png)
+
+<use bc/RunsProfile_Predicted_glmk1.png>
+Package pdftex.def Info: bc/RunsProfile_Predicted_glmk1.png used on input line 
+355.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<bc/RunsProfile_Index_glmk1.png, id=1025, 702.625pt x 602.25pt>
+File: bc/RunsProfile_Index_glmk1.png Graphic file (type png)
+
+<use bc/RunsProfile_Index_glmk1.png>
+Package pdftex.def Info: bc/RunsProfile_Index_glmk1.png used on input line 360.
+
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+ [64 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/bc/RunsProfile_observationhour_glmk1.png> <C:/Users/lindesay/Dropbox/Resea
+rch/MarineScotland_LSH/MRSea package/UserGuide/bc/RunsProfile_Predicted_glmk1.p
+ng> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/RunsProfile_Index_glmk1.png>]
+<bc/acfPlot.png, id=1041, 602.25pt x 501.875pt>
+File: bc/acfPlot.png Graphic file (type png)
+ <use bc/acfPlot.png>
+Package pdftex.def Info: bc/acfPlot.png used on input line 420.
+(pdftex.def)             Requested size: 256.0748pt x 213.40509pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[65] [66 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/bc/acfPlot.png>]
+<bc/CumRes_observationhour_glm.png, id=1063, 702.625pt x 602.25pt>
+File: bc/CumRes_observationhour_glm.png Graphic file (type png)
+
+<use bc/CumRes_observationhour_glm.png>
+Package pdftex.def Info: bc/CumRes_observationhour_glm.png used on input line 4
+63.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<bc/CumRes_observationhour_glmk1.png, id=1064, 702.625pt x 602.25pt>
+File: bc/CumRes_observationhour_glmk1.png Graphic file (type png)
+
+<use bc/CumRes_observationhour_glmk1.png>
+Package pdftex.def Info: bc/CumRes_observationhour_glmk1.png used on input line
+ 468.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+Overfull \hbox (2.08958pt too wide) in paragraph at lines 495--496
+[]\OT1/cmtt/m/n/10.95 fitnessMeasure\OT1/cmss/m/n/10.95 . The cri-te-rion for s
+e-lect-ing the `best' model. Avail-
+ []
+
+[67 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/CumRes_observationhour_glm.png> <C:/Users/lindesay/Dropbox/Research/Mari
+neScotland_LSH/MRSea package/UserGuide/bc/CumRes_observationhour_glmk1.png>]
+[68]
+Overfull \hbox (4.78728pt too wide) in paragraph at lines 588--589
+[]\OT1/cmss/m/n/10.95 Next we add a two di-men-sional smooth of ge-o-graphic co
+-or-di-nates (s(\OT1/cmtt/m/n/10.95 x.pos\OT1/cmss/m/n/10.95 ,
+ []
+
+[69] [70]
+Overfull \hbox (13.27066pt too wide) in paragraph at lines 681--681
+[]    \OT1/cmtt/m/n/9 knotdim=c(7,9), startKnots = 6, minKnots = 4, maxKnots = 
+20, r_seq = r_seq,[] 
+ []
+
+[71]
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 721--721
+[]\OT1/cmtt/m/n/9 cv1 <- []getCV_CReSS[](data, salsa1dOutput$bestModel, salsa1d
+Output$splineParams)[] 
+ []
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 770.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 770.
+
+[72]
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 819--819
+[][]\OT1/cmtt/m/n/9 # N.B. for the GEE formula, the data must be ordered by blo
+ck (which this is)[][] 
+ []
+
+[73]
+Overfull \hbox (13.27066pt too wide) in paragraph at lines 856--856
+[][]\OT1/cmtt/m/n/9 getPvalues[](geeModel, varlist = []c[]([]"observationhour"[
+]), factorlist = []c[]([]"floodebb"[],[] 
+ []
+
+[74]
+Overfull \hbox (27.4455pt too wide) in paragraph at lines 896--896
+[][]\OT1/cmtt/m/n/9 getPvalues[](noint.model, varlist = []c[]([]"observationhou
+r"[]), factorlist = []c[]([]"floodebb"[],[] 
+ []
+
+[75] <bc/PartialFits1.png, id=1155, 652.4375pt x 602.25pt>
+File: bc/PartialFits1.png Graphic file (type png)
+
+<use bc/PartialFits1.png>
+Package pdftex.def Info: bc/PartialFits1.png used on input line 945.
+(pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
+
+<bc/PartialFits2.png, id=1156, 652.4375pt x 602.25pt>
+File: bc/PartialFits2.png Graphic file (type png)
+
+<use bc/PartialFits2.png>
+Package pdftex.def Info: bc/PartialFits2.png used on input line 948.
+(pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
+
+<bc/PartialFits3.png, id=1157, 652.4375pt x 602.25pt>
+File: bc/PartialFits3.png Graphic file (type png)
+
+<use bc/PartialFits3.png>
+Package pdftex.def Info: bc/PartialFits3.png used on input line 952.
+(pdftex.def)             Requested size: 170.71652pt x 157.58296pt.
+ [76 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/bc/PartialFits1.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LS
+H/MRSea package/UserGuide/bc/PartialFits2.png> <C:/Users/lindesay/Dropbox/Resea
+rch/MarineScotland_LSH/MRSea package/UserGuide/bc/PartialFits3.png>] [77] [78
+
+]
+<bc/FitPlots_fitted.png, id=1186, 433.62pt x 433.62pt>
+File: bc/FitPlots_fitted.png Graphic file (type png)
+
+<use bc/FitPlots_fitted.png>
+Package pdftex.def Info: bc/FitPlots_fitted.png used on input line 1033.
+(pdftex.def)             Requested size: 199.16928pt x 199.16988pt.
+ [79 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/bc/FitPlots_fitted.png>]
+<bc/FitPlots_resids.png, id=1199, 433.62pt x 433.62pt>
+File: bc/FitPlots_resids.png Graphic file (type png)
+
+<use bc/FitPlots_resids.png>
+Package pdftex.def Info: bc/FitPlots_resids.png used on input line 1069.
+(pdftex.def)             Requested size: 199.16928pt x 199.16988pt.
+ [80 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/bc/FitPlots_resids.png>]
+Overfull \hbox (3.82077pt too wide) in paragraph at lines 1098--1098
+[][]\OT1/cmtt/m/n/9 plotCumRes[](geeModel, varlist=[]c[]([]'observationhour'[])
+, splineParams=splineParams,[] 
+ []
+
+<bc/CumRes_observationhour_gee.png, id=1210, 702.625pt x 602.25pt>
+File: bc/CumRes_observationhour_gee.png Graphic file (type png)
+
+<use bc/CumRes_observationhour_gee.png>
+Package pdftex.def Info: bc/CumRes_observationhour_gee.png used on input line 1
+113.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<bc/RunsProfile_observationhour_gee.png, id=1211, 702.625pt x 602.25pt>
+File: bc/RunsProfile_observationhour_gee.png Graphic file (type png)
+
+<use bc/RunsProfile_observationhour_gee.png>
+Package pdftex.def Info: bc/RunsProfile_observationhour_gee.png used on input l
+ine 1116.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<bc/CumRes_Predicted_gee.png, id=1214, 702.625pt x 602.25pt>
+File: bc/CumRes_Predicted_gee.png Graphic file (type png)
+
+<use bc/CumRes_Predicted_gee.png>
+Package pdftex.def Info: bc/CumRes_Predicted_gee.png used on input line 1143.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<bc/RunsProfile_Predicted_gee.png, id=1215, 702.625pt x 602.25pt>
+File: bc/RunsProfile_Predicted_gee.png Graphic file (type png)
+
+<use bc/RunsProfile_Predicted_gee.png>
+Package pdftex.def Info: bc/RunsProfile_Predicted_gee.png used on input line 11
+46.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[81 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/CumRes_observationhour_gee.png> <C:/Users/lindesay/Dropbox/Research/Mari
+neScotland_LSH/MRSea package/UserGuide/bc/RunsProfile_observationhour_gee.png>]
+<bc/CumRes_Index_gee.png, id=1230, 702.625pt x 602.25pt>
+File: bc/CumRes_Index_gee.png Graphic file (type png)
+
+<use bc/CumRes_Index_gee.png>
+Package pdftex.def Info: bc/CumRes_Index_gee.png used on input line 1169.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+<bc/RunsProfile_Index_gee.png, id=1231, 702.625pt x 602.25pt>
+File: bc/RunsProfile_Index_gee.png Graphic file (type png)
+
+<use bc/RunsProfile_Index_gee.png>
+Package pdftex.def Info: bc/RunsProfile_Index_gee.png used on input line 1172.
+(pdftex.def)             Requested size: 170.71652pt x 146.32573pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[82 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/CumRes_Predicted_gee.png> <C:/Users/lindesay/Dropbox/Research/MarineScot
+land_LSH/MRSea package/UserGuide/bc/RunsProfile_Predicted_gee.png>] [83 <C:/Use
+rs/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGuide/bc/CumR
+es_Index_gee.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea 
+package/UserGuide/bc/RunsProfile_Index_gee.png>]
+<bc/InfluenceMeasures_covratio.png, id=1262, 602.25pt x 602.25pt>
+File: bc/InfluenceMeasures_covratio.png Graphic file (type png)
+
+<use bc/InfluenceMeasures_covratio.png>
+Package pdftex.def Info: bc/InfluenceMeasures_covratio.png used on input line 1
+237.
+(pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
+
+<bc/InfluenceMeasures_press.png, id=1264, 602.25pt x 602.25pt>
+File: bc/InfluenceMeasures_press.png Graphic file (type png)
+
+<use bc/InfluenceMeasures_press.png>
+Package pdftex.def Info: bc/InfluenceMeasures_press.png used on input line 1262
+.
+(pdftex.def)             Requested size: 199.16928pt x 199.16583pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[84 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/InfluenceMeasures_covratio.png (PNG copy)>]
+Overfull \hbox (7.91893pt too wide) in paragraph at lines 1274--1275
+[]\OT1/cmss/m/n/10.95 Predictions are sen-si-tive to sev-eral blocks: \OT1/cmtt
+/m/n/10.95 c710213 c710210 \OT1/cmss/m/n/10.95 and \OT1/cmtt/m/n/10.95 d6111116
+
+ []
+
+<bc/residualPlot.png, id=1278, 903.375pt x 602.25pt>
+File: bc/residualPlot.png Graphic file (type png)
+ <use bc/residualPlot.png>
+Package pdftex.def Info: bc/residualPlot.png used on input line 1298.
+(pdftex.def)             Requested size: 341.43306pt x 227.62596pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[85 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/InfluenceMeasures_press.png (PNG copy)>] [86 <C:/Users/lindesay/Dropbox/
+Research/MarineScotland_LSH/MRSea package/UserGuide/bc/residualPlot.png>]
+Overfull \hbox (19.73146pt too wide) in paragraph at lines 1333--1350
+ [][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1360--1363
+
+ []
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/m/it' in size <12> not available
+(Font)              Font shape `OT1/cmss/m/sl' tried instead on input line 1364
+.
+
+[87
+
+] [88] <bc/pointEstimate.png, id=1310, 903.375pt x 602.25pt>
+File: bc/pointEstimate.png Graphic file (type png)
+
+<use bc/pointEstimate.png>
+Package pdftex.def Info: bc/pointEstimate.png used on input line 1460.
+(pdftex.def)             Requested size: 341.43306pt x 227.62596pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[89]
+Overfull \hbox (1.24153pt too wide) in paragraph at lines 1491--1493
+\OT1/cmss/m/n/12 This ap-proach in-cor-po-rates the un-cer-tainty as-so-ci-ated
+ with the count model
+ []
+
+[90 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/pointEstimate.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1494--1496
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1497--1498
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1514--1516
+
+ []
+
+[91] <bc/cis_upper.png, id=1329, 903.375pt x 602.25pt>
+File: bc/cis_upper.png Graphic file (type png)
+ <use bc/cis_upper.png>
+Package pdftex.def Info: bc/cis_upper.png used on input line 1565.
+(pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
+
+<bc/cis_lower.png, id=1330, 903.375pt x 602.25pt>
+File: bc/cis_lower.png Graphic file (type png)
+ <use bc/cis_lower.png>
+Package pdftex.def Info: bc/cis_lower.png used on input line 1569.
+(pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
+
+[92 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/bc/cis_upper.png> <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MR
+Sea package/UserGuide/bc/cis_lower.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1585--1586
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1589--1591
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1613--1614
+
+ []
+
+[93] <bc/differencePlot.png, id=1344, 803.0pt x 602.25pt>
+File: bc/differencePlot.png Graphic file (type png)
+
+<use bc/differencePlot.png>
+Package pdftex.def Info: bc/differencePlot.png used on input line 1646.
+(pdftex.def)             Requested size: 227.62204pt x 170.71487pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[94] [95 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/U
+serGuide/bc/differencePlot.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 1690--1692
+
+ []
+
+)
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\Tipstricks.tex" [96]
+Chapter 4.
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+
+ []
+
+[97
+
+] <impactdetplot.png, id=1367, 614.295pt x 351.3125pt>
+File: impactdetplot.png Graphic file (type png)
+
+<use impactdetplot.png>
+Package pdftex.def Info: impactdetplot.png used on input line 44.
+(pdftex.def)             Requested size: 341.43306pt x 195.26485pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 52--54
+
+ []
+
+
+Overfull \hbox (1.29056pt too wide) in paragraph at lines 57--58
+[]\OT1/cmss/m/n/12 wavefront and wave-fron-theight are not suit-able as wave-fr
+ont is nested, 
+ []
+
+
+Package Fancyhdr Warning: \headheight is too small (13.59999pt): 
+ Make it at least 25.2842pt.
+ We now make it that large for the rest of the document.
+ This may cause the page layout to be inconsistent, however.
+
+[98 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserGu
+ide/impactdetplot.png>] [99] <knot1.png, id=1379, 903.375pt x 602.25pt>
+File: knot1.png Graphic file (type png)
+
+<use knot1.png>
+Package pdftex.def Info: knot1.png used on input line 144.
+(pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
+ [100 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/User
+Guide/knot1.png>] <knot3.png, id=1387, 903.375pt x 602.25pt>
+File: knot3.png Graphic file (type png)
+
+<use knot3.png>
+Package pdftex.def Info: knot3.png used on input line 166.
+(pdftex.def)             Requested size: 256.0748pt x 170.71487pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--184
+
+ []
+
+[101 <C:/Users/lindesay/Dropbox/Research/MarineScotland_LSH/MRSea package/UserG
+uide/knot3.png>] [102]
+Underfull \hbox (badness 10000) in paragraph at lines 236--237
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 240--242
+
+ []
+
+[103] [104] [105] [106])
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.bbl" [107]
+
+LaTeX Font Warning: Font shape `OT1/cmss/m/sc' in size <12> not available
+(Font)              Font shape `OT1/cmr/m/sc' tried instead on input line 19.
+
+)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 163.
+ [108
+
+]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 163.
+
+("C:\Users\lindesay\Dropbox\Research\MarineScotland_LSH\MRSea package\UserGuide
+\master_userguide.aux")
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 163.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 163.
+Package rerunfilecheck Info: File `master_userguide.out' has not changed.
+(rerunfilecheck)             Checksum: D473951C6A912A404BBF459604467C77;6118.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 163.
+ ) 
+Here is how much of TeX's memory you used:
+ 16544 strings out of 494045
+ 289898 string characters out of 3145960
+ 358624 words of memory out of 3000000
+ 18863 multiletter control sequences out of 15000+200000
+ 24239 words of font info for 90 fonts, out of 3000000 for 9000
+ 715 hyphenation exceptions out of 8191
+ 56i,12n,56p,696b,566s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
+><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmitt10.pfb>
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C
+:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/
+Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Pro
+gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Progra
+m Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program File
+s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Program Files (x
+86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)/
+MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Program Files (x86)/MiKT
+eX 2.9/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Program Files (x86)/MiKTeX
+ 2.9/fonts/type1/public/amsfonts/cm/cmss12.pfb><C:/Program Files (x86)/MiKTeX 2
+.9/fonts/type1/public/amsfonts/cm/cmss17.pfb><C:/Program Files (x86)/MiKTeX 2.9
+/fonts/type1/public/amsfonts/cm/cmss8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fo
+nts/type1/public/amsfonts/cm/cmss9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts
+/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts
+/type1/public/amsfonts/cm/cmssi10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/
+type1/public/amsfonts/cm/cmssi12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/t
+ype1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/typ
+e1/public/amsfonts/cm/cmsy6.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/
+public/amsfonts/cm/cmsy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/pub
+lic/amsfonts/cm/cmsy9.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public
+/amsfonts/cm/cmtt10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/a
+msfonts/cm/cmtt12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/ams
+fonts/cm/cmtt8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfon
+ts/cm/cmtt9.pfb>
+Output written on master_userguide.pdf (109 pages, 1337968 bytes).
+PDF statistics:
+ 1625 PDF objects out of 1728 (max. 8388607)
+ 509 named destinations out of 1000 (max. 500000)
+ 947 words of extra memory for PDF output out of 10000 (max. 10000000)
+

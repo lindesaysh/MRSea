@@ -6,7 +6,7 @@
 #' @param orig.data The original data. In case \code{ddf.obj} is specified, this should be the original distance data. In case \code{ddf.obj} is \code{NULL}, it should have the format equivalent to \code{count.data} where each record represents the summed up counts at the segments. 
 #' @param predict.data The prediction grid data 
 #' @param ddf.obj The ddf object created for the best fitting detection model. Defaults to \code{NULL} for when nodetection function object available. 
-#' @param model.obj The best fitting \code{CReSS} model for the original count data
+#' @param model.obj The best fitting \code{CReSS} model for the original count data. Should be geeglm or a Poisson/Binomial GLM (not quasi).
 #' @param splineParams The object describing the parameters for fitting the one and two dimensional splines
 #' @param g2k (N x k) matrix of distances between all prediction points (N) and all knot points (k)
 #' @param resample Specifies the resampling unit for bootstrapping, default is \code{transect.id}. Must match a column name in \code{dis.data} exactly
@@ -92,7 +92,7 @@
 #' # bootstrapping
 #' do.bootstrap.cress(dis.data.re, predict.data.re, ddf.obj=result, geeModel, splineParams, 
 #'               g2k=dists, resample='transect.id', rename='segment.id', stratum='survey.id', 
-#'               B=4, name="cress", save.data=FALSE, nhats=NULL, nCores=1)
+#'               B=4, name="cress", save.data=FALSE, nhats=FALSE, nCores=1)
 #' load("cresspredictionboot.RData") # loading the bootstrap predictions into the workspace
 #' # look at the first 6 lines of the bootstrap predictions (on the scale of the response)
 #' head(bootPreds) 
@@ -102,7 +102,7 @@
 #' require(parallel)
 #' do.bootstrap.cress(dis.data.re, predict.data.re, ddf.obj=result, geeModel, splineParams,
 #'                 g2k=dists, resample='transect.id', rename='segment.id', stratum='survey.id',
-#'                 B=4, name="cress", save.data=FALSE, nhats=NULL, nCores=4)
+#'                 B=4, name="cress", save.data=FALSE, nhats=FALSE, nCores=4)
 #' load("cresspredictionboot.RData") # loading the bootstrap predictions into the workspace
 #' # look at the first 6 lines of the bootstrap predictions (on the scale of the response)
 #' head(bootPreds)
@@ -114,7 +114,7 @@
 #' \dontrun{
 #' do.bootstrap.cress(ns.data.re, ns.predict.data.re, ddf.obj=NULL, geeModel, splineParams, 
 #'              g2k=dists, resample='transect.id', rename='segment.id', stratum=NULL, 
-#'              B=2, name="cress", save.data=FALSE, nhats=NULL)
+#'              B=2, name="cress", save.data=FALSE, nhats=FALSE)
 #' load("cresspredictionboot.RData") # loading the predictions into the workspace
 #' # look at the first 6 lines of the bootstrap predictions (on the scale of the response)
 #' head(bootPreds)}
@@ -123,6 +123,10 @@
 
 do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splineParams, g2k, resample="transect.id",rename="segment.id",stratum=NULL,B,name=NULL, save.data=FALSE, nhats=FALSE, seed=12345, nCores=1){
   
+  require(Matrix)
+  require(mvtnorm)
+  
+  if(is.null(nhats)){nhats<-FALSE}
   #require(mvtnorm)
   if(is.null(ddf.obj)==F){
     # fixing the settings for the detection model
@@ -160,6 +164,7 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
       require(MRSea)
       require(geepack)
       require(mvtnorm)
+      require(mgcv)
     })
     
     # only do parametric boostrap if no data re-sampling and no nhats provided
@@ -182,7 +187,7 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
         samplecoeff<-NULL
         try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
         if(is.null(samplecoeff)){
-          varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
+          varcov<-as.matrix(nearPD(as.matrix(summary(model.obj)$cov.unscaled))$mat)
           samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
         }
         
@@ -244,7 +249,7 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
           #print(paste('zeroblocks:', length(which(tapply(boot.count.data$response, boot.count.data$transect.id2, sum)==0)), sep=''))
           
           dists<- d2k[boot.count.data$segment.id,]
-          #geefit<- geeglm(model.obj$formula, id=transect.id2, family=model.obj$family$family, data=boot.count.data)
+          #geefit<- geeglm(model.obj$formula, id=as.numeric(transect.id2), family=model.obj$family$family, data=boot.count.data)
           geefit<- eval(parse(text=paste("geeglm(model.obj$formula, id=transect.id2, family=", model.obj$family$family,"(link='", model.obj$family$link, "'), data=boot.count.data)", sep='')))
           
           # sample from multivariate normal
@@ -253,7 +258,7 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
           samplecoeff<-NULL
           try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')), silent=T)
           if(is.null(samplecoeff)){
-            varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
+            varcov<-as.matrix(nearPD(as.matrix(summary(geefit)$cov.unscaled))$mat)
             samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
             #cat('*')
           }
@@ -287,7 +292,7 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
           samplecoeff<-NULL
           try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
           if(is.null(samplecoeff)){
-            varcov<-as.matrix(nearPD(vcov(geefit))$mat)
+            varcov<-as.matrix(nearPD(as.matrix(summary(geefit)$cov.unscaled))$mat)
             samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
           }
           
@@ -337,7 +342,7 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
         samplecoeff<-NULL
         try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
         if(is.null(samplecoeff)){
-          varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
+          varcov<-as.matrix(nearPD(as.matrix(summary(model.obj)$cov.unscaled))$mat)
           samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
         }
         # make predictions
@@ -396,7 +401,7 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
           samplecoeff<-NULL
           try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')), silent=T)
           if(is.null(samplecoeff)){
-            varcov<-as.matrix(nearPD(vcov(model.obj))$mat)
+            varcov<-as.matrix(nearPD(as.matrix(summary(model.obj)$cov.unscaled))$mat)
             samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
             cat('*')
           }
@@ -432,7 +437,7 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
           samplecoeff<-NULL
           try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
           if(is.null(samplecoeff)){
-            varcov<-as.matrix(nearPD(vcov(geefit))$mat)
+            varcov<-as.matrix(nearPD(as.matrix(summary(geefit)$cov.unscaled))$mat)
             samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
           }
           

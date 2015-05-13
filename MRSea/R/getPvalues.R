@@ -31,6 +31,9 @@
 #' @export
 #' 
 getPvalues<-function(model, varlist=NULL, factorlist=NULL){
+  
+  if(class(model)[1]!='geeglm'){stop('Class of model not geeglm. Fit model as GEE or use an appropriate ANOVA function (e.g. Anova or anova)')}
+  
   print("Getting marginal p-values")
   
   # make list of terms if varlist and factorlist are spcified

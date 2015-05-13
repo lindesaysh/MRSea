@@ -67,69 +67,39 @@
 #' 
 #' @export
 #' 
-
-predict.cress<-function(predict.data, splineParams, g2k, model, type='response', coeff=NULL){
-  
-  attributes(model$formula)$.Environment<-environment()
-  radii<-splineParams[[1]]$radii
-  radiusIndices<-splineParams[[1]]$radiusIndices
-  aR<- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
-  
-  dists<- g2k
-  x2<- data.frame(response=rpois(nrow(predict.data),lambda = 5), predict.data)
-  #fakemodel<- eval(parse(text=paste("glm(model$formula, data=x2, family=", model$family$family,"(link='", model$family$link, "'))", sep='')))
-  fakemodel<- glm(model$formula, data=x2, family='poisson')
-  modmat<- model.matrix(fakemodel)
-  head(modmat[,6:9])
-  
-  # get centering of fakeglm above
-  bad_cntr<-attributes(fakemodel$model$'LocalRadialFunction(radiusIndices, dists, radii, aR)')$`scaled:center`
-  
-  # get centering of original model
-  cntr<- attributes(model$model$'LocalRadialFunction(radiusIndices, dists, radii, aR)')$`scaled:center`
-  
-  # find columns with interaction in them
-  intcol<- grep(':', attributes(modmat)$dimnames[[2]])
-  
-  # find columns with radial in them but not interaction (if there)
-  if(length(intcol)==0){
-    radcol<- grep('Local', attributes(modmat)$dimnames[[2]])
-  }else{
-    radcol<- grep('Local', attributes(modmat)$dimnames[[2]][-intcol])  
-  }
-  
-  # take local radial model matrix and add bad centre back on
-  
-  bad_cntr.mat<-matrix(rep(bad_cntr, each = nrow(modmat)), ncol=length(bad_cntr), byrow=F)
-  #modmat[,radcol]<-modmat[,radcol]+bad_cntr.mat
-  #head(modmat[,6:9])
-  # now re-centre with centering from original fitted model
-  cntr.mat<-matrix(rep(cntr, each = nrow(modmat)), ncol=length(cntr), byrow=F)
-  modmat[,radcol]<-modmat[,radcol]+bad_cntr.mat-cntr.mat
-  #head(modmat[,6:9])
-
-  # do the same for the interaction if present
-  if(length(intcol)!=0){
-    modmat[,intcol]<-modmat[,intcol]+bad_cntr.mat-cntr.mat
-  }
-  
-  if(is.null(coeff)){
-    modcoef<- as.vector(model$coefficients)  
-  }else{
-    modcoef<-coeff
-  }
-  if(type=='response'){
-    if(length(model$offset)>0 & sum(model$offset)!=0){
-      preds<- model$family$linkinv(modmat%*%modcoef)* predict.data$area  
-    }else{
-      preds<- model$family$linkinv(modmat%*%modcoef)
+predict.cress<- function (predict.data, splineParams, g2k, model, type = "response", 
+                              coeff = NULL) 
+    {
+      attributes(model$formula)$.Environment <- environment()
+      radii <- splineParams[[1]]$radii
+      radiusIndices <- splineParams[[1]]$radiusIndices
+      dists <- g2k
+      x2 <- data.frame(response = rpois(nrow(predict.data), lambda = 5), 
+                       predict.data)
+      tt <- terms(model)
+      Terms <- delete.response(tt)
+      m <- model.frame(Terms, predict.data, xlev = model$xlevels)
+      modmat <- model.matrix(Terms, m)
+      if (is.null(coeff)) {
+        modcoef <- as.vector(model$coefficients)
+      }
+      else {
+        modcoef <- coeff
+      }
+      if (type == "response") {
+        if (length(model$offset) > 0 & sum(model$offset) != 
+              0) {
+          preds <- model$family$linkinv(modmat %*% modcoef) * 
+            predict.data$area
+        }
+        else {
+          preds <- model$family$linkinv(modmat %*% modcoef)
+        }
+      }
+      if (type == "link") {
+        preds <- modmat %*% modcoef
+        print("warning: no offset included as link response specified")
+      }
+      return(preds)
     }
-  }
-  
-  if(type=='link'){
-    preds<- modmat%*%modcoef
-    print('warning: no offset included as link response specified')
-  }
-  
-  return(preds)
-}
+

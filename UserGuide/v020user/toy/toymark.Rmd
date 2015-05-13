@@ -1,0 +1,18 @@
+---
+title: "toy2"
+output: html_document
+bibliography: newref.bib
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+require(knitcitations)
+cleanbib()
+biblio <- read.bibtex("newref.bib")
+cite_options(citation_format = 'pandoc', cite.style = 'authoryear', max.names = 1, longnamesfirst=FALSE)
+```
+
+## Introduction
+The ```MRSea``` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to other studies as well. This vignette gives an updated example of the code for version 0.2.0.  For additional information regarding methods, see `r citet(biblio[['Mac2013']])` and `r citet(biblio[['ScottH2013a']])`.  The user should be familiar with generalised linear models and their assumptions and model selection. The ```MRSea``` package primarily allows spatially adaptive model selection for both one and two dimensional covariates using the functions ```runSALSA1D_withremoval``` and ```runSALSA2D```, which implement the methods of `r citet(biblio[['Walker2010']])` and `r citet(biblio[['ScottH2013']])`. Other functions include diagnostics (to assess residual correlation: ```runACF```, smooth relationships: ``` runPartialPlots``` and model selection (ANOVA) for a Generalised Estimating Equation used when residual correlation is present: ```getPvalues```) and inference (```do.bootstrap.cress```). 
+
+
+## References:

@@ -20,7 +20,7 @@
 bref <- c(
   bibentry(
     bibtype = "Manual",
-    title = "MRSea package (version 0.1.3): Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
+    title = "MRSea package (version 0.2.1): Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
     author = c(
       person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
              email = "lass@st-andrews.ac.uk"),
@@ -30,13 +30,30 @@ bref <- c(
       person("Eric", "Rexstad", role = c("ctb"))
     ),
     Institution = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
-    year = "2013",
+    year = "2015",
     note = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
     url = "http://creem2.st-and.ac.uk/software.aspx",
     key = "mrsea-package"
   ),
   
   bibentry(
+    bibtype = "TechReport",
+    title = "Vignette for the MRSea Package v0.2.0: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas.",
+    author = c(
+      person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
+             email = "lass@st-andrews.ac.uk"),
+      person(c("Cornelia", "S."), "Oedekoven", role = c("aut", "ctb")),
+      person(c("Monique", "L."), "Mackenzie", role = c("aut","ctb")),
+      person(c("Cameron", "G."), "Walker", role = c("aut","ctb"))
+    ),
+    Institution = "University of St. Andrews",
+    year = "2015",
+    note = "Centre for Research into Ecological and Environmental Modelling",
+    url = "http://creem2.st-and.ac.uk/software.aspx",
+    key = "mrsea-guide2015"
+  )
+
+bibentry(
     bibtype = "TechReport",
     title = "User Guide for the MRSea Package: Statistical Modelling of bird and
 cetacean distributions in offshore renewables development areas",

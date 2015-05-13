@@ -1,0 +1,97 @@
+\documentclass[10pt, a4paper]{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{fancyhdr}
+\usepackage{bookman}
+\usepackage{amsthm}
+\usepackage{natbib}
+
+\pagestyle{fancy} \rhead[RH-even]{}
+\setlength{\oddsidemargin}{0pt} \setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{450pt}
+\newcommand{\markforthis}[1]{\nolinebreak\hfill [#1]}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+
+
+
+
+
+%~~~~~~~~~~~~~~~~~~~~~~~~
+\section{Introduction}
+The {\tt MRSea} package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to other studies as well. This vignette gives an updated example of the code for version 0.2.0.  For additional information regarding methods, see Mackenzie, et al. (2013) and Scott-Hayward, et al. (2013).  The user should be familiar with generalised linear models and their assumptions and model selection. The {\tt MRSea} package primarily allows spatially adaptive model selection for both one and two dimensional covariates using the functions {\tt runSALSA1D\_withremoval} and {\tt runSALSA2D}, which implement the methods of Walker, et al. (2010) and Scott-Hayward, et al. (2013). Other functions include diagnostics (to assess residual correlation: {\tt runACF}, smooth relationships: {\tt runPartialPlots} and model selection (ANOVA) for a Generalised Estimating Equation used when residual correlation is present: {\tt getPvalues}) and inference ({\tt do.bootstrap.cress}). 
+
+
+\section{References:}
+[1] M. Mackenzie, L. Scott-Hayward, C.S., Oedekoven,
+H., Skov, E. Humphreys and E. Rexstad. _Statistical
+Modelling of Seabird and Cetacean data: Guidance
+Document. University of St. Andrews contract for
+Marine Scotland; SB9 (CR/2012/05)._ Tech. rep.
+University of St Andrews, 2013.
+[1] L. Scott-Hayward, C. Oedekoven, M. Mackenzie, C.
+Walker and E. Rexstad. _User Guide for the MRSea
+Package v0.1.2: Statistical Modelling of bird and
+cetacean distributions in offshore renewables
+development areas. University of St. Andrews contract
+for Marine Scotland; SB9 (CR/2012/05)._ Tech. rep.
+University of St Andrews, 2013.
+[1] C. Walker, M. Mackenzie, C. Donovan and M.
+O'Sullivan. "SALSA - A Spatially Adaptive Local
+Smoothing Algorithm". In: _Journal of Statistical
+Computation and Simulation_ 81.2 (2010), pp. 179-191.
+\begin{kframe}
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error: argument 1 (type 'list') cannot be handled by 'cat'}}\end{kframe}
+
+
+
+\end{document}

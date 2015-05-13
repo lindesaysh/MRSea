@@ -7,7 +7,7 @@
 #' @param vector Logical indicating whether the vector of scores is returned (TRUE) or if the mean score is returned (FALSE).
 #' 
 #' @details
-#' There must be a column in the data called \code{foldid}, which can be created using \code{\link{getCVids}}.  This column defines the folds of data for the CV calculation.
+#' There must be a column in the data called \code{foldid}, which can be created using \code{\link{getCVids}}.  This column defines the folds of data for the CV calculation.  If this is not provided, by default random allocation is given to 5 folds.
 #' 
 #' The cost function for this CV is a mean squared error.
 #' 
@@ -43,13 +43,21 @@
 #' 
 #' @export
 #' 
-getCV_CReSS<-function(data, baseModel, splineParams, vector=FALSE){
+getCV_CReSS<-function(datain, baseModel, splineParams=NULL, vector=FALSE){
 
   #data<-baseModel$data
   
 #   if(is.null(block)==FALSE){
 #     data$foldid<-data[,block]  
 #   }
+  
+  if(is.null(datain$foldid)){
+    datahere<-datain
+    datahere$foldid<-getCVids(datain, folds = 5)
+    warning("Fold ID not specified as column in the data.  Random allocation to 5 folds used here by default.  To change, use getCVids() to create your own foldid column in the data set.")
+  }else{
+    datahere<-datain
+  }
   
   d2k<-splineParams[[1]]$dist
   radiusIndices <-splineParams[[1]]$radiusIndices
@@ -58,28 +66,36 @@ getCV_CReSS<-function(data, baseModel, splineParams, vector=FALSE){
   
   attributes(baseModel$formula)$.Environment<-environment()
   # calculate cross-validation
-  nfolds<-length(unique(data$foldid))
+  nfolds<-length(unique(datahere$foldid))
   dists<-d2k
   store<- matrix(0, nrow=nfolds, ncol=1)
   for(f in 1:nfolds){
-    dists<-d2k[data$foldid!=f,]
-    foldedFit<- update(baseModel, .~., data=data[data$foldid!=f,])
+    dists<-d2k[datahere$foldid!=f,]
+    
+    eval(parse(text=paste(substitute(datain), "=datahere[datahere$foldid!=", f, ",]", sep="")))
+    
+    eval(parse(text=paste("foldedFit<- update(baseModel, .~., data=", substitute(datain), ")", sep="")))
+    # one parameter model
     if(length(coef(foldedFit))==1){
-      dists<-d2k[data$foldid==f,]
+      dists<-d2k[datahere$foldid==f,]
+      #offset or not?
       if(is.null(baseModel$offset)){
-        predscv<- baseModel$family$linkinv(as.matrix(model.matrix(baseModel)[data$foldid==f])%*%coef(foldedFit))
+        predscv<- baseModel$family$linkinv(as.matrix(model.matrix(baseModel)[datahere$foldid==f])%*%coef(foldedFit))
       }else{
-        predscv<- baseModel$family$linkinv(as.matrix(model.matrix(baseModel)[data$foldid==f])%*%coef(foldedFit)) * baseModel$family$linkinv(baseModel$offset)[data$foldid==f]  
+        predscv<- baseModel$family$linkinv(as.matrix(model.matrix(baseModel)[datahere$foldid==f])%*%coef(foldedFit)) * baseModel$family$linkinv(baseModel$offset)[datahere$foldid==f]  
       }
+      
     }else{  
-      dists<-d2k[data$foldid==f,]
+      dists<-d2k[datahere$foldid==f,]
+      
       if(is.null(baseModel$offset)){
-      predscv<- baseModel$family$linkinv(model.matrix(baseModel)[data$foldid==f,]%*%coef(foldedFit))
+      predscv<- baseModel$family$linkinv(model.matrix(baseModel)[datahere$foldid==f,]%*%coef(foldedFit))
       }else{
-        predscv<- baseModel$family$linkinv(model.matrix(baseModel)[data$foldid==f,]%*%coef(foldedFit)) * baseModel$family$linkinv(baseModel$offset)[data$foldid==f]
+        predscv<- baseModel$family$linkinv(model.matrix(baseModel)[datahere$foldid==f,]%*%coef(foldedFit)) * baseModel$family$linkinv(baseModel$offset)[datahere$foldid==f]
       }
+      
     }        
-    store[f]<- mean((data$response[data$foldid==f]-predscv)**2)
+    store[f]<- mean((datahere$response[datahere$foldid==f]-predscv)**2)
   }
   if(vector==TRUE){
     return(store)

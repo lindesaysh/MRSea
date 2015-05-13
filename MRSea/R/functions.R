@@ -30,14 +30,64 @@
 #' 
 #' @export
 #' 
-getRadiiChoices<-function(numberofradii=8, distMatrix){
-  numberofradii = numberofradii+2
-  # establish smallest observation-knot distance
-  rmin<- sqrt(max(distMatrix)/21)
-  rmax<- sqrt(max(distMatrix)/3e-7)
-  r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
+# getRadiiChoices<-function(numberofradii=8, distMatrix){
+#   numberofradii = numberofradii+2
+#   # establish smallest observation-knot distance
+#   rmin<- sqrt(max(distMatrix)/21)
+#   rmax<- sqrt(max(distMatrix)/3e-7)
+#   r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
+#   return(r_seq)
+# }
+
+# getRadiiChoices<-function(numberofradii=10, distMatrix){
+#   #mindist<-mean(apply(distMatrix, 2, min))
+#   #maxdist<-mean(apply(distMatrix, 2, max))
+#   #r_seq=1/(seq((mindist), (maxdist),length=numberofradii+1))
+#   mindist<-mean(apply(distMatrix, 2, min))
+#   maxdist<-mean(apply(distMatrix, 2, max))
+#   r_seq=exp(seq(log(1/mindist)*1.5, log(1/maxdist),length=10))
+#   return(r_seq[-1])
+# }
+
+# getRadiiChoices<-function(numberofradii=10, distMatrix){
+#   
+#   mindist<-mean(apply(distMatrix, 2, min))
+#   maxdist<-mean(apply(distMatrix, 2, max))
+#   r_seq=exp(seq(log(1/mindist), log(1/maxdist)*1.5,length=20))
+#   
+#   aRsel<- sample(1:ncol(distMatrix), 5)
+#   r_min=r_max=vector(length = length(aRsel))
+#   for(a in 1:5){
+#     b<-LocalRadialFunction(radiusIndices = c(1:length(r_seq)),dists = distMatrix, radii = r_seq, aR = rep(aRsel[a], length=length(r_seq)))
+#     means<-apply(b, 2, mean)
+#     r_min[a]<-r_seq[(which(means>0.01)[1])]
+#     r_max[a]<-r_seq[(which(means>0.90)[1])]
+#     
+#   }
+#   r_min<-mean(r_min)
+#   r_max<-mean(r_max)
+#   r_seq=exp(seq(log(r_min), log(r_max),length=numberofradii))
+#   #b<-LocalRadialFunction(radiusIndices = c(1:length(r_seq)),dists = distMatrix, radii = r_seq, aR = rep(aRsel[a], length=length(r_seq)))
+# #   summary(b)
+# #   par(mfrow=c(2,2))
+# #   for(i in 1:(length(r_seq))){
+# #     print(i)
+# #     quilt.plot(data$x.pos, data$y.pos, b[,i], asp=1, zlim=c(0,1))
+# #   }
+#   
+#   return(r_seq)
+# }
+
+getRadiiChoices<-function(numberofradii=10, distMatrix){
+  
+  minDist <- mean(apply(distMatrix,2,min))
+  meanDist <- mean(apply(distMatrix,2,mean))
+  rval_max<- sqrt(-log(0.7)/meanDist**2)
+  rval_min<- sqrt(-log(0.001)/meanDist**2)
+  r_seq<- exp(seq(log(rval_min), log(rval_max), length=numberofradii))
   return(r_seq)
 }
+
 
 #-----------------------------------------------------------------------------
 #' Factor level response check

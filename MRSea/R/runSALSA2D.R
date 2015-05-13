@@ -80,8 +80,11 @@
 #'                    family='quasipoisson', data=ns.data.re)
 #' 
 #' # make parameter set for running salsa2d
+#' # I have chosen a gap parameter of 1000 (in metres) to speed up the process.  
+#' # Note that this means there cannot be two knots within 1000m of each other.
+#' 
 #' salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, knotdim = c(7, 9), 
-#'                   startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1, 
+#'                   startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1000, 
 #'                   interactionTerm="as.factor(impact)")
 #' 
 #' salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, 
@@ -91,7 +94,7 @@
 #'
 #' @export
 #' 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, chooserad=F){
   
   if(class(model)[1]=='glm'){
     data<-model$data  
@@ -114,10 +117,14 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
   gridResp<-salsa2dlist$knotgrid[,1]
   
-  if(length(salsa2dlist$r_seq)>1){
-    radii<- salsa2dlist$r_seq[round(length(salsa2dlist$r_seq)/2)]  
+  if(chooserad==F){
+    if(length(salsa2dlist$r_seq)>1){
+      radii<- salsa2dlist$r_seq[round(length(salsa2dlist$r_seq)/2)]  
+    }else{
+      radii<- salsa2dlist$r_seq[1]
+    }  
   }else{
-    radii<- salsa2dlist$r_seq[1]
+    radii <- salsa2dlist$r_seq
   }
   winHalfWidth = 0
   
@@ -151,6 +158,8 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   
   if(dim(k2k)[2]<salsa2dlist$minKnots | dim(k2k)[2]<salsa2dlist$startKnots){stop('Starting number of knots or min knots more than number of valid knot locations in knotgrid')}
   
+  if(salsa2dlist$fitnessMeasure=='BIC' & model$family$family=='quasipoisson' ){stop('Please use fitness Measure appropriate for quasi family, e.g. QICb')}
+  
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ 2D SALSA RUN ~~~~~~~~~~~~~~~~~~~~~~~
@@ -162,32 +171,71 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0){
   output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10)
   
   baseModel<- output$out.lm
+  
+  
+  
+  if(length(output$models)>0){
+    modRes<- c()
+    for(m in 1:length(output$models)){
+      modelNo<- m
+      knotPosition<-output$models[[m]][[1]]
+      rIs<- output$models[[m]][[2]]
+      r<- output$models[[m]][[3]]
+      fitScore<- output$models[[m]][[4]]
+      modRes<- rbind(modRes, data.frame(modelNo, knotPosition, rIs, fitScore))
+    }
     
-  # use initialise step to change radii
-  radii = salsa2dlist$r_seq
-  x <- as.vector(splineParams[[1]]$grid[,1])
-  y <- as.vector(splineParams[[1]]$grid[,2])
-  xvals <- max(x)
-  yvals <- max(y)
-  
-  if(length(salsa2dlist$r_seq)>1){
-    radiusIndices<- rep(round(length(salsa2dlist$r_seq)/2), (length(output$aR)))
-  }else{
-      radiusIndices<- rep(1, length(output$aR))
+    modRes<-modRes[order(modRes$fitScore),]
+    bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
+    
+    a<-sum(as.vector(output$invInd[output$aR]) - as.vector(unlist(output$models[[bestModNo]][1])))
+    print(paste('a = ', a, sep=''))
+    if(a!=0) break 
+    
+    #output$aR<- output$models[[bestModNo]][[1]]
   }
-  output_radii<- initialise.measures_2d(k2k, maxIterations=10, salsa2dlist$gap, radii, d2k, gridResp, explData, splineParams[[1]]$startKnots, xvals, yvals, explanatory, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10)
   
+  #   if(length(output$models)==0){
+  #     output$aR<- output$invInd[output$aR]  
+  #   }
+  if(chooserad==F){
+    # use initialise step to change radii
+    radii = salsa2dlist$r_seq
+    x <- as.vector(splineParams[[1]]$grid[,1])
+    y <- as.vector(splineParams[[1]]$grid[,2])
+    xvals <- max(x)
+    yvals <- max(y)
+    
+    if(length(salsa2dlist$r_seq)>1){
+      radiusIndices<- rep(round(length(salsa2dlist$r_seq)/2), (length(output$aR)))
+    }else{
+      radiusIndices<- rep(1, length(output$aR))
+    }
+    initDisp<-getDispersion(baseModel)
+    output_radii<- initialise.measures_2d(k2k, maxIterations=10, salsa2dlist$gap, radii, d2k, gridResp, explData, splineParams[[1]]$startKnots, xvals, yvals, explanatory, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp)
+    
+    
+    splineParams[[1]]$radii= radii
+    splineParams[[1]][['knotPos']]= output_radii$aR
+    TwoDModelsfirstStage <- output_radii$models
+    splineParams[[1]][['radiusIndices']]= output_radii$radiusIndices
+    splineParams[[1]][['invInd']] = output_radii$invInd
+    modelFit = output_radii$BIC  
+    aRout<- list(aR1=output$aR, aR2=output_radii$aR)
+    
+    baseModel<-output_radii$out.lm
+  }else{
+    splineParams[[1]]$radii= radii
+    splineParams[[1]][['knotPos']]= output$aR
+    TwoDModelsfirstStage <- output$models
+    splineParams[[1]][['radiusIndices']]= output$radiusIndices
+    splineParams[[1]][['invInd']] = output$invInd
+    modelFit = output$BIC 
+    aRout = output$aR
+  }
   
-  splineParams[[1]]$radii= radii
-  splineParams[[1]][['knotPos']]= output_radii$aR
-  TwoDModelsfirstStage <- output_radii$models
-  splineParams[[1]][['radiusIndices']]= output_radii$radiusIndices
-  splineParams[[1]][['invInd']] = output_radii$invInd
-  modelFit = output_radii$BIC                                         
-  
-  baseModel<-output_radii$out.lm
   attributes(baseModel$formula)$.Environment<-globalenv()
   
   #save.image(paste("salsa2D_k", splineParams[[1]]$startKnots, ".RData", sep=''))
-  return(list(bestModel=baseModel, splineParams=splineParams, fitStat=output_radii$BIC))
+  return(list(bestModel=baseModel, splineParams=splineParams, fitStat=modelFit, aR=aRout))
 }

@@ -1,14 +1,17 @@
+
 #' Running SALSA for continuous one-dimensional covariates.
 #' 
 #' This function finds spatially adaptive knot locations for one or more continuous one-dimensional covariates.  It differs to \code{\link{runSALSA1D}} in that if the CV score of a model does not improve with the addition of a covariate in \code{varlist} then that term is either reduced to linear or removed from the model.
 #' 
-#' @param initialModel The best fitting \code{CReSS} model with no continuous covariates specified
+#' @param initialModel The best fitting \code{CReSS} model with no continuous covariates specified.  This must be a model of class \code{glm}.
 #' @param salsa1dlist Vector of objects required for \code{runSALSA1D}: \code{fitnessMeasure}, \code{minKnots_1d}, \code{maxKnots_1d}, \code{startKnots_1d} \code{degree}, \code{maxIterations} \code{gap}. 
 #' @param varlist Vector of variable names for the covariates required for knot selection
 #' @param factorlist vector of factor variables specified in \code{initialModel}.  Specified so that a check can be made that there are non-zero counts in all levels of each factor. Uses the function \code{checkfactorlevelcounts}. Default setting is NULL.
-#' @param predictionData The data to be predicted for. column names correspond to the data in \code{initialModel}
+#' @param predictionData The data for which predictions are to be made. Column names must correspond to the data in \code{initialModel}. If predictionData is not specified (\code{NULL}), then the range of the data is used to create the smooth terms.
 #' @param varlist_cyclicSplines Vector of variable names for covariates to be modelled with cyclic cubic splines.  This must be a subset of \code{varlist}.The default is \code{NULL}
 #' @param splineParams List object containing information for fitting splines to the covariates in \code{varlist}. If not specified (\code{NULL}) this object is created and returned. See \code{\link{makesplineParams}} for details.
+#' @param datain Data used to fit the initial Model.
+#' @param removal (Default: \code{TRUE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth.
 #' 
 #' @details
 #' There must be columns called \code{response} (response variable) and \code{foldid} (for cross-validation calculation) in the data used in the initial model to be fitted. 
@@ -34,7 +37,7 @@
 #'
 #'  The initial model contains all the factor level covariates and any covariates of interest that are not specified in the \code{varlist} argument of \code{runSALSA1D} 
 #' 
-#' \emph{Note:} The algorithm may remove variables in \code{varlist} (but not the variables in \code{factorlist}.  If there is no better model than with a knot at the mean, the output will include that covariate with a knot at the mean.  The best model with a given smooth term is tested both against a model with the term as linear or removed. Cross-Validation is used in the selection process.
+#' \emph{Note:} The algorithm may remove variables in \code{varlist} but not the variables in \code{factorlist}.  If there is no better model than with a knot at the mean, the output will include that covariate with a knot at the mean.  The best model with a given smooth term is tested both against a model with the term as linear or removed. Cross-Validation is used in the selection process.
 #' 
 #' @return
 #' A list object is returned containing 4 elements:
@@ -80,27 +83,34 @@
 #'                     family='quasipoisson',data=ns.data.re)
 #' 
 #' #set some input info for SALSA
-#' salsa1dlist<-list(fitnessMeasure = 'QICb', minKnots_1d=c(2,2), maxKnots_1d = c(5, 5), 
+#' salsa1dlist<-list(fitnessMeasure = 'QBIC', minKnots_1d=c(2,2), maxKnots_1d = c(5, 5), 
 #'                   startKnots_1d = c(2,2), degree=c(2,2), maxIterations = 10, gaps=c(1,1))
 #' 
 #' # run SALSA
 #' salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlist, varlist=c('observationhour', 'DayOfMonth'), 
-#'                  factorlist=c('floodebb', 'impact'), ns.predict.data.re, splineParams=splineParams)
+#'                  factorlist=c('floodebb', 'impact'), ns.predict.data.re, splineParams=splineParams, datain=ns.data.re)
 #' 
 #' @export
 #' 
-runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData, varlist_cyclicSplines=NULL, splineParams=NULL){
+runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=TRUE){
+  
+  require(splines)
+  require(fields)
+  
+  if(class(initialModel)[1]!='glm') stop('Class of model not supported.  Please use glm')
   
   if(is.null(factorlist)==F){
     # check factor level counts:
-  checkfactorlevelcounts(factorlist, initialModel$data, initialModel$y)
+    checkfactorlevelcounts(factorlist, initialModel$data, initialModel$y)
   }
   
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~
   # set parameters for SALSA
   winHalfWidth = 0
   family=initialModel$family$family
+  link<-initialModel$family$link
   data<-initialModel$data
+  if(sum(abs(dim(data)-dim(datain)))>0) stop('Data dimensions do not match the data in initialModel')
   
   attributes(initialModel$formula)$.Environment<-environment()
   
@@ -132,23 +142,48 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   
   terms1D <- list(length(varlist))
   
-  for(i in 2:(length(varlist)+1))
+  counter<-1 # needed to loop through cyclics if more than one
+  for(i in 2:(length(varlist)+1)){
     if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
       require(mgcv)
-      terms1D[[(i-1)]]<- paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])),fit=F)$X[,-1]))", sep="")  
+      #terms1D[[(i-1)]]<- paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(",varlist[varID[(i-1)]-1], "=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])), data=data, fit=F)$X[,-1]))", sep="")  
+      #terms1D[[(i-1)]]<- paste('cSplineDes(x=',  varlist[varID[(i-1)]-1], ", knots=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2]),ord=splineParams[[",varID[(i-1)], "]]$degree +1)", sep="")
+      terms1D[[(i-1)]]<- paste("smooth.construct(s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(",varlist[varID[(i-1)]-1], "=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])), data=data.frame(",varlist[varID[(i-1)]-1],"))$X[,-1]", sep="")
+      splineParams[[i]]$knots<-eval(parse(text=paste('quantile(data$', varlist_cyclicSplines[counter], ', probs = c(0.25, 0.5, 0.75))', sep='')))
+      counter<-counter+1
     }else{
       terms1D[[(i-1)]]<- paste("bs(", varlist[(i-1)], ", knots = splineParams[[", varID[(i-1)], "]]$knots, degree=splineParams[[", varID[(i-1)], "]]$degree, Boundary.knots=splineParams[[",varID[(i-1)], "]]$bd)", sep='')
     }
+  }
   
-  
+  splineParams<<-splineParams
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # initial model is all variables in varlist with knots at locations in splineParams and NO 2D smooth
   require(mgcv)
-  baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data = data)", sep='')))
+  baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   
   cv_initial <- getCV_CReSS(data, baseModel, splineParams=splineParams)
-  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel)$fitStat
+  
+  if(salsa1dlist$fitnessMeasure=='QAIC' | salsa1dlist$fitnessMeasure=='QAICc' | salsa1dlist$fitnessMeasure=='QBIC'){
+    for(i in 2:(length(varlist)+1)){
+      eval(parse(text=paste("splineParams[[", i, "]]$knots<-seq(min(splineParams[[", i,"]]$explanatory),max(splineParams[[", i,"]]$explanatory),length=(salsa1dlist$maxKnots_1d[",(i-1),"])+2)[2:(salsa1dlist$maxKnots_1d[",(i-1),"]+1)]", sep='')))
+    }
+    splineParams<<-splineParams
+    dispersion_Model<-update(baseModel, .~.)
+    salsa1dlist$fitnessMeasure<-c(salsa1dlist$fitnessMeasure, summary(dispersion_Model)$dispersion)
+    for(i in 2:(length(varlist)+1)){
+      eval(parse(text=paste("splineParams[[", i, "]]$knots<-mean(splineParams[[", i, "]]$explanatory)", sep='')))
+    }
+    if(dispersion_Model$conv==FALSE) stop('Model to get dispersion parameter, with max knots evenly spaced did not converge.  Use fewer max knots or change fitness measure.')
+    splineParams<<-splineParams
+    if(family=='quasipoisson'){family='poisson'}
+    if(family=='quasibinomial'){family='binomial'}
+    baseModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(family), "(link=", substitute(link),"))", sep='')))
+  }
+  
+  initDisp<-getDispersion(baseModel)
+  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp)$fitStat
   
   modelFits1D <- list((length(varlist)+1))
   modelFits1D[[1]] <- list(term = 'startmodel', kept=NULL, basemodelformula = baseModel$call, knotsSelected = NULL, tempfits = c(CV = cv_initial, fitStat=fitStat))
@@ -160,24 +195,24 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   timings<- vector(length=length(varlist))
   knots=NULL
   varkeepid<-NULL
-  #baseModel <- eval(parse(text=paste("update(baseModel, ~. -", term, ")", sep="")))
   for (i in 2:(length(varlist)+1)){
     explanatory <- splineParams[[varID[(i-1)]]]$explanatory
     response<-data$response
     bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
     gap <- (salsa1dlist$gaps[(i-1)])
     term<- terms1D[[(i-1)]]
+    interactionTerm<-NULL  #(salsa1dlist$interactionTerm[(i-1)])
     baseModel <- eval(parse(text=paste("update(baseModel, ~. -", term, ")", sep="")))
     cv_without<-getCV_CReSS(data, baseModel, splineParams=splineParams)
-    fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel)$fitStat
+    fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp)$fitStat
     
     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceding', sep=''))}
     
     if(varlist[(i-1)]%in%varlist_cyclicSplines){spl<- "cc"}else{spl="bs"}
     
-    if(spl == "cc"){minKnots_1d <- 3; startKnots_1d<-3}
+    if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
     sttime<- proc.time()[3]
-    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl)
+    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm)
     
     timings[(i-1)]<- proc.time()[3] - sttime
     
@@ -191,12 +226,17 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
     tempModel<- eval(parse(text=paste("update(baseModel, ~. +", term, ")", sep="")))
     # calculate a cv score here too
     cv_with<- getCV_CReSS(data=data, tempModel, splineParams)
+    models<<-output$models
+    knotSites<<-output$knotSites
     
+    if(removal=='TRUE'){
+    cat('Fitting Linear Model...')
     tempModel_lin<- eval(parse(text=paste("update(baseModel, ~. +",varlist[(i-1)] , ")", sep="")))
     cv_linear<- getCV_CReSS(data=data, tempModel_lin, splineParams)
     
-    cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(c(cv_initial, cv_with, cv_without, cv_linear)))
+    cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))[1]
     
+    cat('Choosing smooth vs linear model...')
     if(cvid==1){
       # initial model is best - keep term but with original knots
       fitStat = fitStat
@@ -215,34 +255,75 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
       varkeepid<-c(varkeepid, i)
       kept='YES - new knots'
     }
-    
+      
     if(cvid==3){
-      # model with parameter removed is best
-      fitStat = fitStat_without
-      splineParams[[varID[(i-1)]]]$knots<- 'NA'
-      baseModel<-update(baseModel, .~.)
-      cv_initial<-cv_without
-      kept='NO'
+        # model with parameter removed is best
+        fitStat = fitStat_without
+        splineParams[[varID[(i-1)]]]$knots<- 'NA'
+        baseModel<-update(baseModel, .~.)
+        cv_initial<-cv_without
+        kept='NO'
     }
-    
+      
     if(cvid==4){
-      # model with parameter linear is best
-      splineParams[[varID[(i-1)]]]$knots<- 'NA'
-      baseModel<-update(tempModel_lin, .~.)
-      fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel)$fitStat
-      cv_initial<-cv_linear
-      varkeepid<-c(varkeepid, i)
-      kept='YES - linear'
+        # model with parameter linear is best
+        splineParams[[varID[(i-1)]]]$knots<- 'NA'
+        baseModel<-update(tempModel_lin, .~.)
+        fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp)$fitStat
+        cv_initial<-cv_linear
+        varkeepid<-c(varkeepid, i)
+        kept='YES - linear'
+    }
+    }else{
+#       cvid<-which(c(cv_initial, cv_with)==min(cv_initial, cv_with))
+#       if(cvid==1){
+#         # initial model is best - keep term but with original knots
+#         fitStat = fitStat
+#         splineParams[[varID[(i-1)]]]$knots<- tempinitialknots
+#         baseModel<-update(tempModel, .~.)
+#         cv_initial<-cv_initial
+#         varkeepid<-c(varkeepid, i)
+#         kept='YES - initial'
+#       }
+#      if(cvid==2){
+        # model with covariate with new knots is best
+        fitStat = thisFit
+        splineParams[[varID[(i-1)]]]$knots= sort(output$aR)
+        baseModel<-update(tempModel, .~.)
+        cv_initial<-cv_with
+        varkeepid<-c(varkeepid, i)
+        kept='YES - new knots'
+#      }      
     }
     
     
     modelFits1D[[i]] <- list(term = term, kept=kept, basemodelformula = baseModel$call, knotsSelected = splineParams[[varID[(i-1)]]]$knots, baseModelFits = c(CV = cv_initial, fitStat = fitStat), modelfits = c(CV = cv_with, fitStat = thisFit))
+    splineParams<<-splineParams
   }
   
-  attributes(baseModel$formula)$.Environment<-.GlobalEnv
-  #save.image("Test.RData")
-  return(list(bestModel=baseModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStat, keptvarlist = varlist[(varkeepid-1)]))
+  # turn the model data back into what came in
   
+  outTerms <- list(length(varlist_cyclicSplines))
+  counter<-1
+  origfamily<-initialModel$family$family
+  
+  outModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(origfamily), "(link=", substitute(link),"))",  sep='')))
+  eval(parse(text=paste(substitute(datain),"<-data", sep="" )))
+  #  for(i in 2:(length(varlist)+1)){
+  #if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
+  # outTerms[[counter]]<-paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(",varlist[varID[(i-1)]-1], "=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])), data=",substitute(datain),", fit=F)$X[,-1]))", sep="")  
+  outModel<-eval(parse(text=paste("update(outModel, ~ ., data=", substitute(datain),")", sep="")))
+  #    counter<-counter+1
+  #   }
+  
+  
+  attributes(outModel$formula)$.Environment<-.GlobalEnv
+  
+  if(salsa1dlist$fitnessMeasure[1]=='QAIC' | salsa1dlist$fitnessMeasure[1]=='QAICc' | salsa1dlist$fitnessMeasure[1]=='QBIC'){
+    fitStatlist<-list(fitStat=fitStat, CV = cv_initial, chat=salsa1dlist$fitnessMeasure[2])  
+  }else{
+    fitStatlist<-list(fitStat=fitStat, CV = cv_initial)  
+  }
+  #save.image("Test.RData")
+  return(list(bestModel=outModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStatlist, keptvarlist = varlist[(varkeepid-1)]))
 }
-
-

@@ -72,108 +72,110 @@
 #' 
 runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData, varlist_cyclicSplines=NULL, splineParams=NULL){
   
-  if(is.null(factorlist)==F){
-    # check factor level counts:
-  checkfactorlevelcounts(factorlist, initialModel$data, initialModel$y)
-  }
+  cat('Warning: This function is obsolete. Please use runSALSA1D_withremoval()')
   
-  # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~
-  # set parameters for SALSA
-  winHalfWidth = 0
-  family=initialModel$family$family
-  data<-initialModel$data
-  
-  attributes(initialModel$formula)$.Environment<-environment()
-  
-  # check for response variable
-  if(is.null(data$response)) stop('data does not contain response column')
-  
-  # check parameters in salsa1dlist are same length as varlist
-  if(length(varlist)!=length(salsa1dlist$minKnots_1d)) stop('salsa1dlist$minKnots_1d not same length as varlist')
-  if(length(varlist)!=length(salsa1dlist$maxKnots_1d)) stop('salsa1dlist$maxKnots_1d not same length as varlist')
-  if(length(varlist)!=length(salsa1dlist$startKnots_1d)) stop('salsa1dlist$startKnots_1d not same length as varlist')
-  if(length(varlist)!=length(salsa1dlist$degree)) stop('salsa1dlist$degree not same length as varlist')
-  if(length(varlist)!=length(salsa1dlist$gaps)) stop('salsa1dlist$gaps not same length as varlist')
-  
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if(is.null(splineParams)){
-    splineParams<-makesplineParams(data, varlist, predictionData, salsa1dlist$degree)
-    varID<-(1:length(varlist))+1
-  }else{
-    # check whats in varlist and splineParams to see if they match
-    if((length(splineParams)-1)!=length(varlist)){
-      varID<-vector(length=length(varlist))
-      for(i in 1:length(varlist)){
-        varID[i]<-grep(varlist[i], splineParams)
-      }
-    }else{varID<-(1:length(varlist))+1}
-  }
-  
-  terms1D <- list(length(varlist))
-  
-  for(i in 2:(length(varlist)+1))
-    if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
-      require(mgcv)
-      terms1D[[(i-1)]]<- paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])),fit=F)$X[,-1]))", sep="")  
-    }else{
-      terms1D[[(i-1)]]<- paste("bs(", varlist[(i-1)], ", knots = splineParams[[", varID[(i-1)], "]]$knots, degree=splineParams[[", varID[(i-1)], "]]$degree, Boundary.knots=splineParams[[",varID[(i-1)], "]]$bd)", sep='')
-    }
-  
-  
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # initial model is year one knot at mean and NO 2D smooth
-  require(mgcv)
-  baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data = data)", sep='')))
-  
-  modelFit = BIC(baseModel)
-  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel)$fitStat
-  
-  modelFits1D <- list((length(varlist)+1))
-  modelFits1D[[1]] <- list(term = terms1D[[1]], tempfits = c(fitoutput = fitStat, get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel)$fitStat), knots = splineParams[[2]]$knots, formula = baseModel$call)
-  
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  # ~~~~~~~~~~~~~~~~~~~~ loop through 1D covar ~~~~~~~~~~~~~~~~~~~~~~~
-  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  starttime = proc.time()
-  timings<- vector(length=length(varlist))
-  knots=NULL
-  #baseModel <- eval(parse(text=paste("update(baseModel, ~. -", term, ")", sep="")))
-  for (i in 2:(length(varlist)+1)){
-    explanatory <- splineParams[[varID[(i-1)]]]$explanatory
-    response<-data$response
-    bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
-    gap <- (salsa1dlist$gaps[(i-1)])
-    term<- terms1D[[(i-1)]]
-    baseModel <- eval(parse(text=paste("update(baseModel, ~. -", term, ")", sep="")))
-    if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceding', sep=''))}
-    
-    if(varlist[(i-1)]%in%varlist_cyclicSplines){spl<- "cc"}else{spl="bs"}
-    
-    if(spl == "cc"){minKnots_1d <- 3; startKnots_1d<-3}
-    sttime<- proc.time()[3]
-    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl)
-    
-    timings[(i-1)]<- proc.time()[3] - sttime
-    
-    thisFit = output$output[2] 
-    if (thisFit < fitStat) {
-      splineParams[[varID[(i-1)]]]$knots= sort(output$aR)
-      fitStat = thisFit
-    }
-    # update best model to have new knot locations and covariate back in model
-    baseModel<- eval(parse(text=paste("update(baseModel, ~. +", term, ")", sep="")))
-    # calculate a BIC score here too
-    thisBIC = BIC(baseModel)
-    
-    modelFits1D[[i]] <- list(term = term, tempfits = c(fitoutput = thisFit, get.measure(salsa1dlist$fitnessMeasure,'NA',output$out.lm)$fitStat), knots = sort(c(output$aR)), formula = baseModel$call, modelfits = c(fit = thisFit))
-  }
-  
-  attributes(baseModel$formula)$.Environment<-.GlobalEnv
-  #save.image("Test.RData")
-  return(list(bestModel=baseModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStat))
-  
+#   if(is.null(factorlist)==F){
+#     # check factor level counts:
+#   checkfactorlevelcounts(factorlist, initialModel$data, initialModel$y)
+#   }
+#   
+#   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~
+#   # set parameters for SALSA
+#   winHalfWidth = 0
+#   family=initialModel$family$family
+#   data<-initialModel$data
+#   
+#   attributes(initialModel$formula)$.Environment<-environment()
+#   
+#   # check for response variable
+#   if(is.null(data$response)) stop('data does not contain response column')
+#   
+#   # check parameters in salsa1dlist are same length as varlist
+#   if(length(varlist)!=length(salsa1dlist$minKnots_1d)) stop('salsa1dlist$minKnots_1d not same length as varlist')
+#   if(length(varlist)!=length(salsa1dlist$maxKnots_1d)) stop('salsa1dlist$maxKnots_1d not same length as varlist')
+#   if(length(varlist)!=length(salsa1dlist$startKnots_1d)) stop('salsa1dlist$startKnots_1d not same length as varlist')
+#   if(length(varlist)!=length(salsa1dlist$degree)) stop('salsa1dlist$degree not same length as varlist')
+#   if(length(varlist)!=length(salsa1dlist$gaps)) stop('salsa1dlist$gaps not same length as varlist')
+#   
+#   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   if(is.null(splineParams)){
+#     splineParams<-makesplineParams(data, varlist, predictionData, salsa1dlist$degree)
+#     varID<-(1:length(varlist))+1
+#   }else{
+#     # check whats in varlist and splineParams to see if they match
+#     if((length(splineParams)-1)!=length(varlist)){
+#       varID<-vector(length=length(varlist))
+#       for(i in 1:length(varlist)){
+#         varID[i]<-grep(varlist[i], splineParams)
+#       }
+#     }else{varID<-(1:length(varlist))+1}
+#   }
+#   
+#   terms1D <- list(length(varlist))
+#   
+#   for(i in 2:(length(varlist)+1))
+#     if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
+#       require(mgcv)
+#       terms1D[[(i-1)]]<- paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])),fit=F)$X[,-1]))", sep="")  
+#     }else{
+#       terms1D[[(i-1)]]<- paste("bs(", varlist[(i-1)], ", knots = splineParams[[", varID[(i-1)], "]]$knots, degree=splineParams[[", varID[(i-1)], "]]$degree, Boundary.knots=splineParams[[",varID[(i-1)], "]]$bd)", sep='')
+#     }
+#   
+#   
+#   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   # initial model is year one knot at mean and NO 2D smooth
+#   require(mgcv)
+#   baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data = data)", sep='')))
+#   
+#   modelFit = BIC(baseModel)
+#   fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel)$fitStat
+#   
+#   modelFits1D <- list((length(varlist)+1))
+#   modelFits1D[[1]] <- list(term = terms1D[[1]], tempfits = c(fitoutput = fitStat, get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel)$fitStat), knots = splineParams[[2]]$knots, formula = baseModel$call)
+#   
+#   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   # ~~~~~~~~~~~~~~~~~~~~ loop through 1D covar ~~~~~~~~~~~~~~~~~~~~~~~
+#   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#   starttime = proc.time()
+#   timings<- vector(length=length(varlist))
+#   knots=NULL
+#   #baseModel <- eval(parse(text=paste("update(baseModel, ~. -", term, ")", sep="")))
+#   for (i in 2:(length(varlist)+1)){
+#     explanatory <- splineParams[[varID[(i-1)]]]$explanatory
+#     response<-data$response
+#     bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
+#     gap <- (salsa1dlist$gaps[(i-1)])
+#     term<- terms1D[[(i-1)]]
+#     baseModel <- eval(parse(text=paste("update(baseModel, ~. -", term, ")", sep="")))
+#     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceding', sep=''))}
+#     
+#     if(varlist[(i-1)]%in%varlist_cyclicSplines){spl<- "cc"}else{spl="bs"}
+#     
+#     if(spl == "cc"){minKnots_1d <- 3; startKnots_1d<-3}
+#     sttime<- proc.time()[3]
+#     output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl)
+#     
+#     timings[(i-1)]<- proc.time()[3] - sttime
+#     
+#     thisFit = output$output[2] 
+#     if (thisFit < fitStat) {
+#       splineParams[[varID[(i-1)]]]$knots= sort(output$aR)
+#       fitStat = thisFit
+#     }
+#     # update best model to have new knot locations and covariate back in model
+#     baseModel<- eval(parse(text=paste("update(baseModel, ~. +", term, ")", sep="")))
+#     # calculate a BIC score here too
+#     thisBIC = BIC(baseModel)
+#     
+#     modelFits1D[[i]] <- list(term = term, tempfits = c(fitoutput = thisFit, get.measure(salsa1dlist$fitnessMeasure,'NA',output$out.lm)$fitStat), knots = sort(c(output$aR)), formula = baseModel$call, modelfits = c(fit = thisFit))
+#   }
+#   
+#   attributes(baseModel$formula)$.Environment<-.GlobalEnv
+#   #save.image("Test.RData")
+#   return(list(bestModel=baseModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStat))
+#   
 }
 
 
