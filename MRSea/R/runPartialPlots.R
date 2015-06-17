@@ -126,7 +126,7 @@ runPartialPlots<-function(model, data, factorlist=NULL, varlist=NULL, showKnots=
     } # factor
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
+    # Continuous covariates
     if(is.null(varlist)==F){
       n<-length(varlist)
       for(i in 1:n){

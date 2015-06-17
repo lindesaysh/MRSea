@@ -163,7 +163,11 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   require(mgcv)
   baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   
-  cv_initial <- getCV_CReSS(data, baseModel, splineParams=splineParams)
+  if(removal==TRUE){
+    cv_initial <- getCV_CReSS(data, baseModel, splineParams=splineParams)  
+  }else{
+    cv_initial=NULL
+  }
   
   if(salsa1dlist$fitnessMeasure=='QAIC' | salsa1dlist$fitnessMeasure=='QAICc' | salsa1dlist$fitnessMeasure=='QBIC'){
     for(i in 2:(length(varlist)+1)){
@@ -203,8 +207,11 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
     term<- terms1D[[(i-1)]]
     interactionTerm<-NULL  #(salsa1dlist$interactionTerm[(i-1)])
     baseModel <- eval(parse(text=paste("update(baseModel, ~. -", term, ")", sep="")))
-    cv_without<-getCV_CReSS(data, baseModel, splineParams=splineParams)
-    fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp)$fitStat
+    
+    if(removal==TRUE){
+      cv_without<-getCV_CReSS(data, baseModel, splineParams=splineParams)
+      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp)$fitStat  
+    }
     
     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceding', sep=''))}
     
@@ -225,7 +232,9 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
     # update best model to have new knot locations and covariate back in model
     tempModel<- eval(parse(text=paste("update(baseModel, ~. +", term, ")", sep="")))
     # calculate a cv score here too
-    cv_with<- getCV_CReSS(data=data, tempModel, splineParams)
+    if(removal==TRUE){
+      cv_with<- getCV_CReSS(data=data, tempModel, splineParams)  
+    }
     models<<-output$models
     knotSites<<-output$knotSites
     
@@ -290,7 +299,7 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
         fitStat = thisFit
         splineParams[[varID[(i-1)]]]$knots= sort(output$aR)
         baseModel<-update(tempModel, .~.)
-        cv_initial<-cv_with
+        cv_initial=cv_with=NULL
         varkeepid<-c(varkeepid, i)
         kept='YES - new knots'
 #      }      
