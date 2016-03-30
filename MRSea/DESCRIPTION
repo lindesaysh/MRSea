@@ -8,8 +8,8 @@ Description: Examines animal survey data for signs of changes in animal
     This review constitutes work carried out at the Centre for Research into
     Ecological and Environmental Modelling (CREEM) at the University of St.
     Andrews, performed under contract for Marine Scotland (SB9 (CR/2012/05)).
-Version: 0.2.1
-Date: 2014-03-17
+Version: 0.2.3
+Date: 2016-03-30
 Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique
     Mackenzie, Cameron Walker <cameron.walker@auckland.ac.nz>
 Maintainer: Lindesay Scott-Hayward <lass@st-and.ac.uk>
@@ -34,3 +34,4 @@ Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML, Walker, CG and Rexstad E
     cetacean distributions in offshore renewables development areas".
     University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)
 URL: http://creem2.st-and.ac.uk/software.aspx
+RoxygenNote: 5.0.1

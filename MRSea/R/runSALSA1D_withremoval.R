@@ -14,7 +14,7 @@
 #' @param removal (Default: \code{TRUE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth.
 #' 
 #' @details
-#' There must be columns called \code{response} (response variable) and \code{foldid} (for cross-validation calculation) in the data used in the initial model to be fitted. 
+#' There must be columns called \code{response} (response variable) and \code{foldid} (for cross-validation calculation) in the data used in the initial model to be fitted. If the data is proportion, then there should be two columns called \code{successess} and \code{failures}.
 #' 
 #' The object \code{salsa1dlist} contains parameters for the \code{runSALSA1D} function.
 #'   
@@ -99,7 +99,14 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   
   if(class(initialModel)[1]!='glm') stop('Class of model not supported.  Please use glm')
   
-  if(is.null(factorlist)==F){
+  # check for response variable
+  if(nrow(initialModel$data)!=length(initialModel$model[[1]])){
+    fam<-'BinProp'
+  }else{
+    fam<-'other'
+  }
+  
+  if(is.null(factorlist)==F & fam=='other'){
     # check factor level counts:
     checkfactorlevelcounts(factorlist, initialModel$data, initialModel$y)
   }
@@ -107,15 +114,21 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~
   # set parameters for SALSA
   winHalfWidth = 0
-  family=initialModel$family$family
+  family<-initialModel$family$family
   link<-initialModel$family$link
   data<-initialModel$data
   if(sum(abs(dim(data)-dim(datain)))>0) stop('Data dimensions do not match the data in initialModel')
   
   attributes(initialModel$formula)$.Environment<-environment()
+
   
-  # check for response variable
-  if(is.null(data$response)) stop('data does not contain response column')
+  if(fam=='other'){
+    if(is.null(data$response)) stop('data does not contain response column')  
+  }else{
+    if(is.null(data$successes)) stop('data does not contain successes column')
+    if(is.null(data$failures)) stop('data does not contain failures column')
+  }
+  
   
   # check parameters in salsa1dlist are same length as varlist
   if(length(varlist)!=length(salsa1dlist$minKnots_1d)) stop('salsa1dlist$minKnots_1d not same length as varlist')
@@ -146,8 +159,6 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   for(i in 2:(length(varlist)+1)){
     if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
       require(mgcv)
-      #terms1D[[(i-1)]]<- paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(",varlist[varID[(i-1)]-1], "=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])), data=data, fit=F)$X[,-1]))", sep="")  
-      #terms1D[[(i-1)]]<- paste('cSplineDes(x=',  varlist[varID[(i-1)]-1], ", knots=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2]),ord=splineParams[[",varID[(i-1)], "]]$degree +1)", sep="")
       terms1D[[(i-1)]]<- paste("smooth.construct(s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(",varlist[varID[(i-1)]-1], "=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])), data=data.frame(",varlist[varID[(i-1)]-1],"))$X[,-1]", sep="")
       splineParams[[i]]$knots<-eval(parse(text=paste('quantile(data$', varlist_cyclicSplines[counter], ', probs = c(0.25, 0.5, 0.75))', sep='')))
       counter<-counter+1
@@ -161,7 +172,11 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # initial model is all variables in varlist with knots at locations in splineParams and NO 2D smooth
   require(mgcv)
-  baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+  if(fam=='BinProp'){
+    baseModel <- eval(parse(text=paste("glm(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+  }else{
+    baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+  }
   
   if(removal==TRUE){
     cv_initial <- getCV_CReSS(data, baseModel, splineParams=splineParams)  
@@ -201,12 +216,16 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   varkeepid<-NULL
   for (i in 2:(length(varlist)+1)){
     explanatory <- splineParams[[varID[(i-1)]]]$explanatory
-    response<-data$response
+    if(fam=='BinProp'){
+      response<-cbind(data$successes, data$failures)
+    }else{
+      response<-data$response  
+    }
     bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
     gap <- (salsa1dlist$gaps[(i-1)])
     term<- terms1D[[(i-1)]]
     interactionTerm<-NULL  #(salsa1dlist$interactionTerm[(i-1)])
-    baseModel <- eval(parse(text=paste("update(baseModel, ~. -", term, ")", sep="")))
+    baseModel <- eval(parse(text=paste("update(baseModel, .~. -", term, ")", sep="")))
     
     if(removal==TRUE){
       cv_without<-getCV_CReSS(data, baseModel, splineParams=splineParams)
@@ -230,7 +249,7 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
     splineParams[[varID[(i-1)]]]$knots= sort(output$aR)
     #}
     # update best model to have new knot locations and covariate back in model
-    tempModel<- eval(parse(text=paste("update(baseModel, ~. +", term, ")", sep="")))
+    tempModel<- eval(parse(text=paste("update(baseModel, .~. +", term, ")", sep="")))
     # calculate a cv score here too
     if(removal==TRUE){
       cv_with<- getCV_CReSS(data=data, tempModel, splineParams)  
@@ -240,7 +259,7 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
     
     if(removal=='TRUE'){
     cat('Fitting Linear Model...')
-    tempModel_lin<- eval(parse(text=paste("update(baseModel, ~. +",varlist[(i-1)] , ")", sep="")))
+    tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
     cv_linear<- getCV_CReSS(data=data, tempModel_lin, splineParams)
     
     cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))[1]

@@ -94,8 +94,15 @@ getCV_CReSS<-function(datain, baseModel, splineParams=NULL, vector=FALSE){
         predscv<- baseModel$family$linkinv(model.matrix(baseModel)[datahere$foldid==f,]%*%coef(foldedFit)) * baseModel$family$linkinv(baseModel$offset)[datahere$foldid==f]
       }
       
-    }        
-    store[f]<- mean((datahere$response[datahere$foldid==f]-predscv)**2)
+    }  
+    # check for response variable
+    if(nrow(baseModel$data)!=length(baseModel$model[[1]])){
+      props<-datahere$successes[datahere$foldid==f]/(datahere$successes[datahere$foldid==f] + datahere$failures[datahere$foldid==f])
+      store[f]<- mean((props-predscv)**2)
+    }else{
+      store[f]<- mean((datahere$response[datahere$foldid==f]-predscv)**2)
+    }
+    
   }
   if(vector==TRUE){
     return(store)

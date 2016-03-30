@@ -669,6 +669,7 @@ getCV_type2<- function(folds, baseModel){
  
    attributes(baseModel$formula)$.Environment<-environment()
    data<-baseModel$data
+   
    # ~~~~~~~~~~~~~~~~~~~~~
    # b-spline
   if(spl == 'bs'){

@@ -151,7 +151,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
   splineParams[[1]][['radii']]= radii
   splineParams[[1]][['minKnots']]= salsa2dlist$minKnots
   splineParams[[1]][['maxKnots']]= salsa2dlist$maxKnots
-  splineParams[[1]][['gap']]= salsa2dlist$gap
+  if(is.null(salsa2dlist$gap)){
+    splineParams[[1]][['gap']]= 0
+  }else{
+    splineParams[[1]][['gap']]= salsa2dlist$gap  
+  }
   splineParams[[1]][[14]]= NULL                       #this will be invInd
   
   if(dim(k2k)[2]==salsa2dlist$minKnots & dim(k2k)[2]==salsa2dlist$maxKnots & dim(k2k)[2]==salsa2dlist$startKnots){stop('Min, Max and Start knots all identical and equal to the total number of valid knots\n Please add more valid knot locations (knotgrid) or reduce min/max/start')}
@@ -234,8 +238,15 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
     aRout = output$aR
   }
   
-  attributes(baseModel$formula)$.Environment<-globalenv()
+  dataname<-languageEl(model$call, which=length(model$call))
+  # dists<-splineParams[[1]]$dist
+  # aR<-splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
+  # radiusIndices<-splineParams[[1]]$radiusIndices
+  # radii<-splineParams[[1]]$radii
+  eval(parse(text=paste(substitute(dataname),"<-data", sep="" )))
+  baseModel<-eval(parse(text=paste("update(baseModel, ~ ., data=", substitute(dataname),")", sep="")))
   
+  attributes(baseModel$formula)$.Environment<-globalenv()
   #save.image(paste("salsa2D_k", splineParams[[1]]$startKnots, ".RData", sep=''))
   return(list(bestModel=baseModel, splineParams=splineParams, fitStat=modelFit, aR=aRout))
 }

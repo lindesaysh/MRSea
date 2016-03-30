@@ -31,7 +31,7 @@ getDispersion<-function(model){
   if(model$family[[1]]=='binomial' | model$family[[1]]=='quasibinomial'){
     phi = sum(sqresid) * (1/n-k)
   }
-  if(model$family[[1]]=='gamma'){
+  if(model$family[[1]]=='Gamma'){
     phi = sum(sqresid/fits^2) * 1/(n-k)
     
   }

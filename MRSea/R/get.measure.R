@@ -27,7 +27,7 @@
       fitStat <- QAIC(out.lm, chat = extra)
     }
     if(out.lm$family[1]=='quasibinomial'){
-      fitStat <- QAIC(update(out.lm,  family=binomial), chat = extra)
+      fitStat <- QAIC(update(out.lm,.~. ,family=binomial), chat = extra)
     }else{
       fitStat <- QAIC(out.lm, chat = extra)
     }
@@ -40,7 +40,7 @@
       fitStat <- QAIC(out.lm, chat = extra, k=log(nrow(out.lm$data)))
     }
     if(out.lm$family[1]=='quasibinomial'){
-      fitStat <- QAIC(update(out.lm, family=binomial), chat = extra,k=log(nrow(out.lm$data)))
+      fitStat <- QAIC(update(out.lm, .~.,family=binomial), chat = extra,k=log(nrow(out.lm$data)))
     }else{
       fitStat <- QAIC(out.lm, chat = extra, k=log(nrow(out.lm$data)))
     }
@@ -59,7 +59,7 @@
       fitStat <- QAICc(out.lm, chat = extra)
     }
     if(out.lm$family[1]=='quasibinomial'){
-      fitStat <- QAICc(update(out.lm, family=binomial), chat = extra)
+      fitStat <- QAICc(update(out.lm, .~.,family=binomial), chat = extra)
     }else{
       fitStat <- QAICc(out.lm, chat = extra)
     }
@@ -108,6 +108,10 @@
     }
     fitStat<- mean(store)
     #fitStat<- outer.func(out.lm)
+  }
+  
+  if(fitnessMeasure=="CV2"){
+    fitStat<-getCV_CReSS(data, out.lm)
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")
