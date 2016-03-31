@@ -156,10 +156,10 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   terms1D <- list(length(varlist))
   
   counter<-1 # needed to loop through cyclics if more than one
-  for(i in 2:(length(varlist)+1)){
+    for(i in 2:(length(varlist)+1)){
     if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
       require(mgcv)
-      terms1D[[(i-1)]]<- paste("smooth.construct(s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(",varlist[varID[(i-1)]-1], "=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])), data=data.frame(",varlist[varID[(i-1)]-1],"))$X[,-1]", sep="")
+      terms1D[[(i-1)]]<- paste("smooth.construct(s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots))+2), knots = list(",varlist[varID[(i-1)]-1], "=as.numeric(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2]))), data=data.frame(",varlist[varID[(i-1)]-1],"))$X[,-1]", sep="")
       splineParams[[i]]$knots<-eval(parse(text=paste('quantile(data$', varlist_cyclicSplines[counter], ', probs = c(0.25, 0.5, 0.75))', sep='')))
       counter<-counter+1
     }else{
@@ -184,18 +184,21 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
     cv_initial=NULL
   }
   
+  # re-fit base model with max knots allowed to get best estimate of dispersion parameter
   if(salsa1dlist$fitnessMeasure=='QAIC' | salsa1dlist$fitnessMeasure=='QAICc' | salsa1dlist$fitnessMeasure=='QBIC'){
+    splineParams_base<-splineParams
     for(i in 2:(length(varlist)+1)){
       eval(parse(text=paste("splineParams[[", i, "]]$knots<-seq(min(splineParams[[", i,"]]$explanatory),max(splineParams[[", i,"]]$explanatory),length=(salsa1dlist$maxKnots_1d[",(i-1),"])+2)[2:(salsa1dlist$maxKnots_1d[",(i-1),"]+1)]", sep='')))
     }
     splineParams<<-splineParams
     dispersion_Model<-update(baseModel, .~.)
     salsa1dlist$fitnessMeasure<-c(salsa1dlist$fitnessMeasure, summary(dispersion_Model)$dispersion)
-    for(i in 2:(length(varlist)+1)){
-      eval(parse(text=paste("splineParams[[", i, "]]$knots<-mean(splineParams[[", i, "]]$explanatory)", sep='')))
-    }
+    
+    # return the splineParams object back to the original
+    splineParams<<-splineParams_base
     if(dispersion_Model$conv==FALSE) stop('Model to get dispersion parameter, with max knots evenly spaced did not converge.  Use fewer max knots or change fitness measure.')
-    splineParams<<-splineParams
+    
+    # update the modelling to use the poisson family. The dispersion has been calculated and will be used by the get.measure function.
     if(family=='quasipoisson'){family='poisson'}
     if(family=='quasibinomial'){family='binomial'}
     baseModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(family), "(link=", substitute(link),"))", sep='')))
