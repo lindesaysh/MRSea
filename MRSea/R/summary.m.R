@@ -2,7 +2,7 @@
 #' 
 #' @param model Fitted model object (glm or geeglm)
 #' @param varlist (\code{default=NULL}). Vector of names of continuous variables.
-#' @param facls (\code{default=NULL}). Vector or names of factor variables, as written in the model formula. e.g. including 'as.factor' wrappers.
+#' @param facls (\code{default=NULL}). Vector or names of factor variables.
 #' 
 #' @return
 #' summary object as for \code{summary.glm} but with the variable names shortened for ease of viewing. 
@@ -27,7 +27,7 @@
 #' # run SALSA
 #' salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlist, varlist=c('observationhour'), factorlist=c('floodebb', 'impact'), ns.predict.data.re, splineParams=splineParams, datain=ns.data.re)
 #' 
-#' summary.m(salsa1dOutput$bestModel,varlist=c('observationhour'), facls=c('as.factor(floodebb)', 'as.factor(impact)'))
+#' summary.m(salsa1dOutput$bestModel,varlist=c('observationhour'), facls=c('floodebb', 'impact'))
 #' 
 #' # compare output with:
 #' summary(salsa1dOutput$bestModel)
@@ -56,7 +56,7 @@ summary.m<-function(model, varlist=NULL, facls=NULL){
       bob[smoothid][k]<-paste('s(x.pos, y.pos)b', k, sep='')
     }
     # change interaction terms:
-    for(i in 1:length(factorlist)){
+    for(i in 1:length(facls)){
       a<-grep(facls[i], bob[intid])  
       if(length(a)>0){
         a<-i
@@ -68,7 +68,7 @@ summary.m<-function(model, varlist=NULL, facls=NULL){
     for(k in 1:length(smoothid)){
         for(i in 1:(length(intid)/length(smoothid))){
           #print(c(b, k, i))
-          textin<-paste(facls[a], i, ':s(x.pos, y.pos)b', k, sep='')
+          textin<-paste('as.factor(',facls[a],')', i, ':s(x.pos, y.pos)b', k, sep='')
           bob[intid[counter]]<-textin
          #print(textin)
           counter<-counter+1
