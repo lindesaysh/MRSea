@@ -92,7 +92,7 @@
 #' 
 #' @export
 #' 
-runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=TRUE){
+runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=TRUE, panelid=NULL){
   
   require(splines)
   require(fields)
@@ -346,7 +346,9 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   outModel<-eval(parse(text=paste("update(outModel, ~ ., data=", substitute(datain),")", sep="")))
   #    counter<-counter+1
   #   }
-  
+  class(outModel)<-c('gammrsea', class(outModel))
+  outModel$varshortnames<-varlist[(varkeepid-1)]
+  outModel$panels<-panelid
   
   attributes(outModel$formula)$.Environment<-.GlobalEnv
   
