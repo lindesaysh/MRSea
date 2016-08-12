@@ -96,6 +96,7 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   
   require(splines)
   require(fields)
+  # branch test
   
   if(class(initialModel)[1]!='glm') stop('Class of model not supported.  Please use glm')
   
