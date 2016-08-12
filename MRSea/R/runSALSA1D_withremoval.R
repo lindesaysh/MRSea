@@ -346,7 +346,7 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   outModel<-eval(parse(text=paste("update(outModel, ~ ., data=", substitute(datain),")", sep="")))
   #    counter<-counter+1
   #   }
-  class(outModel)<-c('gammrsea', class(outModel))
+  class(outModel)<-c('gamMRSea', class(outModel))
   outModel$varshortnames<-varlist[(varkeepid-1)]
   outModel$panels<-panelid
   

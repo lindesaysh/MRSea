@@ -6,7 +6,7 @@
 \usage{
 runSALSA1D_withremoval(initialModel, salsa1dlist, varlist, factorlist = NULL,
   predictionData = NULL, varlist_cyclicSplines = NULL,
-  splineParams = NULL, datain, removal = TRUE)
+  splineParams = NULL, datain, removal = TRUE, panelid = NULL)
 }
 \arguments{
 \item{initialModel}{The best fitting \code{CReSS} model with no continuous covariates specified.  This must be a model of class \code{glm}.}

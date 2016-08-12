@@ -11,7 +11,7 @@ summary.m(model, varlist = NULL, facls = NULL)
 
 \item{varlist}{(\code{default=NULL}). Vector of names of continuous variables.}
 
-\item{facls}{(\code{default=NULL}). Vector or names of factor variables, as written in the model formula. e.g. including 'as.factor' wrappers.}
+\item{facls}{(\code{default=NULL}). Vector or names of factor variables.}
 }
 \value{
 summary object as for \code{summary.glm} but with the variable names shortened for ease of viewing.
@@ -39,7 +39,7 @@ salsa1dlist<-list(fitnessMeasure = 'QBIC', minKnots_1d=c(1), maxKnots_1d = c(5),
 # run SALSA
 salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlist, varlist=c('observationhour'), factorlist=c('floodebb', 'impact'), ns.predict.data.re, splineParams=splineParams, datain=ns.data.re)
 
-summary.m(salsa1dOutput$bestModel,varlist=c('observationhour'), facls=c('as.factor(floodebb)', 'as.factor(impact)'))
+summary.m(salsa1dOutput$bestModel,varlist=c('observationhour'), facls=c('floodebb', 'impact'))
 
 # compare output with:
 summary(salsa1dOutput$bestModel)

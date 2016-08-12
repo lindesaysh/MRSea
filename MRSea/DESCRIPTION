@@ -8,8 +8,8 @@ Description: Examines animal survey data for signs of changes in animal
     This review constitutes work carried out at the Centre for Research into
     Ecological and Environmental Modelling (CREEM) at the University of St.
     Andrews, performed under contract for Marine Scotland (SB9 (CR/2012/05)).
-Version: 0.2.3
-Date: 2016-03-30
+Version: 0.2.4
+Date: 2016-06-23
 Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique
     Mackenzie, Cameron Walker <cameron.walker@auckland.ac.nz>
 Maintainer: Lindesay Scott-Hayward <lass@st-and.ac.uk>

@@ -99,8 +99,9 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
   if(class(model)[1]=='glm'){
     data<-model$data  
   }
-  if(class(model)[1]=='gammrsea'){
-    data<-model$data  
+  if(class(model)[1]=='gamMRSea'){
+    data<-model$data
+    panels=model$panels
   }
   if(class(model)[1]=='lm'){
     data<-model$model
@@ -108,7 +109,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
   
   attributes(model$formula)$.Environment<-environment()
   
-  if(class(model)[1]!='gammrsea'){class(model)<-c('gammrsea', class(model))}
+  if(class(model)[1]!='gamMRSea'){class(model)<-c('gamMRSea', class(model))}
   
   # check for response variable
   if(is.null(data$response)) stop('data does not contain response column')
@@ -248,9 +249,10 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
   # aR<-splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
   # radiusIndices<-splineParams[[1]]$radiusIndices
   # radii<-splineParams[[1]]$radii
-  #class(baseModel)<-c('gammrsea', class(baseModel))
-  baseModel$varshortnames<-varlist[(varkeepid-1)]
-  baseModel$panels<-panelid
+  #class(baseModel)<-c('gamMRSea', class(baseModel))
+  baseModel$varshortnames<-model$varshortnames
+  baseModel$panels<-panels
+  baseModel$interactionterm<-interactionTerm
  
    eval(parse(text=paste(substitute(dataname),"<-data", sep="" )))
   baseModel<-eval(parse(text=paste("update(baseModel, ~ ., data=", substitute(dataname),")", sep="")))
