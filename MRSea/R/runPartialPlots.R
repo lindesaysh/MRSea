@@ -42,7 +42,8 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
   require(splines)
   require(Matrix)
   
- 
+ splineParams <- model$splineParams
+  
   if(save==T){
     if(type=='response'){
       png(paste(label,"PartialFitsResponse%i.png",sep=''), height=600, width=650)}else{

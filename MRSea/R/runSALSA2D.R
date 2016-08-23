@@ -94,7 +94,7 @@
 #'
 #' @export
 #' 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, chooserad=F, panels=NULL){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, chooserad=F, panels=NULL, suppress.printout=FALSE){
   
   if(class(model)[1]=='glm'){
     data<-model$data  
@@ -178,7 +178,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
   baseModel1D<- model
   baseModel<- baseModel1D
   
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout)
   
   baseModel<- output$out.lm
   

@@ -21,8 +21,11 @@
 #'@export
 #'
 
-"return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl,interactionTerm=interactionTerm){
+"return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl,interactionTerm=interactionTerm, suppress.printout=FALSE){
 
+  if(suppress.printout){
+    sink(file = 'salsa1d.log')
+  }
   varWinHW=5
   computeWt=0
   wts=rep(1,length(explanatory))
@@ -72,7 +75,9 @@
 
 # LSH 12/3/15 added dispersion parameter calc
 initDisp<-getDispersion(baseModel)
-print(paste('initialDispersion ', initDisp, sep=''))
+if(length(unique(response))!=2){
+  print(paste('initialDispersion ', initDisp, sep=''))
+}
     
 ####deal with multiple unordered x-values
 knotSites <- sort(unique(explanatory))
@@ -749,6 +754,11 @@ getCV_type2<- function(folds, baseModel){
       tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp)$fitStat
       models[[length(models)+1]] = list(aR, tempFit)
     }
+    
+    if(suppress.printout){
+      sink()
+    }
+    
     return(list(currentModel=out.lm,models=models))
   }
 } # end of function
