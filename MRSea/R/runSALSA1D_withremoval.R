@@ -217,6 +217,11 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   timings<- vector(length=length(varlist))
   knots=NULL
   varkeepid<-NULL
+  
+  if(suppress.printout){
+    sink(file='salsa1d.log')
+  }
+  
   for (i in 2:(length(varlist)+1)){
     explanatory <- splineParams[[varID[(i-1)]]]$explanatory
     if(fam=='BinProp'){
@@ -357,6 +362,12 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   }else{
     fitStatlist<-list(fitStat=fitStat, CV = cv_initial)  
   }
+  
+  
+  if(suppress.printout){
+    sink()
+  }
+  
   #save.image("Test.RData")
   return(list(bestModel=outModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStatlist, keptvarlist = varlist[(varkeepid-1)]))
 }
