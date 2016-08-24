@@ -92,7 +92,7 @@
 #' 
 #' @export
 #' 
-runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=TRUE, panelid=NULL){
+runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=TRUE, panelid=NULL, suppress.printout=FALSE){
   
   require(splines)
   require(fields)
@@ -213,6 +213,10 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ loop through 1D covar ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if(suppress.printout){
+    sink(file='salsa1d.log')
+  }
+  
   starttime = proc.time()
   timings<- vector(length=length(varlist))
   knots=NULL
@@ -357,6 +361,11 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   }else{
     fitStatlist<-list(fitStat=fitStat, CV = cv_initial)  
   }
+  
+  if(suppress.printout){
+    sink()
+  }
+  
   #save.image("Test.RData")
   return(list(bestModel=outModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStatlist, keptvarlist = varlist[(varkeepid-1)]))
 }

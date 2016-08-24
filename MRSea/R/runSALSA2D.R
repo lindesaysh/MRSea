@@ -94,7 +94,7 @@
 #'
 #' @export
 #' 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, chooserad=F, panels=NULL){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, chooserad=F, panels=NULL, suppress.printout=FALSE){
   
   if(class(model)[1]=='glm'){
     data<-model$data  
@@ -174,11 +174,14 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ 2D SALSA RUN ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if(suppress.printout){
+    sink(file='salsa2d.log')
+  }
   
   baseModel1D<- model
   baseModel<- baseModel1D
   
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout)
   
   baseModel<- output$out.lm
   
@@ -259,5 +262,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
   
   attributes(baseModel$formula)$.Environment<-globalenv()
   #save.image(paste("salsa2D_k", splineParams[[1]]$startKnots, ".RData", sep=''))
+  
+  if(suppress.printout){
+    sink()
+  }
+  
+  
   return(list(bestModel=baseModel, splineParams=splineParams, fitStat=modelFit, aR=aRout))
 }
