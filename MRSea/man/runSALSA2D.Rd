@@ -5,7 +5,7 @@
 \title{Running SALSA for a spatial smooth with a CReSS basis}
 \usage{
 runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL, tol = 0,
-  chooserad = F, panels = NULL)
+  chooserad = F, panels = NULL, suppress.printout = FALSE)
 }
 \arguments{
 \item{model}{A model with no spatial smooth}
@@ -41,22 +41,22 @@ This function fits a spatially adaptive two dimensional smooth of spatial coordi
 \details{
 There must be a column called \code{response} in the data, which is the response variable used in the initial model to be fitted.
 
-The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} function.  
+The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} function.
 
    \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b.
-   
+
    \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example.
-   
+
    \code{knotdim}. The dimensions of the knot grid as a vector. (x, y)
-   
+
    \code{startknots}. Starting number of knots (initialised as spaced filled locations).
-   
+
    \code{minKnots}. Minimum number of knots to be tried.
-   
+
    \code{maxKnots}. Maximum number of knots to be tried.
-   
+
    \code{r_seq}. Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot. Sequence made using \code{\link{getRadiiChoices}}.
-   
+
    \code{gap}. The minimum gap between knots (in unit of measurement of coordinates).
    \code{interactionTerm}. Specifies which term in \code{baseModel} the spatial smooth will interact with.  If \code{NULL} no interaction term is fitted.
 }
@@ -81,19 +81,19 @@ r_seq<-getRadiiChoices(8, distMats$dataDist)
 
 # set initial model without the spatial term
 # (so all other non-spline terms)
-initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)), 
+initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)),
                    family='quasipoisson', data=ns.data.re)
 
 # make parameter set for running salsa2d
-# I have chosen a gap parameter of 1000 (in metres) to speed up the process.  
+# I have chosen a gap parameter of 1000 (in metres) to speed up the process.
 # Note that this means there cannot be two knots within 1000m of each other.
 
-salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, knotdim = c(7, 9), 
-                  startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1000, 
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, knotdim = c(7, 9),
+                  startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1000,
                   interactionTerm="as.factor(impact)")
 
-salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, 
-                            k2k=distMats$knotDist, splineParams=splineParams) 
+salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
+                            k2k=distMats$knotDist, splineParams=splineParams)
 
 }
 \author{

@@ -7,7 +7,7 @@
 return.reg.spline.fit.2d(splineParams, startKnots, winHalfWidth,
   fitnessMeasure = "BIC", maxIterations = 10, tol = 0, baseModel = NULL,
   radiusIndices = NULL, initialise = TRUE, initialKnots = NULL,
-  interactionTerm = NULL, knot.seed = 10)
+  interactionTerm = NULL, knot.seed = 10, suppress.printout = FALSE)
 }
 \description{
 Wrapper function for running SALSA2D

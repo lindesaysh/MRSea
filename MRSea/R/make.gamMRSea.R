@@ -1,13 +1,14 @@
 #' Function to make model of class \code{gamMRSea}
 #'
 #'
-#' @param model
-#' @param panelid
-#' @param splineParams
+#' @param model  model object of class glm or gamMRSea
+#' @param panelid vector of length of the data containing the panel identification for each row of data
+#' @param splineParams MRSea based list object
+#' @param varshortnames vector containing the short names for each variable.  These are used in summary and anova
+#' @param gamMRSea logical stating whether the call of the model should be changed to 'gamMRSea'
 #'
 #'
-#' @example
-#'
+#' @export
 
 make.gamMRSea<-function(model, panelid=NULL, splineParams=NULL, varshortnames=NULL, gamMRSea=FALSE){
   newmodel<-model
