@@ -9,17 +9,8 @@
 
 
 "return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10, suppress.printout=FALSE){
-  #
-  # if(suppress.printout){
-  #   sink(file='salsa2d.log')
-  # }
-
-
-<<<<<<< HEAD
-"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10,suppress.printout){
   
-=======
->>>>>>> package/model-structure
+
   #Where am I?
   # requires splines library and mgcv ibrary to be loaded!!
 
@@ -63,17 +54,12 @@
   #                 radiusIndices  - index in radii for each knot radius (e.g. [2,3,1,2,1]
   #                 interactionTerm - allows interaction between space and another term "ns(Year, knots =
   # splineParams[[6]][[2]])", for example.  If this is NULL, no interaction is done
-<<<<<<< HEAD
   
   
   if(suppress.printout){
     sink(file='salsa2d.log')
   }
   
-  
-=======
-
->>>>>>> package/model-structure
   # split out spline parameter object into its pieces
   knotDist <- splineParams[[1]]$knotDist
   radii <- splineParams[[1]]$radii
@@ -194,19 +180,11 @@
   ####print("here fin")
   print("And we're done...")
 
-<<<<<<< HEAD
   if(suppress.printout){
     sink()
   }
   
     return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,invInd=invInd,models=models,actualKnotIndices=invInd[aR],improve=overallImprove))
   
-=======
-  # if(suppress.printout){
-  #   sink()
-  # }
-  #
-    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,invInd=invInd,models=models,actualKnotIndices=invInd[aR],improve=overallImprove))
 
->>>>>>> package/model-structure
 }

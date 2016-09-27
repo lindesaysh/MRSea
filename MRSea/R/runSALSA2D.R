@@ -93,15 +93,10 @@
 #'@author Cameron Walker
 #'
 #' @export
-<<<<<<< HEAD
-#' 
+#'
+
 runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, chooserad=F, panels=NULL, suppress.printout=FALSE){
   
-=======
-#'
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, chooserad=F, panels=NULL, suppress.printout=FALSE){
-
->>>>>>> package/model-structure
   if(class(model)[1]=='glm'){
     data<-model$data
   }
@@ -189,18 +184,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
 
   baseModel1D<- model
   baseModel<- baseModel1D
-<<<<<<< HEAD
+
   
   output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout)
-  
-=======
 
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout)
-
->>>>>>> package/model-structure
   baseModel<- output$out.lm
-
-
 
   if(length(output$models)>0){
     modRes<- c()

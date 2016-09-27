@@ -1,5 +1,3 @@
-
-#-----------------------------------------------------------------------------
 #' Plot partial plots for each of the variables listed in \code{factorlist.in} or \code{varlist.in}.
 #'
 #' @param model Fitted model object (glm or gam)
@@ -41,15 +39,9 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
   require(mvtnorm)
   require(splines)
   require(Matrix)
-<<<<<<< HEAD
   
  splineParams <- model$splineParams
   
-=======
-
-  splineParams<-model$splineParams
-
->>>>>>> package/model-structure
   if(save==T){
     if(type=='response'){
       png(paste(label,"PartialFitsResponse%i.png",sep=''), height=600, width=650)}else{
