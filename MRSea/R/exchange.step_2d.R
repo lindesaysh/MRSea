@@ -1,16 +1,16 @@
 #' Function for exchanging knot locations and re-fitting model to find best one
-#' 
-#' 
+#'
+#'
 #' @author Cameron Walker, Department of Enginering Science, University of Auckland.
-#' 
+#'
 #' @export
-#' 
+#'
 
 ################################################################################################################
 "exchange.step_2d" <- function(gap,knotDist,radii,invInd,dists,explData,response,explanatory,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
-  
-  attributes(baseModel$formula)$.Environment<-environment()
-  
+
+  #attributes(baseModel$formula)$.Environment<-environment()
+
   # Loop - fuse used to ensure algorithm terminates
   print("******************************************************************************")
   print("Exchanging...")

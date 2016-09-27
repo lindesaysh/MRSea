@@ -13,23 +13,23 @@
     newRadii = radiusIndices
     #       while (improveR) {
     #         improveR = 0
-    
+
     tempRadii = radiusIndices
     tempRadii[i] = ceiling(length(radii)/2)
-    
+
     output = fit.thinPlate_2d(fitnessMeasure, dists,invInd[tempR],radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp)
     initModel = output$currentModel
     models = output$models
     initBIC = get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, invInd[tempR],radii, tempRadii, initDisp)$fitStat
 
     out<-choose.radii(initBIC,1:length(radiusIndices),tempRadii,radii,initModel,dists,invInd[tempR],baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp)
-    
+
     tempRadii=out$radiusIndices
     tempOut.lm=out$out.lm
     models=out$models
     output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, invInd[tempR],radii, tempRadii, initDisp)
     tempMeasure<-output$fitStat
-    
+
     if (tempMeasure+tol < fitStat) {
       out.lm <- tempOut.lm
       fitStat<-tempMeasure
@@ -43,25 +43,25 @@
       improveEx <- 1
       newRadii = tempRadii
     }
-    
+
   }
   if (length(aR)<maxKnots) {
     tempR<-c(aR,point[index])
     tempRadii = c(radiusIndices,(1:length(radii))[ceiling(length(radii)/2)])
     print("Adding knot...")
-  
+
     output = fit.thinPlate_2d(fitnessMeasure, dists,invInd[tempR],radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp)
     initModel = output$currentModel
     models = output$models
     initBIC = get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, invInd[tempR],radii, tempRadii, initDisp)$fitStat
     out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,invInd[tempR],baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp)
-    
+
     tempRadii=out$radiusIndices
     tempOut.lm=out$out.lm
     models=out$models
     output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, invInd[tempR],radii, tempRadii, initDisp)
     tempMeasure<-output$fitStat
-    
+
     if (tempMeasure +tol < fitStat) {
       out.lm <- tempOut.lm
       fitStat<-tempMeasure

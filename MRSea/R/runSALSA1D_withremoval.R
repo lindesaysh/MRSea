@@ -96,6 +96,7 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   
   require(splines)
   require(fields)
+  # branch test 2
   
   if(class(initialModel)[1]!='glm') stop('Class of model not supported.  Please use glm')
   
@@ -213,6 +214,10 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ loop through 1D covar ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  if(suppress.printout){
+    sink(file='salsa1d.log')
+  }
+  
   starttime = proc.time()
   timings<- vector(length=length(varlist))
   knots=NULL
@@ -363,7 +368,10 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
     fitStatlist<-list(fitStat=fitStat, CV = cv_initial)  
   }
   
+<<<<<<< HEAD
   
+=======
+>>>>>>> package/model-structure
   if(suppress.printout){
     sink()
   }
