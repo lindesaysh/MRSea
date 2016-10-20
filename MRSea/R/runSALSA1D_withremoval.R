@@ -358,6 +358,7 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   class(outModel)<-c('gamMRSea', class(outModel))
   outModel$varshortnames<-varlist[(varkeepid-1)]
   outModel$panels<-panelid
+  outModel$splineParams<-splineParams
   
   attributes(outModel$formula)$.Environment<-.GlobalEnv
   

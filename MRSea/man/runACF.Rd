@@ -4,7 +4,7 @@
 \alias{runACF}
 \title{run functions to create acf matrix and plot the results}
 \usage{
-runACF(block, model, store = FALSE, save = F)
+runACF(block, model, store = FALSE, save = F, suppress.printout = FALSE)
 }
 \arguments{
 \item{block}{Vector of blocks that identify data points that are correlated}

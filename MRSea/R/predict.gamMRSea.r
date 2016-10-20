@@ -67,12 +67,15 @@
 #'
 #' @export
 #'
-predict.gamMRSea<- function (predict.data, splineParams=NULL, g2k=NULL, model, type = "response",coeff = NULL)
+predict.gamMRSea<- function (predict.data, g2k=NULL, model, type = "response",coeff = NULL)
 {
   # attributes(model$formula)$.Environment <- environment()
   # radii <- splineParams[[1]]$radii
   # radiusIndices <- splineParams[[1]]$radiusIndices
   # dists <- g2k
+  
+  splineParams<- model$splineParams
+  
   require(splines)
   x2 <- data.frame(response = rpois(nrow(predict.data), lambda = 5),
                    predict.data)

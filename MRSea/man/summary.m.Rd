@@ -4,7 +4,7 @@
 \alias{summary.m}
 \title{Summary function for MRSea models to shorten names.}
 \usage{
-summary.m(model, varlist = NULL, facls = NULL)
+\method{summary}{m}(model, varlist = NULL, facls = NULL)
 }
 \arguments{
 \item{model}{Fitted model object (glm or geeglm)}

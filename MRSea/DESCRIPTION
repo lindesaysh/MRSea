@@ -34,3 +34,6 @@ Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
     University of St. Andrews
 URL: http://creem2.st-and.ac.uk/software.aspx
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

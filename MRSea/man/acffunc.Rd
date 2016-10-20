@@ -4,7 +4,7 @@
 \alias{acffunc}
 \title{calculate correlation for residuals by block}
 \usage{
-acffunc(block, model)
+acffunc(block, model, suppress.printout = FALSE)
 }
 \arguments{
 \item{block}{Vector of blocks that identify data points that are correlated}

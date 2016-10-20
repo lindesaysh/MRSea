@@ -29,8 +29,8 @@
 #' @export
 #' 
 
-runACF<-function(block, model, store=FALSE, save=F){
-  acf_result<-acffunc(block, model)
+runACF<-function(block, model, store=FALSE, save=F, suppress.printout=FALSE){
+  acf_result<-acffunc(block, model, suppress.printout)
   if(save==T){png('acfPlot.png', height=500, width=600)}
   plotacf(acf_result$acfmat)
   if(save==T){dev.off()}
@@ -44,11 +44,15 @@ runACF<-function(block, model, store=FALSE, save=F){
 #' @param block Vector of blocks that identify data points that are correlated
 #' @param model Fitted model object (glm or gam)
 #' 
-acffunc<-function(block, model){
+acffunc<-function(block, model, suppress.printout=FALSE){
   blocktab<-table(block)
   acfmat<-matrix(NA, length(unique(block)), max(blocktab))
   for(i in 1:length(unique(block))){
-    print(i)
+    
+    if(suppress.printout==FALSE){
+      print(i)
+    }
+    
     corr<-as.vector(acf(residuals(model, type='pearson')[which(block==unique(block)[i])], plot=F,lag.max=max(blocktab))$acf)
     acfmat[i,1:length(corr)]<- corr
   }

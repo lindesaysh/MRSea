@@ -13,6 +13,7 @@ RnwWeave: knitr
 LaTeX: pdfLaTeX
 
 BuildType: Package
+PackageUseDevtools: Yes
 PackagePath: MRSea
 PackageInstallArgs: --no-multiarch --with-keep.source
 PackageBuildArgs: --resave-data
