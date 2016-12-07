@@ -14,7 +14,7 @@
 
 \item{model}{Object from a GEE or GLM model}
 
-\item{type}{Type of predictions required. (default=`response`, may also use `link`.}
+\item{type}{Type of predictions required. (default=`response`, may also use `link`).}
 
 \item{coeff}{Vector of coefficients (default = NULL). To be used when bootstrapping and sampling coefficients from a distribution e.g. in \code{do.bootstrap.cress}.}
 
