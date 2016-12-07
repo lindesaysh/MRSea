@@ -6,7 +6,7 @@
 #' @param splineParams spline parameter object that describes the fitting of 2D and 1D splines in the model object
 #' @param g2k Matrix of distances between prediction locations and knot locations (n x k). May be Euclidean or geodesic distances.
 #' @param model Object from a GEE or GLM model
-#' @param type Type of predictions required. (default=`response`, may also use `link`.
+#' @param type Type of predictions required. (default=`response`, may also use `link`).
 #' @param coeff Vector of coefficients (default = NULL). To be used when bootstrapping and sampling coefficients from a distribution e.g. in \code{do.bootstrap.cress}.
 #'
 #' @details
@@ -88,6 +88,16 @@ predict.gamMRSea<- function (predict.data, g2k=NULL, model, type = "response",co
   
   m <- model.frame.gamMRSea(Terms, predict.data, xlev = model$xlevels, splineParams=splineParams)
   modmat <- model.matrix(Terms, m)
+  
+  offset <- rep(0, nrow(modmat))
+  # offset specified as term
+  if (!is.null(off.num <- attr(tt, "offset"))) 
+    for (i in off.num) offset <- offset + eval(attr(tt, "variables")[[i + 1]], predict.data)
+  # offset specified as parameter in call
+  if (!is.null(model$call$offset)) 
+    offset <- offset + eval(model$call$offset, predict.data)
+  
+  
   if (is.null(coeff)) {
     modcoef <- as.vector(model$coefficients)
   }
@@ -97,8 +107,8 @@ predict.gamMRSea<- function (predict.data, g2k=NULL, model, type = "response",co
   if (type == "response") {
     if (length(model$offset) > 0 & sum(model$offset) !=
         0) {
-      preds <- model$family$linkinv(modmat %*% modcoef) *
-        predict.data$area
+        preds <- model$family$linkinv(modmat %*% modcoef) *
+        offset
     }
     else {
       preds <- model$family$linkinv(modmat %*% modcoef)
