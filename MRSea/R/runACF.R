@@ -47,13 +47,27 @@ runACF<-function(block, model, store=FALSE, save=F, suppress.printout=FALSE){
 acffunc<-function(block, model, suppress.printout=FALSE){
   blocktab<-table(block)
   acfmat<-matrix(NA, length(unique(block)), max(blocktab))
-  for(i in 1:length(unique(block))){
+  
+  if(is.list(model)){
+    d<-residuals(model, type='pearson')
+  }else{
+    d<-model
+  }
+  
+  overallacf<-acf(d, lag.max = max(blocktab), plot=F)$acf
+  
+  
+    for(i in 1:length(unique(block))){
     
     if(suppress.printout==FALSE){
       print(i)
     }
     
-    corr<-as.vector(acf(residuals(model, type='pearson')[which(block==unique(block)[i])], plot=F,lag.max=max(blocktab))$acf)
+    corr<-as.vector(acf(d[which(block==unique(block)[i])], plot=F,lag.max=max(blocktab))$acf)
+    if(length(which(is.na(corr)))>0)
+    {
+      corr<-overallacf[1:length(corr)]
+    }
     acfmat[i,1:length(corr)]<- corr
   }
   return(list(acfmat=acfmat, blocktab=blocktab))
@@ -67,10 +81,10 @@ acffunc<-function(block, model, suppress.printout=FALSE){
 #' @param acfmat Matrix of output from \code{acffunc} (blocks x max block length).
 #'  
 plotacf<-function(acfmat){
-  plot(1:length(na.omit(acfmat[1,])), na.omit(acfmat[1,]), xlim=c(0,ncol(acfmat)), ylim=c(-1,1), type='l', col='grey', xlab='Lag', ylab='Auto correlation', cex.lab=1.3, cex.axis=1.3)
+  plot(0:(length(na.omit(acfmat[1,]))-1), na.omit(acfmat[1,]), xlim=c(0,ncol(acfmat)), ylim=c(-1,1), type='l', col='grey', xlab='Lag', ylab='Auto correlation', cex.lab=1.3, cex.axis=1.3)
   abline(h=0)
   for(i in 2:nrow(acfmat)){
-    lines(1:length(na.omit(acfmat[i,])), na.omit(acfmat[i,]), col='grey')  
+    lines(0:(length(na.omit(acfmat[i,]))-1), na.omit(acfmat[i,]), col='grey')  
   }
-  lines(1:ncol(acfmat), apply(acfmat, 2, mean, na.rm=T), col='red', lwd=2)
+  lines(0:(ncol(acfmat)-1), apply(acfmat, 2, mean, na.rm=T), col='red', lwd=2)
 }
