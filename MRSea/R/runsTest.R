@@ -41,32 +41,32 @@ runsTest<-function (y, plot.it = FALSE, alternative = c("two.sided", "positive.c
                                                           m - 1))
   statistic <- (R - E)/sqrt(s2)
   if (alternative == "positive.correlated") {
-    if (is.null(critvals)) {
+    if (is.null(emp.distribution)) {
       p.value = pnorm(statistic)
       METHOD = "Runs Test - Positive Correlated"
     }else{
-      p.value=length(which(critvals<statistic))/length(critvals)
+      p.value=length(which(emp.distribution<statistic))/length(emp.distribution)
       METHOD = "Runs Test - Positive Correlated; Empirical Distribution"
     }
   }
   else if (alternative == "negative.correlated") {
-    if (is.null(critvals)) {
+    if (is.null(emp.distribution)) {
       p.value = 1 - pnorm(statistic)
       METHOD = "Runs Test - Negative Correlated"
     }else{
-      p.value=length(which(critvals>statistic))/length(critvals)
+      p.value=length(which(emp.distribution>statistic))/length(emp.distribution)
       METHOD = "Runs Test - Negative Correlated; Empirical Distribution"
     }
   }
   else {
-    if (is.null(critvals)) {
+    if (is.null(emp.distribution)) {
       p.value = 2 * min(pnorm(statistic), 1 - pnorm(statistic))
       alternative = "two.sided"
       METHOD = "Runs Test - Two sided"
     }
     else {
       if(alternative == "two.sided"){
-        p.value=2 * min(length(which(critvals>statistic))/length(critvals), length(which(critvals<statistic))/length(critvals))
+        p.value=2 * min(length(which(emp.distribution>statistic))/length(emp.distribution), length(which(emp.distribution<statistic))/length(emp.distribution))
         alternative = "two.sided"
         METHOD = "Runs Test - Two sided; Empirical Distribution"
       }
