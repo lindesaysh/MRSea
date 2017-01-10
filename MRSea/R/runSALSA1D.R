@@ -1,7 +1,7 @@
 
 #' Running SALSA for continuous one-dimensional covariates.
 #' 
-#' This function finds spatially adaptive knot locations for one or more continuous one-dimensional covariates.  It differs to \code{\link{runSALSA1D}} in that if the CV score of a model does not improve with the addition of a covariate in \code{varlist} then that term is either reduced to linear or removed from the model.
+#' This function finds spatially adaptive knot locations for one or more continuous one-dimensional covariates.  
 #' 
 #' @param initialModel The best fitting \code{CReSS} model with no continuous covariates specified.  This must be a model of class \code{glm}.
 #' @param salsa1dlist Vector of objects required for \code{runSALSA1D}: \code{fitnessMeasure}, \code{minKnots_1d}, \code{maxKnots_1d}, \code{startKnots_1d} \code{degree}, \code{maxIterations} \code{gap}. 
@@ -11,7 +11,9 @@
 #' @param varlist_cyclicSplines Vector of variable names for covariates to be modelled with cyclic cubic splines.  This must be a subset of \code{varlist}.The default is \code{NULL}
 #' @param splineParams List object containing information for fitting splines to the covariates in \code{varlist}. If not specified (\code{NULL}) this object is created and returned. See \code{\link{makesplineParams}} for details.
 #' @param datain Data used to fit the initial Model.
-#' @param removal (Default: \code{TRUE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth.
+#' @param removal (Default: \code{FALSE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth. If \code{TRUE} then cross-validation is used to make model selection choices.
+#' @param panel.id Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
+#' @param suppress.printout (Default: \code{FALSE}. Logical stating whether to show the analysis printout.
 #' 
 #' @details
 #' There must be columns called \code{response} (response variable) and \code{foldid} (for cross-validation calculation) in the data used in the initial model to be fitted. If the data is proportion, then there should be two columns called \code{successess} and \code{failures}.
@@ -42,7 +44,7 @@
 #' @return
 #' A list object is returned containing 4 elements:
 #' 
-#' \item{bestModel}{A glm model object from the best model fitted}
+#' \item{bestModel}{A model object of class \code{gam.MRSea} from the best model fitted}
 #' \item{modelFits1D}{A list object with an element for each new term fitted to the model.  The first element is a model fitted with a knot at the mean for each of the covariates (startmodel) in \code{varlist}.  Within the first element, the current fit and formula of the start model.  
 #' 
 #' The second element is the result of SALSA on the first term in \code{varlist}.  Within this element:
@@ -69,7 +71,7 @@
 #' # load prediction data
 #' data(ns.predict.data.re)
 #' 
-#' splineParams<-makesplineParams(data=ns.data.re, varlist=c('observationhour', 'DayOfMonth'))
+#' varlist=c('observationhour', 'DayOfMonth')
 #' 
 #' # make column with foldid for cross validation calculation
 #' ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$MonthOfYear, ns.data.re$DayOfMonth, sep='')
@@ -87,12 +89,14 @@
 #'                   startKnots_1d = c(2,2), degree=c(2,2), maxIterations = 10, gaps=c(1,1))
 #' 
 #' # run SALSA
-#' salsa1dOutput<-runSALSA1D_withremoval(initialModel, salsa1dlist, varlist=c('observationhour', 'DayOfMonth'), 
-#'                  factorlist=c('floodebb', 'impact'), ns.predict.data.re, splineParams=splineParams, datain=ns.data.re)
+#' salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist, factorlist=c('floodebb', 'impact'), 
+#'                ns.predict.data.re, splineParams=NULL, datain=ns.data.re, removal=TRUE)
+#' 
+#' @author Lindesay Scott-Hayward
 #' 
 #' @export
 #' 
-runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=TRUE, panelid=NULL, suppress.printout=FALSE){
+runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=FALSE, panelid=NULL, suppress.printout=FALSE){
   
   require(splines)
   require(fields)
@@ -221,10 +225,6 @@ runSALSA1D_withremoval<-function(initialModel, salsa1dlist, varlist, factorlist=
   timings<- vector(length=length(varlist))
   knots=NULL
   varkeepid<-NULL
-  
-  if(suppress.printout){
-    sink(file='salsa1d.log')
-  }
   
   for (i in 2:(length(varlist)+1)){
     explanatory <- splineParams[[varID[(i-1)]]]$explanatory

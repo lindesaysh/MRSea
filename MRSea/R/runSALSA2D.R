@@ -90,7 +90,7 @@
 #' salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
 #'                             k2k=distMats$knotDist, splineParams=splineParams)
 #'
-#'@author Cameron Walker
+#'@author Lindesay Scott-Hayward, Cameron Walker
 #'
 #' @export
 #'
