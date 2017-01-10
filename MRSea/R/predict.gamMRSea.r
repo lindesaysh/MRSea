@@ -92,7 +92,7 @@ predict.gamMRSea<- function (predict.data, g2k=NULL, model, type = "response",co
   offset <- rep(0, nrow(modmat))
   # offset specified as term
   if (!is.null(off.num <- attr(tt, "offset"))) 
-    for (i in off.num) offset <- offset + eval(attr(tt, "variables")[[i + 1]], predict.data)
+    for (i in off.num) offset <- offset + exp(eval(attr(tt, "variables")[[i + 1]], predict.data))
   # offset specified as parameter in call
   if (!is.null(model$call$offset)) 
     offset <- offset + eval(model$call$offset, predict.data)
