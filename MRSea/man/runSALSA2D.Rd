@@ -97,7 +97,7 @@ salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
 
 }
 \author{
-Cameron Walker
+Lindesay Scott-Hayward, Cameron Walker
 }
 \references{
 Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
