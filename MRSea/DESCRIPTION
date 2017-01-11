@@ -7,7 +7,7 @@ Description: Examines animal survey data for signs of changes in animal
     spatially adaptive one and 2D smoothers using SALSA and CReSS.  Non-parametric bootstrapping 
     is available to estimate uncertainty. Several model assessment tools are also available.
     Recent updates include the direct estimation of robust standard errors, given a panel structure.
-Version: 0.3.0.2
+Version: 0.3.0.3
 Date: 2017-01-10
 Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique
     Mackenzie, Cameron Walker <cameron.walker@auckland.ac.nz>
