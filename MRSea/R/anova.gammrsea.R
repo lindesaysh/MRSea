@@ -14,6 +14,12 @@ anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
   beta<-object$coefficients
 
   panelid <- if(is.null(panelid) & is.null(object$panels)) 1:nrow(object$data) else object$panels
+  
+  #warning message not to use F when correlation present
+  if(length(unique(panelid))<nrow(x) && test=='F'){
+    stop("If panels are provided (number of panels < number of observations), please use type = 'Wald' to make use of the robust standard errors.")
+  }
+  
   vbeta<-sandcov(object, id=panelid)
   ncoefs<-table(varseq)
   
@@ -125,7 +131,7 @@ anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
   row.names(result) <- c(tl, "Residuals")
   names(result) <- c("SS", "Df", "F", "Pr(>F)")
   class(result) <- c("anova", "data.frame")
-  attr(result, "heading") <- c("Analysis of Deviance Table (Type II tests)\n", 
+  attr(result, "heading") <- c("Analysis of Deviance Table (Type II tests)", "Marginal Testing\n", 
                                paste("Response:", as.character(varlist[-1])[1]), paste("Error estimate based on", "Pearson residuals", "\n"))
   }
   
