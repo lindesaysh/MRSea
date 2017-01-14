@@ -25,8 +25,16 @@ if(is.null(panelid) & !is.null(model$panels)){
   newmodel$panels<-model$panels
 }
 
-  newmodel$splineParams<-splineParams
-  newmodel$varshortnames<-varshortnames
+  if(!is.null(splineParams)){
+    newmodel$splineParams<-splineParams
+  }
+  
+  
+  
+  if(!is.null(varshortnames)){
+    newmodel$varshortnames<-varshortnames  
+  }
+  
 
   if(gamMRSea){
     newmodel$call[[1]]<-quote(gamMRSea)

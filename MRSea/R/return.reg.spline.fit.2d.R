@@ -55,11 +55,11 @@
   #                 interactionTerm - allows interaction between space and another term "ns(Year, knots =
   # splineParams[[6]][[2]])", for example.  If this is NULL, no interaction is done
   
-  
-  if(suppress.printout){
-    sink(file='salsa2d.log')
-  }
-  
+  # 
+  # if(suppress.printout){
+  #   sink(file='salsa2d.log')
+  # }
+  # 
   # split out spline parameter object into its pieces
   knotDist <- splineParams[[1]]$knotDist
   radii <- splineParams[[1]]$radii
@@ -180,9 +180,12 @@
   ####print("here fin")
   print("And we're done...")
 
-  if(suppress.printout){
-    sink()
-  }
+  # if(suppress.printout){
+  #   sink()
+  # }
+  # 
+  
+  gc(verbose=FALSE)
   
     return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,invInd=invInd,models=models,actualKnotIndices=invInd[aR],improve=overallImprove))
   
