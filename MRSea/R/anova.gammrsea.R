@@ -1,4 +1,3 @@
-a=
 anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
 
   if(!is.null(object$varshortnames)){
@@ -20,7 +19,12 @@ anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
     stop("If panels are provided (number of panels < number of observations), please use type = 'Wald' to make use of the robust standard errors.")
   }
   
-  vbeta<-sandcov(object, id=panelid)
+  if(max(table(panelid))==1){
+    vbeta<-summary(object)$cov.scaled
+  }else{
+    vbeta<-sandcov(object, id=panelid)  
+  }
+  
   ncoefs<-table(varseq)
   
   if(test=='Wald'){
