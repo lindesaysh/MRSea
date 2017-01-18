@@ -372,6 +372,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     sink()
   }
   
+ gc(verbose=FALSE)
   #save.image("Test.RData")
   return(list(bestModel=outModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStatlist, keptvarlist = varlist[(varkeepid-1)]))
 }

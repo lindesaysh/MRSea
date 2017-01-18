@@ -266,6 +266,8 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, tol=0, cho
   attributes(baseModel$formula)$.Environment<-globalenv()
   #save.image(paste("salsa2D_k", splineParams[[1]]$startKnots, ".RData", sep=''))
 
+  baseModel<-make.gamMRSea(baseModel, gamMRSea=TRUE)
+  
   if(suppress.printout){
     sink()
   }
