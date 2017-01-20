@@ -28,7 +28,7 @@
 Summarising model fits from models fitted using the MRSea package.
 }
 \details{
-\code{print.summary.gamMRSea} tries to be smart about formatting the coefficients, standard errors, etc. and additionally gives 'significance stars' if signif.stars is TRUE. The coefficients component of the result gives the estimated coefficients and their estimated standard errors (raw and robust), together with their ratio. The third column gives the robust standard errors calculated using the sandwich estimator.  If no correlation is present, the second and third columns should be similar. The fourth column is labelled Wald and gives the Wald test statistic, based on the robust standard errors.The fifth column gives the two-tailed p-value corresponding to the Wald test ().
+\code{print.summary.gamMRSea} tries to be smart about formatting the coefficients, standard errors, etc. and additionally gives 'significance stars' if signif.stars is TRUE. The coefficients component of the result gives the estimated coefficients and their estimated standard errors (raw and robust), together with their ratio (from robust s.e.). The third column gives the robust standard errors calculated using the sandwich estimator.  If no correlation is present, the second and third columns are the same as the sandwich estimator is not used when data points are independent. The fourth column is labelled Wald and gives the Wald test statistic, based on the robust standard errors. The fifth column gives the two-tailed p-value corresponding to the Wald test ().
 
 Aliased coefficients are omitted in the returned object but restored by the print method.
 
