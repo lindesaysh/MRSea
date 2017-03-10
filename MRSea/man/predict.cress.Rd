@@ -58,7 +58,8 @@ r_seq<-getRadiiChoices(8,distMats$dataDist)
 initialModel<- glm(response ~ as.factor(season) + as.factor(impact) + offset(log(area)),  
                 family='quasipoisson', data=count.data)
 # make parameter set for running salsa2d
-salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.off, knotdim=c(26,14), startKnots=4, minKnots=4, 
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.off, 
+                 knotdim=c(26,14), startKnots=4, minKnots=4, 
                  maxKnots=20, r_seq=r_seq, gap=4000, interactionTerm="as.factor(impact)")
 salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, 
                    k2k=distMats$knotDist, splineParams=splineParams) 

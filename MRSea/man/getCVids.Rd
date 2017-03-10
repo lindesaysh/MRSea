@@ -4,7 +4,7 @@
 \alias{getCVids}
 \title{IDs for running cross validation}
 \usage{
-getCVids(data, folds, block = NULL)
+getCVids(data, folds, block = NULL, seed = 1234)
 }
 \arguments{
 \item{data}{data used in regression model}
@@ -12,6 +12,8 @@ getCVids(data, folds, block = NULL)
 \item{folds}{integer number of validation data sets}
 
 \item{block}{column in data indicating the blocking structure for cross-validation (if \code{block} = NULL, individual observations will be used as blocks)}
+
+\item{seed}{integer number used to set the seed of the fold generation.  By default this is set to `1234`.}
 }
 \description{
 This function creates a string of integers which will be used for pointing to the right subsets of data for cross validation of regression objects
@@ -25,6 +27,8 @@ data(ns.data.re)
 
 CVids<-getCVids(ns.data.re, 5)
 
-
+}
+\author{
+LAS Scott-Hayward, University of St Andrews
 }
 

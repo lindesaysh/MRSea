@@ -6,6 +6,9 @@
 \usage{
 AICh(model)
 }
+\arguments{
+\item{model}{model object of class glm.}
+}
 \description{
 Function to calculate AICh (Hardin and Hilbe 2013)
 }

@@ -35,7 +35,7 @@ The output is plots of cumulative residuals.
 # load data
 data(ns.data.re)
 
-model<-glm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
            family='quasipoisson', data=ns.data.re)
 
 plotCumRes(model, varlist=c('observationhour'))

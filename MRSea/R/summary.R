@@ -7,6 +7,7 @@
 #' @param digits	the number of significant digits to use when printing.
 #' @param symbolic.cor	logical. If TRUE, print the correlations in a symbolic form (see symnum) rather than as numbers.
 #' @param signif.stars	logical. If TRUE, 'significance stars' are printed for each coefficient.
+#' @param varshortnames vector stating the short versions of the covariate names if required.
 #' @param ...	further arguments passed to or from other methods.
 #'
 #' @details
@@ -36,6 +37,16 @@
 #'
 #' @author Lindesay Scott-Hayward, Univeristy of St Andrews.
 #' @note Code adapted from \code{summary.glm}
+#'
+#' @examples 
+#' 
+#' # load data
+#' data(ns.data.re)
+#' ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
+#'  
+#' model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+#'               family='poisson', data=ns.data.re)
+#' summary(model)
 #'
 #' @export
 
@@ -75,18 +86,19 @@ summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
       }
       else {bob[id] <- paste(varshortnames[i], sep = "")}
     }
+  }
 
-    localid <- grep("LocalRadial", bob)
-    if (length(localid > 1)) {
-      intid <- grep(":", bob)
-      smoothid <- localid[which(is.na(match(localid, intid)))]
-      for (k in 1:length(smoothid)) {
-        bob[smoothid][k] <- paste("s(x.pos, y.pos)b", k,
-                                  sep = "")
-      }
+  localid <- grep("LocalRadial", bob)
+  if (length(localid > 1)) {
+    intid <- grep(":", bob)
+    smoothid <- localid[which(is.na(match(localid, intid)))]
+    for (k in 1:length(smoothid)) {
+      bob[smoothid][k] <- paste("s(x.pos, y.pos)b", k,
+                                sep = "")
+    }
 
-      int<-attr(terms(formula(object)), 'term.labels')[grep(":", attr(terms(formula(object)), 'term.labels'))]
-      a<-which(!is.na(pmatch(names(factorlist), int)))
+    int<-attr(terms(formula(object)), 'term.labels')[grep(":", attr(terms(formula(object)), 'term.labels'))]
+    a<-which(!is.na(pmatch(names(factorlist), int)))
 
       # for (i in 1:length(factorlist)) {
       #   a <- grep(factorlist[i], int)
@@ -108,7 +120,7 @@ summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
     }
 
     attr(object$coefficients, "names") <- bob
-  }
+  
 
   est.disp <- FALSE
   df.r <- object$df.residual
@@ -261,7 +273,11 @@ print.summary.gamMRSea<-function (x, digits = max(3L, getOption("digits") - 3L),
     cat("  (", mess, ")\n", sep = "")
   cat("AIC: ", format(x$aic, digits = max(4L, digits + 1L)))
 
-  cat("\n\nMax Panel Size = ", max(table(x$panelid)),"; Number of panels = ", max(x$panelid),"\nNumber of Fisher Scoring iterations: ", x$iter, "\n", sep = "")
+  if(max(table(x$panelid))==1){
+    maxpanels <- paste(max(table(x$panelid)), ' (independence assumed)', sep='')
+  }else{maxpanels<-max(table(x$panelid))}
+  
+  cat("\n\nMax Panel Size = ", maxpanels,"; Number of panels = ", max(x$panelid),"\nNumber of Fisher Scoring iterations: ", x$iter, "\n", sep = "")
 
 
   correl <- x$correlation

@@ -20,7 +20,7 @@
 #' # load data
 #' data(ns.data.re)
 #' 
-#' model<-glm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
+#' model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
 #'             family='quasipoisson', data=ns.data.re)
 #' 
 #' plotRunsProfile(model, varlist=c('observationhour'))
@@ -33,7 +33,7 @@ plotRunsProfile<- function(model, varlist, label='', save=FALSE){
   
   namesOfx<- c(varlist, c("Predicted", "Index"))
   
-  if(class(model)[1]=='geeglm' | class(model)[1]=='glm'){
+  if(class(model)[1]=='geeglm' | class(model)[1]=='glm' | class(model)[1]=='gamMRSea'){
     dat<- model$data
   }
   
@@ -51,7 +51,7 @@ plotRunsProfile<- function(model, varlist, label='', save=FALSE){
   xmatrix<- cbind(dat[,coefpos], fitted(model), ord=1:length(fitted(model)))
   
   for(c in 1:length(namesOfx)){
-    rtest<-runs.test(residuals(model, type="pearson")[order(xmatrix[, c])],alternative = c("two.sided"))
+    rtest<-runsTest(residuals(model, type="pearson")[order(xmatrix[, c])],alternative = c("two.sided"))
     pval<-round(rtest$p.value, 3)
     if(rtest$p.value<0.0001){pval<-'< 0.0001'}
     

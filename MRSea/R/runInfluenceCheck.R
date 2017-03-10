@@ -1,8 +1,6 @@
-
-#-----------------------------------------------------------------------------
 #' Timing check to see how long it will take to run \code{runInfluence}.
 #' 
-#' @param model Fitted model object (glm or gam)
+#' @param model Fitted model object (glm, gamMRSea or gam)
 #' @param id blocking structure
 #' @param d2k (\code{default=NULL}). (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations.
 #' @param splineParams (\code{default=NULL}). List object containng output from runSALSA (e.g. knot locations for continuous covariates). See \code{\link{makesplineParams}} for more details of this object. 
@@ -14,8 +12,8 @@
 #'                      ns.data.re$DayOfMonth, sep='')
 #' ns.data.re$blockid<-as.factor(ns.data.re$blockid)
 
-#' model<-geeglm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
-#'                family='poisson', data=ns.data.re, id=blockid)
+#' model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+#'               family='poisson', data=ns.data.re)
 #' 
 #' timeInfluenceCheck(model, ns.data.re$blockid)
 #'
@@ -27,7 +25,7 @@ timeInfluenceCheck<-function(model, id, d2k=NULL, splineParams=NULL){
   attributes(model$formula)$.Environment<-environment()
   response<-model$y
     
-  if(class(model)[1]=='geeglm'){
+  if(class(model)[1]=='geeglm' | class(model)[1]=='gamMRSea' | class(model)[1]=='glm'){
     dat<- model$data
   }
   

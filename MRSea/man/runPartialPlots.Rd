@@ -40,7 +40,7 @@ Plot partial plots for each of the variables listed in \code{factorlist.in} or \
 #' # load data
 data(ns.data.re)
 
-model<-glm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),
            family='quasipoisson', data=ns.data.re)
 
 runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
@@ -49,6 +49,8 @@ runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
                 varlist.in=c('observationhour'), type='link')
 runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
                 varlist.in=c('observationhour'), partial.resid=TRUE)
-
+}
+\author{
+LAS Scott-Hayward, University of St Andrews
 }
 

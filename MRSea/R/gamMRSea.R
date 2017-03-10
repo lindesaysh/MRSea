@@ -1,7 +1,11 @@
 #' gamMRSea model function
-#'
-#'
-
+#' 
+#' See \code{\link{glm}} for details.  A \code{splineParams} object may be specified as part of the model object.
+#' 
+#' @author LAS Scott-Hayward, University of St Andrews
+#' 
+#' @export
+#' 
 gamMRSea<-function (formula, family = gaussian, data, weights, subset,
                     na.action, start = NULL, etastart, mustart, offset, control = list(...),
                     model = TRUE, method = "glm.fit", x = FALSE, y = TRUE, contrasts = NULL, splineParams=NULL, ...)

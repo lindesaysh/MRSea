@@ -19,7 +19,7 @@
 #' #' # load data
 #' data(ns.data.re)
 #'
-#' model<-glm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),
+#' model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),
 #'            family='quasipoisson', data=ns.data.re)
 #'
 #' runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
@@ -28,7 +28,9 @@
 #'                 varlist.in=c('observationhour'), type='link')
 #' runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
 #'                 varlist.in=c('observationhour'), partial.resid=TRUE)
-#'
+
+#' @author LAS Scott-Hayward, University of St Andrews
+#' 
 #' @export
 #'
 
@@ -191,12 +193,14 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
         lines(newX,cis[,2], col="darkred", lty=4)
 
         if(showKnots=="TRUE"){
-          if(length(splineParams[[(i+1)]]$knots)==1 & is.character(splineParams[[(i+1)]]$knots)){
+          spid<-grep(varlist.in[i], sapply(splineParams, '[[','covar'))
+          if(length(splineParams[[spid]]$knots)==1 & is.character(splineParams[[(i+1)]]$knots)){
             XX<-FALSE
           }else{XX<-TRUE}
 
           if(XX==TRUE){
-            abline(v=splineParams[[(i+1)]]$knots, lty=4, col="grey")}
+           
+            abline(v=splineParams[[spid]]$knots, lty=4, col="grey")}
         }
         eval(parse(text=paste("rm(", varlist.in[i], ")", sep="")))
         rm(response)

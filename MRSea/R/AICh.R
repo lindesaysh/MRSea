@@ -1,5 +1,7 @@
 #'
 #' Function to calculate AICh (Hardin and Hilbe 2013) 
+#' 
+#' @param model model object of class glm.
 #'
 #' @author Lindesay Scott-Hayward, University of St Andrews
 #' 

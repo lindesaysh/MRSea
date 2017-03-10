@@ -35,6 +35,10 @@ runDiagnostics<-function(model, plotting='b', save=FALSE){
     dat<-model$model 
   }
   
+  if(class(model)[1]=='gamMRSea'){
+    dat<-model$data
+  }
+  
   #Assessing predictive power
   
   #r-squared:

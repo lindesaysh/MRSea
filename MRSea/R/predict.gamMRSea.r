@@ -3,7 +3,6 @@
 #' This function calculates vector of predictions on the scale of the response or link.
 #'
 #' @param predict.data Data frame of covariate values to make predictions to
-#' @param splineParams spline parameter object that describes the fitting of 2D and 1D splines in the model object
 #' @param g2k Matrix of distances between prediction locations and knot locations (n x k). May be Euclidean or geodesic distances.
 #' @param model Object from a GEE or GLM model
 #' @param type Type of predictions required. (default=`response`, may also use `link`).
@@ -45,25 +44,15 @@
 #' initialModel<- glm(response ~ as.factor(season) + as.factor(impact) + offset(log(area)),
 #'                 family='quasipoisson', data=count.data)
 #' # make parameter set for running salsa2d
-#' salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.off, knotdim=c(26,14), startKnots=4, minKnots=4,
+#' salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.off, 
+#'                  knotdim=c(26,14), startKnots=4, minKnots=4,
 #'                  maxKnots=20, r_seq=r_seq, gap=4000, interactionTerm="as.factor(impact)")
 #' salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
 #'                    k2k=distMats$knotDist, splineParams=splineParams)
 #'
-#' splineParams<-salsa2dOutput_k6$splineParams
-#' # specify parameters for local radial function:
-#' radiusIndices <- splineParams[[1]]$radiusIndices
-#' dists <- splineParams[[1]]$dist
-#' radii <- splineParams[[1]]$radii
-#' aR <- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
-#' count.data$blockid<-paste(count.data$transect.id, count.data$season, count.data$impact, sep='')
-#' # Re-fit the chosen model as a GEE (based on SALSA knot placement) and GEE p-values
-#' geeModel<- geeglm(formula(salsa2dOutput_k6$bestModel), data=count.data, family=poisson, id=blockid)
-#' dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$y.pos), na.omit(knotgrid.off),
-#'        knotmat=FALSE)$dataDist
 #'
 #' # make predictions on response scale
-#' preds<-predict.gamMRSea(predict.data.re, splineParams, dists, geeModel)
+#' preds<-predict.gamMRSea(predict.data.re, dists, salsa2dOutput_k6$bestModel)
 #'
 #' @export
 #'

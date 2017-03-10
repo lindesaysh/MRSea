@@ -6,6 +6,9 @@
 \usage{
 QICb(model)
 }
+\arguments{
+\item{model}{Model of class geeglm}
+}
 \description{
 Function to calculate QICb
 }

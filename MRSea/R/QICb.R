@@ -1,6 +1,8 @@
 #'
 #' Function to calculate QICb 
 #'
+#' @param model Model of class geeglm
+#' 
 #' @author Lindesay Scott-Hayward, University of St Andrews
 #' 
 #' @export

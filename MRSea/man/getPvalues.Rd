@@ -7,7 +7,7 @@
 getPvalues(model, varlist = NULL, factorlist = NULL)
 }
 \arguments{
-\item{model}{Fitted model object (gee)}
+\item{model}{Fitted model object of class \code{gee}.}
 
 \item{varlist}{(default =\code{NULL}). Vector of covariate names (continous covariates only) used to make the output table names shorter.  Useful if spline parameters are specified in the model.}
 

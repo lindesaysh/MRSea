@@ -1,5 +1,3 @@
-
-#-----------------------------------------------------------------------------
 #' Function for obtaining a sequence of range parameters for the CReSS smoother
 #' 
 #' @param numberofradii The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.

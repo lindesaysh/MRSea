@@ -16,9 +16,12 @@ make.gamMRSea(model, panelid = NULL, splineParams = NULL,
 
 \item{varshortnames}{vector containing the short names for each variable.  These are used in summary and anova}
 
-\item{gamMRSea}{logical stating whether the call of the model should be changed to 'gamMRSea'}
+\item{gamMRSea}{logical stating whether the call of the model should be changed to 'gamMRSea' from `glm`}
 }
 \description{
-Function to make model of class \code{gamMRSea}
+Function to allow a model of class \code{gamMRSea} to be updated to include a panel structure or shortnames to make summary and anova outputs more readable. Function to update an `lm` or `glm` model to class `gamMRSea`.
+}
+\author{
+LAS Scott-Hayward, University of St Andrews
 }
 

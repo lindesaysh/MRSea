@@ -31,7 +31,7 @@ Calculate runs test and plot profile plot.  The output is a plot of runs profile
 # load data
 data(ns.data.re)
 
-model<-glm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
             family='quasipoisson', data=ns.data.re)
 
 plotRunsProfile(model, varlist=c('observationhour'))

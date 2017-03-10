@@ -7,7 +7,7 @@
 runInfluence(model, id, d2k = NULL, splineParams = NULL, save = FALSE)
 }
 \arguments{
-\item{model}{Fitted model object (glm or gam)}
+\item{model}{Fitted model object (glm, gamMRSea or gam)}
 
 \item{id}{blocking structure}
 
@@ -37,8 +37,8 @@ ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$Month
                     ns.data.re$DayOfMonth, sep='')
 ns.data.re$blockid<-as.factor(ns.data.re$blockid)
 
-model<-geeglm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
-              family='poisson', data=ns.data.re, id=blockid)
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
 
 timeInfluenceCheck(model, ns.data.re$blockid)
 

@@ -1,3 +1,27 @@
+#'
+#' Anova Tables for \code{gamMRSea} Models
+#'
+#' @description Calculates type-III analysis-of-variance tables for model objects produced by gamMRSea (in the MRSea package). Wald chisquare tests are calculated by default although, F-tests may be specified. 
+#' 
+#' @param object A \code{gamMRSea} model object
+#' @param varshortnames (default = NULL).  Character vector denoting the short names to use for any smooth terms.  May already be specified as part of the model object.
+#' @param panelid vector of length of the data used in object.  Specified if robust standard errors are to be used.
+#' @param test (default='wald'). May also specify "F".
+#' 
+#' @return An object of class "\code{anova}".
+#' 
+#' @examples 
+#' 
+#' # load data
+#' data(ns.data.re)
+#' ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
+#'  
+#' model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+#'               family='poisson', data=ns.data.re)
+#' anova(model)        
+#'              
+#' @export
+#' 
 anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
 
   if(!is.null(object$varshortnames)){
@@ -123,10 +147,14 @@ anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
   }
   
   if(test=='Wald'){
+    if(max(table(panelid))==1){
+      maxpanels <- paste(max(table(panelid)), ' (independence assumed)', sep='')
+    }else{maxpanels<-max(table(panelid))}
+    
     dimnames(table)<-list(c(tl), c("Df", "X2", "P(>|Chi|)"))
     title <- paste("Analysis of 'Wald statistic' Table", "\nModel: ",
                    object$family$family, ", link: ", object$family$link,
-                   "\nResponse: ", as.character(varlist[-1])[1], "\nMarginal Testing\n", "Max Panel Size = ",max(table(panelid)),"; Number of panels = ", max(panelid),"\n", sep = "")
+                   "\nResponse: ", as.character(varlist[-1])[1], "\nMarginal Testing\n", "Max Panel Size = ",maxpanels,"; Number of panels = ", max(panelid),"\n", sep = "")
     result<-structure(table, heading = title, class = c("anova", "data.frame"))
     
   }

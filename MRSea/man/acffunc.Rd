@@ -10,6 +10,8 @@ acffunc(block, model, suppress.printout = FALSE)
 \item{block}{Vector of blocks that identify data points that are correlated}
 
 \item{model}{Fitted model object (glm or gam)}
+
+\item{suppress.printout}{(Default: \code{FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.}
 }
 \description{
 calculate correlation for residuals by block

@@ -24,7 +24,6 @@
 #' @return
 #' The function returns a matrix of bootstrap predictions. The number of rows is equal to the number of rows in predictionGrid.  The number of columns is equal to \code{B}.  The matrix may be very large and so is stored directly into the working directory as a workspace object: '"name"predictionboot.RObj'.  The object inside is called \code{bootPreds}.
 #'
-#' @examples
 #'
 #'
 #' @export

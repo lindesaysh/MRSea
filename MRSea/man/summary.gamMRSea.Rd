@@ -12,6 +12,8 @@
 
 \item{dispersion}{the dispersion parameter for the family used. Either a single numerical value or NULL (the default), when it is inferred from object (see 'Details').}
 
+\item{varshortnames}{vector stating the short versions of the covariate names if required.}
+
 \item{...}{further arguments passed to or from other methods.}
 
 \item{x}{an object of class "summary.gamMRSea", usually, a result of a call to summary.gamMRSea.}
@@ -54,6 +56,17 @@ symbolic.cor	(only if correlation is true.) The value of the argument symbolic.c
 }
 \note{
 Code adapted from \code{summary.glm}
+}
+\examples{
+
+# load data
+data(ns.data.re)
+ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
+ 
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+summary(model)
+
 }
 \author{
 Lindesay Scott-Hayward, Univeristy of St Andrews.

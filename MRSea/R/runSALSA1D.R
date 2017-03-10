@@ -11,8 +11,8 @@
 #' @param varlist_cyclicSplines Vector of variable names for covariates to be modelled with cyclic cubic splines.  This must be a subset of \code{varlist}.The default is \code{NULL}
 #' @param splineParams List object containing information for fitting splines to the covariates in \code{varlist}. If not specified (\code{NULL}) this object is created and returned. See \code{\link{makesplineParams}} for details.
 #' @param datain Data used to fit the initial Model.
-#' @param removal (Default: \code{FALSE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth. If \code{TRUE} then cross-validation is used to make model selection choices.
-#' @param panel.id Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
+#' @param removal (Default: \code{FALSE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth. If \code{TRUE} then cross-validation is used to make model selection choices. The folds are specified by a column in the dataset called \code{foldid}.
+#' @param panelid Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
 #' @param suppress.printout (Default: \code{FALSE}. Logical stating whether to show the analysis printout.
 #' 
 #' @details
@@ -32,7 +32,7 @@
 #'    
 #'    \code{maxIterations}.The exchange/improve steps will terminate after maxIterations if still running.
 #'    
-#'    \code{gaps}. The minimum gap between knots (in unit of measurement of explanatory).
+#'    \code{gaps}. The minimum gap between knots (in unit of measurement of explanatory), usually set to zero.
 #'    
 #'    
 #' \code{minKnots_1d}, \code{maxKnots_1d}, \code{startKnots_1d} and \code{gaps} are vectors the same length as \code{varlist}.  This enables differing values of these parameters for each covariate.
@@ -74,11 +74,9 @@
 #' varlist=c('observationhour', 'DayOfMonth')
 #' 
 #' # make column with foldid for cross validation calculation
-#' ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$MonthOfYear, ns.data.re$DayOfMonth, sep='')
-#' ns.data.re$blockid<-as.factor(ns.data.re$blockid)
-#' ns.data.re$foldid<-getCVids(ns.data.re, folds=5, block='blockid')
+#' ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
 #' 
-#' #' # set initial model without the spline terms in there 
+#' # set initial model without the spline terms in there 
 #' # (so all other non-spline terms)
 #' ns.data.re$response<- ns.data.re$birds
 #' initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)), 
@@ -89,7 +87,8 @@
 #'                   startKnots_1d = c(2,2), degree=c(2,2), maxIterations = 10, gaps=c(1,1))
 #' 
 #' # run SALSA
-#' salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist, factorlist=c('floodebb', 'impact'), 
+#' salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist, 
+#'                factorlist=c('floodebb', 'impact'), 
 #'                ns.predict.data.re, splineParams=NULL, datain=ns.data.re, removal=TRUE)
 #' 
 #' @author Lindesay Scott-Hayward
@@ -224,7 +223,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   starttime = proc.time()
   timings<- vector(length=length(varlist))
   knots=NULL
-  varkeepid<-NULL
+  varkeepid=varkeepsmid=NULL
   
   for (i in 2:(length(varlist)+1)){
     explanatory <- splineParams[[varID[(i-1)]]]$explanatory
@@ -284,6 +283,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       baseModel<-update(tempModel, .~.)
       cv_initial<-cv_initial
       varkeepid<-c(varkeepid, i)
+      varkeepsmid<-c(varkeepsmid, i)
       kept='YES - initial'
     }
     if(cvid==2){
@@ -293,6 +293,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       baseModel<-update(tempModel, .~.)
       cv_initial<-cv_with
       varkeepid<-c(varkeepid, i)
+      varkeepsmid<-c(varkeepsmid, i)
       kept='YES - new knots'
     }
       
@@ -332,6 +333,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
         baseModel<-update(tempModel, .~.)
         cv_initial=cv_with=NULL
         varkeepid<-c(varkeepid, i)
+        varkeepsmid<-c(varkeepsmid, i)
         kept='YES - new knots'
 #      }      
     }

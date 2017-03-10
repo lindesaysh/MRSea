@@ -22,7 +22,7 @@
 #' # load data
 #' data(ns.data.re)
 #' 
-#' model<-glm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
+#' model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
 #'            family='quasipoisson', data=ns.data.re)
 #' 
 #' plotCumRes(model, varlist=c('observationhour'))
@@ -30,6 +30,8 @@
 #' @export
 #' 
 plotCumRes<- function(model, varlist, d2k=NULL, splineParams=NULL, label='', save=FALSE){
+  
+  require(splines)
   
   print("Calculating cumulative residuals")
   
@@ -41,6 +43,10 @@ plotCumRes<- function(model, varlist, d2k=NULL, splineParams=NULL, label='', sav
   
   if(class(model)[1]=='gam'){
     dat<-model$model 
+  }
+  
+  if(class(model)[1]=='gamMRSea'){
+    dat<-model$data 
   }
   
   # find which data columns refer to the used variables

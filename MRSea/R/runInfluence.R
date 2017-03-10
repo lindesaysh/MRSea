@@ -1,8 +1,6 @@
-
-#-----------------------------------------------------------------------------
 #' Assessing the influece of each correlated block on both the precision of the parameter estimates (COVRATIO statistics) and the sensitivity of model predictions (PRESS statistics).
 #' 
-#' @param model Fitted model object (glm or gam)
+#' @param model Fitted model object (glm, gamMRSea or gam)
 #' @param id blocking structure
 #' @param d2k (\code{default=NULL}). (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations.
 #' @param splineParams (\code{default=NULL}). List object containng output from runSALSA (e.g. knot locations for continuous covariates). See \code{\link{makesplineParams}} for more details of this object. 
@@ -25,8 +23,8 @@
 #'                     ns.data.re$DayOfMonth, sep='')
 #' ns.data.re$blockid<-as.factor(ns.data.re$blockid)
 #' 
-#' model<-geeglm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
-#'               family='poisson', data=ns.data.re, id=blockid)
+#' model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+#'               family='poisson', data=ns.data.re)
 #' 
 #' timeInfluenceCheck(model, ns.data.re$blockid)
 #' 
@@ -47,6 +45,10 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE){
   
   if(class(model)[1]=='gam'){
     dat<-model$model 
+  }
+  
+  if(class(model)[1]=='gamMRSea'){
+    dat<-model$data 
   }
   
   print("Calculating COVRATIO and PRESS Statistics")

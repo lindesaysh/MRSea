@@ -4,21 +4,28 @@
 \alias{runSALSA2D}
 \title{Running SALSA for a spatial smooth with a CReSS basis}
 \usage{
-runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL, tol = 0,
-  chooserad = F, panels = NULL, suppress.printout = FALSE)
+runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL, chooserad = F,
+  panels = NULL, suppress.printout = FALSE)
 }
 \arguments{
 \item{model}{A model with no spatial smooth}
 
 \item{salsa2dlist}{Vector of objects required for \code{runSALSA2D}: \code{fitnessMeasure}, \code{knotgrid}, \code{startKnots}, \code{minKnots}, code{maxKnots}, \code{r_seq}, \code{gap}, \code{interactionTerm}.}
 
-\item{d2k}{(n x k) Matrix of distances between all data points in \code{model} and all valid knot locations specified in \code{knotgrid}
-#' @param k2k (k x k) Matrix of distances between all valid knot locations specified in \code{knotgrid}}
+\item{d2k}{(n x k) Matrix of distances between all data points in \code{model} and all valid knot locations specified in \code{knotgrid}}
+
+\item{k2k}{(k x k) Matrix of distances between all valid knot locations specified in \code{knotgrid}}
 
 \item{splineParams}{(default \code{=NULL}) List object containng output from runSALSA (e.g. knot locations for continuous covariates)}
+
+\item{chooserad}{logical flag.  If FALSE (default) then the range parameter of the basis is chosen after the knot location and number. If TRUE, the range is assessed at every iteration of a knot move/add/drop.}
+
+\item{panels}{Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.}
+
+\item{suppress.printout}{(Default: \code{FALSE}. Logical stating whether to show the analysis printout.}
 }
 \value{
-The spline paramater object that is return now contains a list in the first element (previously reserved for the spatial component).  This list contains the objects required for the SALSA2D fitting process:
+The spline paramater object that is returned as part of the model object now contains a list in the first element (previously reserved for the spatial component).  This list contains the objects required for the SALSA2D fitting process:
 
 \item{knotDist}{Matrix of knot to knot distances (k x k).  May be Euclidean or geodesic distances. Must be square and the same dimensions as \code{nrows(na.omit(knotgrid))}.  Created using \code{\link{makeDists}}.}
 \item{radii}{Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot.}
@@ -45,9 +52,9 @@ The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} func
 
    \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b.
 
-   \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example.
+   \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example. May be made using \code{\link{getKnotgrid}}.
 
-   \code{knotdim}. The dimensions of the knot grid as a vector. (x, y)
+   \code{knotdim}. The dimensions of the knot grid as a vector. (x, y).  If \code{knotgrid} is made using \code{\link{getKnotgrid}} then the default dimensions are c(100, 100).
 
    \code{startknots}. Starting number of knots (initialised as spaced filled locations).
 
@@ -97,7 +104,7 @@ salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
 
 }
 \author{
-Lindesay Scott-Hayward, Cameron Walker
+Lindesay Scott-Hayward (University of St Andrews), Cameron Walker (University of Auckland)
 }
 \references{
 Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920

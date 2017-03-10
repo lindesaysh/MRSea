@@ -10,6 +10,9 @@ gamMRSea(formula, family = gaussian, data, weights, subset, na.action,
   contrasts = NULL, splineParams = NULL, ...)
 }
 \description{
-gamMRSea model function
+See \code{\link{glm}} for details.  A \code{splineParams} object may be specified as part of the model object.
+}
+\author{
+LAS Scott-Hayward, University of St Andrews
 }
 

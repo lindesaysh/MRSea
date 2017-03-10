@@ -1,5 +1,6 @@
 update.gamMRSea<-function (object, formula., ..., evaluate = TRUE)
 {
+  #rm('splineParams', envir = globalenv())
   splineParams<<-object$splineParams
   
   if (is.null(call <- getCall(object)))

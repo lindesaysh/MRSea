@@ -41,8 +41,4 @@ The following steps are performed for each iteration:
 
 - predictions are made to the prediction data using the resampled coefficients
 }
-\examples{
-
-
-}
 
