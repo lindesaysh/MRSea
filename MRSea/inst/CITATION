@@ -20,7 +20,7 @@
 bref <- c(
   bibentry(
     bibtype = "Manual",
-    title = "MRSea package (version 0.2.3): Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
+    title = "MRSea package (version 0.99): Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
     author = c(
       person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
              email = "lass@st-andrews.ac.uk"),
@@ -30,7 +30,7 @@ bref <- c(
       person("Eric", "Rexstad", role = c("ctb"))
     ),
     Institution = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
-    year = "2016",
+    year = "2017",
     note = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
     url = "http://creem2.st-and.ac.uk/software.aspx",
     key = "mrsea-package"
