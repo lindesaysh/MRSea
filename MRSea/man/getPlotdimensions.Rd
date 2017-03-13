@@ -25,4 +25,3 @@ data(ns.data.re)
 getPlotdimensions(ns.data.re$x.pos, ns.data.re$y.pos, segmentWidth=500, segmentLength=500)
 
 }
-

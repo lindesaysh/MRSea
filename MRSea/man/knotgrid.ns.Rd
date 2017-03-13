@@ -7,4 +7,3 @@
 \description{
 Knot grid data for nearshore example
 }
-

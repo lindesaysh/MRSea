@@ -71,4 +71,3 @@ summary(model)
 \author{
 Lindesay Scott-Hayward, Univeristy of St Andrews.
 }
-

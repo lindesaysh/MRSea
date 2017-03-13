@@ -41,4 +41,3 @@ model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact
 plotCumRes(model, varlist=c('observationhour'))
 
 }
-

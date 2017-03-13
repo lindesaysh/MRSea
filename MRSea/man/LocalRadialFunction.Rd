@@ -47,4 +47,3 @@ basis<-LocalRadialFunction(radiusIndices=rep(4, 5), dists=distMats$dataDist, rad
         aR=c(3, 10, 15, 28, 31))
 
 }
-

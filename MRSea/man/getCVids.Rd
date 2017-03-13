@@ -31,4 +31,3 @@ CVids<-getCVids(ns.data.re, 5)
 \author{
 LAS Scott-Hayward, University of St Andrews
 }
-

@@ -16,4 +16,3 @@ acffunc(block, model, suppress.printout = FALSE)
 \description{
 calculate correlation for residuals by block
 }
-

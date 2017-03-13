@@ -31,4 +31,3 @@ This function finds the differences for every predicted grid cell for every boot
 getDifferences(beforePreds, afterPreds)}
 
 }
-
