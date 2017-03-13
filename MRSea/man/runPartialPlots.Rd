@@ -53,4 +53,3 @@ runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
 \author{
 LAS Scott-Hayward, University of St Andrews
 }
-

@@ -28,4 +28,3 @@ data(knotgrid.ns)
 # make distance matrices for datatoknots and knottoknots
 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
 }
-

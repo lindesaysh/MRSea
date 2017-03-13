@@ -38,4 +38,3 @@ getCV_CReSS(ns.data.re, model)
 \author{
 LAS Scott-Hayward (University of St Andrews)
 }
-

@@ -26,4 +26,3 @@ grid data. The variables are as follows:
 }
 }
 \keyword{datasets}
-

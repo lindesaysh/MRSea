@@ -35,4 +35,3 @@ dis.data.re<-create.NHAT(dis.data.re,result)
 knotgrid<-getKnotgrid(cbind(dis.data.re$x.pos, dis.data.re$y.pos))}
 
 }
-

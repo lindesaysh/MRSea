@@ -28,4 +28,3 @@ checkfactorlevelcounts(factorlist=c('floodebb', 'impact'), ns.data.re,
      ns.data.re$birds)
 
 }
-

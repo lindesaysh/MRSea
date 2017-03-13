@@ -31,4 +31,3 @@ new.resamples<-sample(samples,resamples.no,replace=TRUE)
 bootstrap.data<-bootstrap.orig.data(dis.data.re,resample,new.resamples,resamples.no)
 
 }
-

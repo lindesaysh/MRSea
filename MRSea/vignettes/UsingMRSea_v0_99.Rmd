@@ -47,7 +47,7 @@ http://creem2.st-and.ac.uk/software.aspx.  The manual and this document use vers
 
 1. Load data and fit detection function (Distance Sampling)
 ```{r message=FALSE}
-devtools::load_all(pkg='C://Users/lindesay/Documents/GitHub/MRSea/MRSea')
+devtools::load_all(pkg='../../MRSea')
 # we will use the dataset with a known re-distribution of animals
 data(dis.data.re)
 dis.data<-dis.data.re
@@ -132,6 +132,7 @@ initialModel <- glm(response ~ as.factor(season) + as.factor(impact)
 
 ```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
 # run SALSA
+require(MuMIn)
 salsa1dOutput <- runSALSA1D(initialModel, salsa1dlist, c("depth"),
                       predictionData=predictData, datain=data, removal=TRUE, panelid = data$blockid)
 ```

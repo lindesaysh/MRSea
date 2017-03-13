@@ -47,4 +47,3 @@ Code for adaptively spacing knots for a given covariate.
 \author{
 Cameron Walker, Department of Enginering Science, University of Auckland.
 }
-

@@ -15,4 +15,3 @@ Function to move knots to neighbours to see if there is any improvement in fit
 \author{
 Cameron Walker, Department of Enginering Science, University of Auckland.
 }
-

@@ -25,4 +25,3 @@ If a value in \code{dis.data$distance} matches a cut point in \code{cutpoints} e
 
 E.g. if \code{cutpoints=c(0,1,2,3)}, \code{dis.data$distance}=2 will be attributed to interval 2 (and not 3).
 }
-

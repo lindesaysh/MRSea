@@ -16,11 +16,11 @@ getEmpDistribution(n.sim, simData, model, data, plot = FALSE,
 
 \item{data}{data set used to fit the model.}
 
-\item{plot}{logical flag. If TRUE, a plot is made showing the 5% critical values for the empirical distribution vs the N(0,1) distribution. Default is `FALSE`}
+\item{plot}{logical flag. If TRUE, a plot is made showing the 5\% critical values for the empirical distribution vs the N(0,1) distribution. Default is 'FALSE'}
 
-\item{returnDist}{logical flag.  Do you want the distribution of test statistics returned ('TRUE') or just the 5% critical values ('FALSE')}
+\item{returnDist}{logical flag.  Do you want the distribution of test statistics returned ('TRUE') or just the 5\% critical values ('FALSE')}
 
-\item{dots}{(Default: \code{TRUE}. Logical stating whether to show a printout of block numebers to assess progress. `TRUE` will print dots into the workspace.}
+\item{dots}{(Default: \code{TRUE}. Logical stating whether to show a printout of block numebers to assess progress. 'TRUE' will print dots into the workspace.}
 }
 \description{
 Function to generate the empirical distribution of the runs test statistic, given some data and a model.
@@ -32,10 +32,10 @@ model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact
               family='poisson', data=ns.data.re)
 
 simData<-generateNoise(n=500, response=fitted(model), family='poisson')
-empdist<-getEmpDistribution(500, simData, model, data=ns.data.re, plot=FALSE, returnDist=TRUE,dots=FALSE)
+empdist<-getEmpDistribution(500, simData, model, data=ns.data.re, plot=FALSE, 
+                returnDist=TRUE,dots=FALSE)
 
 }
 \author{
 LAS Scott-Hayward, University of St Andrews
 }
-

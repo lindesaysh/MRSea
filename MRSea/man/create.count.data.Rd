@@ -34,4 +34,3 @@ dis.data.re<-create.NHAT(dis.data.re,result)
 count.data<-create.count.data(dis.data.re)
 
 }
-
