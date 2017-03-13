@@ -1,0 +1,2979 @@
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\usepackage[utf8,latin1]{inputenc}
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `MRSea'}}
+\par\bigskip{\large \today}
+\end{center}
+\begin{description}
+\raggedright{}
+\item[Title]\AsIs{Marine Renewables Strategic environmental assessment}
+\item[Description]\AsIs{Examines animal survey data for signs of changes in animal
+abundance and distribution following marine renewables development. The
+functions of this package can be used to analyse segmented line transect
+data and nearshore vantage point data. The package includes functions for fitting
+spatially adaptive one and 2D smoothers using SALSA and CReSS.  Non-parametric bootstrapping
+is available to estimate uncertainty. Several model assessment tools are also available.
+Recent updates include the direct estimation of robust standard errors, given a panel structure.}
+\item[Version]\AsIs{0.99}
+\item[Date]\AsIs{2017-03-10}
+\item[Author]\AsIs{Lindesay Scott-Hayward }\email{lass@st-and.ac.uk}\AsIs{, Cornelia Oedekoven, Monique
+Mackenzie, Cameron Walker }\email{cameron.walker@auckland.ac.nz}\AsIs{}
+\item[Maintainer]\AsIs{Lindesay Scott-Hayward }\email{lass@st-and.ac.uk}\AsIs{}
+\item[Depends]\AsIs{
+R (>= 3.3.1)}
+\item[Imports]\AsIs{
+calibrate (>= 1.7.2),
+car (>= 2.0-20),
+fields (>= 7.1),
+ggplot2 (>= 1.0.0),
+Matrix (>= 1.1-4),
+mgcv (>= 1.8-0),
+mrds (>= 2.1.6),
+mvtnorm (>= 1.0-0),
+splines (>= 3.1.1)}
+\item[License]\AsIs{GPL-2}
+\item[LazyData]\AsIs{true}
+\item[Note]\AsIs{Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
+(2017). ``MRSea package (version 0.99): Statistical Modelling of bird and
+cetacean distributions in offshore renewables development areas''.
+University of St. Andrews}
+\item[URL]\AsIs{}\url{http://creem2.st-and.ac.uk/software.aspx}\AsIs{}
+\item[RoxygenNote]\AsIs{6.0.1}
+\item[Suggests]\AsIs{knitr,
+rmarkdown}
+\item[VignetteBuilder]\AsIs{knitr}
+\end{description}
+\Rdcontents{\R{} topics documented:}
+\inputencoding{utf8}
+\HeaderA{acffunc}{calculate correlation for residuals by block}{acffunc}
+%
+\begin{Description}\relax
+calculate correlation for residuals by block
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+acffunc(block, model, suppress.printout = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{block}] Vector of blocks that identify data points that are correlated
+
+\item[\code{model}] Fitted model object (glm or gam)
+
+\item[\code{suppress.printout}] (Default: \code{FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{AICh}{Function to calculate AICh (Hardin and Hilbe 2013)}{AICh}
+%
+\begin{Description}\relax
+Function to calculate AICh (Hardin and Hilbe 2013)
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+AICh(model)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] model object of class glm.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Author}\relax
+Lindesay Scott-Hayward, University of St Andrews
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{anova.gamMRSea}{Anova Tables for \code{gamMRSea} Models}{anova.gamMRSea}
+%
+\begin{Description}\relax
+Calculates type-III analysis-of-variance tables for model objects produced by gamMRSea (in the MRSea package). Wald chisquare tests are calculated by default although, F-tests may be specified.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'gamMRSea'
+anova(object, varshortnames = NULL, panelid = NULL,
+  test = "Wald")
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{object}] A \code{gamMRSea} model object
+
+\item[\code{varshortnames}] (default = NULL).  Character vector denoting the short names to use for any smooth terms.  May already be specified as part of the model object.
+
+\item[\code{panelid}] vector of length of the data used in object.  Specified if robust standard errors are to be used.
+
+\item[\code{test}] (default='wald'). May also specify "F".
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+An object of class "\code{anova}".
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# load data
+data(ns.data.re)
+ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
+ 
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+anova(model)        
+             
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{bootstrap.orig.data}{Obtaining a data frame of bootstrapped data using resamples}{bootstrap.orig.data}
+%
+\begin{Description}\relax
+This function extracts the records corresponding to each resample from the original 
+distance data and pastes them together in a new data frame which is returned.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+bootstrap.orig.data(orig.data, resample, new.resamples, resamples.no)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{orig.data}] Original data to be bootstrapped
+
+\item[\code{resample}] Specifies the resampling unit for bootstrapping, default is \code{transect.id}. Must match a column name in \code{orig.data} exactly
+
+\item[\code{new.resamples}] String of resampled units from \code{data[,"resample"]}. Created by \code{create.bootstrap.data()}
+
+\item[\code{resamples.no}] Length of new.resamples
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Returns bootstrapped data. Internal function called by function \code{create.bootstrap.data}.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+data(dis.data.re)
+resample<-"transect.id"
+samples<-unique(dis.data.re[,resample])
+resamples.no<-length(samples)
+new.resamples<-sample(samples,resamples.no,replace=TRUE)
+bootstrap.data<-bootstrap.orig.data(dis.data.re,resample,new.resamples,resamples.no)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{checkfactorlevelcounts}{Factor level response check This function checks that there are some non-zero counts in each level of each factor variable for consideration in a model}{checkfactorlevelcounts}
+%
+\begin{Description}\relax
+Factor level response check
+
+This function checks that there are some non-zero counts in each level of each factor variable for consideration in a model
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+checkfactorlevelcounts(factorlist, data, response)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{factorlist}] Vector of factor variables specified in \code{model}.  Specified so that a check can be made that there are non-zero counts in all levels of each factor.
+
+\item[\code{data}] Data frame containing columns of covariates listed in \code{factorlist}.  Column names must match with names in \code{factorlist}
+
+\item[\code{response}] A vector of response values
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+
+checkfactorlevelcounts(factorlist=c('floodebb', 'impact'), ns.data.re, 
+     ns.data.re$birds)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{choose.radii}{Function to choose the radii for the CReSS local radial basis function}{choose.radii}
+%
+\begin{Description}\relax
+Function to choose the radii for the CReSS local radial basis function
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+choose.radii(currentFit, indices, radiusIndices, radii, out.lm, dists, aR,
+  baseModel, fitnessMeasure, response, models, interactionTerm, data, initDisp)
+\end{verbatim}
+\end{Usage}
+\inputencoding{utf8}
+\HeaderA{create.bootcount.data}{Aggregate bootstrapped distance data into count data}{create.bootcount.data}
+%
+\begin{Description}\relax
+This function creates a new data set where \code{dis.data} is aggregated 
+for each visit to a segment. For bootstrapped data, the column with the ids 
+for visits to a segment is \code{segment.id2} which is created
+by \code{create.bootstrap.data} using the default for argument \code{rename}. 
+The sum of the estimated number of individuals for each segment from 
+\code{dis.data\$NHAT} is given in the column \code{NHAT} in the new data. 
+All other columns from the observation layer should be discarded. This is achieved 
+by specifying the columns that should be retained using the argument \code{column.numbers}. 
+Generally, all columns from the segment and higher levels should be kept. 
+If the default is used, \code{column.numbers=NULL}, the columns \code{distance}, \code{object}, 
+\code{size}, \code{distbegin} and \code{distend} from the observation level are automatically 
+discarded. Note that for those columns from the observation layer that are kept, only the 
+first recorded value will be transferred.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+create.bootcount.data(dis.data, column.numbers = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dis.data}] Data frame containing distance data (one row for each detection). Expects a column \code{NHAT}, i.e. size of detection divided by its probability of detection (see \code{create.NHAT}) and that and that ids in \code{segment.id2} are unique regardless of what resampled transect they belong to.
+
+\item[\code{column.numbers}] Optional argument: vector of integers indicating which columns other than \code{NHAT} from \code{dis.data} should be retained in the returned data.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+This function returns bootstrapped count data that is suited for second stage count modelling of distance sampling 
+data. The data includes the columns \code{NHAT} and \code{area} which are the response and
+the offset required by functions concerned with second stage modelling from this package.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+data(dis.data.re)
+# bootstrap data without stratification
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re, method="ds",
+             meta.data=list(width=250))
+dis.data.re<-create.NHAT(dis.data.re,result)
+
+bootstrap.data<-create.bootstrap.data(dis.data.re) 
+
+bootcount.data<-create.bootcount.data(bootstrap.data)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{create.bootstrap.data}{Create bootstrap data for non-parametric bootstrapping}{create.bootstrap.data}
+%
+\begin{Description}\relax
+This function creates one realisation of bootstrapped data based on \code{dis.data}. 
+The default resampling unit is \code{transect.id} which may be modified using the argument \code{resample}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+create.bootstrap.data(dis.data, resample = "transect.id",
+  rename = "segment.id", stratum = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dis.data}] Original data to be bootstrapped. Requires a column that matches argument \code{resample} exactly.
+
+\item[\code{resample}] Specifies the resampling unit for bootstrapping, default is \code{transect.id}. Must match a column name in \code{dis.data} exactly
+
+\item[\code{rename}] A vector of column names for which a new column needs to be created for the bootstrapped data. This defaults to \code{segment.id} for line transects, however others might be added
+A new column with new ids will automatically be created for the column listed in \code{resample}
+
+\item[\code{stratum}] The column name in \code{dis.data} that identifies the different strata. The default \code{NULL} returns un-stratified bootstrap data. If stratum is specified, this requires a column in \code{dis.data} that matches argument \code{stratum} exactly
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Returns one realisation of bootstrapped distance data. Note that a new column 
+(in addition to those listed under argument \code{rename}) is created. If the default for \code{resample} is used, 
+a column with new unique ids called \code{transect.id2}. 
+Note that a new column is created with renamed bootstrap resamples to preserve the number of unique bootstrap resamples. 
+If the default for \code{resample} is used, i.e. \code{transect.id}, this new column is called \code{transect.id2}. 
+In addition, a new column \code{segment.id2} is created which is required for other bootstrap functions.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+data(dis.data.re)
+# run distance analysis to create NHATS
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re, method="ds",
+             meta.data=list(width=250))
+dis.data.re<-create.NHAT(dis.data.re,result)
+
+# bootstrap data without stratification
+bootstrap.data<-create.bootstrap.data(dis.data.re) 
+# boostrap data with stratification (here by survey which is composed of 
+# season and impact)
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+bootstrap.data.str<-create.bootstrap.data(dis.data.re, stratum = "survey.id") 
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{create.count.data}{Aggregate distance data into count data}{create.count.data}
+%
+\begin{Description}\relax
+This function creates a new data set where \code{dis.data} is aggregated for 
+each visit to a segment (\code{segment.id}). The sum of the estimated number 
+of individuals for each segment from \code{dis.data\$NHAT} is given in the 
+column \code{NHAT} in the new data. 
+Only columns from the segment or higher layers should be carried over into 
+\code{count.data} from \code{dis.data}. Use argument \code{column.numbers} to 
+identify these.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+create.count.data(dis.data, column.numbers = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dis.data}] Data frame containing distance data (one row for each detection). Expects a column \code{NHAT}, i.e. size of detection divided by its probability of detection (see \code{create.NHAT}) and that ids in \code{segment.id} are unique regardless of what transect they belong to
+
+\item[\code{column.numbers}] Optional argument: vector of integers indicating which columns other than \code{NHAT} from \code{dis.data} should be retained in the returned data. Generally all columns from the segment and higher levels should be kept while those from the observation level should be discarded. If the default is used, \code{column.numbers=NULL}, the columns \code{distance}, \code{object}, \code{size}, \code{distbegin} and \code{distend} from the observation level are automatically discarded. Note that for those columns from the observation layer that are kept, only the first recorded value will be transferred.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+This function returns count data that is suited for second stage count modelling of distance sampling 
+data. The data includes the columns \code{NHAT} and \code{area} which are the response and
+the offset required by functions concerned with second stage modelling from this package.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+data(dis.data.re)
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re, method="ds",
+           meta.data=list(width=250))
+dis.data.re<-create.NHAT(dis.data.re,result)
+count.data<-create.count.data(dis.data.re)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{create.NHAT}{Estimated number of individuals for each detection}{create.NHAT}
+%
+\begin{Description}\relax
+This function creates a new column in \code{data} which contains the estimated 
+number of animals for each detection. This is the number of observed individuals 
+divided by their probability of detection using MCDS methods (size/detection probability). 
+In the case that no \code{size} column is given in \code{dis.data}, it is assumed that 
+detections were made of individuals and \code{size} is set to 1 for all detections. The values 
+for \code{size} and \code{NHAT} are set to zero in case the distance was larger than the 
+truncation distance \code{w} specified in \code{det.fct.object}.
+In addition, a new column \code{area} is created which is used as the offset in the 
+second stage count model (segment length * (truncation distance/1000) * 2). The truncation
+distance is divided by 1000 to convert it from metres to km. It is assumed that the 
+segment data represents two-sided surveys. In case the survey was one-sided, this column needs to 
+be divided by 2 after the call to this function.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+create.NHAT(data, ddf.obj)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{data}] distance data object used with \code{det.fct} to estimate probabilities of detection
+
+\item[\code{ddf.obj}] detection function object created by \code{ddf}
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Examples}
+\begin{ExampleCode}
+data(dis.data.re)
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re,method="ds", 
+     meta.data= list(width=250,binned=FALSE))
+dis.data<-create.NHAT(dis.data.re,result)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{dis.data.de}{Line transect data with decrease post-impact}{dis.data.de}
+\keyword{datasets}{dis.data.de}
+%
+\begin{Description}\relax
+A simulated dataset containing the observed perpendicular distances, the effort data and other variables of 
+segmented line transect data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 10759 rows and 12 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{transect.id} Identifier for the individual visits to the transects
+\item \code{transect.label} Labels for transects
+\item \code{season} Numerical indicator for the four different seasons
+\item \code{impact} Numerical indicator for before (0) and after (1) impact
+\item \code{segment.id} Identifier for individual visits to the segment
+\item \code{segment.label} Label for segments
+\item \code{length} Length of segment in km
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{depth} Depth in m
+\item \code{object} Id for detected object      
+\item \code{distance} Perpendicular distance from the line
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{dis.data.no}{Line transect data with no post-impact consequence}{dis.data.no}
+\keyword{datasets}{dis.data.no}
+%
+\begin{Description}\relax
+A simulated dataset containing the observed perpendicular distances, the effort data and other variables of 
+segmented line transect data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 10771 rows and 12 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{transect.id} Identifier for the individual visits to the transects
+\item \code{transect.label} Labels for transects
+\item \code{season} Numerical indicator for the four different seasons
+\item \code{impact} Numerical indicator for before (0) and after (1) impact
+\item \code{segment.id} Identifier for individual visits to the segment
+\item \code{segment.label} Label for segments
+\item \code{length} Length of segment in km
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{depth} Depth in m
+\item \code{object} Id for detected object      
+\item \code{distance} Perpendicular distance from the line
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{dis.data.re}{Line transect data with redistribution post-impact}{dis.data.re}
+\keyword{datasets}{dis.data.re}
+%
+\begin{Description}\relax
+A simulated dataset containing the observed perpendicular distances, the effort data and other variables of 
+segmented line transect data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 10951 rows and 12 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{transect.id} Identifier for the individual visits to the transects
+\item \code{transect.label} Labels for transects
+\item \code{season} Numerical indicator for the four different seasons
+\item \code{impact} Numerical indicator for before (0) and after (1) impact
+\item \code{segment.id} Identifier for individual visits to the segment
+\item \code{segment.label} Label for segments
+\item \code{length} Length of segment in km
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{depth} Depth in m
+\item \code{object} Id for detected object      
+\item \code{distance} Perpendicular distance from the line
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{do.bootstrap.cress}{Bootstrapping function without model selection using CReSS/SALSA for fitting the second stage count model}{do.bootstrap.cress}
+%
+\begin{Description}\relax
+This fuction performs a specified number of bootstrapping iterations using CReSS/SALSA for fitting the 
+second stage count model. See below for details.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+do.bootstrap.cress(orig.data, predict.data, ddf.obj = NULL, model.obj,
+  splineParams, g2k, resample = "transect.id", rename = "segment.id",
+  stratum = NULL, B, name = NULL, save.data = FALSE, nhats = FALSE,
+  seed = 12345, nCores = 1)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{orig.data}] The original data. In case \code{ddf.obj} is specified, this should be the original distance data. In case \code{ddf.obj} is \code{NULL}, it should have the format equivalent to \code{count.data} where each record represents the summed up counts at the segments.
+
+\item[\code{predict.data}] The prediction grid data
+
+\item[\code{ddf.obj}] The ddf object created for the best fitting detection model. Defaults to \code{NULL} for when nodetection function object available.
+
+\item[\code{model.obj}] The best fitting \code{CReSS} model for the original count data. Should be geeglm or a Poisson/Binomial GLM (not quasi).
+
+\item[\code{splineParams}] The object describing the parameters for fitting the one and two dimensional splines
+
+\item[\code{g2k}] (N x k) matrix of distances between all prediction points (N) and all knot points (k)
+
+\item[\code{resample}] Specifies the resampling unit for bootstrapping, default is \code{transect.id}. Must match a column name in \code{dis.data} exactly
+
+\item[\code{rename}] A vector of column names for which a new column needs to be created for the bootstrapped data. This defaults to \code{segment.id} for line transects (which is required for \code{create.bootcount.data}), others might be added. 
+A new column with new ids will automatically be created for the column listed in \code{resample}. In case of nearshore data, this argument is ignored.
+
+\item[\code{stratum}] The column name in \code{orig.data} that identifies the different strata. The default \code{NULL} returns un-stratified bootstrap data. In case of nearshore data, this argument is ignored.
+
+\item[\code{B}] Number of bootstrap iterations
+
+\item[\code{name}] Analysis name. Required to avoid overwriting previous bootstrap results. This name is added at the beginning of "predictionboot.RData" when saving bootstrap predictions.
+
+\item[\code{save.data}] If TRUE, all created bootstrap data will be saved as an RData object in the working directory at each iteration, defaults to FALSE
+
+\item[\code{nhats}] (default = FALSE).  If you have calculated bootstrap NHATS because there is no simple ddf object then a matrix of these may be fed into the function.  The number of columns of data should >= B.  The rows must be equal to those in \code{orig.data} and \code{d2k} and \emph{must} be in matching order.
+
+\item[\code{seed}] Set the seed for the bootstrap sampling process.
+
+\item[\code{nCores}] Set the number of computer cores for the bootstrap process to use (default = 1).  The more cores the faster the proces but be wary of over using the cores on your computer. If \code{nCores} > (number of computer cores - 2), the function defaults to \code{nCores} = (number of computer cores - 2).  Note: On a Mac computer the parallel code does not compute so use nCores=1.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+In case of distance sampling data, the following steps are performed for each iteration: 
+
+- the original data is bootstrapped
+
+- a detection function is fitted to the bootstrapped data
+
+- a count model is fitted to the bootstrapped data
+
+- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from count model
+
+- predictions are made to the prediction data using the resampled coefficients 
+
+In case of count data, the following steps are performed for each iteration:
+
+- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
+
+- predictions are made to the prediction data using the resampled coefficients
+\end{Details}
+%
+\begin{Value}
+The function returns a matrix of bootstrap predictions. The number of rows is equal to the number of rows in predict.data.  The number of columns is equal to \code{B}.  The matrix may be very large and so is stored directly into the working directory as a workspace object: '"name"predictionboot.RObj'.  The object inside is called \code{bootPreds}.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# offshore redistribution data
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+data(dis.data.re)
+data(predict.data.re)
+data(knotgrid.off)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# distance sampling
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re, method="ds",
+        meta.data=list(width=250))
+dis.data.re<-create.NHAT(dis.data.re,result)
+count.data<-create.count.data(dis.data.re)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# spatial modelling
+splineParams<-makesplineParams(data=count.data, varlist=c('depth'))
+#set some input info for SALSA
+count.data$response<- count.data$NHAT
+# make distance matrices for datatoknots and knottoknots
+distMats<-makeDists(cbind(count.data$x.pos, count.data$y.pos), na.omit(knotgrid.off))
+# choose sequence of radii
+r_seq<-getRadiiChoices(8,distMats$dataDist)
+# set initial model without the spatial term
+initialModel<- glm(response ~ as.factor(season) + as.factor(impact) + offset(log(area)),  
+                family='quasipoisson', data=count.data)
+# make parameter set for running salsa2d
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.off, 
+                 knotdim=c(26,14), startKnots=4, minKnots=4, 
+                 maxKnots=20, r_seq=r_seq, gap=4000, interactionTerm="as.factor(impact)")
+salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, 
+                   k2k=distMats$knotDist, splineParams=splineParams) 
+
+splineParams<-salsa2dOutput_k6$splineParams
+# specify parameters for local radial function:
+radiusIndices <- splineParams[[1]]$radiusIndices
+dists <- splineParams[[1]]$dist
+radii <- splineParams[[1]]$radii
+aR <- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
+count.data$blockid<-paste(count.data$transect.id, count.data$season, count.data$impact, sep='')
+# Re-fit the chosen model as a GEE (based on SALSA knot placement) and GEE p-values
+geeModel<- geeglm(formula(salsa2dOutput_k6$bestModel), data=count.data, family=poisson, id=blockid)
+dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$y.pos), na.omit(knotgrid.off), 
+       knotmat=FALSE)$dataDist
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# bootstrapping
+do.bootstrap.cress(dis.data.re, predict.data.re, ddf.obj=result, geeModel, splineParams, 
+              g2k=dists, resample='transect.id', rename='segment.id', stratum='survey.id', 
+              B=4, name="cress", save.data=FALSE, nhats=FALSE, nCores=1)
+load("cresspredictionboot.RData") # loading the bootstrap predictions into the workspace
+# look at the first 6 lines of the bootstrap predictions (on the scale of the response)
+head(bootPreds) 
+
+## Not run: 
+# In parallel (Note: windows machines only)
+require(parallel)
+do.bootstrap.cress(dis.data.re, predict.data.re, ddf.obj=result, geeModel, splineParams,
+                g2k=dists, resample='transect.id', rename='segment.id', stratum='survey.id',
+                B=4, name="cress", save.data=FALSE, nhats=FALSE, nCores=4)
+load("cresspredictionboot.RData") # loading the bootstrap predictions into the workspace
+# look at the first 6 lines of the bootstrap predictions (on the scale of the response)
+head(bootPreds)
+
+## End(Not run)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# nearshore redistribution data
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## Not run: 
+do.bootstrap.cress(ns.data.re, ns.predict.data.re, ddf.obj=NULL, geeModel, splineParams, 
+             g2k=dists, resample='transect.id', rename='segment.id', stratum=NULL, 
+             B=2, name="cress", save.data=FALSE, nhats=FALSE)
+load("cresspredictionboot.RData") # loading the predictions into the workspace
+# look at the first 6 lines of the bootstrap predictions (on the scale of the response)
+head(bootPreds)
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{do.bootstrap.cress.robust}{Bootstrapping function without model selection for a model of class 'gamMRSea'}{do.bootstrap.cress.robust}
+%
+\begin{Description}\relax
+This fuction performs a specified number of bootstrapping iterations using CReSS/SALSA for fitting the count model. See below for details.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+do.bootstrap.cress.robust(model.obj, predictionGrid, splineParams = NULL,
+  g2k = NULL, B, robust = T, name = NULL, seed = 12345, nCores = 1,
+  cat.message = TRUE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model.obj}] The best fitting \code{CReSS} model for the original count data. Should be geeglm or a Poisson/Binomial GLM (not quasi).
+
+\item[\code{predictionGrid}] The prediction grid data
+
+\item[\code{splineParams}] The object describing the parameters for fitting the one and two dimensional splines
+
+\item[\code{g2k}] (N x k) matrix of distances between all prediction points (N) and all knot points (k)
+
+\item[\code{B}] Number of bootstrap iterations
+
+\item[\code{name}] Analysis name. Required to avoid overwriting previous bootstrap results. This name is added at the beginning of "predictionboot.RData" when saving bootstrap predictions.
+
+\item[\code{seed}] Set the seed for the bootstrap sampling process.
+
+\item[\code{nCores}] Set the number of computer cores for the bootstrap process to use (default = 1).  The more cores the faster the proces but be wary of over using the cores on your computer. If \code{nCores} > (number of computer cores - 2), the function defaults to \code{nCores} = (number of computer cores - 2).  Note: On a Mac computer the parallel code does not compute so use nCores=1.
+
+\item[\code{rename}] A vector of column names for which a new column needs to be created for the bootstrapped data. This defaults to \code{segment.id} for line transects (which is required for \code{create.bootcount.data}), others might be added.
+A new column with new ids will automatically be created for the column listed in \code{resample}. In case of nearshore data, this argument is ignored.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+The following steps are performed for each iteration:
+
+- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
+
+- predictions are made to the prediction data using the resampled coefficients
+\end{Details}
+%
+\begin{Value}
+The function returns a matrix of bootstrap predictions. The number of rows is equal to the number of rows in predictionGrid.  The number of columns is equal to \code{B}.  The matrix may be very large and so is stored directly into the working directory as a workspace object: '"name"predictionboot.RObj'.  The object inside is called \code{bootPreds}.
+\end{Value}
+\inputencoding{utf8}
+\HeaderA{do.bootstrap.gam}{Bootstrapping function without model selection using \code{gam} as the second stage count model}{do.bootstrap.gam}
+%
+\begin{Description}\relax
+This fuction performs a specified number of bootstrapping iterations using gams for fitting the 
+second stage count model. See below for details.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+do.bootstrap.gam(orig.data, predict.data, ddf.obj = NULL, model.obj,
+  resample = "transect.id", rename = "segment.id", stratum = NULL, B,
+  name = NULL, save.data = FALSE, nhats = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{orig.data}] The original data. In case \code{ddf.obj} is specified, this should be the original distance data. In case \code{ddf.obj} is \code{NULL}, it should have the format equivalent to \code{count.data} where each record represents the summed up counts at the segments.
+
+\item[\code{predict.data}] The prediction grid data
+
+\item[\code{ddf.obj}] The ddf object created for the best fitting detection model. Defaults to \code{NULL} for nearshore data.
+
+\item[\code{model.obj}] The best fitting \code{gam} model for the original count data
+
+\item[\code{resample}] Specifies the resampling unit for bootstrapping, default is \code{transect.id}. Must match a column name in \code{dis.data} exactly
+
+\item[\code{rename}] A vector of column names for which a new column needs to be created for the bootstrapped data. This defaults to \code{segment.id} for line transects (which is required for \code{create.bootcount.data}), others might be added. 
+A new column with new ids will automatically be created for the column listed in \code{resample}. In case of nearshore data, this argument is ignored.
+
+\item[\code{stratum}] The column name in \code{orig.data} that identifies the different strata. The default \code{NULL} returns un-stratified bootstrap data. In case of nearshore data, this argument is ignored.
+
+\item[\code{B}] Number of bootstrap iterations
+
+\item[\code{name}] Analysis name. Required to avoid overwriting previous bootstrap results. This name is added at the beginning of "predictionboot.RData" when saving bootstrap predictions.
+
+\item[\code{save.data}] If TRUE, all created bootstrap data will be saved as an RData object in the working directory at each iteration, defaults to FALSE
+
+\item[\code{nhats}] (default = FALSE). If you have calculated bootstrap NHATS because there is no simple ddf object then a matrix of these may be fed into the function.  The number of columns of data should >= B.  The rows must be equal to those in \code{orig.data} and \code{d2k} and \emph{must} be in matching order.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+In case of distance sampling data, the following steps are performed for each iteration: 
+
+- the original data is bootstrapped
+
+- a detection function is fitted to the bootstrapped data
+
+- a count model is fitted to the bootstrapped data
+
+- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from count model
+
+- predictions are made to the prediction data using the resampled coefficients 
+
+In case of count data, the following steps are performed for each iteration
+
+- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
+
+- predictions are made to the prediction data using the resampled coefficients
+\end{Details}
+%
+\begin{Value}
+The function returns a matrix of bootstrap predictions. The number of rows is equal to the number of rows in predict.data.  The number of columns is equal to \code{B}.  The matrix may be very large and so is stored directly into the working directory as a workspace object: '"name"predictionboot.RObj'.  The object inside is called \code{bootPreds}.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# offshore redistribution data
+data(dis.data.re)
+data(predict.data.re)
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re, method="ds",
+            meta.data=list(width=250))
+dis.data.re<-create.NHAT(dis.data.re,result)
+count.data<-create.count.data(dis.data.re)
+require(mgcv)
+gam.2<-gam(NHAT~as.factor(impact)+s(x.pos,y.pos,by=as.factor(impact))+offset(log(area)),
+           data=count.data,family=quasipoisson)
+do.bootstrap.gam(dis.data.re,predict.data.re,ddf.obj=result,model.obj=gam.2,resample="transect.id",
+               rename="segment.id",stratum='survey.id',1,name='gam',save.data=FALSE,nhats=NULL)
+load("gampredictionboot.RData") # loading the predictions into the workspace
+# look at the first 6 lines of the predictions on the response scale
+head(bootPreds)
+
+
+## Not run: # nearshore redistribution data
+data(ns.data.re)
+data(ns.predict.data.re)
+require(mgcv)
+gam.ns2=gam(birds~as.factor(impact)+s(x.pos,y.pos,by=as.factor(impact))+offset(log(area)),
+         data=ns.data.re,family=quasipoisson)
+do.bootstrap.gam(ns.data.re,ns.predict.data.re,ddf.obj=NULL,model.obj=gam.ns2,resample=NULL,
+                rename=NULL,stratum=NULL,1,name='ns.gam',save.data=FALSE,nhats=NULL)
+# load the replicate predictions into the workspace               
+load("ns.gampredictionboot.RData") 
+# look at the first 6 lines of the predictions on the response scale
+head(bootPreds)
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{drop.step\_2d}{Function that tries dropping knots to find an improvement in fit}{drop.step.Rul.2d}
+%
+\begin{Description}\relax
+Function that tries dropping knots to find an improvement in fit
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+drop.step_2d(radii, invInd, dists, explData, response, explanatory,
+  maxIterations, fitnessMeasure, point, knotPoint, position, aR, BIC, track,
+  out.lm, improveDrop, minKnots, tol = 0, baseModel, radiusIndices, models,
+  interactionTerm, data, initDisp)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Author}\relax
+Cameron Walker, Department of Enginering Science, University of Auckland.
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{exchange.step\_2d}{Function for exchanging knot locations and re-fitting model to find best one}{exchange.step.Rul.2d}
+%
+\begin{Description}\relax
+Function for exchanging knot locations and re-fitting model to find best one
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+exchange.step_2d(gap, knotDist, radii, invInd, dists, explData, response,
+  explanatory, maxIterations, fitnessMeasure, point, knotPoint, position, aR,
+  BIC, track, out.lm, improveEx, maxKnots, tol = 0, baseModel, radiusIndices,
+  models, interactionTerm, data, initDisp)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Author}\relax
+Cameron Walker, Department of Enginering Science, University of Auckland.
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{fit.thinPlate\_2d}{Function to fit a local radial basis function (CReSS) as a two dimensional smooth}{fit.thinPlate.Rul.2d}
+%
+\begin{Description}\relax
+Function to fit a local radial basis function (CReSS) as a two dimensional smooth
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+fit.thinPlate_2d(fitnessMeasure, dists, aR, radii, baseModel, radiusIndices,
+  models, currentFit, interactionTerm, data, initDisp)
+\end{verbatim}
+\end{Usage}
+\inputencoding{utf8}
+\HeaderA{gamMRSea}{gamMRSea model function}{gamMRSea}
+%
+\begin{Description}\relax
+See \code{\LinkA{glm}{glm}} for details.  A \code{splineParams} object may be specified as part of the model object.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+gamMRSea(formula, family = gaussian, data, weights, subset, na.action,
+  start = NULL, etastart, mustart, offset, control = list(...),
+  model = TRUE, method = "glm.fit", x = FALSE, y = TRUE,
+  contrasts = NULL, splineParams = NULL, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Author}\relax
+LAS Scott-Hayward, University of St Andrews
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{generateNoise}{Function to generate noisy data}{generateNoise}
+%
+\begin{Description}\relax
+The function generates a random sample from poisson, overdispersed poisson, binomial and zero inflated binomial samples.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+generateNoise(n, response, family, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{n}] number of simulations to generate
+
+\item[\code{response}] vector of 'true' means to genereate from
+
+\item[\code{family}] one of \code{poisson}, \code{binomial} or \code{zibinomial}
+
+\item[\code{...}] Other parameters required for the family specified
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+An additional parameter for the Poisson distribution is the dispersion parameter, specified by d=
+The additional parameters for the Binomial distribution can be found in \LinkA{rbinom}{rbinom}
+The zibinomial family requires the \code{VGAM} library to generate zero inflated binomial data. Additional parameters can be found in the help for \LinkA{rzibinom}{rzibinom}.
+\end{Details}
+%
+\begin{Author}\relax
+LAS Scott-Hayward, University of St Andrews
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+data(ns.data.re)
+
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+
+simData<-generateNoise(n=500, response=fitted(model), family='poisson')
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{getCVids}{IDs for running cross validation}{getCVids}
+%
+\begin{Description}\relax
+This function creates a string of integers which will be used for pointing to the right subsets of data for cross validation of regression objects
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getCVids(data, folds, block = NULL, seed = 1234)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{data}] data used in regression model
+
+\item[\code{folds}] integer number of validation data sets
+
+\item[\code{block}] column in data indicating the blocking structure for cross-validation (if \code{block} = NULL, individual observations will be used as blocks)
+
+\item[\code{seed}] integer number used to set the seed of the fold generation.  By default this is set to `1234`.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+The function returns a random sequence of 1:folds of the same length as observations in data. It is called by other functions, e.g. \code{\LinkA{getCV\_CReSS}{getCV.Rul.CReSS}}.
+\end{Details}
+%
+\begin{Author}\relax
+LAS Scott-Hayward, University of St Andrews
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+
+CVids<-getCVids(ns.data.re, 5)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{getCV\_CReSS}{Calculate cross-validation score for a CReSS type model}{getCV.Rul.CReSS}
+%
+\begin{Description}\relax
+Calculate cross-validation score for a CReSS type model
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getCV_CReSS(datain, baseModel, splineParams = NULL, vector = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{datain}] Data frame containing columns of covariates contained in \code{baseModel}.
+
+\item[\code{baseModel}] 'glm' or 'gamMRSea' model object
+
+\item[\code{splineParams}] list object containing information for fitting one and two dimensional splines. See \code{\LinkA{makesplineParams}{makesplineParams}} for more details.
+
+\item[\code{vector}] Logical indicating whether the vector of scores is returned (TRUE) or if the mean score is returned (FALSE).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+There must be a column in the data called \code{foldid}, which can be created using \code{\LinkA{getCVids}{getCVids}}.  This column defines the folds of data for the CV calculation.  If this is not provided, by default random allocation is given to 5 folds.
+
+The cost function for this CV is a mean squared error.
+\end{Details}
+%
+\begin{Author}\relax
+LAS Scott-Hayward (University of St Andrews)
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
+ 
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+              
+# calculate CV
+getCV_CReSS(ns.data.re, model)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{getDifferences}{Identify any significant differences between predicted data before an impact event and predicted data after an impact event}{getDifferences}
+%
+\begin{Description}\relax
+Identify any significant differences between predicted data before an impact event and predicted data after an impact event
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getDifferences(beforePreds, afterPreds, quants = c(0.025, 0.975))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{beforePreds}] Matrix of bootstrap predictions (n x B) to each grid cell before impact (same length and order as \code{afterPreds})
+
+\item[\code{afterPreds}] Matrix of bootstrap predictions (n x B) to each grid cell after impact (same length and order as \code{beforePreds})
+
+\item[\code{quants}] (\code{default = =c(.025,.975)}) Quantile for significance.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+This function finds the differences for every predicted grid cell for every bootstrap replicate.  Quantiles are used to determine whether each difference is significantly different from zero and if so, in what direction.
+\end{Details}
+%
+\begin{Value}
+A list is returned consisting of
+\begin{ldescription}
+\item[\code{mediandiff}] Vector of the median difference for each grid cell
+\item[\code{lowerci}] Vector of the lower 2.5\% difference for each grid cell
+\item[\code{upperci}] Vector of the upper 97.5\% difference for each grid cell
+\item[\code{significanceMarker}] Vector of significance.  0: not significant, 1: significant and positive, -1: significant and negative
+\end{ldescription}
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+ ## Not run: 
+getDifferences(beforePreds, afterPreds)
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{getDispersion}{dispersion parameter}{getDispersion}
+%
+\begin{Description}\relax
+This function calculates the dispersion parameter for Normal, Binomial, Poisson and Gamma distributions
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getDispersion(model)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] 
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+some details
+\end{Details}
+%
+\begin{Value}
+single number of dispersion parameter estimation
+\end{Value}
+%
+\begin{Author}\relax
+LAS Scott-Hayward
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{getEmpDistribution}{Function to generate the empirical distribution of the runs test statistic, given some data and a model.}{getEmpDistribution}
+%
+\begin{Description}\relax
+Function to generate the empirical distribution of the runs test statistic, given some data and a model.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getEmpDistribution(n.sim, simData, model, data, plot = FALSE,
+  returnDist = TRUE, dots = TRUE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{n.sim}] The number of simulated sets of data.
+
+\item[\code{simData}] A matrix, where each column is a set of data simulated under independence, with rows the same length as the data used for the model.
+
+\item[\code{model}] a glm or gamMRSea model object
+
+\item[\code{data}] data set used to fit the model.
+
+\item[\code{plot}] logical flag. If TRUE, a plot is made showing the 5\% critical values for the empirical distribution vs the N(0,1) distribution. Default is 'FALSE'
+
+\item[\code{returnDist}] logical flag.  Do you want the distribution of test statistics returned ('TRUE') or just the 5\% critical values ('FALSE')
+
+\item[\code{dots}] (Default: \code{TRUE}. Logical stating whether to show a printout of block numebers to assess progress. 'TRUE' will print dots into the workspace.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Author}\relax
+LAS Scott-Hayward, University of St Andrews
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+data(ns.data.re)
+
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+
+simData<-generateNoise(n=500, response=fitted(model), family='poisson')
+empdist<-getEmpDistribution(500, simData, model, data=ns.data.re, plot=FALSE, 
+                returnDist=TRUE,dots=FALSE)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{getKnotgrid}{Generate a grid of knot locations to run SALSA2D.}{getKnotgrid}
+%
+\begin{Description}\relax
+Generate a grid of knot locations to run SALSA2D.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getKnotgrid(coordData, numKnots = 300, plot = TRUE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{coordData}] nx2 matrix or data frame of coordinates representing data locations
+
+\item[\code{numKnots}] (\code{default = 300)}).  The user may choose how many legal knot locations are available (only if more than 400 )
+
+\item[\code{plot}] (\code{default = TRUE}). Logical stating whether a plot showing the legal knot positions is given.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+SALSA2D requires a grid of knot locations to determine the best locations.  Illegal knot positions (those not close to data) are kept as a row in the data frame of locations but given c(NA, NA) to avoid a knot considered.
+\end{Details}
+%
+\begin{Value}
+A (10000 x 2) matrix of knot locations.  Any row with an illegal knot location (e.g. not near data) contains c(NA, NA)
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+ ## Not run: 
+data(dis.data.re)
+# bootstrap data without stratification
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+require(mrds)
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re, method="ds",
+             meta.data=list(width=250))
+dis.data.re<-create.NHAT(dis.data.re,result)
+
+knotgrid<-getKnotgrid(cbind(dis.data.re$x.pos, dis.data.re$y.pos))
+## End(Not run)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{getPlotdimensions}{find the plotting dimensions for quilt.plot when using a regular grid}{getPlotdimensions}
+%
+\begin{Description}\relax
+find the plotting dimensions for quilt.plot when using a regular grid
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getPlotdimensions(x.pos, y.pos, segmentWidth, segmentLength)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x.pos}] Vector of x-coordinates in dataset
+
+\item[\code{y.pos}] Vector of y-coordinates in dataset
+
+\item[\code{segmentWidth}] Width of each grid cell of data (in same units as \code{x.pos})
+
+\item[\code{segmentLength}] Length of each grid cell of data (in same units as \code{y.pos})
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Examples}
+\begin{ExampleCode}
+#' # load data
+data(ns.data.re)
+
+getPlotdimensions(ns.data.re$x.pos, ns.data.re$y.pos, segmentWidth=500, segmentLength=500)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{getPvalues}{Calculate marginal p-values from a \code{model}.}{getPvalues}
+%
+\begin{Description}\relax
+An ANOVA is fitted repeatedly with each covariate being the last so that the output is marginal.  \code{varlist} and \code{factorlist} are optional and shorten the variable names in the output.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getPvalues(model, varlist = NULL, factorlist = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] Fitted model object of class \code{gee}.
+
+\item[\code{varlist}] (default =\code{NULL}). Vector of covariate names (continous covariates only) used to make the output table names shorter.  Useful if spline parameters are specified in the model.
+
+\item[\code{factorlist}] (default =\code{NULL}). Vector of covariate names (factor covariates only) used to make the output table names shorter. Useful if spline parameters are specified in the model.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Print out table of each variable and its associated marginal p-value.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# load data
+data(ns.data.re)
+
+# make blocking structure
+ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$MonthOfYear, 
+                    ns.data.re$DayOfMonth, sep='')
+ns.data.re$blockid<-as.factor(ns.data.re$blockid)
+
+initialModel<- geeglm(birds ~ as.factor(floodebb) + as.factor(impact) + observationhour + x.pos + 
+              y.pos + offset(log(area)), family='poisson',data=ns.data.re, id=blockid)
+
+getPvalues(initialModel, varlist=c('observationhour', 'x.pos', 'y.pos'), 
+            factorlist=c('floodebb', 'impact'))
+
+getPvalues(initialModel)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{getRadiiChoices}{Function for obtaining a sequence of range parameters for the CReSS smoother}{getRadiiChoices}
+%
+\begin{Description}\relax
+Function for obtaining a sequence of range parameters for the CReSS smoother
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+getRadiiChoices(numberofradii = 10, distMatrix)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{numberofradii}] The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.
+
+\item[\code{distMatrix}] Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\LinkA{makeDists}{makeDists}}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+The range parameter determines the range of the influence of each knot.  Small numbers indicate local influence and large ones, global influence.
+\end{Details}
+%
+\begin{Value}
+This function returns a vector containing a sequence of range parameters.
+\end{Value}
+%
+\begin{References}\relax
+Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. 
+DOI: 10.1080/10618600.2012.762920
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# load data
+data(ns.data.re)
+# load knot grid data
+data(knotgrid.ns)
+
+# make distance matrices for datatoknots and knottoknots
+distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
+
+# choose sequence of radii
+r_seq<-getRadiiChoices(8, distMats$dataDist)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{improve.step\_2d}{Function to move knots to neighbours to see if there is any improvement in fit}{improve.step.Rul.2d}
+%
+\begin{Description}\relax
+Function to move knots to neighbours to see if there is any improvement in fit
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+improve.step_2d(gap, knotDist, radii, invInd, dists, gridResp, grid, explData,
+  xVals, yVals, num, response, explanatory, maxIterations, fitnessMeasure,
+  point, knotPoint, position, aR, BIC, track, out.lm, improveNudge, tol = 0,
+  baseModel, radiusIndices, models, interactionTerm, data, initDisp)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Author}\relax
+Cameron Walker, Department of Enginering Science, University of Auckland.
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{knotgrid.ns}{Knot grid data for nearshore example}{knotgrid.ns}
+%
+\begin{Description}\relax
+Knot grid data for nearshore example
+\end{Description}
+\inputencoding{utf8}
+\HeaderA{knotgrid.off}{Knot grid data for offshore example}{knotgrid.off}
+%
+\begin{Description}\relax
+Knot grid data for offshore example
+\end{Description}
+\inputencoding{utf8}
+\HeaderA{LocalRadialFunction}{Function for creating an Gaussian basis function for a spatial smooth using the CReSS method.}{LocalRadialFunction}
+%
+\begin{Description}\relax
+This function calculates a local radial Gausiian basis matrix for use in \code{\LinkA{runSALSA2D}{runSALSA2D}}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+LocalRadialFunction(radiusIndices, dists, radii, aR)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{radiusIndices}] Vector of length startKnots identifying which radii (splineParams[[1]]\$radii) will be used to initialise the model
+
+\item[\code{dists}] Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances.
+
+\item[\code{radii}] Sequence of range parameters for the CReSS basis from local (small) to global (large). Determines the range of the influence of each knot.
+
+\item[\code{aR}] Index of knot locations. The index contains numbers selected by SALSA from 1 to the number of legal knot locations \code{na.omit(knotgrid)}. Used to specify which columns of \code{dists} should be used to construct the basis matrix.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+Calculate a local radial basis matrix for use in \code{\LinkA{runSALSA2D}{runSALSA2D}}.  The distance matrix input may be Euclidean or geodesic distances.
+\end{Details}
+%
+\begin{Value}
+Returns a basis matrix with one column for each knot in \code{aR} and one row for every observation (i.e. same number of rows as \code{dists})
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# load data
+data(ns.data.re)
+# load knot grid data
+data(knotgrid.ns)
+
+splineParams<-makesplineParams(data=ns.data.re, varlist=c('observationhour'))
+
+#set some input info for SALSA
+ns.data.re$response<- ns.data.re$birds
+
+# make distance matrices for datatoknots and knottoknots
+distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns), knotmat=FALSE)
+
+# choose sequence of radii
+r_seq<-getRadiiChoices(8, distMats$dataDist)
+
+# using the fourth radius and picking 5 knots
+basis<-LocalRadialFunction(radiusIndices=rep(4, 5), dists=distMats$dataDist, radii = r_seq, 
+        aR=c(3, 10, 15, 28, 31))
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{make.gamMRSea}{Function to make model of class \code{gamMRSea}}{make.gamMRSea}
+%
+\begin{Description}\relax
+Function to allow a model of class \code{gamMRSea} to be updated to include a panel structure or shortnames to make summary and anova outputs more readable. Function to update an `lm` or `glm` model to class `gamMRSea`.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+make.gamMRSea(model, panelid = NULL, splineParams = NULL,
+  varshortnames = NULL, gamMRSea = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] model object of class glm or gamMRSea
+
+\item[\code{panelid}] vector of length of the data containing the panel identification for each row of data
+
+\item[\code{splineParams}] MRSea based list object
+
+\item[\code{varshortnames}] vector containing the short names for each variable.  These are used in summary and anova
+
+\item[\code{gamMRSea}] logical stating whether the call of the model should be changed to 'gamMRSea' from `glm`
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Author}\relax
+LAS Scott-Hayward, University of St Andrews
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{makeBootCIs}{Calculate percentile confidence intervals from a matrix of bootstrapped predictions}{makeBootCIs}
+%
+\begin{Description}\relax
+Calculate percentile confidence intervals from a matrix of bootstrapped predictions
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+makeBootCIs(preds, quants = c(0.025, 0.975))
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{preds}] matrix of bootstrap predictions where each column is a bootstrap realisation
+
+\item[\code{quants}] (\code{default = c(0.025, 0.975)}. Vector of length two of quantiles.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Examples}
+\begin{ExampleCode}
+## Not run: 
+makeBootCIs(bootPreds)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{makeDists}{Make Euclidean distance matrices for use in CReSS and SALSA model frameworks}{makeDists}
+%
+\begin{Description}\relax
+This function makes two Euclidean distance matrices.  One for the distances between all spatial observations and all spatial knot locations.  The other, if specified, is the distances between knot locations.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+makeDists(datacoords, knotcoords, knotmat = TRUE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{datacoords}] Coordinates of the data locations
+
+\item[\code{knotcoords}] Coordinates of the legal knot locations
+
+\item[\code{knotmat}] (\code{default=TRUE}). Should a matrix of knot-knot distances be created
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+The data-knot matrix is used in the CReSS basis and the knot-knot matrix is used in SALSA to determine where a nearest knot to `move' should be.
+\end{Details}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+# load knot grid data
+data(knotgrid.ns)
+ 
+# make distance matrices for datatoknots and knottoknots
+distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{makesplineParams}{Constructing an object of spline parameters}{makesplineParams}
+%
+\begin{Description}\relax
+This function makes a list object containing all of the information to fit splines to continuous data.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+makesplineParams(data, varlist, predictionData = NULL, degree = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{data}] Data frame containing columns of covariates listed in \code{varlist}.  Column names must match with names in \code{varlist}
+
+\item[\code{varlist}] Vector of variable names for the covariates of interest
+
+\item[\code{predictionData}] Data frame containing columns of covariates listed in \code{varlist}.  Column names must match with those in \code{varlist}.  This parameter is used to find the maximum range of covariates between the data and prediction data. If \code{predictionData} is \code{NULL} then the range of the data is used.
+
+\item[\code{degree}] Vector specifying the degree of the spline. If unspecified, degree 2 is stored.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+The information is stored in list slots \code{[[2]]} and onward (slot \code{[[1]]} is reserved for a spatial term). Specifically: 
+
+\code{covar}. Name of covariate.
+
+\code{explanatory}. Vector of covariate data.
+
+\code{knots}. Knot(s) for spline fitting.  This function initialises with a knot at the mean covariate value.
+
+\code{bd}. This specifies the boundary knots.  If \code{predictionData} is \code{NULL} then this is the range of the covariate data.  Otherwise, the boundary knots are the maximum combined range of the data and prediction data.
+
+\code{degree}. The degree of a B-spline. This function retuns 2 by default.
+
+
+See \code{\LinkA{runSALSA2D}{runSALSA2D}} for details on the spatial slot (\code{[[1]]})
+\end{Details}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+# load prediction data
+data(ns.predict.data.re)
+
+splineParams<- makesplineParams(ns.data.re, varlist=c('observationhour', 'DayOfMonth'),
+                predictionData=ns.predict.data.re)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{MRSea}{MRSea}{MRSea}
+\aliasA{MRSea-package}{MRSea}{MRSea.Rdash.package}
+%
+\begin{Description}\relax
+MRSea
+\end{Description}
+\inputencoding{utf8}
+\HeaderA{ns.data.de}{Nearshore data with decrease post-impact}{ns.data.de}
+\keyword{datasets}{ns.data.de}
+%
+\begin{Description}\relax
+A simulated dataset containing the observed counts, the effort data and other variables of 
+grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 27798 rows and 12 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{area} area surveyed in the gridcell in km squared
+\item \code{floodebb} 3 level factor covariate for tides
+\item \code{observationhour} hour of observation
+\item \code{GridCode} identifier for the different grids that were surveyed
+\item \code{Year} Year of the survey
+\item \code{DavOfMonth} Day of the survey
+\item \code{MonthOfYear} Month of the survey 
+\item \code{impact} numerical indicator for before (0) and after (1) impact
+\item \code{birds} observed number of birds
+\item \code{cellid} identifier for the individual records 
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{ns.data.no}{Nearshore data with no effect of impact}{ns.data.no}
+\keyword{datasets}{ns.data.no}
+%
+\begin{Description}\relax
+A simulated dataset containing the observed counts, the effort data and other variables of 
+grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 27798 rows and 12 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{area} area surveyed in the gridcell in km squared
+\item \code{floodebb} 3 level factor covariate for tides
+\item \code{observationhour} hour of observation
+\item \code{GridCode} identifier for the different grids that were surveyed
+\item \code{Year} Year of the survey
+\item \code{DavOfMonth} Day of the survey
+\item \code{MonthOfYear} Month of the survey 
+\item \code{impact} numerical indicator for before (0) and after (1) impact
+\item \code{birds} observed number of birds
+\item \code{cellid} identifier for the individual records 
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{ns.data.re}{Nearshore data with redistribution post-impact}{ns.data.re}
+\keyword{datasets}{ns.data.re}
+%
+\begin{Description}\relax
+A simulated dataset containing the observed counts, the effort data and other variables of 
+grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 27798 rows and 12 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{area} area surveyed in the gridcell in km squared
+\item \code{floodebb} 3 level factor covariate for tides
+\item \code{observationhour} hour of observation
+\item \code{GridCode} identifier for the different grids that were surveyed
+\item \code{Year} Year of the survey
+\item \code{DavOfMonth} Day of the survey
+\item \code{MonthOfYear} Month of the survey 
+\item \code{impact} numerical indicator for before (0) and after (1) impact
+\item \code{birds} observed number of birds
+\item \code{cellid} identifier for the individual records 
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{ns.predict.data.de}{Prediction grid data for nearshore post-impact decrease}{ns.predict.data.de}
+\keyword{datasets}{ns.predict.data.de}
+%
+\begin{Description}\relax
+A simulated prediction dataset containing the true counts, the effort data and other variables of 
+grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 27798 rows and 11 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{area} Area surveyed in the gridcell in km squared
+\item \code{floodebb} 3 level factor covariate for tide state
+\item \code{observationhour} hour of observation
+\item \code{GridCode} identifier for the different grids that were surveyed
+\item \code{Year} Year of the survey
+\item \code{DavOfMonth} Day of the survey
+\item \code{MonthOfYear} Month of the survey 
+\item \code{impact} numerical indicator for before (0) and after (1) impact
+\item \code{birds} true density of birds
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{ns.predict.data.no}{Prediction grid data for nearshore no post-impact consequence}{ns.predict.data.no}
+\keyword{datasets}{ns.predict.data.no}
+%
+\begin{Description}\relax
+A simulated prediction dataset containing the true counts, the effort data and other variables of 
+grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 27798 rows and 11 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{area} Area surveyed in the gridcell in km squared
+\item \code{floodebb} 3 level factor covariate for tide state
+\item \code{observationhour} hour of observation
+\item \code{GridCode} identifier for the different grids that were surveyed
+\item \code{Year} Year of the survey
+\item \code{DavOfMonth} Day of the survey
+\item \code{MonthOfYear} Month of the survey 
+\item \code{impact} numerical indicator for before (0) and after (1) impact
+\item \code{birds} true density of birds
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{ns.predict.data.re}{Prediction grid data for nearshore post-impact redistribution}{ns.predict.data.re}
+\keyword{datasets}{ns.predict.data.re}
+%
+\begin{Description}\relax
+A simulated prediction dataset containing the true counts, the effort data and other variables of 
+grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 27798 rows and 11 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{area} Area surveyed in the gridcell in km squared
+\item \code{floodebb} 3 level factor covariate for tide state
+\item \code{observationhour} hour of observation
+\item \code{GridCode} identifier for the different grids that were surveyed
+\item \code{Year} Year of the survey
+\item \code{DavOfMonth} Day of the survey
+\item \code{MonthOfYear} Month of the survey 
+\item \code{impact} numerical indicator for before (0) and after (1) impact
+\item \code{birds} true density of birds
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{plotacf}{run functions to create acf matrix and plot the results}{plotacf}
+%
+\begin{Description}\relax
+run functions to create acf matrix and plot the results
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+plotacf(acfmat)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{acfmat}] Matrix of output from \code{acffunc} (blocks x max block length).
+\end{ldescription}
+\end{Arguments}
+\inputencoding{utf8}
+\HeaderA{plotCumRes}{Calculate cumulative residuals and plot.}{plotCumRes}
+%
+\begin{Description}\relax
+The output is plots of cumulative residuals.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+plotCumRes(model, varlist, d2k = NULL, splineParams = NULL, label = "",
+  save = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] Fitted model object (glm or gam)
+
+\item[\code{varlist}] Vector of covariate names (continous covariates only)
+
+\item[\code{d2k}] (default=NULL).  Distance matrix of data to knot points. Used only if there is a \code{\LinkA{LocalRadialFunction}{LocalRadialFunction}} smooth in the model formula
+
+\item[\code{splineParams}] (default \code{=NULL}) List object containing output from runSALSA/runSALSA2D required for updating \code{model}.  Used only if there is a \code{LocalRadialFunction} smooth in the model formula. See \code{\LinkA{makesplineParams}{makesplineParams}} for details of this object.
+
+\item[\code{label}] Label printed at the end of the plot name to identify it if \code{save=TRUE}.
+
+\item[\code{save}] (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Cumulative residual plots are returned for residuals ordered by each covariate in \code{varlist}, predicted value and index of observations (temporally).
+The blue dots are the residuals
+The black line is the line of cumulative residual.
+On the covariate plots (those in \code{varlist}) the grey line indicates what we would expect from a well fitted covariate. i.e. one that is fitted with excessive knots.
+
+Note: if the covariate is discrete in nature (like the example below), there will be a lot of overplotting of residuals.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
+           family='quasipoisson', data=ns.data.re)
+
+plotCumRes(model, varlist=c('observationhour'))
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{plotRunsProfile}{Calculate runs test and plot profile plot.  The output is a plot of runs profiles (with p-value to indicate level of correlation)}{plotRunsProfile}
+%
+\begin{Description}\relax
+Calculate runs test and plot profile plot.  The output is a plot of runs profiles (with p-value to indicate level of correlation)
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+plotRunsProfile(model, varlist, label = "", save = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] Fitted model object (glm or gam)
+
+\item[\code{varlist}] Vector of covariate names (continous covariates only)
+
+\item[\code{label}] Label printed at the end of the plot name to identify it when \code{save=TRUE}.
+
+\item[\code{save}] (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Runs profile plots are returned for residuals ordered by each covariate in \code{varlist}, predicted value and index of observations (temporally).
+
+The black line is the line of sequences of positive or negative residuals.  The vertical lines are the change between a sequence of positive to negative residuals (or vice versa).
+
+The p-values are from a \code{\LinkA{runs.test}{runs.test}} and indicate whether there is correlation in the residuals (p<0.05) or independence (p>0.05).  The test statistic determines the type of correlation (positive/negative) and the result printed at the bottom of the figure. 
+
+Note: if the covariate is discrete in nature (like the example below), there will be a lot of overplotting of runs.  Some jittering occurs at each discrete value (for covariates with <= 25 unique values).
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
+            family='quasipoisson', data=ns.data.re)
+
+plotRunsProfile(model, varlist=c('observationhour'))
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{predict.cress}{Function for making predictions for a model containing a CReSS basis (two dimensional local smooth).}{predict.cress}
+%
+\begin{Description}\relax
+This function calculates vector of predictions on the scale of the response or link.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'cress'
+predict(predict.data, splineParams, g2k, model,
+  type = "response", coeff = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{predict.data}] Data frame of covariate values to make predictions to
+
+\item[\code{splineParams}] spline parameter object that describes the fitting of 2D and 1D splines in the model object
+
+\item[\code{g2k}] Matrix of distances between prediction locations and knot locations (n x k). May be Euclidean or geodesic distances.
+
+\item[\code{model}] Object from a GEE or GLM model
+
+\item[\code{type}] Type of predictions required. (default=`response`, may also use `link`.
+
+\item[\code{coeff}] Vector of coefficients (default = NULL). To be used when bootstrapping and sampling coefficients from a distribution e.g. in \code{do.bootstrap.cress}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+Calculate predictions for a model whilst centering the CReSS bases in the same way as the fitted model. Note, if there is an offset in the model it must be called 'area'.
+\end{Details}
+%
+\begin{Value}
+Returns a vector of predictions on either the response or link scale
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# offshore redistribution data
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+data(dis.data.re)
+data(predict.data.re)
+data(knotgrid.off)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# distance sampling
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re, method="ds",
+        meta.data=list(width=250))
+dis.data.re<-create.NHAT(dis.data.re,result)
+count.data<-create.count.data(dis.data.re)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# spatial modelling
+splineParams<-makesplineParams(data=count.data, varlist=c('depth'))
+#set some input info for SALSA
+count.data$response<- count.data$NHAT
+# make distance matrices for datatoknots and knottoknots
+distMats<-makeDists(cbind(count.data$x.pos, count.data$y.pos), na.omit(knotgrid.off))
+# choose sequence of radii
+r_seq<-getRadiiChoices(8,distMats$dataDist)
+# set initial model without the spatial term
+initialModel<- glm(response ~ as.factor(season) + as.factor(impact) + offset(log(area)),  
+                family='quasipoisson', data=count.data)
+# make parameter set for running salsa2d
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.off, 
+                 knotdim=c(26,14), startKnots=4, minKnots=4, 
+                 maxKnots=20, r_seq=r_seq, gap=4000, interactionTerm="as.factor(impact)")
+salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, 
+                   k2k=distMats$knotDist, splineParams=splineParams) 
+
+splineParams<-salsa2dOutput_k6$splineParams
+# specify parameters for local radial function:
+radiusIndices <- splineParams[[1]]$radiusIndices
+dists <- splineParams[[1]]$dist
+radii <- splineParams[[1]]$radii
+aR <- splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
+count.data$blockid<-paste(count.data$transect.id, count.data$season, count.data$impact, sep='')
+# Re-fit the chosen model as a GEE (based on SALSA knot placement) and GEE p-values
+geeModel<- geeglm(formula(salsa2dOutput_k6$bestModel), data=count.data, family=poisson, id=blockid)
+dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$y.pos), na.omit(knotgrid.off), 
+       knotmat=FALSE)$dataDist
+       
+# make predictions on response scale
+preds<-predict.cress(predict.data.re, splineParams, dists, geeModel)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{predict.data.de}{Prediction grid data for post-impact decrease}{predict.data.de}
+\keyword{datasets}{predict.data.de}
+%
+\begin{Description}\relax
+A simulated dataset containing the true number of birds, the effort data and other variables of 
+prediction grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 37928 rows and 8 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{area} area surveyed in the gridcell in km squared
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{depth} depth in m
+\item \code{segment.id} Identifier for individual visits to the segment
+\item \code{season} Numerical indicator for the four different seasons
+\item \code{impact} Numerical indicator for before (0) and after (1) impact
+\item \code{truth} number of birds
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{predict.data.no}{Prediction grid data for no post-impact consequence}{predict.data.no}
+\keyword{datasets}{predict.data.no}
+%
+\begin{Description}\relax
+A simulated dataset containing the true number of birds, the effort data and other variables of 
+prediction grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 37928 rows and 8 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{area} area surveyed in the gridcell in km squared
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{depth} depth in m
+\item \code{segment.id} Identifier for individual visits to the segment
+\item \code{season} Numerical indicator for the four different seasons
+\item \code{impact} Numerical indicator for before (0) and after (1) impact
+\item \code{truth} number of birds
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{predict.data.re}{Prediction grid data for post-impact redistribution}{predict.data.re}
+\keyword{datasets}{predict.data.re}
+%
+\begin{Description}\relax
+A simulated dataset containing the true number of birds, the effort data and other variables of 
+prediction grid data. The variables are as follows:
+\end{Description}
+%
+\begin{Format}
+A data frame with 37928 rows and 8 variables
+\end{Format}
+%
+\begin{Details}\relax
+\begin{itemize}
+
+\item \code{area} area surveyed in the gridcell in km squared
+\item \code{x.pos} spatial location in the horizontal axis in UTMs
+\item \code{y.pos} spatial location in the vertical axis in UTMs
+\item \code{depth} depth in m
+\item \code{segment.id} Identifier for individual visits to the segment
+\item \code{season} Numerical indicator for the four different seasons
+\item \code{impact} Numerical indicator for before (0) and after (1) impact
+\item \code{truth} number of birds
+
+\end{itemize}
+
+\end{Details}
+\inputencoding{utf8}
+\HeaderA{predict.gamMRSea}{Function for making predictions for a model containing a CReSS basis (two dimensional local smooth).}{predict.gamMRSea}
+%
+\begin{Description}\relax
+This function calculates vector of predictions on the scale of the response or link.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'gamMRSea'
+predict(predict.data, g2k = NULL, model,
+  type = "response", coeff = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{predict.data}] Data frame of covariate values to make predictions to
+
+\item[\code{g2k}] Matrix of distances between prediction locations and knot locations (n x k). May be Euclidean or geodesic distances.
+
+\item[\code{model}] Object from a GEE or GLM model
+
+\item[\code{type}] Type of predictions required. (default=`response`, may also use `link`).
+
+\item[\code{coeff}] Vector of coefficients (default = NULL). To be used when bootstrapping and sampling coefficients from a distribution e.g. in \code{do.bootstrap.cress}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+Calculate predictions for a model whilst centering the CReSS bases in the same way as the fitted model. Note, if there is an offset in the model it must be called 'area'.
+\end{Details}
+%
+\begin{Value}
+Returns a vector of predictions on either the response or link scale
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# offshore redistribution data
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+data(dis.data.re)
+data(predict.data.re)
+data(knotgrid.off)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# distance sampling
+dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
+result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re, method="ds",
+        meta.data=list(width=250))
+dis.data.re<-create.NHAT(dis.data.re,result)
+count.data<-create.count.data(dis.data.re)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# spatial modelling
+splineParams<-makesplineParams(data=count.data, varlist=c('depth'))
+#set some input info for SALSA
+count.data$response<- count.data$NHAT
+# make distance matrices for datatoknots and knottoknots
+distMats<-makeDists(cbind(count.data$x.pos, count.data$y.pos), na.omit(knotgrid.off))
+# choose sequence of radii
+r_seq<-getRadiiChoices(8,distMats$dataDist)
+# set initial model without the spatial term
+initialModel<- glm(response ~ as.factor(season) + as.factor(impact) + offset(log(area)),
+                family='quasipoisson', data=count.data)
+# make parameter set for running salsa2d
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.off, 
+                 knotdim=c(26,14), startKnots=4, minKnots=4,
+                 maxKnots=20, r_seq=r_seq, gap=4000, interactionTerm="as.factor(impact)")
+salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
+                   k2k=distMats$knotDist, splineParams=splineParams)
+
+
+# make predictions on response scale
+preds<-predict.gamMRSea(predict.data.re, dists, salsa2dOutput_k6$bestModel)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{QICb}{Function to calculate QICb}{QICb}
+%
+\begin{Description}\relax
+Function to calculate QICb
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+QICb(model)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] Model of class geeglm
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Author}\relax
+Lindesay Scott-Hayward, University of St Andrews
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{qzibinom}{qzibinom function from the VGAM package}{qzibinom}
+%
+\begin{Description}\relax
+qzibinom function from the VGAM package
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+qzibinom(p, size, prob, pstr0 = 0)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Author}\relax
+VGAM package
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{return.reg.spline.fit}{Code for adaptively spacing knots for a given covariate.}{return.reg.spline.fit}
+%
+\begin{Description}\relax
+Code for adaptively spacing knots for a given covariate.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+return.reg.spline.fit(response, explanatory, degree, minKnots, maxKnots,
+  startKnots, gap, winHalfWidth, fitnessMeasure = "BIC",
+  maxIterations = 100, initialise = TRUE, initialKnots = NULL,
+  baseModel = NULL, bd, spl, interactionTerm = interactionTerm,
+  suppress.printout = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{response}] vector of response data for the modelling process
+
+\item[\code{explanatory}] vector of covariate to find knots for
+
+\item[\code{degree}] degree of the spline to be used
+
+\item[\code{minKnots}] minimum number of knots to fit
+
+\item[\code{maxKnots}] maximum number of knots to fit
+
+\item[\code{startKnots}] number of equally spaced knots to start with (between minKnots and maxKnots)
+
+\item[\code{gap}] minimum gap between knots (in unit of measurement of \code{explanatory})
+
+\item[\code{winHalfWidth}] Half-width of window used to calculate region with biggest average residual magnitude
+
+\item[\code{fitnessMeasure}] (default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QICb (Quasi-Likelihood Information Criterion with log(n) penalty)
+
+\item[\code{maxIterations}] exchange/improve heuristic will terminate after \code{maxIterations} if still running
+
+\item[\code{initialise}] (default = TRUE). Logical stating whether or not to start with equally spaced knots (TRUE) or user specified locations (FALSE)
+
+\item[\code{initialKnots}] If \code{initialise=FALSE} then the start locations for the knots are specified in \code{initialKnots}
+
+\item[\code{baseModel}] starting model for SALSA to use.  Must not contain the covariate in \code{explanatory}
+
+\item[\code{bd}] the x-coordinate of the boundary knots of \code{explanatory}
+
+\item[\code{spl}] "bs" uses b-spline, "cc" uses cyclic cubic, "ns" uses natural cubic spline for fitting smooth to \code{explanatory}
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Author}\relax
+Cameron Walker, Department of Enginering Science, University of Auckland.
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{return.reg.spline.fit.2d}{Wrapper function for running SALSA2D}{return.reg.spline.fit.2d}
+%
+\begin{Description}\relax
+Wrapper function for running SALSA2D
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+return.reg.spline.fit.2d(splineParams, startKnots, winHalfWidth,
+  fitnessMeasure = "BIC", maxIterations = 10, tol = 0, baseModel = NULL,
+  radiusIndices = NULL, initialise = TRUE, initialKnots = NULL,
+  interactionTerm = NULL, knot.seed = 10, suppress.printout = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Author}\relax
+Cameron Walker, Department of Enginering Science, University of Auckland.
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{runACF}{run functions to create acf matrix and plot the results}{runACF}
+%
+\begin{Description}\relax
+run functions to create acf matrix and plot the results
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+runACF(block, model, store = FALSE, save = F, suppress.printout = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{block}] Vector of blocks that identify data points that are correlated
+
+\item[\code{model}] Fitted model object (glm or gam)
+
+\item[\code{store}] (\code{default=F}). Logical stating whether a list of the matrix of correlations is stored (output from \code{acffunc}.)
+
+\item[\code{save}] (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
+
+\item[\code{suppress.printout}] (Default: \code{FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Plot of lag vs correlation.  Each grey line is the correlation for each individual block in \code{block}.  The red line is the mean values for each lag.
+
+If \code{store=TRUE} then the matrix of correlations (nblocks x length\_max\_block) is returned and \code{plotacf} may be used to plot the acf.
+\end{Value}
+%
+\begin{Author}\relax
+LAS Scott-Hayward, University of St Andrews
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
+           family='quasipoisson', data=ns.data.re)
+
+ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$MonthOfYear, 
+                    ns.data.re$DayOfMonth, sep='')
+ns.data.re$blockid<-as.factor(ns.data.re$blockid)
+
+runACF(ns.data.re$blockid, model, suppress.printout=TRUE)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{runDiagnostics}{functions to create observed vs fitted and fitted vs scaled pearsons residual plots}{runDiagnostics}
+%
+\begin{Description}\relax
+functions to create observed vs fitted and fitted vs scaled pearsons residual plots
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+runDiagnostics(model, plotting = "b", save = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] Fitted model object (glm or gam)
+
+\item[\code{plotting}] Plotting options (\code{default='b'}). \code{b}: returns both plots, \code{f}: returns observed vs fitted only and  \code{r}: returns scale pearsons residual plot only.
+
+\item[\code{save}] (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Two plots:
+\begin{ldescription}
+\item[\code{Observed vs Fitted}] Plot of observed vs fitted with concordence correlation and marginal R-squared printed in the plot title.
+\item[\code{Fitted vs scaled Pearsons residuals}] The red line is a locally weighted least squares regression line of all of the residuals.
+\end{ldescription}
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+
+model<-glm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact), 
+           family='quasipoisson', data=ns.data.re)
+
+runDiagnostics(model)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{runInfluence}{Assessing the influece of each correlated block on both the precision of the parameter estimates (COVRATIO statistics) and the sensitivity of model predictions (PRESS statistics).}{runInfluence}
+%
+\begin{Description}\relax
+Assessing the influece of each correlated block on both the precision of the parameter estimates (COVRATIO statistics) and the sensitivity of model predictions (PRESS statistics).
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+runInfluence(model, id, d2k = NULL, splineParams = NULL, save = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] Fitted model object (glm, gamMRSea or gam)
+
+\item[\code{id}] blocking structure
+
+\item[\code{d2k}] (\code{default=NULL}). (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations.
+
+\item[\code{splineParams}] (\code{default=NULL}). List object containng output from runSALSA (e.g. knot locations for continuous covariates). See \code{\LinkA{makesplineParams}{makesplineParams}} for more details of this object.
+
+\item[\code{save}] (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+Always run \code{\LinkA{timeInfluenceCheck}{timeInfluenceCheck}} first to see how long it will take to produce the plots.
+\end{Details}
+%
+\begin{Value}
+Two plots one each for COVRATIO and PRESS statistics, giving the influence of each block on precision of the parameter estimates and the sensitivity of model predictions.
+List object:
+\begin{ldescription}
+\item[\code{influenceData}] List of \code{blocks}, COVRATIO statistics and PRESS statistics used for making the plot of PRESS and COVRATIO statistics.
+\item[\code{influencePoints}] Row id of blocks in \code{influenceData} that lie outside the 95\% quantile of COVRATIO statistics and above the 95\% quantile of PRESS statistics.
+\end{ldescription}
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+
+ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$MonthOfYear, 
+                    ns.data.re$DayOfMonth, sep='')
+ns.data.re$blockid<-as.factor(ns.data.re$blockid)
+
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+
+timeInfluenceCheck(model, ns.data.re$blockid)
+
+## Not run: 
+# **WARNING** this example takes a long time
+influences<-runInfluence(model, ns.data.re$blockid)
+
+## End(Not run)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{runPartialPlots}{Plot partial plots for each of the variables listed in \code{factorlist.in} or \code{varlist.in}.}{runPartialPlots}
+%
+\begin{Description}\relax
+Plot partial plots for each of the variables listed in \code{factorlist.in} or \code{varlist.in}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+runPartialPlots(model, data, factorlist.in = NULL, varlist.in = NULL,
+  showKnots = FALSE, type = "response", partial.resid = FALSE,
+  save = FALSE, savedata = F, label = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] Fitted model object (glm or gam)
+
+\item[\code{data}] Data frame of data information used to fit \code{model}
+
+\item[\code{factorlist.in}] (\code{default=NULL}). Vector or names of factor variables
+
+\item[\code{varlist.in}] (\code{default=NULL}). Vector of names of continuous variables
+
+\item[\code{showKnots}] (\code{default=FALSE}). Logical stating whether knot locations should be plotted.
+
+\item[\code{type}] (\code{default='responss'}).  Character stating whether to return partial plots on the scale of the link function or the response.
+
+\item[\code{partial.resid}] (\code{default=FALSE}).  Logical stating whether to include partial residuals on the plot.
+
+\item[\code{save}] (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
+
+\item[\code{savedata}] (\code{default=FALSE}). Logical stating whether the data used to make the plots should be saved into the working directory.  The object is called PartialData\_'variablename'.RData
+
+\item[\code{label}] (\code{default=NULL}).  This enables the user to specify a character label for the plots saved to the working directory. This may also be used to specify an alternative directory.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Partial plots, one for each covariate in \code{factorlist.in} and \code{varlist.in}
+\end{Value}
+%
+\begin{Author}\relax
+LAS Scott-Hayward, University of St Andrews
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+#' # load data
+data(ns.data.re)
+
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),
+           family='quasipoisson', data=ns.data.re)
+
+runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
+                varlist.in=c('observationhour'))
+runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
+                varlist.in=c('observationhour'), type='link')
+runPartialPlots(model, ns.data.re, factorlist.in=c('floodebb', 'impact'),
+                varlist.in=c('observationhour'), partial.resid=TRUE)
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{runSALSA1D}{Running SALSA for continuous one-dimensional covariates.}{runSALSA1D}
+%
+\begin{Description}\relax
+This function finds spatially adaptive knot locations for one or more continuous one-dimensional covariates.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+runSALSA1D(initialModel, salsa1dlist, varlist, factorlist = NULL,
+  predictionData = NULL, varlist_cyclicSplines = NULL,
+  splineParams = NULL, datain, removal = FALSE, panelid = NULL,
+  suppress.printout = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{initialModel}] The best fitting \code{CReSS} model with no continuous covariates specified.  This must be a model of class \code{glm}.
+
+\item[\code{salsa1dlist}] Vector of objects required for \code{runSALSA1D}: \code{fitnessMeasure}, \code{minKnots\_1d}, \code{maxKnots\_1d}, \code{startKnots\_1d} \code{degree}, \code{maxIterations} \code{gap}.
+
+\item[\code{varlist}] Vector of variable names for the covariates required for knot selection
+
+\item[\code{factorlist}] vector of factor variables specified in \code{initialModel}.  Specified so that a check can be made that there are non-zero counts in all levels of each factor. Uses the function \code{checkfactorlevelcounts}. Default setting is NULL.
+
+\item[\code{predictionData}] The data for which predictions are to be made. Column names must correspond to the data in \code{initialModel}. If predictionData is not specified (\code{NULL}), then the range of the data is used to create the smooth terms.
+
+\item[\code{varlist\_cyclicSplines}] Vector of variable names for covariates to be modelled with cyclic cubic splines.  This must be a subset of \code{varlist}.The default is \code{NULL}
+
+\item[\code{splineParams}] List object containing information for fitting splines to the covariates in \code{varlist}. If not specified (\code{NULL}) this object is created and returned. See \code{\LinkA{makesplineParams}{makesplineParams}} for details.
+
+\item[\code{datain}] Data used to fit the initial Model.
+
+\item[\code{removal}] (Default: \code{FALSE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth. If \code{TRUE} then cross-validation is used to make model selection choices. The folds are specified by a column in the dataset called \code{foldid}.
+
+\item[\code{panelid}] Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
+
+\item[\code{suppress.printout}] (Default: \code{FALSE}. Logical stating whether to show the analysis printout.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+There must be columns called \code{response} (response variable) and \code{foldid} (for cross-validation calculation) in the data used in the initial model to be fitted. If the data is proportion, then there should be two columns called \code{successess} and \code{failures}.
+
+The object \code{salsa1dlist} contains parameters for the \code{runSALSA1D} function.
+
+\code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC\_c, BIC, QIC\_b.
+
+\code{minKnots\_1d}. Minimum number of knots to be tried.
+
+\code{maxKnots\_1d}. Maximum number of knots to be tried.
+
+\code{startKnots\_1d}. Starting number of knots (spaced at quantiles of the data).
+
+\code{degree}. The degree of the B-spline. Does not need to be specified if \code{splineParams} is a parameter in \code{runSALSA1D}.
+
+\code{maxIterations}.The exchange/improve steps will terminate after maxIterations if still running.
+
+\code{gaps}. The minimum gap between knots (in unit of measurement of explanatory), usually set to zero.
+
+
+\code{minKnots\_1d}, \code{maxKnots\_1d}, \code{startKnots\_1d} and \code{gaps} are vectors the same length as \code{varlist}.  This enables differing values of these parameters for each covariate.
+
+The initial model contains all the factor level covariates and any covariates of interest that are not specified in the \code{varlist} argument of \code{runSALSA1D} 
+
+\emph{Note:} The algorithm may remove variables in \code{varlist} but not the variables in \code{factorlist}.  If there is no better model than with a knot at the mean, the output will include that covariate with a knot at the mean.  The best model with a given smooth term is tested both against a model with the term as linear or removed. Cross-Validation is used in the selection process.
+\end{Details}
+%
+\begin{Value}
+A list object is returned containing 4 elements:
+
+\begin{ldescription}
+\item[\code{bestModel}] A model object of class \code{gam.MRSea} from the best model fitted
+\item[\code{modelFits1D}] A list object with an element for each new term fitted to the model.  The first element is a model fitted with a knot at the mean for each of the covariates (startmodel) in \code{varlist}.  Within the first element, the current fit and formula of the start model.  
+
+The second element is the result of SALSA on the first term in \code{varlist}.  Within this element:
+\begin{itemize}
+
+\item \code{term}: term of interest
+\item \code{kept}: Statement of whether the term is kept in the model (yes- initial knots, yes - new knots, yes -linear or no)
+\item \code{basemodelformula}: the resulting model formula.  If \code{kept=yes} or \code{kept=linear} then the term of interest is included in the model otherwise it is removed.
+\item \code{knotSelected}: the knots chosen for the term of interest (NA if term removed or linear)
+\item \code{baseModelFits}: fit statistics for the resulting formula
+\item \code{modelfits}: fit statistics for the model with the term included (same as resulting formula if \code{kept=yes})
+
+\end{itemize}
+ 
+
+This continues till all covariates in \code{varlist} have been through SALSA.
+\item[\code{splineParams}] The updated spline parameter object, with the new (if chosen) knot locations for each covariate in \code{varlist}
+\item[\code{fitstat}] The final fit statistic of \code{bestModel}.  The type of statistic was specified in \code{salsa1dlist}.
+\item[\code{keptvarlist}] The covariates from \code{varlist} that have been retained in the model
+\end{ldescription}
+\end{Value}
+%
+\begin{Author}\relax
+Lindesay Scott-Hayward
+\end{Author}
+%
+\begin{References}\relax
+Walker, C.; M. Mackenzie, C. Donovan and M. O'Sullivan. SALSA - a Spatially Adaptive Local Smoothing Algorithm. Journal of Statistical Computation and Simulation, 81(2):179-191, 2010
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+# load prediction data
+data(ns.predict.data.re)
+
+varlist=c('observationhour', 'DayOfMonth')
+
+# make column with foldid for cross validation calculation
+ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
+
+# set initial model without the spline terms in there 
+# (so all other non-spline terms)
+ns.data.re$response<- ns.data.re$birds
+initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)), 
+                    family='quasipoisson',data=ns.data.re)
+
+#set some input info for SALSA
+salsa1dlist<-list(fitnessMeasure = 'QBIC', minKnots_1d=c(2,2), maxKnots_1d = c(5, 5), 
+                  startKnots_1d = c(2,2), degree=c(2,2), maxIterations = 10, gaps=c(1,1))
+
+# run SALSA
+salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist, 
+               factorlist=c('floodebb', 'impact'), 
+               ns.predict.data.re, splineParams=NULL, datain=ns.data.re, removal=TRUE)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{runSALSA2D}{Running SALSA for a spatial smooth with a CReSS basis}{runSALSA2D}
+%
+\begin{Description}\relax
+This function fits a spatially adaptive two dimensional smooth of spatial coordinates with knot number and location selected by SALSA.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL, chooserad = F,
+  panels = NULL, suppress.printout = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] A model with no spatial smooth
+
+\item[\code{salsa2dlist}] Vector of objects required for \code{runSALSA2D}: \code{fitnessMeasure}, \code{knotgrid}, \code{startKnots}, \code{minKnots}, codemaxKnots, \code{r\_seq}, \code{gap}, \code{interactionTerm}.
+
+\item[\code{d2k}] (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations specified in \code{knotgrid}
+
+\item[\code{k2k}] (k x k) Matrix of distances between all valid knot locations specified in \code{knotgrid}
+
+\item[\code{splineParams}] (default \code{=NULL}) List object containng output from runSALSA (e.g. knot locations for continuous covariates)
+
+\item[\code{chooserad}] logical flag.  If FALSE (default) then the range parameter of the basis is chosen after the knot location and number. If TRUE, the range is assessed at every iteration of a knot move/add/drop.
+
+\item[\code{panels}] Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
+
+\item[\code{suppress.printout}] (Default: \code{FALSE}. Logical stating whether to show the analysis printout.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+There must be a column called \code{response} in the data, which is the response variable used in the initial model to be fitted.
+
+The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} function.
+
+\code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC\_c, BIC, QIC\_b.
+
+\code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example. May be made using \code{\LinkA{getKnotgrid}{getKnotgrid}}.
+
+\code{knotdim}. The dimensions of the knot grid as a vector. (x, y).  If \code{knotgrid} is made using \code{\LinkA{getKnotgrid}{getKnotgrid}} then the default dimensions are c(100, 100).
+
+\code{startknots}. Starting number of knots (initialised as spaced filled locations).
+
+\code{minKnots}. Minimum number of knots to be tried.
+
+\code{maxKnots}. Maximum number of knots to be tried.
+
+\code{r\_seq}. Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot. Sequence made using \code{\LinkA{getRadiiChoices}{getRadiiChoices}}.
+
+\code{gap}. The minimum gap between knots (in unit of measurement of coordinates).
+\code{interactionTerm}. Specifies which term in \code{baseModel} the spatial smooth will interact with.  If \code{NULL} no interaction term is fitted.
+\end{Details}
+%
+\begin{Value}
+The spline paramater object that is returned as part of the model object now contains a list in the first element (previously reserved for the spatial component).  This list contains the objects required for the SALSA2D fitting process:
+
+\begin{ldescription}
+\item[\code{knotDist}] Matrix of knot to knot distances (k x k).  May be Euclidean or geodesic distances. Must be square and the same dimensions as \code{nrows(na.omit(knotgrid))}.  Created using \code{\LinkA{makeDists}{makeDists}}.
+\item[\code{radii}] Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot.
+\item[\code{dist}]  Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\LinkA{makeDists}{makeDists}}.
+\item[\code{gridresp}] The first column of knotgrid.
+\item[\code{grid}] Index of knotgrid locations.  Should be same length as \code{knotgrid} but with x=integer values from 1 to number of unique x-locations and y= integer values from 1 to number of unique y-locations.
+\item[\code{datacoords}] Coordinates of the data locations
+\item[\code{response}] Vector of response data for the modelling process
+\item[\code{knotgrid}] Grid of legal knot locations.  Must be a regular grid with c(NA, NA) for rows with an illegal knot.
+\item[\code{minKnots}] Minimum number of knots to be tried.
+\item[\code{maxKnots}] Maximum number of knots to be tried.
+\item[\code{gap}] Minimum gap between knots (in unit of measurement of \code{datacoords})
+\item[\code{radiusIndices}] Vector of length startKnots identifying which radii (\code{splineParams[[1]]\$radii}) will be used for each knot location (\code{splineParams[[1]]\$knotPos})
+\item[\code{knotPos}] Index of knot locations. The index identifies which knots (i.e. which rows) from \code{knotgrid} were selected by SALSA
+\item[\code{invInd}] This is a vector of length the number of rows of \code{knotgrid}.  It is used to translate between \code{knotgrid} (used in SALSA) and \code{na.omit(knotgrid)} (used in \code{dist} and \code{LocalRadialFunction}).
+\end{ldescription}
+\end{Value}
+%
+\begin{Author}\relax
+Lindesay Scott-Hayward (University of St Andrews), Cameron Walker (University of Auckland)
+\end{Author}
+%
+\begin{References}\relax
+Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
+
+Scott-Hayward, L.. Novel Methods for species distribution mapping including spatial models in complex regions: Chapter 5 for SALSA2D methods. PhD Thesis, University of St Andrews. 2013
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+# load prediction data
+data(ns.predict.data.re)
+# load knot grid data
+data(knotgrid.ns)
+
+splineParams<-makesplineParams(data=ns.data.re, varlist=c('observationhour'))
+
+#set some input info for SALSA
+ns.data.re$response<- ns.data.re$birds
+
+# make distance matrices for datatoknots and knottoknots
+distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
+
+# choose sequence of radii
+r_seq<-getRadiiChoices(8, distMats$dataDist)
+
+# set initial model without the spatial term
+# (so all other non-spline terms)
+initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)),
+                   family='quasipoisson', data=ns.data.re)
+
+# make parameter set for running salsa2d
+# I have chosen a gap parameter of 1000 (in metres) to speed up the process.
+# Note that this means there cannot be two knots within 1000m of each other.
+
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, knotdim = c(7, 9),
+                  startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1000,
+                  interactionTerm="as.factor(impact)")
+
+salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
+                            k2k=distMats$knotDist, splineParams=splineParams)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{runsTest}{Runs Test for Randomness}{runsTest}
+%
+\begin{Description}\relax
+This function performs the runs test for randomness. Users can choose whether to plot the correlation graph or not, and whether to test against two-sided, negative or positive correlation. NAs from the data are omitted. An empirical distribution may be used for the distribution of the test statistic under the null hypothesis of independence.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+runsTest(y, plot.it = FALSE, alternative = c("two.sided",
+  "positive.correlated", "negative.correlated"), emp.distribution = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{y}] a numeric vector of data values
+
+\item[\code{plot.it}] logical flag.  If 'TRUE' then the graph will be plotted. If 'FALSE', then it is not plotted.
+
+\item[\code{alternative}] a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "negative.correlated" or "positive.correlated"
+
+\item[\code{emp.distribution}] vector containing the empirical distribution of test statistics under the nyll hypothesis. Generated using \code{\LinkA{getEmpDistribution}{getEmpDistribution}}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+On the graph observations which are less than the sample median are represented by letter "A" in red color, and observations which are greater or equal to the sample median are represented by letter "B" in blue color.
+\end{Details}
+%
+\begin{Value}
+A list with the following components.
+
+\code{statistic}	the value of the standardized Runs statistic.
+\code{p.value} the p-value for the test.
+\code{data.name} a character string giving the names of the data.
+\code{alternative} a character string describing the alternative hypothesis.
+\end{Value}
+%
+\begin{References}\relax
+Mendenhall, W (1982), Statistics for Management and Economics, 4th Ed., 801-807, Duxbury Press, Boston.
+
+J.L. Gastwirth; Y.R. Gel, W. L. Hui, V. Lyubchich, W. Miao and K. Noguchi (2015). lawstat: Tools for Biostatistics, Public Policy, and Law. R package version 3.0
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+data(ns.data.re)
+
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+
+runsTest(residuals(model))
+
+## Empirical distribution:
+
+simData<-generateNoise(n=500, response=fitted(model), family='poisson')
+
+empdist<-getEmpDistribution(500, simData, model, data=ns.data.re, plot=FALSE, 
+                            returnDist=TRUE,dots=FALSE)
+runsTest(residuals(model), emp.distribution=empdist)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{summary.gamMRSea}{Summarising model fits from models fitted using the MRSea package.}{summary.gamMRSea}
+%
+\begin{Description}\relax
+Summarising model fits from models fitted using the MRSea package.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+## S3 method for class 'gamMRSea'
+summary(object, dispersion = NULL, varshortnames = NULL,
+  ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{object}] an object of class "gamMRSea", usually, a result of a call from the MRSea package.
+
+\item[\code{dispersion}] the dispersion parameter for the family used. Either a single numerical value or NULL (the default), when it is inferred from object (see 'Details').
+
+\item[\code{varshortnames}] vector stating the short versions of the covariate names if required.
+
+\item[\code{...}] further arguments passed to or from other methods.
+
+\item[\code{x}] an object of class "summary.gamMRSea", usually, a result of a call to summary.gamMRSea.
+
+\item[\code{correlation}] logical; if TRUE, the correlation matrix of the estimated parameters is returned and printed.
+
+\item[\code{digits}] the number of significant digits to use when printing.
+
+\item[\code{symbolic.cor}] logical. If TRUE, print the correlations in a symbolic form (see symnum) rather than as numbers.
+
+\item[\code{signif.stars}] logical. If TRUE, 'significance stars' are printed for each coefficient.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+\code{print.summary.gamMRSea} tries to be smart about formatting the coefficients, standard errors, etc. and additionally gives 'significance stars' if signif.stars is TRUE. The coefficients component of the result gives the estimated coefficients and their estimated standard errors (raw and robust), together with their ratio (from robust s.e.). The third column gives the robust standard errors calculated using the sandwich estimator.  If no correlation is present, the second and third columns are the same as the sandwich estimator is not used when data points are independent. The fourth column is labelled Wald and gives the Wald test statistic, based on the robust standard errors. The fifth column gives the two-tailed p-value corresponding to the Wald test ().
+
+Aliased coefficients are omitted in the returned object but restored by the print method.
+
+Correlations are printed to two decimal places (or symbolically): to see the actual correlations print summary(object)\$correlation directly.
+
+\code{summary.gamMRSea} returns an object of class "summary.gamMRSea", a list with components
+call	the component from object.
+family	the component from object.
+deviance	the component from object.
+contrasts the component from object.
+df.residual	the component from object.
+null.deviance	the component from object.
+df.null	the component from object.
+deviance.resid	the deviance residuals: see residuals.glm.
+coefficients	the matrix of coefficients, standard errors, z-values and p-values. Aliased coefficients are omitted.
+aliased	named logical vector showing if the original coefficients are aliased.
+dispersion	either the supplied argument or the inferred/estimated dispersion if the latter is NULL.
+df	a 3-vector of the rank of the model and the number of residual degrees of freedom, plus number of coefficients (including aliased ones).
+cov.unscaled	the unscaled (dispersion = 1) estimated covariance matrix of the estimated coefficients.
+cov.scaled	ditto, scaled by dispersion.
+correlation	(only if correlation is true.) The estimated correlations of the estimated coefficients.
+symbolic.cor	(only if correlation is true.) The value of the argument symbolic.cor.
+\end{Details}
+%
+\begin{Note}\relax
+Code adapted from \code{summary.glm}
+\end{Note}
+%
+\begin{Author}\relax
+Lindesay Scott-Hayward, Univeristy of St Andrews.
+\end{Author}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+# load data
+data(ns.data.re)
+ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
+ 
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+summary(model)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{thinModels}{function to thin the number of models}{thinModels}
+%
+\begin{Description}\relax
+function to thin the number of models
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+thinModels(models)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Author}\relax
+Cameron Walker, Department of Enginering Science, University of Auckland.
+\end{Author}
+\inputencoding{utf8}
+\HeaderA{timeInfluenceCheck}{Timing check to see how long it will take to run \code{runInfluence}.}{timeInfluenceCheck}
+%
+\begin{Description}\relax
+Timing check to see how long it will take to run \code{runInfluence}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+timeInfluenceCheck(model, id, d2k = NULL, splineParams = NULL)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{model}] Fitted model object (glm, gamMRSea or gam)
+
+\item[\code{id}] blocking structure
+
+\item[\code{d2k}] (\code{default=NULL}). (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations.
+
+\item[\code{splineParams}] (\code{default=NULL}). List object containng output from runSALSA (e.g. knot locations for continuous covariates). See \code{\LinkA{makesplineParams}{makesplineParams}} for more details of this object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Examples}
+\begin{ExampleCode}
+# load data
+data(ns.data.re)
+
+ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$MonthOfYear, 
+                     ns.data.re$DayOfMonth, sep='')
+ns.data.re$blockid<-as.factor(ns.data.re$blockid)
+model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),  
+              family='poisson', data=ns.data.re)
+
+timeInfluenceCheck(model, ns.data.re$blockid)
+
+\end{ExampleCode}
+\end{Examples}
+\inputencoding{utf8}
+\HeaderA{which.bin}{Determining the distance bin}{which.bin}
+%
+\begin{Description}\relax
+For a vector of perpendicular (or radial) distances, this function determines which distance bin it belongs to 
+(given the input of cut points) and adds the beginning and end points of the respective distance bins in new colunns
+in \code{dis.data} called "distbegin" and "distend".
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+which.bin(dis.data, cutpoints)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{dis.data}] A data frame with distance data for which perpendicular (or radial) distances are recorded in the \code{distance} column
+
+\item[\code{cutpoints}] A vector of cut points of the intervals (this function is not set up to deal with left-truncation)
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}\relax
+If a value in \code{dis.data\$distance} matches a cut point in \code{cutpoints} exactly,  the value of \code{dis.data.re\$distance} will be attributed to the bin that is closer to the line/point unless the value of \code{dis.data.re\$distance} is 0. 
+
+E.g. if \code{cutpoints=c(0,1,2,3)}, \code{dis.data\$distance}=2 will be attributed to interval 2 (and not 3).
+\end{Details}
+%
+\begin{Value}
+The \code{dis.data} data frame to which columns "distbegin" and "distend" were added giving the beginning and end cutpoints 
+of the bin that the respective \code{dis.data\$distance} belongs to.
+\end{Value}
+\printindex{}
+\end{document}

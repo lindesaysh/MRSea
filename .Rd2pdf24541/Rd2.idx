@@ -1,0 +1,104 @@
+\indexentry{acffunc@\texttt  {acffunc}|hyperpage}{3}
+\indexentry{AICh@\texttt  {AICh}|hyperpage}{4}
+\indexentry{anova.gamMRSea@\texttt  {anova.gamMRSea}|hyperpage}{4}
+\indexentry{bootstrap.orig.data@\texttt  {bootstrap.orig.data}|hyperpage}{5}
+\indexentry{checkfactorlevelcounts@\texttt  {checkfactorlevelcounts}|hyperpage}{6}
+\indexentry{choose.radii@\texttt  {choose.radii}|hyperpage}{6}
+\indexentry{create.bootcount.data@\texttt  {create.bootcount.data}|hyperpage}{7}
+\indexentry{create.bootstrap.data@\texttt  {create.bootstrap.data}|hyperpage}{8}
+\indexentry{create.count.data@\texttt  {create.count.data}|hyperpage}{9}
+\indexentry{create.NHAT@\texttt  {create.NHAT}|hyperpage}{10}
+\indexentry{dis.data.de@\texttt  {dis.data.de}|hyperpage}{10}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!dis.data.de@\texttt  {dis.data.de}|hyperpage}{10}
+\indexentry{dis.data.no@\texttt  {dis.data.no}|hyperpage}{11}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!dis.data.no@\texttt  {dis.data.no}|hyperpage}{11}
+\indexentry{dis.data.re@\texttt  {dis.data.re}|hyperpage}{12}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!dis.data.re@\texttt  {dis.data.re}|hyperpage}{12}
+\indexentry{do.bootstrap.cress@\texttt  {do.bootstrap.cress}|hyperpage}{12}
+\indexentry{do.bootstrap.cress.robust@\texttt  {do.bootstrap.cress.robust}|hyperpage}{15}
+\indexentry{do.bootstrap.gam@\texttt  {do.bootstrap.gam}|hyperpage}{17}
+\indexentry{drop.step\_2d@\texttt  {drop.step\_2d}|hyperpage}{19}
+\indexentry{exchange.step\_2d@\texttt  {exchange.step\_2d}|hyperpage}{19}
+\indexentry{fit.thinPlate\_2d@\texttt  {fit.thinPlate\_2d}|hyperpage}{19}
+\indexentry{gamMRSea@\texttt  {gamMRSea}|hyperpage}{20}
+\indexentry{glm@\texttt  {glm}|hyperindexformat{\textit}}{20}
+\indexentry{generateNoise@\texttt  {generateNoise}|hyperpage}{20}
+\indexentry{rbinom@\texttt  {rbinom}|hyperindexformat{\textit}}{20}
+\indexentry{rzibinom@\texttt  {rzibinom}|hyperindexformat{\textit}}{20}
+\indexentry{getCVids@\texttt  {getCVids}|hyperpage}{21}
+\indexentry{getCV\_CReSS@\texttt  {getCV\_CReSS}|hyperindexformat{\textit}}{21}
+\indexentry{getCV\_CReSS@\texttt  {getCV\_CReSS}|hyperpage}{22}
+\indexentry{makesplineParams@\texttt  {makesplineParams}|hyperindexformat{\textit}}{22}
+\indexentry{getCVids@\texttt  {getCVids}|hyperindexformat{\textit}}{22}
+\indexentry{getDifferences@\texttt  {getDifferences}|hyperpage}{23}
+\indexentry{getDispersion@\texttt  {getDispersion}|hyperpage}{24}
+\indexentry{getEmpDistribution@\texttt  {getEmpDistribution}|hyperpage}{24}
+\indexentry{getKnotgrid@\texttt  {getKnotgrid}|hyperpage}{25}
+\indexentry{getPlotdimensions@\texttt  {getPlotdimensions}|hyperpage}{26}
+\indexentry{getPvalues@\texttt  {getPvalues}|hyperpage}{27}
+\indexentry{getRadiiChoices@\texttt  {getRadiiChoices}|hyperpage}{28}
+\indexentry{makeDists@\texttt  {makeDists}|hyperindexformat{\textit}}{28}
+\indexentry{improve.step\_2d@\texttt  {improve.step\_2d}|hyperpage}{29}
+\indexentry{knotgrid.ns@\texttt  {knotgrid.ns}|hyperpage}{29}
+\indexentry{knotgrid.off@\texttt  {knotgrid.off}|hyperpage}{29}
+\indexentry{LocalRadialFunction@\texttt  {LocalRadialFunction}|hyperpage}{30}
+\indexentry{runSALSA2D@\texttt  {runSALSA2D}|hyperindexformat{\textit}}{30}
+\indexentry{runSALSA2D@\texttt  {runSALSA2D}|hyperindexformat{\textit}}{30}
+\indexentry{make.gamMRSea@\texttt  {make.gamMRSea}|hyperpage}{31}
+\indexentry{makeBootCIs@\texttt  {makeBootCIs}|hyperpage}{31}
+\indexentry{makeDists@\texttt  {makeDists}|hyperpage}{32}
+\indexentry{makesplineParams@\texttt  {makesplineParams}|hyperpage}{33}
+\indexentry{runSALSA2D@\texttt  {runSALSA2D}|hyperindexformat{\textit}}{33}
+\indexentry{MRSea@\texttt  {MRSea}|hyperpage}{34}
+\indexentry{MRSea-package@\texttt  {MRSea-package} \textit  {(\texttt  {MRSea})}|hyperpage}{34}
+\indexentry{ns.data.de@\texttt  {ns.data.de}|hyperpage}{34}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!ns.data.de@\texttt  {ns.data.de}|hyperpage}{34}
+\indexentry{ns.data.no@\texttt  {ns.data.no}|hyperpage}{35}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!ns.data.no@\texttt  {ns.data.no}|hyperpage}{35}
+\indexentry{ns.data.re@\texttt  {ns.data.re}|hyperpage}{35}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!ns.data.re@\texttt  {ns.data.re}|hyperpage}{35}
+\indexentry{ns.predict.data.de@\texttt  {ns.predict.data.de}|hyperpage}{36}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!ns.predict.data.de@\texttt  {ns.predict.data.de}|hyperpage}{36}
+\indexentry{ns.predict.data.no@\texttt  {ns.predict.data.no}|hyperpage}{37}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!ns.predict.data.no@\texttt  {ns.predict.data.no}|hyperpage}{37}
+\indexentry{ns.predict.data.re@\texttt  {ns.predict.data.re}|hyperpage}{37}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!ns.predict.data.re@\texttt  {ns.predict.data.re}|hyperpage}{37}
+\indexentry{plotacf@\texttt  {plotacf}|hyperpage}{38}
+\indexentry{plotCumRes@\texttt  {plotCumRes}|hyperpage}{38}
+\indexentry{LocalRadialFunction@\texttt  {LocalRadialFunction}|hyperindexformat{\textit}}{39}
+\indexentry{makesplineParams@\texttt  {makesplineParams}|hyperindexformat{\textit}}{39}
+\indexentry{plotRunsProfile@\texttt  {plotRunsProfile}|hyperpage}{39}
+\indexentry{runs.test@\texttt  {runs.test}|hyperindexformat{\textit}}{40}
+\indexentry{predict.cress@\texttt  {predict.cress}|hyperpage}{40}
+\indexentry{predict.data.de@\texttt  {predict.data.de}|hyperpage}{42}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!predict.data.de@\texttt  {predict.data.de}|hyperpage}{42}
+\indexentry{predict.data.no@\texttt  {predict.data.no}|hyperpage}{43}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!predict.data.no@\texttt  {predict.data.no}|hyperpage}{43}
+\indexentry{predict.data.re@\texttt  {predict.data.re}|hyperpage}{43}
+\indexentry{$*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}!predict.data.re@\texttt  {predict.data.re}|hyperpage}{43}
+\indexentry{predict.gamMRSea@\texttt  {predict.gamMRSea}|hyperpage}{44}
+\indexentry{QICb@\texttt  {QICb}|hyperpage}{45}
+\indexentry{qzibinom@\texttt  {qzibinom}|hyperpage}{45}
+\indexentry{return.reg.spline.fit@\texttt  {return.reg.spline.fit}|hyperpage}{46}
+\indexentry{return.reg.spline.fit.2d@\texttt  {return.reg.spline.fit.2d}|hyperpage}{47}
+\indexentry{runACF@\texttt  {runACF}|hyperpage}{47}
+\indexentry{runDiagnostics@\texttt  {runDiagnostics}|hyperpage}{48}
+\indexentry{runInfluence@\texttt  {runInfluence}|hyperpage}{49}
+\indexentry{makesplineParams@\texttt  {makesplineParams}|hyperindexformat{\textit}}{49}
+\indexentry{timeInfluenceCheck@\texttt  {timeInfluenceCheck}|hyperindexformat{\textit}}{49}
+\indexentry{runPartialPlots@\texttt  {runPartialPlots}|hyperpage}{50}
+\indexentry{runSALSA1D@\texttt  {runSALSA1D}|hyperpage}{51}
+\indexentry{makesplineParams@\texttt  {makesplineParams}|hyperindexformat{\textit}}{52}
+\indexentry{runSALSA2D@\texttt  {runSALSA2D}|hyperpage}{54}
+\indexentry{getKnotgrid@\texttt  {getKnotgrid}|hyperindexformat{\textit}}{54}
+\indexentry{getKnotgrid@\texttt  {getKnotgrid}|hyperindexformat{\textit}}{55}
+\indexentry{getRadiiChoices@\texttt  {getRadiiChoices}|hyperindexformat{\textit}}{55}
+\indexentry{makeDists@\texttt  {makeDists}|hyperindexformat{\textit}}{55}
+\indexentry{makeDists@\texttt  {makeDists}|hyperindexformat{\textit}}{55}
+\indexentry{runsTest@\texttt  {runsTest}|hyperpage}{56}
+\indexentry{getEmpDistribution@\texttt  {getEmpDistribution}|hyperindexformat{\textit}}{57}
+\indexentry{summary.gamMRSea@\texttt  {summary.gamMRSea}|hyperpage}{58}
+\indexentry{thinModels@\texttt  {thinModels}|hyperpage}{59}
+\indexentry{timeInfluenceCheck@\texttt  {timeInfluenceCheck}|hyperpage}{60}
+\indexentry{makesplineParams@\texttt  {makesplineParams}|hyperindexformat{\textit}}{60}
+\indexentry{which.bin@\texttt  {which.bin}|hyperpage}{60}

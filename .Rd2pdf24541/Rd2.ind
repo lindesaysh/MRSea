@@ -1,0 +1,158 @@
+\begin{theindex}
+
+  \item $*$Topic{\relax \fontsize  {12}{14}\selectfont  \ \textbf  {datasets}}
+    \subitem \texttt  {dis.data.de}, \hyperpage{10}
+    \subitem \texttt  {dis.data.no}, \hyperpage{11}
+    \subitem \texttt  {dis.data.re}, \hyperpage{12}
+    \subitem \texttt  {ns.data.de}, \hyperpage{34}
+    \subitem \texttt  {ns.data.no}, \hyperpage{35}
+    \subitem \texttt  {ns.data.re}, \hyperpage{35}
+    \subitem \texttt  {ns.predict.data.de}, \hyperpage{36}
+    \subitem \texttt  {ns.predict.data.no}, \hyperpage{37}
+    \subitem \texttt  {ns.predict.data.re}, \hyperpage{37}
+    \subitem \texttt  {predict.data.de}, \hyperpage{42}
+    \subitem \texttt  {predict.data.no}, \hyperpage{43}
+    \subitem \texttt  {predict.data.re}, \hyperpage{43}
+
+  \indexspace
+
+  \item \texttt  {acffunc}, \hyperpage{3}
+  \item \texttt  {AICh}, \hyperpage{4}
+  \item \texttt  {anova.gamMRSea}, \hyperpage{4}
+
+  \indexspace
+
+  \item \texttt  {bootstrap.orig.data}, \hyperpage{5}
+
+  \indexspace
+
+  \item \texttt  {checkfactorlevelcounts}, \hyperpage{6}
+  \item \texttt  {choose.radii}, \hyperpage{6}
+  \item \texttt  {create.bootcount.data}, \hyperpage{7}
+  \item \texttt  {create.bootstrap.data}, \hyperpage{8}
+  \item \texttt  {create.count.data}, \hyperpage{9}
+  \item \texttt  {create.NHAT}, \hyperpage{10}
+
+  \indexspace
+
+  \item \texttt  {dis.data.de}, \hyperpage{10}
+  \item \texttt  {dis.data.no}, \hyperpage{11}
+  \item \texttt  {dis.data.re}, \hyperpage{12}
+  \item \texttt  {do.bootstrap.cress}, \hyperpage{12}
+  \item \texttt  {do.bootstrap.cress.robust}, \hyperpage{15}
+  \item \texttt  {do.bootstrap.gam}, \hyperpage{17}
+  \item \texttt  {drop.step\_2d}, \hyperpage{19}
+
+  \indexspace
+
+  \item \texttt  {exchange.step\_2d}, \hyperpage{19}
+
+  \indexspace
+
+  \item \texttt  {fit.thinPlate\_2d}, \hyperpage{19}
+
+  \indexspace
+
+  \item \texttt  {gamMRSea}, \hyperpage{20}
+  \item \texttt  {generateNoise}, \hyperpage{20}
+  \item \texttt  {getCV\_CReSS}, \hyperindexformat{\textit}{21}, 
+		\hyperpage{22}
+  \item \texttt  {getCVids}, \hyperpage{21}, 
+		\hyperindexformat{\textit}{22}
+  \item \texttt  {getDifferences}, \hyperpage{23}
+  \item \texttt  {getDispersion}, \hyperpage{24}
+  \item \texttt  {getEmpDistribution}, \hyperpage{24}, 
+		\hyperindexformat{\textit}{57}
+  \item \texttt  {getKnotgrid}, \hyperpage{25}, 
+		\hyperindexformat{\textit}{54, 55}
+  \item \texttt  {getPlotdimensions}, \hyperpage{26}
+  \item \texttt  {getPvalues}, \hyperpage{27}
+  \item \texttt  {getRadiiChoices}, \hyperpage{28}, 
+		\hyperindexformat{\textit}{55}
+  \item \texttt  {glm}, \hyperindexformat{\textit}{20}
+
+  \indexspace
+
+  \item \texttt  {improve.step\_2d}, \hyperpage{29}
+
+  \indexspace
+
+  \item \texttt  {knotgrid.ns}, \hyperpage{29}
+  \item \texttt  {knotgrid.off}, \hyperpage{29}
+
+  \indexspace
+
+  \item \texttt  {LocalRadialFunction}, \hyperpage{30}, 
+		\hyperindexformat{\textit}{39}
+
+  \indexspace
+
+  \item \texttt  {make.gamMRSea}, \hyperpage{31}
+  \item \texttt  {makeBootCIs}, \hyperpage{31}
+  \item \texttt  {makeDists}, \hyperindexformat{\textit}{28}, 
+		\hyperpage{32}, \hyperindexformat{\textit}{55}
+  \item \texttt  {makesplineParams}, \hyperindexformat{\textit}{22}, 
+		\hyperpage{33}, \hyperindexformat{\textit}{39}, 
+		\hyperindexformat{\textit}{49}, 
+		\hyperindexformat{\textit}{52}, 
+		\hyperindexformat{\textit}{60}
+  \item \texttt  {MRSea}, \hyperpage{34}
+  \item \texttt  {MRSea-package} \textit  {(\texttt  {MRSea})}, 
+		\hyperpage{34}
+
+  \indexspace
+
+  \item \texttt  {ns.data.de}, \hyperpage{34}
+  \item \texttt  {ns.data.no}, \hyperpage{35}
+  \item \texttt  {ns.data.re}, \hyperpage{35}
+  \item \texttt  {ns.predict.data.de}, \hyperpage{36}
+  \item \texttt  {ns.predict.data.no}, \hyperpage{37}
+  \item \texttt  {ns.predict.data.re}, \hyperpage{37}
+
+  \indexspace
+
+  \item \texttt  {plotacf}, \hyperpage{38}
+  \item \texttt  {plotCumRes}, \hyperpage{38}
+  \item \texttt  {plotRunsProfile}, \hyperpage{39}
+  \item \texttt  {predict.cress}, \hyperpage{40}
+  \item \texttt  {predict.data.de}, \hyperpage{42}
+  \item \texttt  {predict.data.no}, \hyperpage{43}
+  \item \texttt  {predict.data.re}, \hyperpage{43}
+  \item \texttt  {predict.gamMRSea}, \hyperpage{44}
+
+  \indexspace
+
+  \item \texttt  {QICb}, \hyperpage{45}
+  \item \texttt  {qzibinom}, \hyperpage{45}
+
+  \indexspace
+
+  \item \texttt  {rbinom}, \hyperindexformat{\textit}{20}
+  \item \texttt  {return.reg.spline.fit}, \hyperpage{46}
+  \item \texttt  {return.reg.spline.fit.2d}, \hyperpage{47}
+  \item \texttt  {runACF}, \hyperpage{47}
+  \item \texttt  {runDiagnostics}, \hyperpage{48}
+  \item \texttt  {runInfluence}, \hyperpage{49}
+  \item \texttt  {runPartialPlots}, \hyperpage{50}
+  \item \texttt  {runs.test}, \hyperindexformat{\textit}{40}
+  \item \texttt  {runSALSA1D}, \hyperpage{51}
+  \item \texttt  {runSALSA2D}, \hyperindexformat{\textit}{30}, 
+		\hyperindexformat{\textit}{33}, \hyperpage{54}
+  \item \texttt  {runsTest}, \hyperpage{56}
+  \item \texttt  {rzibinom}, \hyperindexformat{\textit}{20}
+
+  \indexspace
+
+  \item \texttt  {summary.gamMRSea}, \hyperpage{58}
+
+  \indexspace
+
+  \item \texttt  {thinModels}, \hyperpage{59}
+  \item \texttt  {timeInfluenceCheck}, \hyperindexformat{\textit}{49}, 
+		\hyperpage{60}
+
+  \indexspace
+
+  \item \texttt  {which.bin}, \hyperpage{60}
+
+\end{theindex}
