@@ -63,64 +63,7 @@ summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
 
   vbeta<-sandcov(object, panelid)
 
-  bob <- attr(object$coefficients, "names")
-
-  factorlist<-names(which(attr(terms(object), 'dataClasses')=='factor'))
-
-  if(is.null(varshortnames)==FALSE){
-    bob2<-attr(terms(object), 'term.labels')
-    v<-NULL
-    for(i in 1:length(varshortnames)){
-      v<-c(v, ifelse(length(grep(varshortnames[i], bob2))>0, 1, 0))
-    }
-    varshortnames<-varshortnames[which(v==1)]
-  }
-
-  if(length(varshortnames)>0){
-    for (i in 1:length(varshortnames)) {
-      id <- grep(varshortnames[i], bob)
-      if (length(id) > 1) {
-        for (j in 1:length(id)) {
-          bob[id][j] <- paste("s(", varshortnames[i], ")", j, sep = "")
-        }
-      }
-      else {bob[id] <- paste(varshortnames[i], sep = "")}
-    }
-  }
-
-  localid <- grep("LocalRadial", bob)
-  if (length(localid > 1)) {
-    intid <- grep(":", bob)
-    smoothid <- localid[which(is.na(match(localid, intid)))]
-    for (k in 1:length(smoothid)) {
-      bob[smoothid][k] <- paste("s(x.pos, y.pos)b", k,
-                                sep = "")
-    }
-
-    int<-attr(terms(formula(object)), 'term.labels')[grep(":", attr(terms(formula(object)), 'term.labels'))]
-    a<-which(!is.na(pmatch(names(factorlist), int)))
-
-      # for (i in 1:length(factorlist)) {
-      #   a <- grep(factorlist[i], int)
-      #   if (length(a) > 0) {
-      #     a <- i
-      #     break
-      #   }
-      # }
-
-      counter <- 1
-      for (k in 1:length(smoothid)) {
-        for (i in 1:(length(intid)/length(smoothid))) {
-          textin <- paste(factorlist[a], i, ":s(x.pos, y.pos)b",
-                          k, sep = "")
-          bob[intid[counter]] <- textin
-          counter <- counter + 1
-        }
-      }
-    }
-
-    attr(object$coefficients, "names") <- bob
-  
+  object<-summaryshortnames(object, varshortnames)
 
   est.disp <- FALSE
   df.r <- object$df.residual
