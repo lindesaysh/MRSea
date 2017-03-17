@@ -41,7 +41,9 @@ getCV_CReSS<-function(datain, baseModel, splineParams=NULL, vector=FALSE){
     datahere<-datain
   }
   
-  # splineParams<-baseModel$splineParams
+  if(is.null(splineParams)){
+    splineParams<-baseModel$splineParams  
+  }
   # 
    d2k<-splineParams[[1]]$dist
   # radiusIndices <-splineParams[[1]]$radiusIndices
