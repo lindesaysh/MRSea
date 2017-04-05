@@ -33,3 +33,4 @@ model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact
 anova(model)        
              
 }
+

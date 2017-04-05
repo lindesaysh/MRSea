@@ -45,3 +45,4 @@ dis.data.re$survey.id<-paste(dis.data.re$season,dis.data.re$impact,sep="")
 bootstrap.data.str<-create.bootstrap.data(dis.data.re, stratum = "survey.id") 
 
 }
+

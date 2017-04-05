@@ -1,13 +1,13 @@
-
 Package: MRSea
 Title: Marine Renewables Strategic environmental assessment
 Description: Examines animal survey data for signs of changes in animal
     abundance and distribution following marine renewables development. The
-    functions of this package can be used to analyse segmented line transect
-    data and nearshore vantage point data. The package includes functions for fitting 
-    spatially adaptive one and 2D smoothers using SALSA and CReSS.  Non-parametric bootstrapping 
-    is available to estimate uncertainty. Several model assessment tools are also available.
-    Recent updates include the direct estimation of robust standard errors, given a panel structure.
+    functions of this package can be used to analyse segmented line transect data
+    and nearshore vantage point data. The package includes functions for fitting
+    spatially adaptive one and 2D smoothers using SALSA and CReSS. Non-parametric
+    bootstrapping is available to estimate uncertainty. Several model assessment
+    tools are also available. Recent updates include the direct estimation of robust
+    standard errors, given a panel structure.
 Version: 0.99
 Date: 2017-03-10
 Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique
@@ -32,7 +32,8 @@ Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
     cetacean distributions in offshore renewables development areas".
     University of St. Andrews
 URL: http://creem2.st-and.ac.uk/software.aspx
-RoxygenNote: 6.0.1
-Suggests: knitr,
+RoxygenNote: 5.0.1
+Suggests:
+    knitr,
     rmarkdown
 VignetteBuilder: knitr

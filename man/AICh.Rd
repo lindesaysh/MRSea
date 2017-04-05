@@ -15,3 +15,4 @@ Function to calculate AICh (Hardin and Hilbe 2013)
 \author{
 Lindesay Scott-Hayward, University of St Andrews
 }
+

@@ -12,3 +12,4 @@ plotacf(acfmat)
 \description{
 run functions to create acf matrix and plot the results
 }
+

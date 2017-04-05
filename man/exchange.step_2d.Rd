@@ -15,3 +15,4 @@ Function for exchanging knot locations and re-fitting model to find best one
 \author{
 Cameron Walker, Department of Enginering Science, University of Auckland.
 }
+

@@ -15,3 +15,4 @@ Function that tries dropping knots to find an improvement in fit
 \author{
 Cameron Walker, Department of Enginering Science, University of Auckland.
 }
+

@@ -10,3 +10,4 @@ choose.radii(currentFit, indices, radiusIndices, radii, out.lm, dists, aR,
 \description{
 Function to choose the radii for the CReSS local radial basis function
 }
+

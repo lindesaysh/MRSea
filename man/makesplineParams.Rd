@@ -44,3 +44,4 @@ splineParams<- makesplineParams(ns.data.re, varlist=c('observationhour', 'DayOfM
                 predictionData=ns.predict.data.re)
 
 }
+

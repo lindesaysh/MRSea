@@ -80,3 +80,4 @@ dists<-makeDists(cbind(predict.data.re$x.pos, predict.data.re$y.pos), na.omit(kn
 preds<-predict.cress(predict.data.re, splineParams, dists, geeModel)
 
 }
+

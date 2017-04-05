@@ -42,3 +42,4 @@ runACF(ns.data.re$blockid, model, suppress.printout=TRUE)
 \author{
 LAS Scott-Hayward, University of St Andrews
 }
+

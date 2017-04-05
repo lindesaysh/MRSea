@@ -34,7 +34,7 @@
 #' }
 #' @export
 #' 
-runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE){
+runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE, dots=FALSE){
   
   attributes(model$formula)$.Environment<-environment()
   response<-model$y
@@ -47,26 +47,33 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE){
     dat<-model$model 
   }
   
-  if(class(model)[1]=='gamMRSea'){
+  if(class(model)[1]=='gamMRSea' | class(model)[1]=='glm'){
     dat<-model$data 
   }
   
+  
   print("Calculating COVRATIO and PRESS Statistics")
   
-  detach("package:mgcv")
-  require(mgcv)
-  
+  # detach("package:mgcv")
+  # require(mgcv)
+  # 
   inflStore<- matrix(0,nrow=length(unique(id)), ncol=(length(coef(model))+2))
   counter<-1
   for(i in unique(id)){
-    print(counter)
+    if(dots==TRUE){if((counter/100)%%1 == 0){cat(counter, '\n')}else{cat('.')}}
     rowsToDel<- which(id==i)
     pos<- which(i==unique(id))
     newData<- dat[-rowsToDel,]
     if(is.null(d2k)==F){
       dists<- d2k[-rowsToDel,]
     }
-    newMod<-update(model, .~. ,data=newData)
+    if(class(model)[1]=='gamMRSea'){
+      panels<-model$panels
+      if(is.null(panels)) panels<-1:nrow(dat)
+      newMod<-update(model, .~. ,data=newData, panels=panels[-rowsToDel])
+    }else{
+      newMod<-update(model, .~. ,data=newData)
+    }
     inflStore[pos,(1:length(coef(model)))]<-newMod$coefficients
     nb<- as.matrix(model.matrix(model)[c(1),])
     nc<- as.matrix(inflStore[pos,1:length(coef(model))])
@@ -76,7 +83,12 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE){
       presPred <- nb%*%nc  
     }
     inflStore[pos,ncol(inflStore)]<-sum((response[rowsToDel]-family(model)$linkinv(presPred))**2)
-    inflStore[pos,(ncol(inflStore)-1)]<-det(summary(newMod)$cov.scaled)/det(summary(model)$cov.scaled)
+    if(class(model)[1]=='gamMRSea'){
+      inflStore[pos,(ncol(inflStore)-1)]<-det(summary(newMod)$cov.robust)/det(summary(model)$cov.robust)
+    }else{
+      inflStore[pos,(ncol(inflStore)-1)]<-det(summary(newMod)$cov.scaled)/det(summary(model)$cov.scaled)
+    }
+    
     counter<-counter+1
   }
   
@@ -119,4 +131,25 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE){
   
   return(list(influenceData=influenceData, influencePoints=influencePoints))
   
+}
+
+
+textxy<-function (X, Y, labs, m = c(0, 0), cex = 0.5, offset = 0.8, ...) 
+{
+  posXposY <- ((X >= m[1]) & ((Y >= m[2])))
+  posXnegY <- ((X >= m[1]) & ((Y < m[2])))
+  negXposY <- ((X < m[1]) & ((Y >= m[2])))
+  negXnegY <- ((X < m[1]) & ((Y < m[2])))
+  if (sum(posXposY) > 0) 
+    text(X[posXposY], Y[posXposY], labs[posXposY], adj = c(0.5 - 
+                                                             offset, 0.5 - offset), cex = cex, ...)
+  if (sum(posXnegY) > 0) 
+    text(X[posXnegY], Y[posXnegY], labs[posXnegY], adj = c(0.5 - 
+                                                             offset, 0.5 + offset), cex = cex, ...)
+  if (sum(negXposY) > 0) 
+    text(X[negXposY], Y[negXposY], labs[negXposY], adj = c(0.5 + 
+                                                             offset, 0.5 - offset), cex = cex, ...)
+  if (sum(negXnegY) > 0) 
+    text(X[negXnegY], Y[negXnegY], labs[negXnegY], adj = c(0.5 + 
+                                                             offset, 0.5 + offset), cex = cex, ...)
 }

@@ -1,4 +1,10 @@
-
+#' Shortening names in summary object
+#' 
+#' @param object a model object
+#' @param varshortnames a list of short variable names
+#' 
+#' @export
+#' 
 summaryshortnames<-function(object, varshortnames){
   
 
@@ -23,11 +29,13 @@ idmaineffect <- (1:length(bob))[-id_int]
 
 # remove factors from shortnames
 finvid<-NULL
-for(i in 1:length(factorlist)){
-  finvid<-c(finvid, grep(factorlist[i], varshortnames))
-}
-if(length(finvid)>0 & length(varshortnames)>0){
-  varshortnames<-varshortnames[-finvid]
+if(length(factorlist)>0){
+  for(i in 1:length(factorlist)){
+    finvid<-c(finvid, grep(factorlist[i], varshortnames))
+  }
+  if(length(finvid)>0 & length(varshortnames)>0){
+    varshortnames<-varshortnames[-finvid]
+  }
 }
 
 # remove linear terms from shortnames

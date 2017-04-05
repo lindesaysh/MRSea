@@ -24,3 +24,4 @@ Function to allow a model of class \code{gamMRSea} to be updated to include a pa
 \author{
 LAS Scott-Hayward, University of St Andrews
 }
+

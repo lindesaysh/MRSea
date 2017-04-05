@@ -1,4 +1,4 @@
-update.gamMRSea<-function (object, formula., ..., evaluate = TRUE)
+update.gamMRSea<-function (object, formula., ..., evaluate = TRUE, panels=NULL)
 {
   #rm('splineParams', envir = globalenv())
   splineParams<<-object$splineParams
@@ -23,7 +23,11 @@ update.gamMRSea<-function (object, formula., ..., evaluate = TRUE)
     #  newmodel<-eval(call, environment())
     #}
     rm('splineParams', envir = globalenv())
-    newmodel$panels<-object$panels
+    if(is.null(panels)){
+      newmodel$panels<-object$panels  
+    }else{
+      newmodel$panels<-panels
+    }
     newmodel$varshortnames<-object$varshortnames
     newmodel$splineParams<-object$splineParams
     class(newmodel)<-class(object)

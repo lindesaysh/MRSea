@@ -32,3 +32,4 @@ result<-ddf(dsmodel=~mcds(key="hn", formula=~1), data=dis.data.re,method="ds",
 dis.data<-create.NHAT(dis.data.re,result)
 
 }
+

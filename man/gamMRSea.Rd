@@ -15,3 +15,4 @@ See \code{\link{glm}} for details.  A \code{splineParams} object may be specifie
 \author{
 LAS Scott-Hayward, University of St Andrews
 }
+

@@ -36,3 +36,4 @@ simData<-generateNoise(n=500, response=fitted(model), family='poisson')
 \author{
 LAS Scott-Hayward, University of St Andrews
 }
+

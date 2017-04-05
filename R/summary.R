@@ -96,6 +96,7 @@ summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
     
     if(max(table(panelid))==1){
       s.err.sand <-sqrt(var.cf)
+      vbeta<-covmat
     }else{
       s.err.sand <- sqrt(diag(vbeta))  
     }
@@ -220,7 +221,7 @@ print.summary.gamMRSea<-function (x, digits = max(3L, getOption("digits") - 3L),
     maxpanels <- paste(max(table(x$panelid)), ' (independence assumed)', sep='')
   }else{maxpanels<-max(table(x$panelid))}
   
-  cat("\n\nMax Panel Size = ", maxpanels,"; Number of panels = ", max(x$panelid),"\nNumber of Fisher Scoring iterations: ", x$iter, "\n", sep = "")
+  cat("\n\nMax Panel Size = ", maxpanels,"; Number of panels = ", length(unique(x$panelid)),"\nNumber of Fisher Scoring iterations: ", x$iter, "\n", sep = "")
 
 
   correl <- x$correlation
