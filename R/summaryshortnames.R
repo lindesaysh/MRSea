@@ -25,7 +25,12 @@ if(is.null(varshortnames)==FALSE){
 id_int <- grep(':', bob)
 
 # main effect id
-idmaineffect <- (1:length(bob))[-id_int]
+if(length(id_int)==0){
+  idmaineffect<-1:length(bob)
+}else{
+  idmaineffect <- (1:length(bob))[-id_int]  
+}
+
 
 # remove factors from shortnames
 finvid<-NULL
