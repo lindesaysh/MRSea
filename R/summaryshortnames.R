@@ -95,7 +95,10 @@ if (length(localid > 1)) {
   counter <- 1
   for (k in 1:(length(localint)/length(smoothid))) {
     for (i in 1:length(smoothid)) {
-    textin <- paste(strsplit(bob[localint[counter]], ':')[[1]][2], ":s(x.pos, y.pos)b", i, sep = "")
+      if(i==1){
+        nonlocalid<-c(2,1)[grep(pattern = 'LocalRadialFunction', strsplit(bob[localint[counter]], ":")[[1]])]
+      }
+    textin <- paste(strsplit(bob[localint[counter]], ':')[[1]][nonlocalid], ":s(x.pos, y.pos)b", i, sep = "")
     #print(textin)
        bob[localint[counter]] <- textin
        counter <- counter + 1
