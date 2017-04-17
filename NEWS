@@ -1,0 +1,14 @@
+MRSea 1.0.0beta
+-----------
+
+Notes
+
+  * Major overhaul of package to include a new model class `gamMRSea`.
+  * Update to summary function to allow robust standard errors to be presented and used for hypothesis testing
+  * knotgrid for 2D smooth no longer required to be a regular grid
+  * calculation of basis radii absorbed into `runSALSA2D` function.
+
+Bug Fixes
+
+  * Fixed bug in summary and anova functions; term names now correct.
+  * `tol` option in runSALSA2D re-instated
