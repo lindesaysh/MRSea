@@ -7,7 +7,7 @@
 #'
 
 ################################################################################################################
-"exchange.step_2d" <- function(gap,knotDist,radii,invInd,dists,explData,response,explanatory,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
+"exchange.step_2d" <- function(gap,knotDist,radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
 
   #attributes(baseModel$formula)$.Environment<-environment()
 
@@ -23,14 +23,14 @@
     improve <- 0
     index<-max.col(t(abs(resid(out.lm,type="pearson"))))
     ####fix for grid approach#####
-    new<-scale(explanatory[point,],center=c(explData[index,1],explData[index,2]))
+    new<-scale(knotgrid[point,],center=c(explData[index,1],explData[index,2]))
     ####Pick nearest grid point that is also far enough away from another knot
-    legPos<-position[which(apply(knotDist[invInd[point],invInd[aR]],1,min)>=gap)]
+    legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
     if (length(legPos)>0) {
       index<-which.min(abs(new[,1])+abs(new[,2]))
-      if (!(any(knotDist[invInd[point[index]],invInd[aR]]<gap))) {
+      if (!(any(knotDist[point[index],aR]<gap))) {
         output <- move.knot_2D(radii,invInd,dists,explData,index,fitnessMeasure,BIC,aR,point,
-                               response,explanatory,out.lm,improve,improveEx, track,
+                               response,knotgrid,out.lm,improve,improveEx, track,
                                maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
         improve <- output$improve
         improveEx <- output$improveEx

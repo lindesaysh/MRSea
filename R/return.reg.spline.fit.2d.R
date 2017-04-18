@@ -36,7 +36,7 @@
   #                  finarSq       - list of adjusted r-squareds for each number of knots
   #                  finBIC        - list of BICs for each number of knots
 
-  # pointers:        knotPoint     - the index of the knot points (i, where explanatory[i] is a knot)
+  # pointers:        knotPoint     - the index of the knot points (i, where knotgrid[i] is a knot)
   #                  point         - the index of the other points
   #                  position      - the index in point of ith data point
   #                                  0 otherwise (position[i] = j,where point[j] = i)
@@ -49,7 +49,7 @@
   #                 gridData       - x and y coordinate of possible knot locations
   #                 explData       - x and y coordinates of observations
   #                 response       - values of observations
-  #                 explanatory    - same as gridData?
+  #                 knotgrid    - same as gridData?
   #                 radii          - possible values of radius
   #                 radiusIndices  - index in radii for each knot radius (e.g. [2,3,1,2,1]
   #                 interactionTerm - allows interaction between space and another term "ns(Year, knots =
@@ -64,11 +64,11 @@
   knotDist <- splineParams[[1]]$knotDist
   radii <- splineParams[[1]]$radii
   dists <- splineParams[[1]]$dist
-  gridResp <- splineParams[[1]]$gridResp
-  grid <- splineParams[[1]]$grid
+  # gridResp <- splineParams[[1]]$gridResp
+  #grid <- splineParams[[1]]$grid
   explData <- splineParams[[1]]$datacoords
   response <- splineParams[[1]]$response
-  explanatory <- splineParams[[1]]$knotgrid
+  knotgrid <- splineParams[[1]]$knotgrid
   minKnots <- splineParams[[1]]$minKnots
   maxKnots <- splineParams[[1]]$maxKnots
   gap <- splineParams[[1]]$gap
@@ -82,13 +82,13 @@
   baseModel<-update(baseModel, data=data)
 
   ###########################triangulation of points############################
-  x<-as.vector(grid[,1])
-  y<-as.vector(grid[,2])
-  #Get dimensions of grid
-  xvals <- max(x)
-  yvals <- max(y)
+  # x<-as.vector(grid[,1])
+  # y<-as.vector(grid[,2])
+  # #Get dimensions of grid
+  # xvals <- max(x)
+  # yvals <- max(y)
   ###########################initialisation######################################
-  output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,gridResp,explData,startKnots,xvals, yvals, explanatory, response, baseModel, radiusIndices, initialise, initialKnots,fitnessMeasure, interactionTerm, data, knot.seed, initDisp)
+  output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,fitnessMeasure, interactionTerm, data, knot.seed, initDisp)
 
   point <- output$point
   knotPoint <- output$knotPoint
@@ -116,7 +116,7 @@
     improveDrop <- 0
     ####################################exchange step#############################
     ####track <- rbind(track,cbind("exchanging",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
-    output <- exchange.step_2d(gap,knotDist,radii,invInd,dists,explData,response,explanatory,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
+    output <- exchange.step_2d(gap,knotDist,radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
     #  ####print("here e")
     point <- output$point
     knotPoint <- output$knotPoint
@@ -136,7 +136,7 @@
     ######################################improve step############################
     ####track <- rbind(track,cbind("improving",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
     ####print("here im")
-    output <- improve.step_2d(gap,knotDist,radii,invInd,dists,gridResp,grid,explData,xvals, yvals, length(aR),response,explanatory,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
+    output <- improve.step_2d(gap,knotDist,radii,invInd,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
     ####print("here im")
     point <- output$point
     knotPoint <- output$knotPoint
@@ -155,7 +155,7 @@
 
     ###################################drop step#################################
     if (length(aR) > minKnots) {
-      output <- drop.step_2d(radii,invInd,dists,explData,response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
+      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
       ####print("here e")
       point <- output$point
       knotPoint <- output$knotPoint
@@ -187,7 +187,7 @@
   
   gc(verbose=FALSE)
   
-    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,invInd=invInd,models=models,actualKnotIndices=invInd[aR],improve=overallImprove))
+    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,models=models,actualKnotIndices=aR,improve=overallImprove))
   
 
 }

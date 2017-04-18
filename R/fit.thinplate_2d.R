@@ -8,7 +8,8 @@
 "fit.thinPlate_2d" <- function(fitnessMeasure, dists,aR,radii,baseModel,radiusIndices,models, currentFit, interactionTerm, data, initDisp) {
 
   attributes(baseModel$formula)$.Environment<-environment()
-  baseModel$splineParams[[1]]$knotPos<-baseModel$splineParams[[1]]$mapInd[aR]
+  baseModel$splineParams[[1]]$knotPos<-aR
+  #baseModel$splineParams[[1]]$knotPos<-baseModel$splineParams[[1]]$mapInd[aR]
   baseModel$splineParams[[1]]$radiusIndices<-radiusIndices
 
   #print("ooooooooooooooooooooooooooooooooooooooo")

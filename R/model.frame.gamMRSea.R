@@ -43,7 +43,7 @@ model.frame.gamMRSea<-function (formula, data = NULL, subset = NULL, na.action =
   
   if(!is.null(splineParams)){
     dists<-splineParams[[1]]$dist
-    aR<-splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
+    aR<-splineParams[[1]]$knotPos
     radii<-splineParams[[1]]$radii
     radiusIndices<-splineParams[[1]]$radiusIndices
   }

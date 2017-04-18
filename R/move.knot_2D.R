@@ -1,5 +1,5 @@
 "move.knot_2D" <- function(radii,invInd,dists,explData,index,fitnessMeasure,BIC,aR,point,
-                           response,explanatory,out.lm,improve,improveEx,track, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
+                           response,knotgrid,out.lm,improve,improveEx,track, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
   attributes(baseModel$formula)$.Environment<-environment()
   print("******************************************************************************")
   print("Moving knot...")
@@ -17,17 +17,17 @@
     tempRadii = radiusIndices
     tempRadii[i] = ceiling(length(radii)/2)
 
-    output = fit.thinPlate_2d(fitnessMeasure, dists,invInd[tempR],radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp)
+    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp)
     initModel = output$currentModel
     models = output$models
-    initBIC = get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, invInd[tempR],radii, tempRadii, initDisp)$fitStat
+    initBIC = get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
 
-    out<-choose.radii(initBIC,1:length(radiusIndices),tempRadii,radii,initModel,dists,invInd[tempR],baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp)
+    out<-choose.radii(initBIC,1:length(radiusIndices),tempRadii,radii,initModel,dists,tempR,baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp)
 
     tempRadii=out$radiusIndices
     tempOut.lm=out$out.lm
     models=out$models
-    output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, invInd[tempR],radii, tempRadii, initDisp)
+    output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii, tempRadii, initDisp)
     tempMeasure<-output$fitStat
 
     if (tempMeasure+tol < fitStat) {
@@ -50,16 +50,16 @@
     tempRadii = c(radiusIndices,(1:length(radii))[ceiling(length(radii)/2)])
     print("Adding knot...")
 
-    output = fit.thinPlate_2d(fitnessMeasure, dists,invInd[tempR],radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp)
+    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp)
     initModel = output$currentModel
     models = output$models
-    initBIC = get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, invInd[tempR],radii, tempRadii, initDisp)$fitStat
-    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,invInd[tempR],baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp)
+    initBIC = get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
+    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp)
 
     tempRadii=out$radiusIndices
     tempOut.lm=out$out.lm
     models=out$models
-    output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, invInd[tempR],radii, tempRadii, initDisp)
+    output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii, tempRadii, initDisp)
     tempMeasure<-output$fitStat
 
     if (tempMeasure +tol < fitStat) {

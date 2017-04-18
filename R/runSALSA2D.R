@@ -10,6 +10,7 @@
 #' @param chooserad logical flag.  If FALSE (default) then the range parameter of the basis is chosen after the knot location and number. If TRUE, the range is assessed at every iteration of a knot move/add/drop.
 #' @param panels Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
 #' @param suppress.printout (Default: \code{FALSE}. Logical stating whether to show the analysis printout.
+#' @param tol Numeric stating the tolerance for the fitness Measure. e.g. tol=2 with AIC would only allow changes to be made if the AIC score improves by 2 units.
 #' 
 #' @references Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
 #'
@@ -25,15 +26,11 @@
 #'
 #'    \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example. May be made using \code{\link{getKnotgrid}}.
 #'
-#'    \code{knotdim}. The dimensions of the knot grid as a vector. (x, y).  If \code{knotgrid} is made using \code{\link{getKnotgrid}} then the default dimensions are c(100, 100).
-#'
 #'    \code{startknots}. Starting number of knots (initialised as spaced filled locations).
 #'
 #'    \code{minKnots}. Minimum number of knots to be tried.
 #'
 #'    \code{maxKnots}. Maximum number of knots to be tried.
-#'
-#'    \code{r_seq}. Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot. Sequence made using \code{\link{getRadiiChoices}}.
 #'
 #'    \code{gap}. The minimum gap between knots (in unit of measurement of coordinates).
 #'    \code{interactionTerm}. Specifies which term in \code{baseModel} the spatial smooth will interact with.  If \code{NULL} no interaction term is fitted.
@@ -45,7 +42,6 @@
 #' \item{knotDist}{Matrix of knot to knot distances (k x k).  May be Euclidean or geodesic distances. Must be square and the same dimensions as \code{nrows(na.omit(knotgrid))}.  Created using \code{\link{makeDists}}.}
 #' \item{radii}{Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot.}
 #' \item{dist}{ Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.}
-#' \item{gridresp}{The first column of knotgrid.}
 #' \item{grid}{Index of knotgrid locations.  Should be same length as \code{knotgrid} but with x=integer values from 1 to number of unique x-locations and y= integer values from 1 to number of unique y-locations.}
 #' \item{datacoords}{Coordinates of the data locations}
 #' \item{response}{Vector of response data for the modelling process}
@@ -74,9 +70,6 @@
 #' # make distance matrices for datatoknots and knottoknots
 #' distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
 #'
-#' # choose sequence of radii
-#' r_seq<-getRadiiChoices(8, distMats$dataDist)
-#'
 #' # set initial model without the spatial term
 #' # (so all other non-spline terms)
 #' initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)),
@@ -86,8 +79,8 @@
 #' # I have chosen a gap parameter of 1000 (in metres) to speed up the process.
 #' # Note that this means there cannot be two knots within 1000m of each other.
 #'
-#' salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, knotdim = c(7, 9),
-#'                   startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1000,
+#' salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns,
+#'                   startKnots=6, minKnots=4, maxKnots=20, gap=1000,
 #'                   interactionTerm="as.factor(impact)")
 #'
 #' salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
@@ -98,9 +91,7 @@
 #' @export
 #'
 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=F, panels=NULL, suppress.printout=FALSE){
-  
-  tol=0
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=F, panels=NULL, suppress.printout=FALSE, tol=0){
   
   if(class(model)[1]=='glm'){
     data<-model$data
@@ -124,19 +115,21 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   if(is.null(data$x.pos)){ stop('no x.pos in data frame; rename coordinates')}
   explData<- cbind(data$x.pos, data$y.pos)
   #specify the full grid (including NAs where knots cannot go)
-  explanatory<- salsa2dlist$knotgrid
+  knotgrid<- salsa2dlist$knotgrid
   #this sets the index of grid positions
-  grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
-  gridResp<-salsa2dlist$knotgrid[,1]
+  #grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
+  #gridResp<-salsa2dlist$knotgrid[,1]
 
+  r_seq<-getRadiiChoices(numberofradii = 8, distMatrix = d2k)
+  
   if(chooserad==F){
-    if(length(salsa2dlist$r_seq)>1){
-      radii<- salsa2dlist$r_seq[round(length(salsa2dlist$r_seq)/2)]
+    if(length(r_seq)>1){
+      radii<- r_seq[round(length(r_seq)/2)]
     }else{
-      radii<- salsa2dlist$r_seq[1]
+      radii<- r_seq[1]
     }
   }else{
-    radii <- salsa2dlist$r_seq
+    radii <- r_seq
   }
   winHalfWidth = 0
 
@@ -156,8 +149,8 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   splineParams[[1]][['knotDist']]= k2k
   splineParams[[1]][['dist']]= d2k
   splineParams[[1]][[4]]= NULL                        #starting radius indices
-  splineParams[[1]][['gridResp']]= gridResp
-  splineParams[[1]][['grid']]= grid
+  #splineParams[[1]][['gridResp']]= gridResp
+  #splineParams[[1]][['grid']]= grid
   splineParams[[1]][['response']]= data$response
   splineParams[[1]][['knotgrid']]= salsa2dlist$knotgrid
   splineParams[[1]][['datacoords']]= explData
@@ -209,7 +202,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     modRes<-modRes[order(modRes$fitScore),]
     bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
 
-    a<-sum(as.vector(output$invInd[output$aR]) - as.vector(unlist(output$models[[bestModNo]][1])))
+    a<-sum(as.vector(output$aR) - as.vector(unlist(output$models[[bestModNo]][1])))
     print(paste('a = ', a, sep=''))
     if(a!=0) break
 
@@ -221,19 +214,19 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   #   }
   if(chooserad==F){
     # use initialise step to change radii
-    radii = salsa2dlist$r_seq
-    x <- as.vector(splineParams[[1]]$grid[,1])
-    y <- as.vector(splineParams[[1]]$grid[,2])
-    xvals <- max(x)
-    yvals <- max(y)
+    radii = r_seq
+    # x <- as.vector(splineParams[[1]]$grid[,1])
+    # y <- as.vector(splineParams[[1]]$grid[,2])
+    # xvals <- max(x)
+    # yvals <- max(y)
 
-    if(length(salsa2dlist$r_seq)>1){
-      radiusIndices<- rep(round(length(salsa2dlist$r_seq)/2), (length(output$aR)))
+    if(length(r_seq)>1){
+      radiusIndices<- rep(round(length(r_seq)/2), (length(output$aR)))
     }else{
       radiusIndices<- rep(1, length(output$aR))
     }
     initDisp<-getDispersion(baseModel)
-    output_radii<- initialise.measures_2d(k2k, maxIterations=10, salsa2dlist$gap, radii, d2k, gridResp, explData, splineParams[[1]]$startKnots, xvals, yvals, explanatory, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp)
+    output_radii<- initialise.measures_2d(k2k, maxIterations=10, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp)
 
 
     splineParams[[1]]$radii= radii

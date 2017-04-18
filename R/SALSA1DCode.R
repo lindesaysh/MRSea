@@ -87,7 +87,7 @@ if (length(knotSites) > maxSites) {
    knotSites <- knotSites[sample(1:length(knotSites), 800)]
    knotSites = sort(cover.design(cbind(knotSites, rep(1, length(knotSites))), nd=maxSites)$design[,1])
  }else{
-   knotSites = sort(cover.design(cbind(knotSites, rep(1, length(knotSites))), nd=maxSites)$design[,1])
+   knotSites = sort(cover.design(cbind(knotSites, rep(1, length(knotSites))), nd=maxSites)$design[,1]) 
  }
   # LSH updated 19/2/15 so that the candidate knot locations may only be at data locations.
   #quantile(knotSites,probs=seq(0,1,length=maxSites),na.rm=TRUE,names=FALSE)
