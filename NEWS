@@ -7,6 +7,8 @@ Notes
   * Update to summary function to allow robust standard errors to be presented and used for hypothesis testing
   * knotgrid for 2D smooth no longer required to be a regular grid
   * calculation of basis radii absorbed into `runSALSA2D` function.
+  * predict.gamMRSea function call updated to have same names as predict.glm
+  * new cv.gamMRSea function.  This is the cv.glm function from the boot library edited to allow for use with gamMRSea models.
 
 Bug Fixes
 
