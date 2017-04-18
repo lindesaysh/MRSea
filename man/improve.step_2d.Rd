@@ -4,10 +4,10 @@
 \alias{improve.step_2d}
 \title{Function to move knots to neighbours to see if there is any improvement in fit}
 \usage{
-improve.step_2d(gap, knotDist, radii, invInd, dists, gridResp, grid, explData,
-  xVals, yVals, num, response, explanatory, maxIterations, fitnessMeasure,
-  point, knotPoint, position, aR, BIC, track, out.lm, improveNudge, tol = 0,
-  baseModel, radiusIndices, models, interactionTerm, data, initDisp)
+improve.step_2d(gap, knotDist, radii, invInd, dists, explData, num, response,
+  knotgrid, maxIterations, fitnessMeasure, point, knotPoint, position, aR, BIC,
+  track, out.lm, improveNudge, tol = 0, baseModel, radiusIndices, models,
+  interactionTerm, data, initDisp)
 }
 \description{
 Function to move knots to neighbours to see if there is any improvement in fit

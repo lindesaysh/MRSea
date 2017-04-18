@@ -5,7 +5,7 @@
 \title{Running SALSA for a spatial smooth with a CReSS basis}
 \usage{
 runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL, chooserad = F,
-  panels = NULL, suppress.printout = FALSE)
+  panels = NULL, suppress.printout = FALSE, tol = 0)
 }
 \arguments{
 \item{model}{A model with no spatial smooth}
@@ -23,6 +23,8 @@ runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL, chooserad = F,
 \item{panels}{Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.}
 
 \item{suppress.printout}{(Default: \code{FALSE}. Logical stating whether to show the analysis printout.}
+
+\item{tol}{Numeric stating the tolerance for the fitness Measure. e.g. tol=2 with AIC would only allow changes to be made if the AIC score improves by 2 units.}
 }
 \value{
 The spline paramater object that is returned as part of the model object now contains a list in the first element (previously reserved for the spatial component).  This list contains the objects required for the SALSA2D fitting process:
@@ -30,7 +32,6 @@ The spline paramater object that is returned as part of the model object now con
 \item{knotDist}{Matrix of knot to knot distances (k x k).  May be Euclidean or geodesic distances. Must be square and the same dimensions as \code{nrows(na.omit(knotgrid))}.  Created using \code{\link{makeDists}}.}
 \item{radii}{Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot.}
 \item{dist}{ Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.}
-\item{gridresp}{The first column of knotgrid.}
 \item{grid}{Index of knotgrid locations.  Should be same length as \code{knotgrid} but with x=integer values from 1 to number of unique x-locations and y= integer values from 1 to number of unique y-locations.}
 \item{datacoords}{Coordinates of the data locations}
 \item{response}{Vector of response data for the modelling process}
@@ -54,15 +55,11 @@ The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} func
 
    \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example. May be made using \code{\link{getKnotgrid}}.
 
-   \code{knotdim}. The dimensions of the knot grid as a vector. (x, y).  If \code{knotgrid} is made using \code{\link{getKnotgrid}} then the default dimensions are c(100, 100).
-
    \code{startknots}. Starting number of knots (initialised as spaced filled locations).
 
    \code{minKnots}. Minimum number of knots to be tried.
 
    \code{maxKnots}. Maximum number of knots to be tried.
-
-   \code{r_seq}. Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot. Sequence made using \code{\link{getRadiiChoices}}.
 
    \code{gap}. The minimum gap between knots (in unit of measurement of coordinates).
    \code{interactionTerm}. Specifies which term in \code{baseModel} the spatial smooth will interact with.  If \code{NULL} no interaction term is fitted.
@@ -83,9 +80,6 @@ ns.data.re$response<- ns.data.re$birds
 # make distance matrices for datatoknots and knottoknots
 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
 
-# choose sequence of radii
-r_seq<-getRadiiChoices(8, distMats$dataDist)
-
 # set initial model without the spatial term
 # (so all other non-spline terms)
 initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)),
@@ -95,8 +89,8 @@ initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(l
 # I have chosen a gap parameter of 1000 (in metres) to speed up the process.
 # Note that this means there cannot be two knots within 1000m of each other.
 
-salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns, knotdim = c(7, 9),
-                  startKnots=6, minKnots=4, maxKnots=20, r_seq=r_seq, gap=1000,
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns,
+                  startKnots=6, minKnots=4, maxKnots=20, gap=1000,
                   interactionTerm="as.factor(impact)")
 
 salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,

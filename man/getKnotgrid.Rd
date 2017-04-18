@@ -14,7 +14,7 @@ getKnotgrid(coordData, numKnots = 300, plot = TRUE)
 \item{plot}{(\code{default = TRUE}). Logical stating whether a plot showing the legal knot positions is given.}
 }
 \value{
-A (10000 x 2) matrix of knot locations.  Any row with an illegal knot location (e.g. not near data) contains c(NA, NA)
+A (numKnots x 2) matrix of knot locations.
 }
 \description{
 Generate a grid of knot locations to run SALSA2D.

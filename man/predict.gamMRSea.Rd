@@ -4,11 +4,11 @@
 \alias{predict.gamMRSea}
 \title{Function for making predictions for a model containing a CReSS basis (two dimensional local smooth).}
 \usage{
-\method{predict}{gamMRSea}(predict.data = NULL, g2k = NULL, object,
+\method{predict}{gamMRSea}(newdata = NULL, g2k = NULL, object,
   type = "response", coeff = NULL)
 }
 \arguments{
-\item{predict.data}{Data frame of covariate values to make predictions to}
+\item{newdata}{Data frame of covariate values to make predictions to}
 
 \item{g2k}{Matrix of distances between prediction locations and knot locations (n x k). May be Euclidean or geodesic distances.}
 
@@ -64,7 +64,7 @@ salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
 
 
 # make predictions on response scale
-preds<-predict.gamMRSea(predict.data.re, dists, object=salsa2dOutput_k6$bestModel)
+preds<-predict.gamMRSea(newdata=predict.data.re, g2k=dists, object=salsa2dOutput_k6$bestModel)
 
 }
 
