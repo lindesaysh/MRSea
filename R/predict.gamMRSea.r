@@ -2,7 +2,7 @@
 #'
 #' This function calculates vector of predictions on the scale of the response or link.
 #'
-#' @param predict.data Data frame of covariate values to make predictions to
+#' @param newdata Data frame of covariate values to make predictions to
 #' @param g2k Matrix of distances between prediction locations and knot locations (n x k). May be Euclidean or geodesic distances.
 #' @param object Object from a GEE or GLM model
 #' @param type Type of predictions required. (default=`response`, may also use `link`).
@@ -52,11 +52,11 @@
 #'
 #'
 #' # make predictions on response scale
-#' preds<-predict.gamMRSea(predict.data.re, dists, object=salsa2dOutput_k6$bestModel)
+#' preds<-predict.gamMRSea(newdata=predict.data.re, g2k=dists, object=salsa2dOutput_k6$bestModel)
 #'
 #' @export
 #'
-predict.gamMRSea<- function (predict.data=NULL, g2k=NULL, object, type = "response",coeff = NULL)
+predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",coeff = NULL)
 {
   # attributes(model$formula)$.Environment <- environment()
   # radii <- splineParams[[1]]$radii
@@ -65,13 +65,13 @@ predict.gamMRSea<- function (predict.data=NULL, g2k=NULL, object, type = "respon
   
   splineParams<- object$splineParams
   
-  if(is.null(predict.data)){
-    predict.data<-object$data
+  if(is.null(newdata)){
+    newdata<-object$data
   }
   
   require(splines)
-  x2 <- data.frame(response = rpois(nrow(predict.data), lambda = 5),
-                   predict.data)
+  x2 <- data.frame(response = rpois(nrow(newdata), lambda = 5),
+                   newdata)
   tt <- terms(object)
   Terms <- delete.response(tt)
   
@@ -79,16 +79,16 @@ predict.gamMRSea<- function (predict.data=NULL, g2k=NULL, object, type = "respon
     splineParams[[1]]$dist<-g2k
   }
   
-  m <- model.frame.gamMRSea(Terms, predict.data, xlev = object$xlevels, splineParams=splineParams)
+  m <- model.frame.gamMRSea(Terms, newdata, xlev = object$xlevels, splineParams=splineParams)
   modmat <- model.matrix(Terms, m)
   
   offset <- rep(0, nrow(modmat))
   # offset specified as term
   if (!is.null(off.num <- attr(tt, "offset"))) 
-    for (i in off.num) offset <- offset + exp(eval(attr(tt, "variables")[[i + 1]], predict.data))
+    for (i in off.num) offset <- offset + exp(eval(attr(tt, "variables")[[i + 1]], newdata))
   # offset specified as parameter in call
   if (!is.null(object$call$offset)) 
-    offset <- offset + eval(object$call$offset, predict.data)
+    offset <- offset + eval(object$call$offset, newdata)
   
   
   if (is.null(coeff)) {
