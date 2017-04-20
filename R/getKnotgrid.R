@@ -48,16 +48,20 @@ getKnotgrid<-function(coordData, numKnots=300, plot=TRUE){
   require(fields)
   
   dupPoints <-paste(coordData[,1], coordData[,2], sep='E')
-  duppointid<-which(duplicated(dupPoints)==T)
+  duppointid<-which(duplicated(dupPoints)==F)
   
-  samplingdata<-coordData[-duppointid,]
+  samplingdata<-coordData[duppointid,]
   
   if(nrow(samplingdata)>1000){
-    samplingdata<-samplingdata[sample(1:nrow(samplingdata), 1000),]
+    sampleid<-sample(1:nrow(samplingdata), 1000)
+    samplingdata<-samplingdata[sampleid,]
   }
   
   spaceid <-cover.design(R = samplingdata, nd = numKnots, nruns = 5)$best.id
   knotgrid <- samplingdata[spaceid,]
+  
+  attr(knotgrid, 'points.selected')<-duppointid[sampleid[spaceid]]
+  
   # cut down number of knots if there are more than 400 locations available
   #if(nrow(na.omit(knotgrid))>400){
   #   naid<- which(is.na(knotgrid))

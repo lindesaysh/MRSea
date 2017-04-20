@@ -126,6 +126,7 @@ checkfactorlevelcounts<-function(factorlist, data, response){
 #' @param datacoords Coordinates of the data locations
 #' @param knotcoords Coordinates of the legal knot locations
 #' @param knotmat (\code{default=TRUE}). Should a matrix of knot-knot distances be created
+#' @param polys (\code{default=NULL}). If geodesic distances are to be calculated, provide a list of polygons defining exclusion areas. 
 #' 
 #' @details
 #' The data-knot matrix is used in the CReSS basis and the knot-knot matrix is used in SALSA to determine where a nearest knot to `move' should be.
@@ -141,20 +142,44 @@ checkfactorlevelcounts<-function(factorlist, data, response){
 #' @export
 #' 
 
-makeDists<-function(datacoords, knotcoords, knotmat=TRUE){
+makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL){
   
+ if(is.null(polys)){
+   # Euclidean
   if(length(which(is.na(knotcoords[,1])))>0) stop('remove NAs from knotcoords')
   
-  DistMatrixNaive<- matrix(0, ncol=dim((knotcoords))[1], nrow=length(datacoords[,1]))
+  d2k<- matrix(0, ncol=dim((knotcoords))[1], nrow=length(datacoords[,1]))
   for(i in 1:dim(knotcoords)[1]){
-    DistMatrixNaive[,i]<- sqrt((datacoords[,1]-knotcoords[i,1])**2 + (datacoords[,2]-knotcoords[i,2])**2)
+    d2k[,i]<- sqrt((datacoords[,1]-knotcoords[i,1])**2 + (datacoords[,2]-knotcoords[i,2])**2)
   }
+  
   if(knotmat==T){
     #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
     knotDist = as.matrix(dist(na.omit(knotcoords), method = "euclidean", diag = TRUE, upper=TRUE))
-    return(list(dataDist=DistMatrixNaive, knotDist = knotDist))
+    return(list(dataDist=d2k, knotDist = knotDist))
   }else{
-    return(list(dataDist=DistMatrixNaive))
+    return(list(dataDist=d2k))
   }
+} # end euclidean
+  
+  # Geodesic
+  if(!is.null(polys)){
+    Nx=seq(min(datacoords[,1]), max(datacoords[,1]), length=100)
+    Ny=seq(min(datacoords[,2]), max(datacoords[,2]), length=100)
+  
+    xygrid<-expand.grid(x=Nx, y=Ny)
+  
+    # data to data matrix
+    geodistsoutput<-getGeoDist(xygrid=xygrid, polys=polys, datalocations=datacoords)
+    # select out knot columnns to get d2k
+    d2k<-geodistsoutput$distance[,attr(knotcoords, 'points.selected')]  
+    if(knotmat==T){
+      #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
+      knotDist = geodistsoutput$distance[attr(knotcoords, 'points.selected'),attr(knotcoords, 'points.selected')] 
+      return(list(dataDist=d2k, knotDist = knotDist))
+    }else{
+      return(list(dataDist=d2k))
+    }
+  } # end geodesic
 }
 

@@ -8,8 +8,8 @@ Description: Examines animal survey data for signs of changes in animal
     bootstrapping is available to estimate uncertainty. Several model assessment
     tools are also available. Recent updates include the direct estimation of robust
     standard errors, given a panel structure.
-Version: 0.99
-Date: 2017-03-10
+Version: 0.99.1
+Date: 2017-04-20
 Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique
     Mackenzie, Cameron Walker <cameron.walker@auckland.ac.nz>
 Maintainer: Lindesay Scott-Hayward <lass@st-and.ac.uk>
@@ -28,12 +28,15 @@ Imports:
 License: GPL-2
 LazyData: true
 Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
-    (2017). "MRSea package (version 0.99): Statistical Modelling of bird and
+    (2017). "MRSea package (version 0.99.1): Statistical Modelling of bird and
     cetacean distributions in offshore renewables development areas".
     University of St. Andrews
 URL: http://creem2.st-and.ac.uk/software.aspx
 RoxygenNote: 5.0.1
 Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    splancs,
+    raster,
+    gdistance
 VignetteBuilder: knitr
