@@ -89,7 +89,7 @@ do.bootstrap.cress.robust<-function(model.obj, predictionGrid, splineParams=NULL
       }
       # make predictions
       dists<- g2k
-      rpreds<-predict.gamMRSea(predictionGrid, dists, model.obj, type='response', coeff=samplecoeff)
+      rpreds<-predict.gamMRSea(newdata=predictionGrid, g2k=dists, object=model.obj, type='response', coeff=samplecoeff)
       bootPreds<- rpreds
       return(bootPreds)
     })
@@ -141,7 +141,7 @@ do.bootstrap.cress.robust<-function(model.obj, predictionGrid, splineParams=NULL
       }
       # make predictions
       dists<- g2k
-      rpreds<-predict.gamMRSea(predictionGrid, dists, model.obj, type='response', coeff=samplecoeff)
+      rpreds<-predict.gamMRSea(newdata=predictionGrid, g2k=dists, object=model.obj, type='response', coeff=samplecoeff)
       bootPreds[,b]<- rpreds
     }
 

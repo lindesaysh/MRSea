@@ -20,6 +20,9 @@
   fitStat<-BIC[length(BIC)]
   newRadii = radiusIndices
   for (i in 1:length(aR)) {
+    
+    #if (length(aR)>minKnots) {
+    
     tempR <- aR
     tempR <- tempR[-i]
     tempRadii = radiusIndices[-i]
@@ -48,6 +51,7 @@
       improve <- 1
       improveDrop <- 1
     }      
+   # }
   }
   
   if (improve) {

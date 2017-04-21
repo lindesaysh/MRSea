@@ -7,7 +7,7 @@
 #'
 
 ################################################################################################################
-"exchange.step_2d" <- function(gap,knotDist,radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
+"exchange.step_2d" <- function(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
 
   #attributes(baseModel$formula)$.Environment<-environment()
 
@@ -21,15 +21,20 @@
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    index<-max.col(t(abs(resid(out.lm,type="pearson"))))
-    ####fix for grid approach#####
-    new<-scale(knotgrid[point,],center=c(explData[index,1],explData[index,2]))
-    ####Pick nearest grid point that is also far enough away from another knot
+    indexdat<-order(abs(residuals(salsa2dOutput$bestModel, type='pearson')), decreasing = TRUE)[1:5]
+    #### Find available knots
     legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
+    index<-c()
+     for(i in 1:5){
+      new<-scale(knotgrid[point,],center=c(explData[indexdat[i],1],explData[indexdat[i],2]))
+      index[i]<-which.min(abs(new[,1])+abs(new[,2]))
+    }
+   index<-unique(index)
+    
     if (length(legPos)>0) {
-      index<-which.min(abs(new[,1])+abs(new[,2]))
-      if (!(any(knotDist[point[index],aR]<gap))) {
-        output <- move.knot_2D(radii,invInd,dists,explData,index,fitnessMeasure,BIC,aR,point,
+      #index<-which.min(abs(new[,1])+abs(new[,2]))
+      if (!(any(knotDist[point[index[1]],aR]<gap))) {
+        output <- move.knot_2D(radii,dists,explData,index,fitnessMeasure,BIC,aR,point,
                                response,knotgrid,out.lm,improve,improveEx, track,
                                maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
         improve <- output$improve
@@ -40,17 +45,17 @@
         track <- output$track
         tempKnot <- output$tempKnot
         if (tempKnot <= length(knotPoint)) {
-          position[knotPoint[tempKnot]] <- index
-          position[point[index]] <- 0
+          position[knotPoint[tempKnot]] <- output$index
+          position[point[output$index]] <- 0
           buff <- knotPoint[tempKnot]
-          knotPoint[tempKnot] <- point[index]
-          point[index] <- buff
+          knotPoint[tempKnot] <- point[output$index]
+          point[output$index] <- buff
         } else {
-          knotPoint<-c(knotPoint,point[index])
-          position[point[index]]<-0
-          point<-point[-index]
-          if (length(point) >= index) {
-            for (i in index:length(point)){
+          knotPoint<-c(knotPoint,point[output$index])
+          position[point[output$index]]<-0
+          point<-point[-output$index]
+          if (length(point) >= output$index) {
+            for (i in output$index:length(point)){
               position[point[i]]<-position[point[i]]-1
             }
           }

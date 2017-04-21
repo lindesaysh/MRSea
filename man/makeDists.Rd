@@ -4,7 +4,7 @@
 \alias{makeDists}
 \title{Make Euclidean distance matrices for use in CReSS and SALSA model frameworks}
 \usage{
-makeDists(datacoords, knotcoords, knotmat = TRUE)
+makeDists(datacoords, knotcoords, knotmat = TRUE, polys = NULL)
 }
 \arguments{
 \item{datacoords}{Coordinates of the data locations}
@@ -12,6 +12,8 @@ makeDists(datacoords, knotcoords, knotmat = TRUE)
 \item{knotcoords}{Coordinates of the legal knot locations}
 
 \item{knotmat}{(\code{default=TRUE}). Should a matrix of knot-knot distances be created}
+
+\item{polys}{(\code{default=NULL}). If geodesic distances are to be calculated, provide a list of polygons defining exclusion areas.}
 }
 \description{
 This function makes two Euclidean distance matrices.  One for the distances between all spatial observations and all spatial knot locations.  The other, if specified, is the distances between knot locations.

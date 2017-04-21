@@ -91,7 +91,7 @@
 #' @export
 #'
 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=F, panels=NULL, suppress.printout=FALSE, tol=0){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=F, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE){
   
   if(class(model)[1]=='glm'){
     data<-model$data
@@ -120,7 +120,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   #grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
   #gridResp<-salsa2dlist$knotgrid[,1]
 
-  r_seq<-getRadiiChoices(numberofradii = 8, distMatrix = d2k)
+  r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k)
   
   if(chooserad==F){
     if(length(r_seq)>1){
@@ -184,7 +184,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   baseModel<- baseModel1D
 
   
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot)
 
   baseModel<- output$out.lm
 

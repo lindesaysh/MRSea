@@ -8,7 +8,7 @@
 
 ####################################################################################################################
 
-"improve.step_2d" <- function(gap,knotDist,radii,invInd,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
+"improve.step_2d" <- function(gap,knotDist,radii,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp){
   attributes(baseModel$formula)$.Environment<-environment()
   print("Improving...")
   print("******************************************************************************")
@@ -53,11 +53,11 @@
 #       }
 
       # find 6 nearest knot points to current knot point
-      nhbrs<-point[order(knotDist[i,])[2:6]]
+      nhbrs<-order(knotDist[i,])[2:6]
       nhbrs<-na.omit(nhbrs)
       # remove options if already a knot point      
       if(length(na.omit(match(nhbrs, knotPoint)))>0){
-        id<-na.omit(match(nhbrs, knotPoint))
+        id<-na.omit(match(knotPoint, nhbrs))
         nhbrs<-nhbrs[-id]
       }
 

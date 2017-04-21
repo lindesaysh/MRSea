@@ -135,7 +135,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }else{
   numNeeded = nrow(initialKnots)
   knots2<-rbind(initialKnots, knotgrid)
-  posKnots<-which(duplicated(knots2)[nrow(initialKnots):nrow(knots2)]==T)
+  posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
   
   #   posKnots = cbind()
   #   legPos=mapInd
@@ -293,7 +293,7 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   print("Initial model fitted...")
   #point <- mapInd[-posKnots]
   #point <- mapInd[-invInd[posKnots]]
-  point <- 1:nrow(knotgrid)[-posKnots]
+  point <- (1:nrow(knotgrid))[-posKnots]
     
   position<- cbind()
   
