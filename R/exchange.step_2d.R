@@ -21,7 +21,7 @@
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    indexdat<-order(abs(residuals(salsa2dOutput$bestModel, type='pearson')), decreasing = TRUE)[1:5]
+    indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
     #### Find available knots
     legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
     index<-c()
