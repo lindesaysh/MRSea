@@ -184,11 +184,11 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
         
         # sample from multivariate normal
         est<- coefficients(model.obj)
-        varcov<-as.matrix(summary(model.obj)$cov.unscaled)
+        varcov<-as.matrix(summary(model.obj)$cov.scaled)
         samplecoeff<-NULL
         try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')))
         if(is.null(samplecoeff)){
-          varcov<-as.matrix(nearPD(as.matrix(summary(model.obj)$cov.unscaled))$mat)
+          varcov<-as.matrix(nearPD(as.matrix(summary(model.obj)$cov.scaled))$mat)
           samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
         }
         
@@ -255,11 +255,11 @@ do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splin
           
           # sample from multivariate normal
           est<- coefficients(geefit)
-          varcov<-as.matrix(summary(geefit)$cov.unscaled)
+          varcov<-as.matrix(summary(geefit)$cov.scaled)
           samplecoeff<-NULL
           try(samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd')), silent=T)
           if(is.null(samplecoeff)){
-            varcov<-as.matrix(nearPD(as.matrix(summary(geefit)$cov.unscaled))$mat)
+            varcov<-as.matrix(nearPD(as.matrix(summary(geefit)$cov.scaled))$mat)
             samplecoeff<- as.numeric(rmvnorm(1,est,varcov, method='svd'))
             #cat('*')
           }

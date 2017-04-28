@@ -3,6 +3,7 @@
 #' @param xygrid Regular grid of x and y coordinates, must have an extent greater than that of \code{datalocations} if specified.
 #' @param polys Either a single polygon (defined by a dataframe with x and y) or a list object containing multiple polygons that define exclusion zones.
 #' @param datalocations data frame of x and y coordinates of locations to calculate distances between. Default = NULL, in which case distances are returned between locations in \code{xygrid}
+#' @param plot.transition (\code{default=TRUE}). Logical stating whether to plot the transition matrix.  Useful to see if the boundaries are being obeyed.
 #' 
 #' @details Using the raster, spancs and gdistance packages to calculate the geodesic distance between pairs of points. The polygons define the areas that an animal/object cannot be. E.g. Land if the animal is a marine mammal. 
 #' 
@@ -34,7 +35,7 @@
 #' @export
 #' 
 
-getGeoDist<-function(xygrid, polys, datalocations=NULL){
+getGeoDist<-function(xygrid, polys, datalocations=NULL, plot.transition=TRUE){
   
   require(raster)
   require(gdistance)
@@ -43,6 +44,7 @@ getGeoDist<-function(xygrid, polys, datalocations=NULL){
     inoutid<-rep(2, length=nrow(xygrid))
     for(b in 1:length(polys)){
       bnd<-polys[[b]]
+      names(bnd)<-c('x', 'y')
       inoutid[which(splancs::inout(xygrid, bnd)==T)]<-0
     }
   }else{
@@ -54,8 +56,9 @@ getGeoDist<-function(xygrid, polys, datalocations=NULL){
   rastermesh<-ratify(rastermesh)
   
   trans<-transition(rastermesh, "areas", 16)
+  if(plot.transition == T) plot(raster(trans[[2]]))
   # nlayers(trans)
-  # plot(raster(trans[[2]]))
+  
   
   trans = geoCorrection(trans[[2]])
   

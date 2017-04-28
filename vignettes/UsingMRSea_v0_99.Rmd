@@ -112,11 +112,11 @@ salsa1dlist <- list(fitnessMeasure = "QBIC", minKnots_1d = 2,maxKnots_1d = 5,
 7.  If you wish to make predictions once the model is fitted, then a prediction grid should be created and specified.  This is because the splines fitted here (B-splines) are unable to make predictions outside of the range they were created.  For example, if the data range for depth is smaller than the range of depths in the prediction data, predictions cannot be made.  
 
 ```{r }
-data(predict.data.re)  # contains predict.data
+data("nysted.predictdata")  # contains predict.data
 # This is a spatial grid for making predictions.  All covariates in 
 # final model must be in this data frame and the naming must be the 
 # same as for the data
-predictData <- predict.data.re
+predictData <- nysted.predictdata
 range(data$depth)
 range(predictData$depth)
 ```
@@ -162,32 +162,29 @@ salsa1dOutput$splineParams[[2]]$knots
 9. Create a grid of knots that will be used as possible knot locations.  This may take while and could be different every time you run it so I suggest saving the knotgrid as a file.
 
 ```{r knotgrid, message=FALSE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, cache=TRUE}
-knotgrid<- getKnotgrid(coordData = cbind(data$x.pos, data$y.pos))
+knotgrid<- getKnotgrid(coordData = cbind(data$x.pos, data$y.pos), numKnots = 300)
 #
 # write.csv(knotgrid, file='knotgrid_fullanalysis.csv', row.names=F)
 # ~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-The black points in the figure are the data and the red points, the candidate knot locations. By default, the knotgrid is 100 by 100 with up to 300 legal knot positions chosen.
+The black points in the figure are the data and the red points, the candidate knot locations. By default, the knotgrid has 300 legal knot positions chosen.
 
-10. Set up parameters for SALSA2D.  Distance matrices and the range parameter.  The default setting of 10 radii should be fine for general use.  Choose a fit statistic, min, max and start knots.
+10. Set up parameters for SALSA2D.  Distance matrices (data to knots and knot to knots), a fit statistic and min, max and start knots.
 
 ```{r }
 # make distance matrices for datatoknots and knottoknots
-distMats <- makeDists(cbind(data$x.pos, data$y.pos), na.omit(knotgrid))
-
-r_seq <- getRadiiChoices(numberofradii=10, distMatrix=distMats$dataDist)
+distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 # make parameter set for running salsa2d
 salsa2dlist<-list(fitnessMeasure = 'QBIC', knotgrid = knotgrid, 
-                  knotdim=c(100,100), startKnots=10, minKnots=4,
-                  maxKnots=12, r_seq=r_seq, gap=0, 
-                  interactionTerm="as.factor(impact)")
+                 startKnots=5, minKnots=4, maxKnots=12, gap=0, 
+                 interactionTerm="as.factor(impact)")
 ```
 
-11. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of ```x.pos``` and ```y.pos```.
+11. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`.
 ```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, 
                       d2k=distMats$dataDist,k2k=distMats$knotDist)
@@ -240,10 +237,11 @@ runPartialPlots(model = salsa2dOutput$bestModel, data = data, factorlist =
 
 ```{r }
 dists<-makeDists(cbind(predictData$x.pos, predictData$y.pos), 
-                 na.omit(knotgrid),knotmat=FALSE)$dataDist
+                 knotgrid,knotmat=FALSE)$dataDist
+
 
 # make predictions on response scale
-preds<-predict.gamMRSea(predict.data = predictData, g2k = dists, model = salsa2dOutput$bestModel)
+preds<-predict.gamMRSea(newdata = predictData, g2k = dists, object = salsa2dOutput$bestModel)
 ```
 
 Plotting the predictions pre and post impact:
@@ -299,6 +297,6 @@ points(predictData$x.pos[predictData$impact == 0][marker == 1],
 points(predictData$x.pos[predictData$impact == 0][marker == (-1)],
        predictData$y.pos[predictData$impact == 0][marker == (-1)],
        col = "darkgrey", cex = 0.75)
-points(681417.3, 6046910, cex = 3, pch = "*", lwd = 1, col = "grey")
+points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey")
 ```
 

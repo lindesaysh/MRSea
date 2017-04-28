@@ -76,17 +76,14 @@ salsa1dOutput$splineParams[[2]]$knots
 
 ## ------------------------------------------------------------------------
 # make distance matrices for datatoknots and knottoknots
-distMats <- makeDists(cbind(data$x.pos, data$y.pos), na.omit(knotgrid))
-
-r_seq <- getRadiiChoices(numberofradii=10, distMatrix=distMats$dataDist)
+distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 # make parameter set for running salsa2d
 salsa2dlist<-list(fitnessMeasure = 'QBIC', knotgrid = knotgrid, 
-                  knotdim=c(100,100), startKnots=10, minKnots=4,
-                  maxKnots=12, r_seq=r_seq, gap=0, 
-                  interactionTerm="as.factor(impact)")
+                 startKnots=5, minKnots=4, maxKnots=12, gap=0, 
+                 interactionTerm="as.factor(impact)")
 
 ## ----echo=FALSE, message=FALSE, warning=FALSE, results='hide'------------
 salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, 
@@ -126,10 +123,11 @@ runPartialPlots(model = salsa2dOutput$bestModel, data = data, factorlist =
 
 ## ------------------------------------------------------------------------
 dists<-makeDists(cbind(predictData$x.pos, predictData$y.pos), 
-                 na.omit(knotgrid),knotmat=FALSE)$dataDist
+                 knotgrid,knotmat=FALSE)$dataDist
+
 
 # make predictions on response scale
-preds<-predict.gamMRSea(predict.data = predictData, g2k = dists, model = salsa2dOutput$bestModel)
+preds<-predict.gamMRSea(newdata = predictData, g2k = dists, object = salsa2dOutput$bestModel)
 
 ## ----fig=TRUE, fig.align='center', fig.width=9, fig.height=6-------------
 par(mfrow=c(1,2))

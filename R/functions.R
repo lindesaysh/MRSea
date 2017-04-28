@@ -127,6 +127,9 @@ checkfactorlevelcounts<-function(factorlist, data, response){
 #' @param knotcoords Coordinates of the legal knot locations
 #' @param knotmat (\code{default=TRUE}). Should a matrix of knot-knot distances be created
 #' @param polys (\code{default=NULL}). If geodesic distances are to be calculated, provide a list of polygons defining exclusion areas. 
+#' @param type (\code{default='A'}).  One of 'A' or 'B'.  'A' is used when the \code{knotcoords} are a subset of \code{datacoords} AND the attributes of \code{knotcoords} give the index of points from \code{datacoords} (as happens if \code{getKnotgrid()} is used).  'B' is used for prediction (when \code{datacoords} is a prediction grid and so \code{knotcoords} is not a subset) or when the knotgrid was not generated using \code{getKnotgrid()}.
+#' @param plot.transition (\code{default=TRUE}). Logical stating whether to plot the transition matrix.  Useful to see if the boundaries are being obeyed.
+#' @param grid.dim This is a vector of length two which specifies the dimesions of the grid used to create the transition matrix (default \code{c(100, 100)}.  If the transition matrix shows that boundaries are being ignored, the grid dimensions will need to increase. However, increasing the grid, whilst improving accuracy, also increases computational time. 
 #' 
 #' @details
 #' The data-knot matrix is used in the CReSS basis and the knot-knot matrix is used in SALSA to determine where a nearest knot to `move' should be.
@@ -142,7 +145,7 @@ checkfactorlevelcounts<-function(factorlist, data, response){
 #' @export
 #' 
 
-makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL){
+makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', plot.transition=FALSE, grid.dim = c(100, 100)){
   
  if(is.null(polys)){
    # Euclidean
@@ -164,15 +167,34 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL){
   
   # Geodesic
   if(!is.null(polys)){
-    Nx=seq(min(datacoords[,1]), max(datacoords[,1]), length=100)
-    Ny=seq(min(datacoords[,2]), max(datacoords[,2]), length=100)
+    
+    Nx=seq(min(datacoords[,1]), max(datacoords[,1]), length=grid.dim[1])
+    Ny=seq(min(datacoords[,2]), max(datacoords[,2]), length=grid.dim[2])
   
     xygrid<-expand.grid(x=Nx, y=Ny)
   
-    # data to data matrix
-    geodistsoutput<-getGeoDist(xygrid=xygrid, polys=polys, datalocations=datacoords)
-    # select out knot columnns to get d2k
-    d2k<-geodistsoutput$distance[,attr(knotcoords, 'points.selected')]  
+    if(type=='B'){
+      if(!is.null(names(datacoords))){
+        knotcoords<-data.frame(knotcoords)
+        names(knotcoords)<-names(datacoords)
+      }
+      datacoords2 = rbind(datacoords, knotcoords)
+      geodistsoutput<-getGeoDist(xygrid=xygrid, polys=polys, datalocations=datacoords2, plot.transition=plot.transition)
+      # select out knot columnns to get d2k
+      d2k<-geodistsoutput$distance[1:nrow(datacoords),(nrow(datacoords)+1):nrow(datacoords2)]
+      if(knotmat==T){
+        #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
+        knotDist = geodistsoutput$distance[(nrow(datacoords)+1):nrow(datacoords2),(nrow(datacoords)+1):nrow(datacoords2)] 
+        return(list(dataDist=d2k, knotDist = knotDist))
+      }else{
+        return(list(dataDist=d2k))
+      }
+    } # end prediction
+    if(type=='A'){
+      # data to data matrix
+      geodistsoutput<-getGeoDist(xygrid=xygrid, polys=polys, datalocations=datacoords, plot.transition=plot.transition)
+      # select out knot columnns to get d2k
+      d2k<-geodistsoutput$distance[,attr(knotcoords, 'points.selected')]
     if(knotmat==T){
       #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
       knotDist = geodistsoutput$distance[attr(knotcoords, 'points.selected'),attr(knotcoords, 'points.selected')] 
@@ -180,6 +202,7 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL){
     }else{
       return(list(dataDist=d2k))
     }
+    } # end model
   } # end geodesic
 }
 

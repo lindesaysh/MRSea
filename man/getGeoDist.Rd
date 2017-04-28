@@ -4,7 +4,7 @@
 \alias{getGeoDist}
 \title{Function to calculate geodesic distances}
 \usage{
-getGeoDist(xygrid, polys, datalocations = NULL)
+getGeoDist(xygrid, polys, datalocations = NULL, plot.transition = TRUE)
 }
 \arguments{
 \item{xygrid}{Regular grid of x and y coordinates, must have an extent greater than that of \code{datalocations} if specified.}
@@ -12,6 +12,8 @@ getGeoDist(xygrid, polys, datalocations = NULL)
 \item{polys}{Either a single polygon (defined by a dataframe with x and y) or a list object containing multiple polygons that define exclusion zones.}
 
 \item{datalocations}{data frame of x and y coordinates of locations to calculate distances between. Default = NULL, in which case distances are returned between locations in \code{xygrid}}
+
+\item{plot.transition}{(\code{default=TRUE}). Logical stating whether to plot the transition matrix.  Useful to see if the boundaries are being obeyed.}
 }
 \description{
 Function to calculate geodesic distances

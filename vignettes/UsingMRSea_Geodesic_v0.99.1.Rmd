@@ -1,0 +1,269 @@
+---
+title: 'MRSea: Geodesic Distance Calculation'
+author: "LAS Scott-Hayward"
+date: '`r Sys.Date()`'
+output: html_document
+---
+
+#### This vignette constitutes work carried out at the Centre for Research into Ecological and Environmental Modelling (CREEM) at the University of St. Andrews.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='', message=FALSE)
+```
+
+This vignette is in addition to the main vignette for the package but shows an analysis using geodesic distances (as the fish swims rather than as the crow flies).
+
+```{r, echo=FALSE}
+devtools::load_all(pkg='../../MRSea')
+```
+
+```{r, eval=FALSE}
+require(MRSea)
+```
+
+1. Load the distance sampling corrected Nysted data from the package.
+```{r}
+data("Nysted.distancecorrected.re")
+```
+
+2. Fit an initial Model to the data.  Here we include only the `impact` variable as a factor along with the offset of cell area. 
+
+```{r message=FALSE}
+initialModel <- glm(response ~ as.factor(impact) 
+                    + offset(log(area)), family = "quasipoisson", 
+                    data = mydata)
+```
+
+
+3. Create a grid of knots that will be used as possible knot locations.  This may take while and could be different every time you run it so I suggest saving the knotgrid as a file.
+
+```{r knotgridnotrun, message=FALSE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, eval=FALSE}
+knotgrid<- getKnotgrid(coordData = cbind(mydata$x.pos, mydata$y.pos), numKnots = 300, plot = FALSE)
+```
+
+Here we load the pre-made knotgrid from the package.
+```{r knotgridload, message=FALSE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, eval=TRUE, echo=FALSE}
+data("knotgrid.off")
+```
+
+4. Load the boundary file.  This is a polygon that denotes areas within the study region 
+```{r , warning=FALSE, message=FALSE}
+data("nysted.coast")
+# make distance matrices for datatoknots and knottoknots
+distMatsGeo <- makeDists(datacoords = cbind(mydata$x.pos, mydata$y.pos), knotcoords = knotgrid, polys = nysted.coast)
+str(distMatsGeo)
+```
+
+If you had two or more boundary polygons, these are entered as a list object, e.g.
+
+```{r , warning=FALSE, message=FALSE, eval=FALSE}
+# make distance matrices for datatoknots and knottoknots
+distMatsGeo <- makeDists(datacoords = cbind(mydata$x.pos, mydata$y.pos), knotcoords = knotgrid, polys = list(nysted.coast1, nysted.coast2))
+```
+
+
+5. To allow comparision, here we also calculate the Euclidean matrices:
+
+```{r , warning=FALSE, message=FALSE}
+distMatsEuc <- makeDists(datacoords = cbind(mydata$x.pos, mydata$y.pos), knotcoords = knotgrid)
+```
+
+Now we can plot an example of the distances from one knot using Euclidean and Geodesic distances:
+
+```{r, fig.height=3, fig.width=8}
+require(fields)
+par(mfrow=c(1,2))
+#i=299
+i=4
+zlim=max(range(distMatsEuc$dataDist[,i]), range(distMatsGeo$dataDist[,i]))
+quilt.plot(mydata$x.pos, mydata$y.pos, distMatsEuc$dataDist[,i], main='Euclidean', asp=1, zlim=c(0,zlim))
+points(knotgrid[i], knotgrid[i,2], pch=20, col='darkgrey', cex=3)
+quilt.plot(mydata$x.pos, mydata$y.pos, distMatsGeo$dataDist[,i], main='Geodesic', asp=1, zlim=c(0,zlim))
+points(knotgrid[i], knotgrid[i,2], pch=20, col='darkgrey', cex=3)
+
+```
+
+The differences are subtle here as there is limited boundary within the surface. To create a better visual representation, we can view one minus the other:
+
+```{r, fig.height=3, fig.width=5}
+quilt.plot(mydata$x.pos, mydata$y.pos, distMatsGeo$dataDist[,i]-distMatsEuc$dataDist[,i], main='Geodesic-Euclidean', asp=1)
+points(knotgrid[i], knotgrid[i,2], pch=20, col='darkgrey', cex=3)
+```
+
+6. Set up the parameters for the two dimensional smooth. As for the main vignette, here we use an interaction term with `impact`, start with 5 knots and have a minimum of 4 and maximum of 12.
+
+```{r}
+# make parameter set for running salsa2d
+salsa2dlist<-list(fitnessMeasure = 'QBIC', knotgrid = knotgrid, 
+                 startKnots=5, minKnots=4, maxKnots=12, gap=0, 
+                 interactionTerm="as.factor(impact)")
+```
+
+7. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+require(MuMIn)
+salsa2dOutput<-runSALSA2D(initialModel, salsa2dlist, 
+                      d2k=distMatsGeo$dataDist,k2k=distMatsGeo$knotDist)
+```
+
+```{r echo=TRUE, eval=FALSE}
+salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, 
+                             d2k=distMatsGeo$dataDist, k2k=distMatsGeo$knotDist)
+```
+
+8. Assess the output for the location of the selected knots (shown in green below), and an ANOVA. 
+```{r , fig.height=3, fig.width=5}
+plot(mydata$x.pos, mydata$y.pos, col="grey", pch=16,
+    xlab="X", ylab="Y", asp=1)
+points(knotgrid, pch=16, col=4)
+points(knotgrid[salsa2dOutput$aR[[1]],], 
+       col="darkgreen", pch=16, cex=2)  
+```
+
+```{r }
+anova(salsa2dOutput$bestModel)
+```
+
+9. Assess the fitted values against the original counts for before and after impact. 
+```{r fig=TRUE, fig.align='center', fig.width=8, fig.height=6}
+par(mfrow=c(2,2))
+quilt.plot(mydata$x.pos[mydata$impact==0], 
+           mydata$y.pos[mydata$impact==0], 
+           (mydata$response)[mydata$impact==0], , nrow=43, ncol=54, asp=1, main='Counts, Before')
+quilt.plot(mydata$x.pos[mydata$impact==1], 
+           mydata$y.pos[mydata$impact==1], 
+           (mydata$response)[mydata$impact==1], nrow=43, ncol=54, asp=1, main='Counts, After')
+
+quilt.plot(mydata$x.pos[mydata$impact==0], 
+           mydata$y.pos[mydata$impact==0], 
+           fitted(salsa2dOutput$bestModel)[mydata$impact==0], , nrow=43, ncol=54, asp=1, main='Fitted, Before')
+quilt.plot(mydata$x.pos[mydata$impact==1], 
+           mydata$y.pos[mydata$impact==1], 
+           fitted(salsa2dOutput$bestModel)[mydata$impact==1], nrow=43, ncol=54, asp=1, main='Fitted, After')
+
+```
+
+10. Load the Nysted prediction grid
+```{r}
+data("nysted.predictdata") 
+```
+
+11. Simplify the grid and check for points inside the boundary polygon: 
+
+    - The prediction grid is four seasons across before and after impact (8 times the grid). Reduce to one grid for before and one for after.  Really, only one grid is required to calculate the distance matrix, but this must then be repeated if predictions are to be made to more than one time point. 
+    - Also check to make sure that the prediction grid does not contain points within the boundary polygon.
+    
+```{r, fig.height=3, fig.width=4}
+# grid for before and after impact, season not in model
+predictdata<-nysted.predictdata[nysted.predictdata$season==1,]
+require(splancs)
+
+plot(predictdata$x.pos, predictdata$y.pos, pch=20, col='darkgrey', cex=0.5,ylim=c(6050, 6065))
+polymap(nysted.coast, add=T)
+```
+
+Remove points on land:
+```{r, fig.height=3, fig.width=4}
+predictdata<-predictdata[which(inout(cbind(predictdata$x.pos, predictdata$y.pos), poly = nysted.coast)==FALSE),]
+
+plot(predictdata$x.pos, predictdata$y.pos, pch=20, col='darkgrey', cex=0.5,ylim=c(6050, 6065))
+polymap(nysted.coast, add=T)
+```
+
+12. Make the geodesic distance matrix for the prediction locations and check the distances for one knot using `quilt.plot`.
+
+```{r , fig.height=3, fig.width=5}
+dists<-makeDists(datacoords = cbind(predictdata$x.pos, predictdata$y.pos), 
+                 knotcoords = knotgrid, knotmat=FALSE, polys = nysted.coast, type='B')$dataDist
+quilt.plot(predictdata$x.pos, predictdata$y.pos, dists[,salsa2dOutput$aR[[1]][1]], main='Prediction Grid', asp=1)
+```
+
+13. Make predictions and plot.
+```{r}
+# make predictions on response scale
+preds<-predict.gamMRSea(newdata = predictdata, g2k = dists, object = salsa2dOutput$bestModel)
+```
+
+Plotting the predictions pre and post impact:
+```{r fig=TRUE, fig.align='center', fig.width=8, fig.height=5}
+par(mfrow=c(1,2))
+quilt.plot(predictdata$x.pos[predictdata$impact==0], 
+           predictdata$y.pos[predictdata$impact==0], 
+           preds[predictdata$impact==0], nrow=80, ncol=40, asp=1)
+
+quilt.plot(predictdata$x.pos[predictdata$impact==1], 
+           predictdata$y.pos[predictdata$impact==1], 
+           preds[predictdata$impact==1], nrow=80, ncol=40, asp=1)
+```
+
+14. Use a parametric bootstrap to get bootstrap predictions and calculate 95% confidence intervals.
+
+```{r boots, warning=FALSE, message=FALSE, results='hide'}
+bootPreds<-do.bootstrap.cress.robust(model.obj = salsa2dOutput$bestModel, predictionGrid = predictdata, splineParams=salsa2dOutput$bestModel$splineParams, g2k=dists, B = 100, robust=TRUE)
+```
+
+```{r }
+#load('predictionboot.RData')
+cis <- makeBootCIs(bootPreds)
+```
+
+15. Finally, calculate the differences before and after across all bootstraps and assess significance.
+
+```{r }
+differences <- getDifferences(beforePreds = 
+                      bootPreds[predictdata$impact == 0, ],
+                      afterPreds = bootPreds[predictdata$impact == 1, ])
+```
+
+Plot differences and indicate where significant positive/negative differences lie.
+```{r fig=TRUE, fig.align='center', fig.width=8, fig.height=5}
+mediandiff <- differences$mediandiff
+# The marker for each after - before difference:
+# positive ('1') and negative ('-') significant differences
+marker <- differences$significanceMarker
+par(mfrow = c(1, 1))
+quilt.plot(predictdata$x.pos[predictdata$impact == 0], 
+           predictdata$y.pos[predictdata$impact == 0],
+           mediandiff, asp = 1, nrow = 104, ncol = 54)
+# add + or - depending on significance of cells. Just
+# requires one significance out of all to be allocated
+points(predictdata$x.pos[predictdata$impact == 0][marker == 1],
+       predictdata$y.pos[predictdata$impact == 0][marker == 1],
+       pch = "+", col = "darkgrey", cex = 0.75)
+points(predictdata$x.pos[predictdata$impact == 0][marker == (-1)],
+       predictdata$y.pos[predictdata$impact == 0][marker == (-1)],
+       col = "darkgrey", cex = 0.75)
+points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey")
+```
+
+# Check CV for Geo vs Euclidean
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+salsa2dOutputeuc<-runSALSA2D(initialModel, salsa2dlist, 
+                      d2k=distMatsEuc$dataDist,k2k=distMatsEuc$knotDist)
+```
+
+```{r, fig.width=8, fig.height=5 }
+par(mfrow=c(1,2))
+plot(mydata$x.pos, mydata$y.pos, col="grey", pch=16,
+    xlab="X", ylab="Y", asp=1, main='Euclidean')
+points(knotgrid, pch=16, col=4)
+points(knotgrid[salsa2dOutputeuc$aR[[1]],], 
+       col="darkgreen", pch=16, cex=2)  
+plot(mydata$x.pos, mydata$y.pos, col="grey", pch=16,
+    xlab="X", ylab="Y", asp=1, main='Geodesic')
+points(knotgrid, pch=16, col=4)
+points(knotgrid[salsa2dOutput$aR[[1]],], 
+       col="darkgreen", pch=16, cex=2) 
+```
+
+```{r }
+anova(salsa2dOutputeuc$bestModel)
+anova(salsa2dOutput$bestModel)
+```
+
+```{r}
+cv.gamMRSea(data=mydata, salsa2dOutput$bestModel, K=10)$delta[2]
+cv.gamMRSea(data=mydata, salsa2dOutputeuc$bestModel, K=10)$delta[2]
+```

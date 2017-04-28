@@ -14,6 +14,12 @@ result <- ddf(dsmodel=~mcds(key="hn", formula=~1),
               data = dis.data, method="ds", 
               meta.data=list(width=250))
 
+## ----dist, cache=TRUE, results='hide', warning=FALSE, message=FALSE------
+# create.NHAT and create.count.data are MRSea functions to adjust the 
+# sightings for the detection function estimated above.
+dis.data <- create.NHAT(dis.data,result)
+count.data <- create.count.data(dis.data)
+
 ## ------------------------------------------------------------------------
 data <- count.data
 data$response <- round(data$NHAT)
@@ -42,11 +48,11 @@ salsa1dlist <- list(fitnessMeasure = "QBIC", minKnots_1d = 2,maxKnots_1d = 5,
                     gaps = c(0))
 
 ## ------------------------------------------------------------------------
-data(predict.data.re)  # contains predict.data
+data("nysted.predictdata")  # contains predict.data
 # This is a spatial grid for making predictions.  All covariates in 
 # final model must be in this data frame and the naming must be the 
 # same as for the data
-predictData <- predict.data.re
+predictData <- nysted.predictdata
 range(data$depth)
 range(predictData$depth)
 
@@ -74,19 +80,22 @@ summary(salsa1dOutput$bestModel)
 salsa1dOutput$splineParams[[2]]$knots
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
+## ----knotgrid, message=FALSE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, cache=TRUE----
+knotgrid<- getKnotgrid(coordData = cbind(data$x.pos, data$y.pos), numKnots = 300)
+#
+# write.csv(knotgrid, file='knotgrid_fullanalysis.csv', row.names=F)
+# ~~~~~~~~~~~~~~~~~~~~~~~
+
 ## ------------------------------------------------------------------------
 # make distance matrices for datatoknots and knottoknots
-distMats <- makeDists(cbind(data$x.pos, data$y.pos), na.omit(knotgrid))
-
-r_seq <- getRadiiChoices(numberofradii=10, distMatrix=distMats$dataDist)
+distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 # make parameter set for running salsa2d
 salsa2dlist<-list(fitnessMeasure = 'QBIC', knotgrid = knotgrid, 
-                  knotdim=c(100,100), startKnots=10, minKnots=4,
-                  maxKnots=12, r_seq=r_seq, gap=0, 
-                  interactionTerm="as.factor(impact)")
+                 startKnots=5, minKnots=4, maxKnots=12, gap=0, 
+                 interactionTerm="as.factor(impact)")
 
 ## ----echo=FALSE, message=FALSE, warning=FALSE, results='hide'------------
 salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, 
@@ -126,10 +135,11 @@ runPartialPlots(model = salsa2dOutput$bestModel, data = data, factorlist =
 
 ## ------------------------------------------------------------------------
 dists<-makeDists(cbind(predictData$x.pos, predictData$y.pos), 
-                 na.omit(knotgrid),knotmat=FALSE)$dataDist
+                 knotgrid,knotmat=FALSE)$dataDist
+
 
 # make predictions on response scale
-preds<-predict.gamMRSea(predict.data = predictData, g2k = dists, model = salsa2dOutput$bestModel)
+preds<-predict.gamMRSea(newdata = predictData, g2k = dists, object = salsa2dOutput$bestModel)
 
 ## ----fig=TRUE, fig.align='center', fig.width=9, fig.height=6-------------
 par(mfrow=c(1,2))
@@ -172,5 +182,5 @@ points(predictData$x.pos[predictData$impact == 0][marker == 1],
 points(predictData$x.pos[predictData$impact == 0][marker == (-1)],
        predictData$y.pos[predictData$impact == 0][marker == (-1)],
        col = "darkgrey", cex = 0.75)
-points(681417.3, 6046910, cex = 3, pch = "*", lwd = 1, col = "grey")
+points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey")
 

@@ -4,7 +4,8 @@
 \alias{makeDists}
 \title{Make Euclidean distance matrices for use in CReSS and SALSA model frameworks}
 \usage{
-makeDists(datacoords, knotcoords, knotmat = TRUE, polys = NULL)
+makeDists(datacoords, knotcoords, knotmat = TRUE, polys = NULL,
+  type = "A", plot.transition = FALSE, grid.dim = c(100, 100))
 }
 \arguments{
 \item{datacoords}{Coordinates of the data locations}
@@ -14,6 +15,12 @@ makeDists(datacoords, knotcoords, knotmat = TRUE, polys = NULL)
 \item{knotmat}{(\code{default=TRUE}). Should a matrix of knot-knot distances be created}
 
 \item{polys}{(\code{default=NULL}). If geodesic distances are to be calculated, provide a list of polygons defining exclusion areas.}
+
+\item{type}{(\code{default='A'}).  One of 'A' or 'B'.  'A' is used when the \code{knotcoords} are a subset of \code{datacoords} AND the attributes of \code{knotcoords} give the index of points from \code{datacoords} (as happens if \code{getKnotgrid()} is used).  'B' is used for prediction (when \code{datacoords} is a prediction grid and so \code{knotcoords} is not a subset) or when the knotgrid was not generated using \code{getKnotgrid()}.}
+
+\item{plot.transition}{(\code{default=TRUE}). Logical stating whether to plot the transition matrix.  Useful to see if the boundaries are being obeyed.}
+
+\item{grid.dim}{This is a vector of length two which specifies the dimesions of the grid used to create the transition matrix (default \code{c(100, 100)}.  If the transition matrix shows that boundaries are being ignored, the grid dimensions will need to increase. However, increasing the grid, whilst improving accuracy, also increases computational time.}
 }
 \description{
 This function makes two Euclidean distance matrices.  One for the distances between all spatial observations and all spatial knot locations.  The other, if specified, is the distances between knot locations.
