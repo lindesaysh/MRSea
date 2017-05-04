@@ -1,0 +1,249 @@
+---
+title: "MRSea Interaction Trial"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='', message=FALSE)
+```
+
+This vignette is in addition to the main vignette for the package but shows an analysis using geodesic distances (as the fish swims rather than as the crow flies).
+
+```{r, echo=FALSE}
+devtools::load_all(pkg='../../MRSea')
+```
+
+```{r, eval=FALSE}
+require(MRSea)
+```
+
+1. Load the distance sampling corrected Nysted data from the package.
+```{r}
+data("Nysted.distancecorrected.re")
+```
+
+2. Fit an initial Model to the data.  Here we include only the `impact` variable as a factor along with the offset of cell area. 
+```{r }
+mydata$blockid <- paste(mydata$transect.id, mydata$season, mydata$impact,sep = "")
+mydata$foldid <- getCVids(data = mydata, folds = 5, block = 'blockid')
+
+salsa1dlist <- list(fitnessMeasure = "cv.gamMRSea", minKnots_1d = 2,maxKnots_1d = 5, 
+                    startKnots_1d = 1, degree = 2, maxIterations = 10,
+                    gaps = c(0))
+```
+
+
+```{r message=FALSE}
+initialModel <- glm(response ~ as.factor(season) + as.factor(impact) 
+                    + offset(log(area)), family = "quasipoisson", 
+                    data = mydata)
+```
+
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+# run SALSA
+require(MuMIn)
+salsa1dOutput <- runSALSA1D(initialModel, salsa1dlist, c("depth"),
+                      predictionData=nysted.predictdata, datain=mydata, removal=TRUE, panelid = mydata$blockid)
+```
+
+```{r eval=FALSE}
+# run SALSA
+salsa1dOutput <- runSALSA1D(initialModel, salsa1dlist, c("depth"),
+                      predictionData=predictData, datain=data, removal=TRUE, panelid = data$blockid)
+```
+
+Use the built in summary function (`summary.gamMRSea`) to look at the summary of the model.  Note that robust standard errors are given alongside the raw standard erorrs and information regarding panels is at the bottom of the output. If each data point is a panel, then independence is assumed.
+
+```{r }
+summary(salsa1dOutput$bestModel)
+```
+
+
+```{r }
+# How many knots were chosen for depth?
+salsa1dOutput$splineParams[[2]]$knots
+# ~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+
+
+
+3. Create a grid of knots that will be used as possible knot locations.  Create one grid for before and one for after:
+
+```{r knotgridnotrun, message=FALSE, eval=TRUE, cache=TRUE}
+knotgrid0<- getKnotgrid(coordData = cbind(mydata$x.pos[mydata$impact==0], mydata$y.pos[mydata$impact==0]), numKnots = 300, plot = FALSE)
+knotgrid1<- getKnotgrid(coordData = cbind(mydata$x.pos[mydata$impact==1], mydata$y.pos[mydata$impact==1]), numKnots = 300, plot = FALSE)
+```
+
+4. Join knotgrids together with additional column representing "time".
+
+```{r}
+myknots<-rbind(knotgrid0,knotgrid1)
+```
+
+5. Create distances between knots!
+
+```{r}
+
+datacoords<-mydata[,c('x.pos', 'y.pos', 'impact')]
+
+d2k<- matrix(Inf, ncol=(nrow(knotgrid0) + nrow(knotgrid1)), nrow=length(datacoords[,1]))
+d2k0 = d2k1 = matrix(0, ncol=dim((knotgrid0))[1], nrow=length(datacoords[datacoords$impact==0,1]))
+
+for(i in 1:dim(knotgrid0)[1]){
+    d2k0[,i]<- sqrt((datacoords[datacoords$impact==0,1]-knotgrid0[i,1])**2 + (datacoords[datacoords$impact==0,2]-knotgrid0[i,2])**2)
+}
+for(i in 1:dim(knotgrid1)[1]){
+    d2k1[,i]<- sqrt((datacoords[datacoords$impact==1,1]-knotgrid1[i,1])**2 + (datacoords[datacoords$impact==1,2]-knotgrid1[i,2])**2)
+}
+
+d2k[1:nrow(d2k0), 1:ncol(d2k0)]<-d2k0
+d2k[(nrow(d2k0)+1):nrow(d2k), (ncol(d2k0)+1):(ncol(d2k))]<-d2k1
+
+```
+
+knot to knot matrix:
+```{r}
+k2k<- matrix(Inf, ncol=(nrow(knotgrid0) + nrow(knotgrid1)), nrow=(nrow(knotgrid0) + nrow(knotgrid1)))
+k2k0 = k2k1 = matrix(0, ncol=dim((knotgrid0))[1], nrow=dim(knotgrid0)[1])
+
+for(i in 1:dim(knotgrid0)[1]){
+    k2k0[,i]<- sqrt((knotgrid0[,1]-knotgrid0[i,1])**2 + (knotgrid0[,2]-knotgrid0[i,2])**2)
+}
+for(i in 1:dim(knotgrid1)[1]){
+    k2k1[,i]<- sqrt((knotgrid1[,1]-knotgrid1[i,1])**2 + (knotgrid1[,2]-knotgrid1[i,2])**2)
+}
+
+k2k[1:nrow(k2k0), 1:ncol(k2k0)]<-k2k0
+k2k[(nrow(k2k0)+1):nrow(k2k), (ncol(k2k0)+1):(ncol(k2k))]<-k2k1
+```
+
+```{r}
+# make parameter set for running salsa2d
+salsa2dlist<-list(fitnessMeasure = 'cv.gamMRSea', knotgrid = myknots, 
+                 startKnots=5, minKnots=4, maxKnots=12, gap=0, cv.gamMRSea.seed = 1)
+```
+
+7. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
+require(MuMIn)
+salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, 
+                      d2k=d2k,k2k=k2k)
+```
+
+```{r echo=TRUE, eval=FALSE}
+salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, 
+                             d2k=distMatsGeo$dataDist, k2k=distMatsGeo$knotDist)
+```
+
+8. Assess the output for the location of the selected knots (shown in green below), and an ANOVA. 
+```{r , fig.height=6, fig.width=8}
+plot(mydata$x.pos, mydata$y.pos, col="grey", pch=16,
+    xlab="X", ylab="Y", asp=1)
+points(myknots, col=1)
+points(myknots[salsa2dOutput$aR[[1]][salsa2dOutput$aR[[1]]<201],], 
+       col="darkgreen", cex=2, pch="+")  
+points(myknots[salsa2dOutput$aR[[1]][salsa2dOutput$aR[[1]]>201],], 
+       col="blue", pch="x", cex=1.5)
+```
+
+```{r}
+salsa2dOutput$aR[[1]]
+```
+
+```{r}
+set.seed(1)
+cv.gamMRSea(mydata, salsa2dOutput$bestModel, K=10)$delta
+salsa2dOutput$fitStat
+```
+
+```{r }
+data("nysted.predictdata")
+datacoords<-nysted.predictdata[,c('x.pos', 'y.pos', 'impact')]
+
+g2k<- matrix(Inf, ncol=(nrow(knotgrid0) + nrow(knotgrid1)), nrow=length(datacoords[,1]))
+g2k0 =g2k1 = matrix(0, ncol=dim((knotgrid0))[1], nrow=length(datacoords[datacoords$impact==0,1]))
+
+for(i in 1:dim(knotgrid0)[1]){
+   g2k0[,i]<- sqrt((datacoords[datacoords$impact==0,1]-knotgrid0[i,1])**2 + (datacoords[datacoords$impact==0,2]-knotgrid0[i,2])**2)
+}
+for(i in 1:dim(knotgrid1)[1]){
+   g2k1[,i]<- sqrt((datacoords[datacoords$impact==1,1]-knotgrid1[i,1])**2 + (datacoords[datacoords$impact==1,2]-knotgrid1[i,2])**2)
+}
+
+g2k[1:nrow(g2k0), 1:ncol(g2k0)]<-g2k0
+g2k[(nrow(g2k0)+1):nrow(g2k), (ncol(g2k0)+1):(ncol(g2k))]<-g2k1
+```
+
+```{r}
+#newmod<-update(salsa2dOutput$bestModel, .~. - LocalRadialFunction(radiusIndices, dists, radii, aR):as.factor(impact))
+
+# make predictions on response scale
+preds<-predict.gamMRSea(newdata = nysted.predictdata, g2k =g2k, object = salsa2dOutput$bestModel)
+```
+
+
+Plotting the predictions pre and post impact:
+```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
+par(mfrow=c(1,2))
+quilt.plot(nysted.predictdata$x.pos[nysted.predictdata$impact==0], 
+           nysted.predictdata$y.pos[nysted.predictdata$impact==0], 
+           preds[nysted.predictdata$impact==0], nrow=104, ncol=55, asp=1)
+
+quilt.plot(nysted.predictdata$x.pos[nysted.predictdata$impact==1], 
+           nysted.predictdata$y.pos[nysted.predictdata$impact==1], 
+           preds[nysted.predictdata$impact==1], nrow=104, ncol=55, asp=1)
+```
+
+```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
+par(mfrow=c(1,2))
+quilt.plot(nysted.predictdata$x.pos[nysted.predictdata$impact==0], 
+           nysted.predictdata$y.pos[nysted.predictdata$impact==0], 
+           nysted.predictdata$truth.re[nysted.predictdata$impact==0], nrow=104, ncol=55, asp=1)
+
+quilt.plot(nysted.predictdata$x.pos[nysted.predictdata$impact==1], 
+           nysted.predictdata$y.pos[nysted.predictdata$impact==1], 
+           nysted.predictdata$truth.re[nysted.predictdata$impact==1], nrow=104, ncol=55, asp=1)
+```
+
+model.)
+
+```{r boots, warning=FALSE, message=FALSE, results='hide'}
+bootPreds<-do.bootstrap.cress.robust(salsa2dOutput$bestModel, predictionGrid = nysted.predictdata, splineParams=salsa2dOutput$bestModel$splineParams, g2k=g2k, B = 100, robust=TRUE)
+```
+
+
+```{r }
+#load('predictionboot.RData')
+cis <- makeBootCIs(bootPreds)
+```
+
+16. Calculate the differences before and after across all bootstraps
+```{r }
+differences <- getDifferences(beforePreds = 
+                      bootPreds[nysted.predictdata$impact == 0, ],
+                      afterPreds = bootPreds[nysted.predictdata$impact == 1, ])
+```
+
+17. Plot differences and indicate where significant positive/negative differences lie.
+```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
+mediandiff <- differences$mediandiff
+# The marker for each after - before difference:
+# positive ('1') and negative ('-') significant differences
+marker <- differences$significanceMarker
+par(mfrow = c(1, 1))
+quilt.plot(nysted.predictdata$x.pos[nysted.predictdata$impact == 0], 
+           nysted.predictdata$y.pos[nysted.predictdata$impact == 0],
+           mediandiff, asp = 1, nrow = 104, ncol = 55)
+# add + or - depending on significance of cells. Just
+# requires one significance out of all to be allocated
+points(nysted.predictdata$x.pos[nysted.predictdata$impact == 0][marker == 1],
+       nysted.predictdata$y.pos[nysted.predictdata$impact == 0][marker == 1],
+       pch = "+", col = "darkgrey", cex = 0.75)
+points(nysted.predictdata$x.pos[nysted.predictdata$impact == 0][marker == (-1)],
+       nysted.predictdata$y.pos[nysted.predictdata$impact == 0][marker == (-1)],
+       col = "darkgrey", cex = 0.75)
+points(681417.3, 6046910, cex = 3, pch = "*", lwd = 1, col = "grey")
+```
