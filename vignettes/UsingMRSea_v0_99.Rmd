@@ -104,7 +104,7 @@ Run SALSA1D to select what covariates are included and whether or not they are s
 6. Specify the parameters required:
 
 ```{r }
-salsa1dlist <- list(fitnessMeasure = "QBIC", minKnots_1d = 2,maxKnots_1d = 5, 
+salsa1dlist <- list(fitnessMeasure = "cv.gamMRSea", minKnots_1d = 2,maxKnots_1d = 5, 
                     startKnots_1d = 1, degree = 2, maxIterations = 10,
                     gaps = c(0))
 ```
@@ -179,9 +179,9 @@ distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 # make parameter set for running salsa2d
-salsa2dlist<-list(fitnessMeasure = 'QBIC', knotgrid = knotgrid, 
+salsa2dlist<-list(fitnessMeasure = 'cv.gamMRSea', knotgrid = knotgrid, 
                  startKnots=5, minKnots=4, maxKnots=12, gap=0, 
-                 interactionTerm="as.factor(impact)")
+                 interactionTerm="as.factor(impact)", cv.gamMRSea.seed=1)
 ```
 
 11. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`.
@@ -218,6 +218,12 @@ runsTest(residuals(salsa2dOutput$bestModel, type='pearson'),emp.distribution=emp
 
 13. Check for model selection
 ```{r }
+set.seed(1)
+cv.gamMRSea(data=data, modelobject = salsa2dOutput$bestModel, K=10)$delta[2]
+salsa2dOutput$fitStat
+```
+
+```{r}
 anova(salsa2dOutput$bestModel)
 ```
 

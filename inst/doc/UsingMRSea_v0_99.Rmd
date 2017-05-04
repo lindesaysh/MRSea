@@ -218,6 +218,7 @@ runsTest(residuals(salsa2dOutput$bestModel, type='pearson'),emp.distribution=emp
 
 13. Check for model selection
 ```{r }
+cv.gamMRSea(data, salsa2dOutput$bestModel, K=10)
 anova(salsa2dOutput$bestModel)
 ```
 

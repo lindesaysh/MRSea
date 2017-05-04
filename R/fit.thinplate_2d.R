@@ -5,7 +5,7 @@
 #'
 
 
-"fit.thinPlate_2d" <- function(fitnessMeasure, dists,aR,radii,baseModel,radiusIndices,models, currentFit, interactionTerm, data, initDisp) {
+"fit.thinPlate_2d" <- function(fitnessMeasure, dists,aR,radii,baseModel,radiusIndices,models, currentFit, interactionTerm, data, initDisp, seed.in) {
 
   attributes(baseModel$formula)$.Environment<-environment()
   baseModel$splineParams[[1]]$knotPos<-aR
@@ -34,7 +34,7 @@
   }
 
 
-  tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp)$fitStat
+  tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, seed.in)$fitStat
   if(tempFit <= (currentFit+10)){
     models[[length(models)+1]] = list(aR,radiusIndices, radii, tempFit)
   }
@@ -43,6 +43,6 @@
   #print("Model fitted...")
   #print(paste('disp= ', summary(currentModel)$dispersion, ', num knots: ', length(aR), ', fitstat: ',tempFit,sep=''))
   #print("ooooooooooooooooooooooooooooooooooooooo")
-  return(list(currentModel=currentModel,models=models))
+  return(list(currentModel=currentModel,models=models, fitStat=tempFit))
 
 }

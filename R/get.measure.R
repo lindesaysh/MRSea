@@ -110,8 +110,27 @@
     #fitStat<- outer.func(out.lm)
   }
   
-  if(fitnessMeasure=="CV2"){
+  if(fitnessMeasure=="CV_CReSS"){
     fitStat<-getCV_CReSS(data, out.lm)
+  }
+  
+  if(fitnessMeasure=="cv.gamMRSea"){
+    if(class(out.lm)[1]=='glm'){
+      if(dim(model.matrix(out.lm))[2]==1){
+        data2<- data.frame(response=out.lm$y)
+        textForEval<- "tempCVFit<-glm(response~1, data=data2, family=family(out.lm))" 
+      }
+      if(dim(model.matrix(out.lm))[2]>1){
+        data2<- data.frame(response=out.lm$y, model.matrix(out.lm)[,2:length(coefficients(out.lm))])
+        names(data2)<- c("response", paste("V", 1:(length(coefficients(out.lm))-1), sep=""))
+        textForEval<- paste("tempCVFit<-glm( response ~ ", paste("V", 1:(length(coefficients(out.lm))-1), sep="", collapse="+"), ", family=family(out.lm), data=data2)")
+      }
+      eval(parse(text=textForEval))  
+      require(boot)
+      fitStat<-cv.glm(data2,tempCVFit, K=10)$delta[2] 
+    }else{
+      fitStat<-cv.gamMRSea(data2,tempCVFit, K=10)$delta[2]    
+    }
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")

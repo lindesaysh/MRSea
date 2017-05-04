@@ -4,7 +4,7 @@
 #' 
 
 choose.radii <- function(currentFit,indices,radiusIndices,radii,out.lm,dists,
-                         aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp) {
+                         aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in) {
   #print("+++++++++++++++++++++++++++")
   #print("Fitting Radii")
   #print("+++++++++++++++++++++++++++")
@@ -27,10 +27,11 @@ choose.radii <- function(currentFit,indices,radiusIndices,radii,out.lm,dists,
           while (thisImprove) {
             thisImprove = 0
             tempRadii[i] = tempRadii[i] - 1
-            output<- fit.thinPlate_2d(fitnessMeasure, dists,aR,radii,baseModel,tempRadii,models, currentFit, interactionTerm, data, initDisp)
+            output<- fit.thinPlate_2d(fitnessMeasure, dists,aR,radii,baseModel,tempRadii,models, currentFit, interactionTerm, data, initDisp, seed.in)
             tempModel<-output$currentModel
             models<-output$models
-            tempFit <- get.measure_2d(fitnessMeasure,currentFit,tempModel, data, dists,aR,radii, tempRadii, initDisp)$fitStat
+#            tempFit <- get.measure_2d(fitnessMeasure,currentFit,tempModel, data, dists,aR,radii, tempRadii, initDisp)$fitStat
+            tempFit <- output$fitStat
             #print(c(i,"Down",tempFit))
             if (tempFit < currentFit) {
               #print("UPDATING")
@@ -50,10 +51,11 @@ choose.radii <- function(currentFit,indices,radiusIndices,radii,out.lm,dists,
           while (thisImprove) {
             thisImprove = 0
             tempRadii[i] = tempRadii[i] + 1
-            output<- fit.thinPlate_2d(fitnessMeasure, dists,aR,radii,baseModel,tempRadii,models, currentFit, interactionTerm, data, initDisp)
+            output<- fit.thinPlate_2d(fitnessMeasure, dists,aR,radii,baseModel,tempRadii,models, currentFit, interactionTerm, data, initDisp, seed.in)
             tempModel<-output$currentModel
             models<-output$models
-            tempFit <- get.measure_2d(fitnessMeasure,currentFit,tempModel, data,  dists,aR, radii, tempRadii, initDisp)$fitStat
+            tempFit <- output$fitStat
+            #tempFit <- get.measure_2d(fitnessMeasure,currentFit,tempModel, data,  dists,aR, radii, tempRadii, initDisp)$fitStat
             #print(c(i,"Up",tempFit))
             if (tempFit < currentFit) {
               # print("UPDATING")

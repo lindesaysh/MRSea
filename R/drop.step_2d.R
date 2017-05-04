@@ -8,7 +8,7 @@
 
 
 "drop.step_2d" <- function(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,
-                           point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp) {
+                           point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in) {
   
   attributes(baseModel$formula)$.Environment<-environment()
   
@@ -26,18 +26,19 @@
     tempR <- aR
     tempR <- tempR[-i]
     tempRadii = radiusIndices[-i]
-    output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp)
+    output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, seed.in)
     initModel<-output$currentModel
     models<-output$models
-    initBIC<-get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
-    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp)
+    initBIC<-output$fitStat
+      #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
+    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in)
     tempRadii=out$radiusIndices
     tempOut.lm=out$out.lm
     models=out$models
-    output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
+    #output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
     
     #fitStat<-output$tempMeasure
-    tempMeasure<-output$fitStat
+    tempMeasure<-out$BIC
     if (tempMeasure +tol < fitStat) {
       out.lm <- tempOut.lm
       fitStat<-tempMeasure

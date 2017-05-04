@@ -1,4 +1,4 @@
-get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,radiusIndices, initDisp){
+get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,radiusIndices, initDisp, seed.in){
   #print("ooooooooooooooooooooooooooooooooooooooo")
   #print("Getting measure...")
   #print("ooooooooooooooooooooooooooooooooooooooo")
@@ -72,6 +72,10 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     fitStat <- getCV_CReSS_2D(data, out.lm, dists,aR,radii,radiusIndices)
   }
   
+  if(fitnessMeasure=="cv.gamMRSea"){  
+    set.seed(seed.in)
+    fitStat <- cv.gamMRSea(data, out.lm, K=10)$delta[2]
+  }
   
   if(fitnessMeasure=="PRESS"){  
     fitStat <- getPRESS_CReSS(data, out.lm)

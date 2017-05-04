@@ -78,8 +78,10 @@
 
 getRadiiChoices<-function(numberofradii=10, distMatrix){
   
-  minDist <- mean(apply(distMatrix,2,min))
-  meanDist <- mean(apply(distMatrix,2,mean))
+  distMatrix[which(is.infinite(distMatrix), arr.ind = T)]<-NA
+  
+  minDist <- mean(apply(distMatrix,2,min, na.rm=TRUE))
+  meanDist <- mean(apply(distMatrix,2,mean, na.rm=TRUE))
   rval_max<- sqrt(-log(0.7)/meanDist**2)
   rval_min<- sqrt(-log(0.001)/meanDist**2)
   r_seq<- exp(seq(log(rval_min), log(rval_max), length=numberofradii))

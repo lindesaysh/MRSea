@@ -1,4 +1,4 @@
-initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots,fitnessMeasure, interactionTerm, data, knot.seed, initDisp){
+initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, seed.in){
 
   attributes(baseModel$formula)$.Environment<-environment()
   baseModel<-update(baseModel, data=data)
@@ -135,7 +135,12 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }else{
   numNeeded = nrow(initialKnots)
   knots2<-rbind(initialKnots, knotgrid)
-  posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
+  if(length(initialaR)>0){
+    posKnots<-initialaR
+  }else{
+    posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
+  }
+  
   
   #   posKnots = cbind()
   #   legPos=mapInd
@@ -274,6 +279,10 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
     fitStat<-AICh(baseModel)
   }
 
+  if(fitnessMeasure=="cv.gamMRSea"){
+    set.seed(seed.in)
+    fitStat<-cv.gamMRSea(data, baseModel, K=10)$delta[2]
+  }
 
   #cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
@@ -286,7 +295,7 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   }
   # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
 
-  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp)
+  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, seed.in)
 
   out.lm<-output$currentModel
   models<-output$models
@@ -306,13 +315,14 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
 
   measures = 0
 
-  BIC<-get.measure_2d(fitnessMeasure,measures,out.lm, data,  dists, aR,radii,radiusIndices, initDisp)$fitStat
+  BIC<-output$fitStat
+  #BIC<-get.measure_2d(fitnessMeasure,measures,out.lm, data,  dists, aR,radii,radiusIndices, initDisp)$fitStat
 
 
   #print(BIC[length(BIC)])
 
   print("Fitting Initial Radii")
-  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp)
+  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in)
   BIC=out$BIC
   radiusIndices=out$radiusIndices
   out.lm=out$out.lm

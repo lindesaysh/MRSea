@@ -8,7 +8,7 @@
 #'
 
 
-"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10, suppress.printout=FALSE, plot=FALSE){
+"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, interactionTerm=NULL, knot.seed=10, suppress.printout=FALSE, plot=FALSE, seed.in){
   
 
   #Where am I?
@@ -88,7 +88,7 @@
   # xvals <- max(x)
   # yvals <- max(y)
   ###########################initialisation######################################
-  output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,fitnessMeasure, interactionTerm, data, knot.seed, initDisp)
+  output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, seed.in)
 
   point <- output$point
   knotPoint <- output$knotPoint
@@ -116,7 +116,7 @@
     improveDrop <- 0
     ####################################exchange step#############################
     ####track <- rbind(track,cbind("exchanging",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
-    output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
+    output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in)
     #  ####print("here e")
     point <- output$point
     knotPoint <- output$knotPoint
@@ -136,7 +136,7 @@
     ######################################improve step############################
     ####track <- rbind(track,cbind("improving",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
     ####print("here im")
-    output <- improve.step_2d(gap,knotDist,radii,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
+    output <- improve.step_2d(gap,knotDist,radii,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in)
     ####print("here im")
     point <- output$point
     knotPoint <- output$knotPoint
@@ -155,7 +155,7 @@
     if(plot==TRUE) {plot(knotgrid, main='Improve'); points(knotgrid[aR,], pch=20)}
     ###################################drop step#################################
     if (length(aR) > minKnots) {
-      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp)
+      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in)
       ####print("here e")
       point <- output$point
       knotPoint <- output$knotPoint
@@ -187,7 +187,7 @@
   
   gc(verbose=FALSE)
   
-    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,models=models,actualKnotIndices=aR,improve=overallImprove))
+    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,models=models,actualKnotIndices=aR,improve=overallImprove, seed.in=seed.in))
   
 
 }

@@ -370,6 +370,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     fitStatlist<-list(fitStat=fitStat, CV = cv_initial)  
   }
   
+  outModel<-make.gamMRSea(outModel, gamMRSea=TRUE)
+  
   if(suppress.printout){
     sink()
   }
