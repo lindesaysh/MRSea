@@ -60,7 +60,7 @@ getKnotgrid<-function(coordData, numKnots=300, plot=TRUE){
   spaceid <-cover.design(R = samplingdata, nd = numKnots, nruns = 5)$best.id
   knotgrid <- samplingdata[spaceid,]
   
-  if(is.null(sampleid)){
+  if(!exists('sampleid')){
     attr(knotgrid, 'points.selected')<-duppointid[spaceid]
   }else{
     attr(knotgrid, 'points.selected')<-duppointid[sampleid[spaceid]]
