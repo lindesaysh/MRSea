@@ -28,6 +28,7 @@ update.gamMRSea<-function (object, formula., ..., evaluate = TRUE, panels=NULL)
     }else{
       newmodel$panels<-panels
     }
+    newmodel$cvfolds<-object$cvfolds
     newmodel$varshortnames<-object$varshortnames
     newmodel$splineParams<-object$splineParams
     class(newmodel)<-class(object)

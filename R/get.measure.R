@@ -1,4 +1,4 @@
-"get.measure" <- function(fitnessMeasure,measures,out.lm, initDisp){
+"get.measure" <- function(fitnessMeasure,measures,out.lm, initDisp, seed.in){
   
   attributes(out.lm$formula)$.Environment<-environment()
   data<-out.lm$data
@@ -127,8 +127,10 @@
       }
       eval(parse(text=textForEval))  
       require(boot)
+      set.seed(seed.in)
       fitStat<-cv.glm(data2,tempCVFit, K=10)$delta[2] 
     }else{
+      set.seed(seed.in)
       fitStat<-cv.gamMRSea(data2,tempCVFit, K=10)$delta[2]    
     }
   }

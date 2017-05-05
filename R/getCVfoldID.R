@@ -31,15 +31,19 @@ getCVids <- function(data, folds, block=NULL, seed=1234){
   }
   else
   {
-    blocks<-unique(data[,block]) 
+    if(length(block)==1){
+      blocks<-unique(data[,block])
+    }else{
+      blocks<-unique(block)
+    }
     nBlocks<-length(blocks)
     n_cv <- ceiling(nBlocks/folds)
     set.seed(seed)                                          
     id_block_cv <- sample(rep(1:folds,n_cv),n_cv*folds)
     id_block_cv <- id_block_cv[1:length(blocks)]
-    id_cv<-numeric(length(data[,block]))
+    id_cv<-numeric(length(block))
     for (xi in 1:nBlocks){
-      rows<-which(data[,block]==blocks[xi])
+      rows<-which(block==blocks[xi])
       id_cv[rows]<-id_block_cv[xi] 
     }
   }

@@ -21,7 +21,7 @@
 #'@export
 #'
 
-"return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl,interactionTerm=interactionTerm, suppress.printout=FALSE){
+"return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl,interactionTerm=interactionTerm, suppress.printout=FALSE, seed.in){
 
   # if(suppress.printout){
   #   sink(file = 'salsa1d.log')
@@ -105,7 +105,7 @@ if(length(which(knotSites==bd[2]))>0){
 #print(knotSites)
 
     ###########################initialisation######################################
-    output <- initialise.measures(startKnots, explanatory, response, degree, wts, initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp)
+    output <- initialise.measures(startKnots, explanatory, response, degree, wts, initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in)
     point <- output$point
     knotPoint <<- output$knotPoint
     position <- output$position
@@ -115,7 +115,7 @@ if(length(which(knotSites==bd[2]))>0){
     models <- output$models
 
         print("^^^^^^^^^^^Initial^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-        print(get.measure(fitnessMeasure,measures,out.lm, initDisp)$fitStat)
+        print(get.measure(fitnessMeasure,measures,out.lm, initDisp, seed.in)$fitStat)
         print(gap)
         print(bd)
 
@@ -130,7 +130,7 @@ if(length(which(knotSites==bd[2]))>0){
       improveDrop <- 0
     ###################################exchange step#############################
       output <- exchange.step(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
-                                 out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp)
+                                 out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp, seed.in)
       point <- output$point
       knotPoint <- output$knotPoint
       position <- output$position
@@ -149,7 +149,7 @@ if(length(which(knotSites==bd[2]))>0){
       }
     #####################################improve step############################
       output <- improve.step(degree, gap, length(aR), response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,
-                                aR,measures,out.lm,improveNudge, wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp)
+                                aR,measures,out.lm,improveNudge, wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, seed.in)
       point <- output$point
       knotPoint <- output$knotPoint
       position <- output$position
@@ -167,7 +167,7 @@ if(length(which(knotSites==bd[2]))>0){
     ###################################drop step#################################
       if (length(aR) > minKnots) {
          output <- drop.step(degree, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
-                                  out.lm,improveDrop,minKnots, wts, baseModel,models, bd, spl, interactionTerm, initDisp)
+                                  out.lm,improveDrop,minKnots, wts, baseModel,models, bd, spl, interactionTerm, initDisp, seed.in)
          point <- output$point
          knotPoint <- output$knotPoint
          position <- output$position
@@ -191,7 +191,7 @@ if(length(which(knotSites==bd[2]))>0){
 
 ########################################################################################################################
 
-"initialise.measures" <- function(num,explanatory, response, degree, wts,  initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp){
+"initialise.measures" <- function(num,explanatory, response, degree, wts,  initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in){
    
   attributes(baseModel$formula)$.Environment<-environment()
   
@@ -230,11 +230,11 @@ if(length(which(knotSites==bd[2]))>0){
          }
       }
     position<-c(position,0,(knotPoint[num]-(num-1)):(length(knotSites )-num))
-    output <- fit.model(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp)
+    output <- fit.model(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in)
     out.lm<-output$currentModel
     models<-output$models
     model<<-out.lm
-    measures<- get.measure(fitnessMeasure,measures=NA,out.lm, initDisp)$fitStat
+    measures<- get.measure(fitnessMeasure,measures=NA,out.lm, initDisp, seed.in)$fitStat
     #measures <- update.measures(out.lm)
 cat("Initial fit = ", measures, aR,"\n")
 print("initialisation complete...")
@@ -244,7 +244,7 @@ print("initialisation complete...")
 ######################################################################################################################
 
 "exchange.step" <- function(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,
-                               measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp){
+                               measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, seed.in){
   
   attributes(baseModel$formula)$.Environment<-environment()
    # Loop - fuse used to ensure algorithm terminates
@@ -260,7 +260,7 @@ print("Exchanging...")
       if (length(index)>0) {
         if (index > 0) {
            output <- move.knot(degree, index,fitnessMeasure,measures,aR,point,response,explanatory,out.lm,improve,improveEx,
-                                  maxKnots, wts,  baseModel,knotSites,models, bd, spl, interactionTerm, initDisp)
+                                  maxKnots, wts,  baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, seed.in)
            improve <- output$improve
            improveEx <- output$improveEx
            models <-output$models
@@ -331,7 +331,7 @@ print("Exchanging done...")
 ################################################################################################################
 
 "move.knot" <- function(degree, index,fitnessMeasure,measures,aR,point,response,explanatory,out.lm,improve,improveEx,maxKnots,
-                            wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp){
+                            wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, seed.in){
   attributes(baseModel$formula)$.Environment<-environment()
 print("Moving knot...")
     chck<-c()
@@ -340,11 +340,11 @@ print("Moving knot...")
        tempR<-aR
        tempR[i]<-knotSites[point[index]]
        chck<-rbind(chck,tempR)
-       output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp)
+       output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in)
        if (output$currentModel$converge) {
           tempOut.lm<-output$currentModel
           models<-output$models
-          output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp)
+          output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, seed.in)
           tempMeasure<-output$tempMeasure
           fitStat<-output$fitStat
           chck<-rbind(chck,fitStat)
@@ -365,11 +365,11 @@ print("Moving knot...")
        }
     if (length(aR)<maxKnots) {
        tempR<-c(aR,knotSites[point[index]])
-       output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp)
+       output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in)
 	   if (output$currentModel$converge) {
           tempOut.lm<-output$currentModel
           models<-output$models
-          output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp)
+          output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, seed.in)
           tempMeasure<-output$tempMeasure
           fitStat<-output$fitStat
           if (tempMeasure > fitStat) {
@@ -397,7 +397,7 @@ print("Knot moved...")
 
 ####################################################################################################################
 
-"improve.step" <- function(degree, gap, num,response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp){
+"improve.step" <- function(degree, gap, num,response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, seed.in){
   attributes(baseModel$formula)$.Environment<-environment()
 print("Improving...")
    improve <- 1
@@ -407,7 +407,7 @@ print("Improving...")
      improve <- 0
      for (i in 1:length(aR)) {
        #browser()
-       output <- local.shift.up(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp)
+       output <- local.shift.up(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, seed.in)
        point <- output$point
        
        #print(length(point))
@@ -423,7 +423,7 @@ print("Improving...")
        improve <- output$improve
        improveNudge <- output$improveNudge
        if (shouldBreak) {break}
-       output <- local.shift.down(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts,baseModel,knotSites,models, bd, spl, interactionTerm, initDisp)
+       output <- local.shift.down(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts,baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, seed.in)
        point <- output$point
        
        #print(length(unique(point)))
@@ -449,7 +449,7 @@ print("Improving complete...")
 #########################################################################################################################
 
 "drop.step" <- function(degree, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,
-                          improveDrop,minKnots,wts, baseModel,models, bd, spl, interactionTerm, initDisp) {
+                          improveDrop,minKnots,wts, baseModel,models, bd, spl, interactionTerm, initDisp, seed.in) {
   
   attributes(baseModel$formula)$.Environment<-environment()
   
@@ -459,11 +459,11 @@ print("Improving complete...")
    for (i in 1:length(aR)) {
       tempR <- aR
       tempR <- tempR[-i]
-      output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp)
+      output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in)
       if (output$currentModel$converge) {
          tempOut.lm<-output$currentModel
          models<-output$models
-         output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp)
+         output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, seed.in)
          tempMeasure<-output$tempMeasure
          fitStat<-output$fitStat
          if (tempMeasure > fitStat) {
@@ -496,7 +496,7 @@ print("Improving complete...")
 ###################################################################################
 
 "local.shift.up" <- function(degree, out.lm, i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory,
-                                  improve,improveNudge,wts, baseModel,knotSites,models,bd , spl, interactionTerm, initDisp){
+                                  improve,improveNudge,wts, baseModel,knotSites,models,bd , spl, interactionTerm, initDisp, seed.in){
     
   attributes(baseModel$formula)$.Environment<-environment()
   print("Shifting up...")
@@ -517,11 +517,11 @@ print("Improving complete...")
          # LSH added <= (19/2/15) rather than < so no two knots in same plae
          if (check) {
             tempR[i] <- knotSites[knotPoint[i]+1]
-            output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp)
+            output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in)
             if (output$currentModel$converge) {
                tempOut.lm<-output$currentModel
                models<-output$models
-               output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp)
+               output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, seed.in)
                tempMeasure<-output$tempMeasure
                fitStat<-output$fitStat
                if (fitStat < tempMeasure) {
@@ -555,7 +555,7 @@ print("Improving complete...")
  ######################################################################################################################################
  
  "local.shift.down" <- function(degree, out.lm, i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory,
-                                     improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp){
+                                     improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, seed.in){
    
    attributes(baseModel$formula)$.Environment<-environment() 
    print("Shifting down...") 
@@ -575,11 +575,11 @@ print("Improving complete...")
           #}    
           if (check) {
              tempR[i]<-knotSites[knotPoint[i]-1]
-             output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp)
+             output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in)
              if (output$currentModel$converge) {
                 tempOut.lm<-output$currentModel
                 models<-output$models
-                output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp)
+                output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, seed.in)
 	            tempMeasure<-output$tempMeasure
                 fitStat<-output$fitStat             
                 if (fitStat < tempMeasure) {
@@ -671,7 +671,7 @@ getCV_type2<- function(folds, baseModel){
 }
  ###################################################################################################################################
  
- "fit.model" <- function(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp) {
+ "fit.model" <- function(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, seed.in) {
  
    attributes(baseModel$formula)$.Environment<-environment()
    data<-baseModel$data
@@ -702,7 +702,7 @@ getCV_type2<- function(folds, baseModel){
     #print(aR)
     #print("model fitted...")
     if (out.lm$converge) {
-      tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp)$fitStat
+      tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp, seed.in)$fitStat
       models[[length(models)+1]] = list(aR, tempFit)
     }
     return(list(currentModel=out.lm,models=models))
@@ -726,7 +726,7 @@ getCV_type2<- function(folds, baseModel){
     #print(aR)
     #print("model fitted...")
     if (out.lm$converge) {
-      tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp)$fitStat
+      tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp, seed.in)$fitStat
       models[[length(models)+1]] = list(aR, tempFit)
     }
     return(list(currentModel=out.lm,models=models))
@@ -752,7 +752,7 @@ getCV_type2<- function(folds, baseModel){
     print(aR)
     print("model fitted...")
     if (out.lm$converge) {
-      tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp)$fitStat
+      tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp, seed.in)$fitStat
       models[[length(models)+1]] = list(aR, tempFit)
     }
     

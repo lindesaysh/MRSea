@@ -170,8 +170,8 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
   # Geodesic
   if(!is.null(polys)){
     
-    Nx=seq(min(datacoords[,1]), max(datacoords[,1]), length=grid.dim[1])
-    Ny=seq(min(datacoords[,2]), max(datacoords[,2]), length=grid.dim[2])
+    Nx=seq(min(c(datacoords[,1], knotcoords[,1])), max(c(datacoords[,1], knotcoords[,1])), length=grid.dim[1])
+    Ny=seq(min(c(datacoords[,2], knotcoords[,2])), max(c(datacoords[,2], knotcoords[,2])), length=grid.dim[2])
   
     xygrid<-expand.grid(x=Nx, y=Ny)
   
@@ -183,7 +183,7 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
       datacoords2 = rbind(datacoords, knotcoords)
       geodistsoutput<-getGeoDist(xygrid=xygrid, polys=polys, datalocations=datacoords2, plot.transition=plot.transition)
       # select out knot columnns to get d2k
-      d2k<-geodistsoutput$distance[1:nrow(datacoords),(nrow(datacoords)+1):nrow(datacoords2)]
+      d2k<-geodistsoutput$distance[(1:nrow(datacoords)),((nrow(datacoords)+1):nrow(datacoords2))]
       if(knotmat==T){
         #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
         knotDist = geodistsoutput$distance[(nrow(datacoords)+1):nrow(datacoords2),(nrow(datacoords)+1):nrow(datacoords2)] 

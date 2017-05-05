@@ -140,7 +140,16 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   if(length(varlist)!=length(salsa1dlist$degree)) stop('salsa1dlist$degree not same length as varlist')
   if(length(varlist)!=length(salsa1dlist$gaps)) stop('salsa1dlist$gaps not same length as varlist')
   
-  if(is.null(data$foldid)) stop('no column called "foldid" in data')
+  #if(is.null(data$foldid)) stop('no column called "foldid" in data')
+  
+  seed.in<-salsa1dlist$seed.in
+  if(is.null(seed.in)){seed.in<-357}
+  if(!is.null(panelid) | length(unique(panelid))!=nrow(data)){
+    if(is.null(initialModel$cvfolds)){
+      initialModel$cvfolds<-getCVids(data, folds=10, block=panelid, seed=seed.in)  
+    }
+  }
+  
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if(is.null(splineParams)){
@@ -182,7 +191,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   }
   
   if(removal==TRUE){
-    cv_initial <- getCV_CReSS(data, baseModel, splineParams=splineParams)  
+    set.seed(seed.in)
+    cv_initial <- cv.gamMRSea(data, baseModel, K=10)$delta[2]
   }else{
     cv_initial=NULL
   }
@@ -208,7 +218,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   }
   
   initDisp<-getDispersion(baseModel)
-  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp)$fitStat
+  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, seed.in)$fitStat
   
   modelFits1D <- list((length(varlist)+1))
   modelFits1D[[1]] <- list(term = 'startmodel', kept=NULL, basemodelformula = baseModel$call, knotsSelected = NULL, tempfits = c(CV = cv_initial, fitStat=fitStat))
@@ -239,8 +249,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     baseModel <- eval(parse(text=paste("update(baseModel, .~. -", term, ")", sep="")))
     
     if(removal==TRUE){
-      cv_without<-getCV_CReSS(data, baseModel, splineParams=splineParams)
-      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp)$fitStat  
+      set.seed(seed.in)
+      cv_without<-cv.gamMRSea(data, baseModel, K=10)$delta[2] 
+      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, seed.in)$fitStat  
     }
     
     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceeding', sep=''))}
@@ -249,7 +260,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
     sttime<- proc.time()[3]
-    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout)
+    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, seed.in=seed.in)
     
     timings[(i-1)]<- proc.time()[3] - sttime
     
@@ -263,7 +274,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     tempModel<- eval(parse(text=paste("update(baseModel, .~. +", term, ")", sep="")))
     # calculate a cv score here too
     if(removal==TRUE){
-      cv_with<- getCV_CReSS(data=data, tempModel, splineParams)  
+      set.seed(seed.in)
+      cv_with<- cv.gamMRSea(data=data, tempModel, K=10)$delta[2]  
     }
     models<<-output$models
     knotSites<<-output$knotSites
@@ -271,7 +283,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(removal=='TRUE'){
     cat('Fitting Linear Model...')
     tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
-    cv_linear<- getCV_CReSS(data=data, tempModel_lin, splineParams)
+    set.seed(seed.in)
+    cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=10)$delta[2]
     
     cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))[1]
     
@@ -310,7 +323,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
         # model with parameter linear is best
         splineParams[[varID[(i-1)]]]$knots<- 'NA'
         baseModel<-update(tempModel_lin, .~.)
-        fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp)$fitStat
+        fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, seed.in)$fitStat
         cv_initial<-cv_linear
         varkeepid<-c(varkeepid, i)
         kept='YES - linear'

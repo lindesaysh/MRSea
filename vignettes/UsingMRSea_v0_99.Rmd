@@ -106,7 +106,7 @@ Run SALSA1D to select what covariates are included and whether or not they are s
 ```{r }
 salsa1dlist <- list(fitnessMeasure = "cv.gamMRSea", minKnots_1d = 2,maxKnots_1d = 5, 
                     startKnots_1d = 1, degree = 2, maxIterations = 10,
-                    gaps = c(0))
+                    gaps = c(0), seed.in=1)
 ```
 
 7.  If you wish to make predictions once the model is fitted, then a prediction grid should be created and specified.  This is because the splines fitted here (B-splines) are unable to make predictions outside of the range they were created.  For example, if the data range for depth is smaller than the range of depths in the prediction data, predictions cannot be made.  

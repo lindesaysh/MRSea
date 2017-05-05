@@ -42,7 +42,11 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
   if (K != K.o) 
     warning(gettextf("'K' has been set to %f", K), domain = NA)
   f <- ceiling(n/K)
-  s <- boot:::sample0(rep(1L:K, f), n)
+  if(is.null(modelobject$cvfolds)){
+    s <- boot:::sample0(rep(1L:K, f), n)  
+  }else{
+    s<-modelobject$cvfolds
+  }
   n.s <- table(s)
   glm.y <- modelobject$y
   cost.0 <- cost(glm.y, fitted(modelobject))

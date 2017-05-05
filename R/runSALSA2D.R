@@ -106,7 +106,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   attributes(model$formula)$.Environment<-environment()
 
-  if(class(model)[1]!='gamMRSea'){class(model)<-c('gamMRSea', class(model))}
+  if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(initialModel, gamMRSea=TRUE)}
 
   # check for response variable
   if(is.null(data$response)) stop('data does not contain response column')
@@ -135,6 +135,15 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   interactionTerm<-salsa2dlist$interactionTerm
   seed.in<- salsa2dlist$cv.gamMRSea.seed
+  if(is.null(seed.in)){seed.in<-357}
+  
+  if(!is.null(panels) | length(unique(panels))!=nrow(data)){
+    if(is.null(model$cvfolds)){
+      model$cvfolds<-getCVids(data, folds=10, block=panels, seed=seed.in)  
+    }
+  }
+  
+  
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,7 +194,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   baseModel<- baseModel1D
 
   
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, seed.in=357)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, seed.in=seed.in)
 
   baseModel<- output$out.lm
 
