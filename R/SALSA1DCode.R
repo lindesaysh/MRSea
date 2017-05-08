@@ -81,13 +81,14 @@ if(length(unique(response))!=2){
 }
     
 ####deal with multiple unordered x-values
-knotSites <- sort(unique(explanatory))
-if (length(knotSites) > maxSites) {
- if(length(knotSites)>800){
-   knotSites <- knotSites[sample(1:length(knotSites), 800)]
-   knotSites = sort(cover.design(cbind(knotSites, rep(1, length(knotSites))), nd=maxSites)$design[,1])
+knotSites <- cbind(sort(explanatory), rep(1, length(explanatory)))
+knotSites <- knotSites[which(duplicated(knotSites)==F),]
+if (nrow(knotSites) > maxSites) {
+ if(nrow(knotSites)>800){
+   knotSites <- knotSites[sample(1:nrow(knotSites), 800),]
+   knotSites = sort(cover.design(knotSites, nd=maxSites)$design[,1])
  }else{
-   knotSites = sort(cover.design(cbind(knotSites, rep(1, length(knotSites))), nd=maxSites)$design[,1]) 
+   knotSites = sort(cover.design(knotSites, nd=maxSites)$design[,1]) 
  }
   # LSH updated 19/2/15 so that the candidate knot locations may only be at data locations.
   #quantile(knotSites,probs=seq(0,1,length=maxSites),na.rm=TRUE,names=FALSE)
