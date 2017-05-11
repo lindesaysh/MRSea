@@ -142,11 +142,13 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   #if(is.null(data$foldid)) stop('no column called "foldid" in data')
   
-  seed.in<-salsa1dlist$seed.in
+  seed.in<-salsa1dlist$cv.gamMRSea
   if(is.null(seed.in)){seed.in<-357}
-  if(!is.null(panelid) | length(unique(panelid))!=nrow(data)){
+  if(!is.null(panelid)){
+    if(length(unique(panelid))!=nrow(data)){
     if(is.null(initialModel$cvfolds)){
       initialModel$cvfolds<-getCVids(data, folds=10, block=panelid, seed=seed.in)  
+    }
     }
   }
   

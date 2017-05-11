@@ -91,7 +91,7 @@
 #' @export
 #'
 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=F, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE){
   
   if(class(model)[1]=='glm'){
     data<-model$data
@@ -122,7 +122,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k)
   
-  if(chooserad==F){
+  if(chooserad==FALSE){
     if(length(r_seq)>1){
       radii<- r_seq[round(length(r_seq)/2)]
     }else{
@@ -137,10 +137,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   seed.in<- salsa2dlist$cv.gamMRSea.seed
   if(is.null(seed.in)){seed.in<-357}
   
-  if(!is.null(panels) | length(unique(panels))!=nrow(data)){
+  if(!is.null(panels)){
+    if(length(unique(panels))!=nrow(data)){
     if(is.null(model$cvfolds)){
       model$cvfolds<-getCVids(data, folds=10, block=panels, seed=seed.in)  
-    }
+    }}
   }
   
   
@@ -198,31 +199,32 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   baseModel<- output$out.lm
 
-  if(length(output$models)>0){
-    modRes<- c()
-    for(m in 1:length(output$models)){
-      modelNo<- m
-      knotPosition<-output$models[[m]][[1]]
-      rIs<- output$models[[m]][[2]]
-      r<- output$models[[m]][[3]]
-      fitScore<- output$models[[m]][[4]]
-      modRes<- rbind(modRes, data.frame(modelNo, knotPosition, rIs, fitScore))
-    }
-
-    modRes<-modRes[order(modRes$fitScore),]
-    bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
-
-    a<-sum(as.vector(output$aR) - as.vector(unlist(output$models[[bestModNo]][1])))
-    print(paste('a = ', a, sep=''))
-    if(a!=0) break
-
-    #output$aR<- output$models[[bestModNo]][[1]]
-  }
+  
 
   #   if(length(output$models)==0){
   #     output$aR<- output$invInd[output$aR]
   #   }
-  if(chooserad==F){
+  if(chooserad==FALSE){
+    if(length(output$models)>0){
+      modRes<- c()
+      for(m in 1:length(output$models)){
+        modelNo<- m
+        knotPosition<-output$models[[m]][[1]]
+        rIs<- output$models[[m]][[2]]
+        r<- output$models[[m]][[3]]
+        fitScore<- output$models[[m]][[4]]
+        modRes<- rbind(modRes, data.frame(modelNo, knotPosition, rIs, fitScore))
+      }
+      
+      modRes<-modRes[order(modRes$fitScore),]
+      bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
+      
+      a<-sum(as.vector(output$aR) - as.vector(unlist(output$models[[bestModNo]][1])))
+      print(paste('a = ', a, sep=''))
+      if(a!=0) break
+      
+      #output$aR<- output$models[[bestModNo]][[1]]
+    }
     # use initialise step to change radii
     radii = r_seq
     # x <- as.vector(splineParams[[1]]$grid[,1])
@@ -254,7 +256,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     TwoDModelsfirstStage <- output$models
     splineParams[[1]][['radiusIndices']]= output$radiusIndices
     splineParams[[1]][['invInd']] = output$invInd
-    modelFit = output$BIC
+    modelFit = output$outputFS[2]
     aRout = output$aR
   }
 
