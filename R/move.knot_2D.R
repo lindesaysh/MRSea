@@ -6,15 +6,18 @@
   print("******************************************************************************")
   # cat('Current Fit in: ', BIC, '\n')
   fitStat<-BIC[1]
+  newRadii = radiusIndices
   for (i in 1:length(aR)) {
     tempR<-aR
     tempR[i]<-point[index[1]]
     #       improveR=1
-    newRadii = radiusIndices
+    
     #       while (improveR) {
     #         improveR = 0
 
     tempRadii = radiusIndices
+    
+    # give new moved knot the mean radius
     tempRadii[i] = ceiling(length(radii)/2)
 
     output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, seed.in)

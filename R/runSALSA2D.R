@@ -255,7 +255,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     splineParams[[1]][['knotPos']]= output$aR
     TwoDModelsfirstStage <- output$models
     splineParams[[1]][['radiusIndices']]= output$radiusIndices
-    splineParams[[1]][['invInd']] = output$invInd
+    #splineParams[[1]][['invInd']] = output$invInd
     modelFit = output$outputFS[2]
     aRout = output$aR
   }

@@ -72,6 +72,7 @@ choose.radii <- function(currentFit,indices,radiusIndices,radii,out.lm,dists,
       }
       #print(c("Current fit:",currentFit))
       radiusIndices = bestRadii
+      currentModel$splineParams[[1]]$radiusIndices<-bestRadii
     }
   }# if length radii > 1 loop
   # print("+++++++++++++++++++++++++++")
