@@ -154,7 +154,7 @@ anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
     dimnames(table)<-list(c(tl), c("Df", "X2", "P(>|Chi|)"))
     title <- paste("Analysis of 'Wald statistic' Table", "\nModel: ",
                    object$family$family, ", link: ", object$family$link,
-                   "\nResponse: ", as.character(varlist[-1])[1], "\nMarginal Testing\n", "Max Panel Size = ",maxpanels,"; Number of panels = ", max(panelid),"\n", sep = "")
+                   "\nResponse: ", as.character(varlist[-1])[1], "\nMarginal Testing\n", "Max Panel Size = ",maxpanels,"; Number of panels = ", length(unique(panelid)),"\n", sep = "")
     result<-structure(table, heading = title, class = c("anova", "data.frame"))
     
   }
