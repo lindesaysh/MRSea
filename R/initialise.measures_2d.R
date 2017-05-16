@@ -286,11 +286,11 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
 
   #cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
-    fitStat<- fitStat + 1000
+    fitStat<- fitStat + 10000000
     cat("Change Fit due to NA: ", fitStat, "\n")
   }
   if(getDispersion(baseModel)>initDisp){
-    fitStat<- tempMeasure + 1000
+    fitStat<- tempMeasure + 10000000
     cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
   }
   # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
