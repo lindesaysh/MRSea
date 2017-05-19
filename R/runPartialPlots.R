@@ -10,6 +10,7 @@
 #' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
 #' @param savedata (\code{default=FALSE}). Logical stating whether the data used to make the plots should be saved into the working directory.  The object is called PartialData_'variablename'.RData
 #' @param label (\code{default=NULL}).  This enables the user to specify a character label for the plots saved to the working directory. This may also be used to specify an alternative directory.
+#' @param includeB0 (\code{default=TRUE}).  Logical stating whether to include the intercept in the partial plots. 
 #'
 #' @return
 #' Partial plots, one for each covariate in \code{factorlist.in} and \code{varlist.in}
@@ -34,7 +35,7 @@
 #' @export
 #'
 
-runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, showKnots=FALSE, type='response', partial.resid=FALSE, save=FALSE, savedata=F, label=NULL){
+runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, showKnots=FALSE, type='response', partial.resid=FALSE, save=FALSE, savedata=F, label=NULL, includeB0=FALSE){
 
   print("Making partial plots")
 
@@ -62,10 +63,14 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
         xvals<-data[,which(names(data)==factorlist.in[i])]
         newX<- sort(unique(xvals))
         newX<- newX[2:length(newX)]
+        if(class(newX)=='character'){
+        newX<-as.factor(newX)  
+        }
+        
 
         partialfit<- coef(model)[c(coefpos)]
         rcoefs<- NULL
-        try(rcoefs<- rmvnorm(1000,coef(model), summary(model)$cov.scaled), silent=T)
+        try(rcoefs<- rmvnorm(1000,coef(model), summary(model)$cov.robust), silent=T)
         if(is.null(rcoefs) || length(which(is.na(rcoefs)==T))>0){
           rcoefs<- rmvnorm(1000,coef(model), as.matrix(nearPD(summary(model)$cov.scaled)$mat))}
 
@@ -91,11 +96,11 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
             if(type=='response'){
               y.lab = "Partial Fit (response)"
             }else{y.lab="Partial Fit (link)"}
-          plot(newX, partialfit, pch=20,
-               xlab=factorlist.in[i], ylab=y.lab, lwd=2, xaxt="n", ylim=c(range(0,cis)), cex.lab=1.3, cex.axis=1.3)
+          plot(newX, partialfit,xlab=factorlist.in[i], ylab=y.lab,  xaxt="n", ylim=c(range(0,cis)), cex.lab=1.3, cex.axis=1.3)
+          points(1:length(newX), partialfit, pch=20)
           }
           axis(1, at=newX, labels=colnames(model.matrix(model))[c(coefpos)])
-          segments(newX,cis[1], newX , cis[2], lwd=2)
+          segments(1:length(newX),cis[1], 1:length(newX) , cis[2], lwd=2)
           abline(h=0, lwd=2)
         }else{
           # cts variables have matrix of rpreds
@@ -138,7 +143,11 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
     if(is.null(varlist.in)==F){
       n<-length(varlist.in)
       for(i in 1:n){
-        coefpos<- c(1,grep(varlist.in[i], colnames(model.matrix(model))))
+        if(includeB0){
+          coefpos<- c(1,grep(varlist.in[i], colnames(model.matrix(model))))  
+        }else{
+          coefpos<- c(grep(varlist.in[i], colnames(model.matrix(model))))
+        }
         xvals<-data[,which(names(data)==varlist.in[i])]
         newX<- seq(min(xvals),max(xvals), length=500)
         eval(parse(text=paste(varlist.in[i], "<- newX", sep="")))
@@ -150,13 +159,24 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
   #      }
 
         newBasis<- eval(parse(text=labels(terms(model))[grep(varlist.in[i], labels(terms(model)))]))
-        partialfit<- cbind(rep(1,500),newBasis)%*%coef(model)[coefpos]
+        
+        if(includeB0){
+          partialfit<- cbind(rep(1,500),newBasis)%*%coef(model)[coefpos]
+        }else{
+          partialfit<- newBasis%*%coef(model)[coefpos]
+        }
         rcoefs<- NULL
         try(rcoefs<- rmvnorm(1000,coef(model), summary(model)$cov.scaled), silent=T)
         if(is.null(rcoefs) || length(which(is.na(rcoefs)==T))>0){
           rcoefs<- rmvnorm(1000,coef(model), as.matrix(nearPD(summary(model)$cov.scaled)$mat))}
-
-        rpreds<- cbind(rep(1,500),newBasis)%*%t(rcoefs[,coefpos])
+        if(includeB0){
+          rpreds<- cbind(rep(1,500),newBasis)%*%t(rcoefs[,coefpos])
+        }
+        else{
+          rpreds<- newBasis%*%t(rcoefs[,coefpos])
+        }
+        
+        
         quant.func<- function(x){quantile(x, probs=c(0.025, 0.975))}
         cis<- t(apply(rpreds, 1,quant.func))
         if(type=='response'){
