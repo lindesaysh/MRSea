@@ -24,7 +24,7 @@
 #'
 
 cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yhat)^2), 
-          K = n) 
+          K = n, replicate=FALSE) 
 {
   call <- match.call()
   if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) 
@@ -42,11 +42,25 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
   if (K != K.o) 
     warning(gettextf("'K' has been set to %f", K), domain = NA)
   f <- ceiling(n/K)
-  if(is.null(modelobject$cvfolds)){
-    s <- boot:::sample0(rep(1L:K, f), n)  
+  
+  if(replicate==TRUE){
+      if(length(unique(modelobject$panels))==nrow(data) | is.null(modelobject$panels)){
+        # have indep
+        s <- boot:::sample0(rep(1L:K, f), n)  
+      }else{
+        # not indep
+        s.eed<-sample(1:100000, size = 1)
+        s<-getCVids(data, K, block=modelobject$panels, seed = s.eed)  
+      }
   }else{
-    s<-modelobject$cvfolds
+    if(is.null(modelobject$cvfolds)){
+      s <- boot:::sample0(rep(1L:K, f), n)  
+    }else{
+      s<-modelobject$cvfolds
+    }  
   }
+  
+  
   n.s <- table(s)
   glm.y <- modelobject$y
   cost.0 <- cost(glm.y, fitted(modelobject))
