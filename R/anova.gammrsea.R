@@ -132,14 +132,14 @@ anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
     }
   }
 
-  lr<-grep('LocalRadialFunction', tl)
+  lr<-grep('LRF', tl)
   if(length(lr>0)){
     if(length(lr)>1){
       intid<-grep(':', tl)
       tl[lr[-which(lr==intid)]]<-'s(x.pos, y.pos)'
       
       splitint<-strsplit(tl[lr[2]], ':')
-      id2<-which(c(length(grep('LocalRadialFunction', splitint[[1]][1])), length(grep('LocalRadialFunction', splitint[[1]][2])))==1)
+      id2<-which(c(length(grep('LRF', splitint[[1]][1])), length(grep('LRF', splitint[[1]][2])))==1)
       tl[lr[which(lr==intid)]]<-paste('s(x.pos, y.pos):', splitint[[1]][-id2], sep='')
     }else{
       tl[lr]<-'s(x.pos, y.pos)'

@@ -2,6 +2,7 @@
 #' 
 #' @param numberofradii The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.
 #' @param distMatrix  Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.
+#' @param basis character stating whether a 'gaussian' or 'exponential' basis is being used. 
 #' 
 #' @details
 #' The range parameter determines the range of the influence of each knot.  Small numbers indicate local influence and large ones, global influence.  
@@ -76,16 +77,27 @@
 #   return(r_seq)
 # }
 
-getRadiiChoices<-function(numberofradii=10, distMatrix){
+getRadiiChoices<-function(numberofradii=10, distMatrix, basis){
   
   distMatrix[which(is.infinite(distMatrix), arr.ind = T)]<-NA
   
-  minDist <- mean(apply(distMatrix,2,min, na.rm=TRUE))
-  meanDist <- mean(apply(distMatrix,2,mean, na.rm=TRUE))
-  rval_max<- sqrt(-log(0.7)/meanDist**2)
-  rval_min<- sqrt(-log(0.001)/meanDist**2)
-  r_seq<- exp(seq(log(rval_min), log(rval_max), length=numberofradii))
-  return(r_seq)
+  if(basis=='gaussian'){
+    minDist <- mean(apply(distMatrix,2,min, na.rm=TRUE))
+    meanDist <- mean(apply(distMatrix,2,mean, na.rm=TRUE))
+    rval_max<- sqrt(-log(0.7)/meanDist**2)
+    rval_min<- sqrt(-log(0.001)/meanDist**2)
+    r_seq<- exp(seq(log(rval_min), log(rval_max), length=numberofradii))
+    return(r_seq)  
+  }
+  
+  if(basis=='exponential'){
+    numberofradii = numberofradii+2
+      # establish smallest observation-knot distance
+      rmin<- sqrt(max(distMatrix, na.rm=TRUE)/21)
+      rmax<- sqrt(max(distMatrix, na.rm=TRUE)/3e-7)
+      r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
+      return(r_seq)
+  }
 }
 
 

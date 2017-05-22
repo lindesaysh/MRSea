@@ -38,11 +38,14 @@
 #' @export
 #' 
 LocalRadialFunction<- function(radiusIndices, dists, radii,aR){
+  
+
+  
   for (i in 1:length(aR)){
     zhold<- dists[,aR[i]]
     r<- radii[radiusIndices[i]]
-    zhold<- exp(-(zhold*radii[radiusIndices[i]])**2) 
-    #zhold<- (1/r*sqrt(2*pi))*exp(-(zhold**2)/                                                        (2*r**2))
+    
+      zhold<- exp(-(zhold*radii[radiusIndices[i]])**2)   
     
     if (i==1) {B<- zhold} else {B<- cbind(B,zhold)}
   }

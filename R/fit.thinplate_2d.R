@@ -5,7 +5,7 @@
 #'
 
 
-"fit.thinPlate_2d" <- function(fitnessMeasure, dists,aR,radii,baseModel,radiusIndices,models, currentFit, interactionTerm, data, initDisp, seed.in) {
+"fit.thinPlate_2d" <- function(fitnessMeasure, dists,aR,radii,baseModel,radiusIndices,models, currentFit, interactionTerm, data, initDisp, seed.in, basis='gaussian') {
 
   attributes(baseModel$formula)$.Environment<-environment()
   baseModel$splineParams[[1]]$knotPos<-aR
@@ -22,8 +22,13 @@
 
 
   # print(aR)
-  bspl<- "LocalRadialFunction(radiusIndices, dists, radii, aR)"
-
+  if(basis=='gaussian'){
+    bspl<- "LRF.g(radiusIndices, dists, radii, aR)"  
+  }
+  
+  if(basis=='exponential'){
+    bspl<- "LRF.e(radiusIndices, dists, radii, aR)"  
+  }
 
   if(is.null(interactionTerm)){
     test<-paste("update(baseModel, .  ~ . + ",bspl, ")",sep="")

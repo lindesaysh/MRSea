@@ -1,4 +1,4 @@
-initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, seed.in){
+initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, seed.in, basis){
 
   attributes(baseModel$formula)$.Environment<-environment()
   baseModel<-update(baseModel, data=data)
@@ -295,7 +295,7 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   }
   # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
 
-  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, seed.in)
+  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, seed.in, basis)
 
   out.lm<-output$currentModel
   models<-output$models
@@ -322,7 +322,7 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   #print(BIC[length(BIC)])
 
   print("Fitting Initial Radii")
-  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in)
+  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in, basis)
   BIC=out$BIC
   radiusIndices=out$radiusIndices
   out.lm=out$out.lm

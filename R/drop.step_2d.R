@@ -8,7 +8,7 @@
 
 
 "drop.step_2d" <- function(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,
-                           point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in) {
+                           point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in, basis) {
   
   attributes(baseModel$formula)$.Environment<-environment()
   
@@ -26,12 +26,12 @@
     tempR <- aR
     tempR <- tempR[-i]
     tempRadii = radiusIndices[-i]
-    output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, seed.in)
+    output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, seed.in, basis)
     initModel<-output$currentModel
     models<-output$models
     initBIC<-output$fitStat
       #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
-    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in)
+    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in, basis)
     tempRadii=out$radiusIndices
     tempOut.lm=out$out.lm
     models=out$models

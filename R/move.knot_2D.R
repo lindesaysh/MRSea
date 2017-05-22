@@ -1,5 +1,5 @@
 "move.knot_2D" <- function(radii,dists,explData,index,fitnessMeasure,BIC,aR,point,
-                           response,knotgrid,out.lm,improve,improveEx,track, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in){
+                           response,knotgrid,out.lm,improve,improveEx,track, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in, basis){
   attributes(baseModel$formula)$.Environment<-environment()
   print("******************************************************************************")
   print("Moving knot...")
@@ -20,13 +20,13 @@
     # give new moved knot the mean radius
     tempRadii[i] = ceiling(length(radii)/2)
 
-    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, seed.in)
+    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, seed.in, basis)
     initModel = output$currentModel
     models = output$models
     #initBIC = get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
     initBIC = output$fitStat
 
-    out<-choose.radii(initBIC,1:length(radiusIndices),tempRadii,radii,initModel,dists,tempR,baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in)
+    out<-choose.radii(initBIC,1:length(radiusIndices),tempRadii,radii,initModel,dists,tempR,baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in, basis)
 
     tempRadii=out$radiusIndices
     tempOut.lm=out$out.lm
@@ -53,12 +53,12 @@
       tempR<-c(aR,point[index[i]])  
       tempRadii = c(radiusIndices,(1:length(radii))[ceiling(length(radii)/2)])
     
-    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, seed.in)
+    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, seed.in, basis)
     initModel = output$currentModel
     models = output$models
     # initBIC = get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
     initBIC = output$fitStat
-    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in)
+    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel, fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in, basis)
 
     tempRadii=out$radiusIndices
     tempOut.lm=out$out.lm

@@ -58,7 +58,7 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
   if(is.null(factorlist.in)==F){
       for(i in 1:length(factorlist.in)){
         coeffac<- c(grep(factorlist.in[i], colnames(model.matrix(model))))
-        coefradial<-c(grep('LocalRadialFunction', colnames(model.matrix(model))))
+        coefradial<-c(grep('LRF', colnames(model.matrix(model))))
         coefpos <- coeffac[which(is.na(match(coeffac, coefradial)))]
         xvals<-data[,which(names(data)==factorlist.in[i])]
         newX<- sort(unique(xvals))

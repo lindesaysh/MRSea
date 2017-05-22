@@ -51,7 +51,7 @@
 #' \item{gap}{Minimum gap between knots (in unit of measurement of \code{datacoords})}
 #' \item{radiusIndices}{Vector of length startKnots identifying which radii (\code{splineParams[[1]]$radii}) will be used for each knot location (\code{splineParams[[1]]$knotPos})}
 #' \item{knotPos}{Index of knot locations. The index identifies which knots (i.e. which rows) from \code{knotgrid} were selected by SALSA}
-#' \item{invInd}{This is a vector of length the number of rows of \code{knotgrid}.  It is used to translate between \code{knotgrid} (used in SALSA) and \code{na.omit(knotgrid)} (used in \code{dist} and \code{LocalRadialFunction}).}
+#' \item{invInd}{This is a vector of length the number of rows of \code{knotgrid}.  It is used to translate between \code{knotgrid} (used in SALSA) and \code{na.omit(knotgrid)} (used in \code{dist} and \code{LRF}).}
 #'
 #'
 #' @examples
@@ -91,7 +91,7 @@
 #' @export
 #'
 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian'){
   
   if(class(model)[1]=='glm'){
     data<-model$data
@@ -120,7 +120,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   #grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
   #gridResp<-salsa2dlist$knotgrid[,1]
 
-  r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k)
+  r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k, basis)
   
   if(chooserad==FALSE){
     if(length(r_seq)>1){
@@ -195,7 +195,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   baseModel<- baseModel1D
 
   
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, seed.in=seed.in)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=10, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, seed.in=seed.in, basis)
 
   baseModel<- output$out.lm
 
@@ -238,7 +238,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
       radiusIndices<- rep(1, length(output$aR))
     }
     initDisp<-getDispersion(baseModel)
-    output_radii<- initialise.measures_2d(k2k, maxIterations=10, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, seed.in)
+    output_radii<- initialise.measures_2d(k2k, maxIterations=10, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, seed.in, basis)
 
 
     splineParams[[1]]$radii= radii

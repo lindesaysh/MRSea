@@ -80,7 +80,7 @@ if(length(id_int)>0){
 
 
 # local radial terms
-localid <- grep("LocalRadial", bob)
+localid <- grep("LRF", bob)
 localint<-id_int[na.omit(match(localid, id_int))]
 if (length(localid > 1)) {
   #intid <- grep(":", bob)
@@ -96,7 +96,7 @@ if (length(localid > 1)) {
   for (k in 1:(length(localint)/length(smoothid))) {
     for (i in 1:length(smoothid)) {
       if(i==1){
-        nonlocalid<-c(2,1)[grep(pattern = 'LocalRadialFunction', strsplit(bob[localint[counter]], ":")[[1]])]
+        nonlocalid<-c(2,1)[grep(pattern = 'LRF', strsplit(bob[localint[counter]], ":")[[1]])]
       }
     textin <- paste(strsplit(bob[localint[counter]], ':')[[1]][nonlocalid], ":s(x.pos, y.pos)b", i, sep = "")
     #print(textin)
