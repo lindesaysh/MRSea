@@ -115,3 +115,77 @@ points(knotgrid[salsa2dOutput$aR[[1]],],
 ## ----acfplot, fig.cap='ACF plot showing correlation in each block (grey lines), and the mean correlation by lag across blocks (red line).'----
 runACF(block = data$blockid, model = salsa2dOutput$bestModel, suppress.printout=TRUE)
 
+## ------------------------------------------------------------------------
+simData<-generateNoise(n=500, response=fitted(salsa2dOutput$bestModel), family='poisson', d=summary(salsa2dOutput$bestModel)$dispersion)
+empdist<-getEmpDistribution(500, simData, salsa2dOutput$bestModel, data=data,dots=FALSE)
+runsTest(residuals(salsa2dOutput$bestModel, type='pearson'),emp.distribution=empdist)
+
+## ------------------------------------------------------------------------
+set.seed(1)
+cv.gamMRSea(data=data, modelobject = salsa2dOutput$bestModel, K=10)$delta[2]
+salsa2dOutput$fitStat
+
+## ------------------------------------------------------------------------
+anova(salsa2dOutput$bestModel)
+
+## ----fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE----
+par(mfrow=c(2,2))
+runPartialPlots(model = salsa2dOutput$bestModel, data = data, factorlist.in = 
+                  c('season', 'impact'), varlist.in = 'depth', showKnots = T)
+
+## ----fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE----
+par(mfrow=c(2,2))
+runPartialPlots(model = salsa2dOutput$bestModel, data = data, factorlist = 
+                  c('season', 'impact'), varlist = 'depth', showKnots = T, type='link')
+
+## ------------------------------------------------------------------------
+dists<-makeDists(cbind(predictData$x.pos, predictData$y.pos), 
+                 knotgrid,knotmat=FALSE)$dataDist
+
+
+# make predictions on response scale
+preds<-predict.gamMRSea(newdata = predictData, g2k = dists, object = salsa2dOutput$bestModel)
+
+## ----fig=TRUE, fig.align='center', fig.width=9, fig.height=6-------------
+par(mfrow=c(1,2))
+quilt.plot(predictData$x.pos[predictData$impact==0], 
+           predictData$y.pos[predictData$impact==0], 
+           preds[predictData$impact==0], nrow=104, ncol=55, asp=1)
+
+quilt.plot(predictData$x.pos[predictData$impact==1], 
+           predictData$y.pos[predictData$impact==1], 
+           preds[predictData$impact==1], nrow=104, ncol=55, asp=1)
+
+## ----boots, warning=FALSE, message=FALSE, results='hide'-----------------
+dis.data$seasonimpact <- paste(dis.data$season, dis.data$impact)
+
+bootPreds<-do.bootstrap.cress.robust(salsa2dOutput$bestModel, predictionGrid = predictData, result, splineParams=salsa2dOutput$bestModel$splineParams, g2k=dists, B = 100, robust=TRUE)
+
+## ------------------------------------------------------------------------
+#load('predictionboot.RData')
+cis <- makeBootCIs(bootPreds)
+
+## ------------------------------------------------------------------------
+differences <- getDifferences(beforePreds = 
+                      bootPreds[predictData$impact == 0, ],
+                      afterPreds = bootPreds[predictData$impact == 1, ])
+
+## ----fig=TRUE, fig.align='center', fig.width=9, fig.height=6-------------
+mediandiff <- differences$mediandiff
+# The marker for each after - before difference:
+# positive ('1') and negative ('-') significant differences
+marker <- differences$significanceMarker
+par(mfrow = c(1, 1))
+quilt.plot(predictData$x.pos[predictData$impact == 0], 
+           predictData$y.pos[predictData$impact == 0],
+           mediandiff, asp = 1, nrow = 104, ncol = 55)
+# add + or - depending on significance of cells. Just
+# requires one significance out of all to be allocated
+points(predictData$x.pos[predictData$impact == 0][marker == 1],
+       predictData$y.pos[predictData$impact == 0][marker == 1],
+       pch = "+", col = "darkgrey", cex = 0.75)
+points(predictData$x.pos[predictData$impact == 0][marker == (-1)],
+       predictData$y.pos[predictData$impact == 0][marker == (-1)],
+       col = "darkgrey", cex = 0.75)
+points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey")
+
