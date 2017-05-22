@@ -4,12 +4,14 @@
 \alias{getRadiiChoices}
 \title{Function for obtaining a sequence of range parameters for the CReSS smoother}
 \usage{
-getRadiiChoices(numberofradii = 10, distMatrix)
+getRadiiChoices(numberofradii = 10, distMatrix, basis)
 }
 \arguments{
 \item{numberofradii}{The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.}
 
 \item{distMatrix}{Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.}
+
+\item{basis}{character stating whether a 'gaussian' or 'exponential' basis is being used.}
 }
 \value{
 This function returns a vector containing a sequence of range parameters.

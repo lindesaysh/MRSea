@@ -6,7 +6,7 @@
 \usage{
 runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL,
   chooserad = FALSE, panels = NULL, suppress.printout = FALSE, tol = 0,
-  plot = FALSE)
+  plot = FALSE, basis = "gaussian")
 }
 \arguments{
 \item{model}{A model with no spatial smooth}
@@ -26,6 +26,10 @@ runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL,
 \item{suppress.printout}{(Default: \code{FALSE}. Logical stating whether to show the analysis printout.}
 
 \item{tol}{Numeric stating the tolerance for the fitness Measure. e.g. tol=2 with AIC would only allow changes to be made if the AIC score improves by 2 units.}
+
+\item{plot}{logical stating whether to print out the chosen knot locations at each iteration. \code{default = FALSE}.}
+
+\item{basis}{One of 'gaussian' (default) or 'exponential'. Specifys what kind of local radial function to use (\code{\link{LRF.g}} or \code{\link{LRF.e}})}
 }
 \value{
 The spline paramater object that is returned as part of the model object now contains a list in the first element (previously reserved for the spatial component).  This list contains the objects required for the SALSA2D fitting process:
@@ -42,17 +46,15 @@ The spline paramater object that is returned as part of the model object now con
 \item{gap}{Minimum gap between knots (in unit of measurement of \code{datacoords})}
 \item{radiusIndices}{Vector of length startKnots identifying which radii (\code{splineParams[[1]]$radii}) will be used for each knot location (\code{splineParams[[1]]$knotPos})}
 \item{knotPos}{Index of knot locations. The index identifies which knots (i.e. which rows) from \code{knotgrid} were selected by SALSA}
-\item{invInd}{This is a vector of length the number of rows of \code{knotgrid}.  It is used to translate between \code{knotgrid} (used in SALSA) and \code{na.omit(knotgrid)} (used in \code{dist} and \code{LocalRadialFunction}).}
+\item{invInd}{This is a vector of length the number of rows of \code{knotgrid}.  It is used to translate between \code{knotgrid} (used in SALSA) and \code{na.omit(knotgrid)} (used in \code{dist} and \code{LRF}).}
 }
 \description{
 This function fits a spatially adaptive two dimensional smooth of spatial coordinates with knot number and location selected by SALSA.
 }
 \details{
-There must be a column called \code{response} in the data, which is the response variable used in the initial model to be fitted.
-
 The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} function.
 
-   \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b.
+   \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, cv.gamMRSea.
 
    \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example. May be made using \code{\link{getKnotgrid}}.
 

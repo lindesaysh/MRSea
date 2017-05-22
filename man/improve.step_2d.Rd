@@ -7,7 +7,7 @@
 improve.step_2d(gap, knotDist, radii, dists, explData, num, response, knotgrid,
   maxIterations, fitnessMeasure, point, knotPoint, position, aR, BIC, track,
   out.lm, improveNudge, tol = 0, baseModel, radiusIndices, models,
-  interactionTerm, data, initDisp, seed.in)
+  interactionTerm, data, initDisp, seed.in, basis)
 }
 \description{
 Function to move knots to neighbours to see if there is any improvement in fit

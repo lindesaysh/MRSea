@@ -11,6 +11,8 @@
 #' @param panels Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
 #' @param suppress.printout (Default: \code{FALSE}. Logical stating whether to show the analysis printout.
 #' @param tol Numeric stating the tolerance for the fitness Measure. e.g. tol=2 with AIC would only allow changes to be made if the AIC score improves by 2 units.
+#' @param plot logical stating whether to print out the chosen knot locations at each iteration. \code{default = FALSE}.
+#' @param basis One of 'gaussian' (default) or 'exponential'. Specifys what kind of local radial function to use (\code{\link{LRF.g}} or \code{\link{LRF.e}})
 #' 
 #' @references Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
 #'
@@ -18,11 +20,9 @@
 #'
 #' @details
 #'
-#'There must be a column called \code{response} in the data, which is the response variable used in the initial model to be fitted.
-#'
 #'The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} function.
 #'
-#'    \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b.
+#'    \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, cv.gamMRSea.
 #'
 #'    \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example. May be made using \code{\link{getKnotgrid}}.
 #'

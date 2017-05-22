@@ -5,7 +5,8 @@
 \title{Function to fit a local radial basis function (CReSS) as a two dimensional smooth}
 \usage{
 fit.thinPlate_2d(fitnessMeasure, dists, aR, radii, baseModel, radiusIndices,
-  models, currentFit, interactionTerm, data, initDisp, seed.in)
+  models, currentFit, interactionTerm, data, initDisp, seed.in,
+  basis = "gaussian")
 }
 \description{
 Function to fit a local radial basis function (CReSS) as a two dimensional smooth

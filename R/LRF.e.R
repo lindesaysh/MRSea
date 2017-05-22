@@ -1,6 +1,6 @@
-#' Function for creating an Gaussian basis function for a spatial smooth using the CReSS method.
+#' Function for creating an Exponential basis function for a spatial smooth using the CReSS method.
 #' 
-#' This function calculates a local radial Gausiian basis matrix for use in \code{\link{runSALSA2D}}.
+#' This function calculates a local radial exponential basis matrix for use in \code{\link{runSALSA2D}}.
 #' 
 #' @param radiusIndices Vector of length startKnots identifying which radii (splineParams[[1]]$radii) will be used to initialise the model
 #' @param dists Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances.
