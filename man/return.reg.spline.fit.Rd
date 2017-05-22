@@ -8,7 +8,7 @@ return.reg.spline.fit(response, explanatory, degree, minKnots, maxKnots,
   startKnots, gap, winHalfWidth, fitnessMeasure = "BIC",
   maxIterations = 100, initialise = TRUE, initialKnots = NULL,
   baseModel = NULL, bd, spl, interactionTerm = interactionTerm,
-  suppress.printout = FALSE)
+  suppress.printout = FALSE, seed.in)
 }
 \arguments{
 \item{response}{vector of response data for the modelling process}

@@ -6,7 +6,7 @@
 \usage{
 runPartialPlots(model, data, factorlist.in = NULL, varlist.in = NULL,
   showKnots = FALSE, type = "response", partial.resid = FALSE,
-  save = FALSE, savedata = F, label = NULL)
+  save = FALSE, savedata = F, label = NULL, includeB0 = FALSE)
 }
 \arguments{
 \item{model}{Fitted model object (glm or gam)}
@@ -28,6 +28,8 @@ runPartialPlots(model, data, factorlist.in = NULL, varlist.in = NULL,
 \item{savedata}{(\code{default=FALSE}). Logical stating whether the data used to make the plots should be saved into the working directory.  The object is called PartialData_'variablename'.RData}
 
 \item{label}{(\code{default=NULL}).  This enables the user to specify a character label for the plots saved to the working directory. This may also be used to specify an alternative directory.}
+
+\item{includeB0}{(\code{default=TRUE}).  Logical stating whether to include the intercept in the partial plots.}
 }
 \value{
 Partial plots, one for each covariate in \code{factorlist.in} and \code{varlist.in}

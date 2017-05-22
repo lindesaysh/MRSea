@@ -6,6 +6,7 @@
 #' @param modelobject An object of class "gamMRSea" containing the results of a gamMRSea model fitted to data.
 #' @param cost A function of two vector arguments specifying the cost function for the cross-validation. The first argument to cost should correspond to the observed responses and the second argument should correspond to the predicted or fitted responses from the generalized linear model. cost must return a non-negative scalar value. The default is the average squared error function.
 #' @param K The number of groups into which the data should be split to estimate the cross-validation prediction error. The value of K must be such that all groups are of approximately equal size. If the supplied value of K does not satisfy this criterion then it will be set to the closest integer which does and a warning is generated specifying the value of K used. The default is to set K equal to the number of observations in data which gives the usual leave-one-out cross-validation.
+#' @param replicate (\code{default=FALSE}).  When using the replicate function, and panels are specified in the model object, \code{replicate=TRUE} will change the seed and select new panel based folds for each iteration.
 #' 
 #' @details For more information please see the \link[boot]{cv.glm} function in the boot library
 #' 

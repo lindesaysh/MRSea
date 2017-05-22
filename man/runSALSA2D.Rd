@@ -4,8 +4,9 @@
 \alias{runSALSA2D}
 \title{Running SALSA for a spatial smooth with a CReSS basis}
 \usage{
-runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL, chooserad = F,
-  panels = NULL, suppress.printout = FALSE, tol = 0, plot = FALSE)
+runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL,
+  chooserad = FALSE, panels = NULL, suppress.printout = FALSE, tol = 0,
+  plot = FALSE)
 }
 \arguments{
 \item{model}{A model with no spatial smooth}

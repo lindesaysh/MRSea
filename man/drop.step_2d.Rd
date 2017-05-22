@@ -7,7 +7,7 @@
 drop.step_2d(radii, invInd, dists, explData, response, knotgrid, maxIterations,
   fitnessMeasure, point, knotPoint, position, aR, BIC, track, out.lm,
   improveDrop, minKnots, tol = 0, baseModel, radiusIndices, models,
-  interactionTerm, data, initDisp)
+  interactionTerm, data, initDisp, seed.in)
 }
 \description{
 Function that tries dropping knots to find an improvement in fit

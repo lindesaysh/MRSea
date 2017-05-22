@@ -5,7 +5,7 @@
 \title{Cross-validation for gamMRSea Models}
 \usage{
 cv.gamMRSea(data, modelobject, cost = function(y, yhat) mean((y - yhat)^2),
-  K = n)
+  K = n, replicate = FALSE)
 }
 \arguments{
 \item{data}{A matrix or data frame containing the data. The rows should be cases and the columns correspond to variables, one of which is the response.}
@@ -15,6 +15,8 @@ cv.gamMRSea(data, modelobject, cost = function(y, yhat) mean((y - yhat)^2),
 \item{cost}{A function of two vector arguments specifying the cost function for the cross-validation. The first argument to cost should correspond to the observed responses and the second argument should correspond to the predicted or fitted responses from the generalized linear model. cost must return a non-negative scalar value. The default is the average squared error function.}
 
 \item{K}{The number of groups into which the data should be split to estimate the cross-validation prediction error. The value of K must be such that all groups are of approximately equal size. If the supplied value of K does not satisfy this criterion then it will be set to the closest integer which does and a warning is generated specifying the value of K used. The default is to set K equal to the number of observations in data which gives the usual leave-one-out cross-validation.}
+
+\item{replicate}{(\code{default=FALSE}).  When using the replicate function, and panels are specified in the model object, \code{replicate=TRUE} will change the seed and select new panel based folds for each iteration.}
 }
 \description{
 This function calculates the estimated K-fold cross-validation prediction error for gamMRSea models. It has been adapted from the \link[boot]{cv.glm} function from the \code{boot} library

@@ -8,3 +8,4 @@ fields
 nlme
 mgcv
 MuMIn
+boot
