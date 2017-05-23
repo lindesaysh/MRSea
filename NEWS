@@ -11,8 +11,6 @@ Notes
   
 Bug Fixes
 
-  * Fixed bug in summary and anova functions; term names now correct.
-  * `tol` option in runSALSA2D re-instated
   * Fixed partial plot bug - issue with factor covariates which are characters.  This class now allowed.
   
 
