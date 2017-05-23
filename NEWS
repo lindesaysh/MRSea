@@ -1,15 +1,19 @@
 
-MRSea 0.99.1-beta
+MRSea 1.0-beta
 -----------
 
 Notes
 
   * Addition of GEODESIC distance calculation using the `makeDists` function. If you supply a polygon defining an exclusion area, geodesic distances are calculated. 
-
+  * Addition of cross-validation (cv.gamMRSea) as fitness measure
+  * Addition of option for gaussian (default) or exponential basis function (see runSALSA2D)
+  * Update to runPartialPlots function to allow inclusion (or not) of intercept uncertainty.
+  
 Bug Fixes
 
   * Fixed bug in summary and anova functions; term names now correct.
   * `tol` option in runSALSA2D re-instated
+  * Fixed partial plot bug - issue with factor covariates which are characters.  This class now allowed.
   
 
 MRSea 0.99-beta
