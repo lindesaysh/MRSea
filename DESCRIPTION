@@ -1,5 +1,5 @@
 Package: MRSea
-Title: Marine Renewables Strategic environmental assessment
+Title: Marine Renewables Strategic environmental assessment - Beta Release
 Description: Examines animal survey data for signs of changes in animal
     abundance and distribution following marine renewables development. The
     functions of this package can be used to analyse segmented line transect data
@@ -8,7 +8,7 @@ Description: Examines animal survey data for signs of changes in animal
     bootstrapping is available to estimate uncertainty. Several model assessment
     tools are also available. Recent updates include the direct estimation of robust
     standard errors, given a panel structure.
-Version: 1.0-beta
+Version: 1.0
 Date: 2017-05-23
 Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique
     Mackenzie, Cameron Walker <cameron.walker@auckland.ac.nz>
