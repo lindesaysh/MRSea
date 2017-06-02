@@ -55,6 +55,7 @@ do.bootstrap.cress.robust<-function(model.obj, predictionGrid, splineParams=NULL
       require(geepack)
       require(mvtnorm)
       require(mgcv)
+      require(splines)
     })
 
     # only do parametric boostrap if no data re-sampling and no nhats provided
