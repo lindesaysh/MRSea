@@ -31,4 +31,3 @@ model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact
 timeInfluenceCheck(model, ns.data.re$blockid)
 
 }
-

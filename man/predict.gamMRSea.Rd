@@ -67,4 +67,3 @@ salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
 preds<-predict.gamMRSea(newdata=predict.data.re, g2k=dists, object=salsa2dOutput_k6$bestModel)
 
 }
-

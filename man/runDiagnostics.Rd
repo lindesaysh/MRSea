@@ -31,4 +31,3 @@ model<-glm(birds ~ observationhour + as.factor(floodebb) + as.factor(impact),
 runDiagnostics(model)
 
 }
-

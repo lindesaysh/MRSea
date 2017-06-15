@@ -47,4 +47,3 @@ basis<-LRF.g(radiusIndices=rep(4, 5), dists=distMats$dataDist, radii = r_seq,
         aR=c(3, 10, 15, 28, 31))
 
 }
-

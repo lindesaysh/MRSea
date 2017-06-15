@@ -11,4 +11,3 @@ fit.thinPlate_2d(fitnessMeasure, dists, aR, radii, baseModel, radiusIndices,
 \description{
 Function to fit a local radial basis function (CReSS) as a two dimensional smooth
 }
-

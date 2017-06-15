@@ -39,4 +39,3 @@ empdist<-getEmpDistribution(500, simData, model, data=ns.data.re, plot=FALSE,
 \author{
 LAS Scott-Hayward, University of St Andrews
 }
-

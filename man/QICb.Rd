@@ -15,4 +15,3 @@ Function to calculate QICb
 \author{
 Lindesay Scott-Hayward, University of St Andrews
 }
-

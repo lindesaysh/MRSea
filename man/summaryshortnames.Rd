@@ -14,4 +14,3 @@ summaryshortnames(object, varshortnames)
 \description{
 Shortening names in summary object
 }
-

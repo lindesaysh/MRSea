@@ -109,10 +109,9 @@ salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist,
                ns.predict.data.re, splineParams=NULL, datain=ns.data.re, removal=TRUE)
 
 }
-\author{
-Lindesay Scott-Hayward
-}
 \references{
 Walker, C.; M. Mackenzie, C. Donovan and M. O'Sullivan. SALSA - a Spatially Adaptive Local Smoothing Algorithm. Journal of Statistical Computation and Simulation, 81(2):179-191, 2010
 }
-
+\author{
+Lindesay Scott-Hayward
+}

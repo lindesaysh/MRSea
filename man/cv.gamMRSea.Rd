@@ -35,4 +35,3 @@ model<-gamMRSea(birds ~ observationhour + as.factor(floodebb) + as.factor(impact
 cv.gamMRSea(data=ns.data.re, modelobject = model, K=5)$delta
 
 }
-

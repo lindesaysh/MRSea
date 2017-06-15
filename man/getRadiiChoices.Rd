@@ -40,4 +40,3 @@ r_seq<-getRadiiChoices(8, distMats$dataDist)
 Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. 
 DOI: 10.1080/10618600.2012.762920
 }
-

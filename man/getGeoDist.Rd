@@ -47,4 +47,3 @@ polymap(bnd, add=T)
 polymap(bnd2, add=T)
 
 }
-

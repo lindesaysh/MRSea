@@ -53,4 +53,3 @@ Mendenhall, W (1982), Statistics for Management and Economics, 4th Ed., 801-807,
 
 J.L. Gastwirth; Y.R. Gel, W. L. Hui, V. Lyubchich, W. Miao and K. Noguchi (2015). lawstat: Tools for Biostatistics, Public Policy, and Law. R package version 3.0
 }
-

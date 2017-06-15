@@ -38,4 +38,3 @@ getPvalues(initialModel, varlist=c('observationhour', 'x.pos', 'y.pos'),
 getPvalues(initialModel)
 
 }
-

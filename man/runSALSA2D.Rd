@@ -100,12 +100,11 @@ salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
                             k2k=distMats$knotDist, splineParams=splineParams)
 
 }
-\author{
-Lindesay Scott-Hayward (University of St Andrews), Cameron Walker (University of Auckland)
-}
 \references{
 Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
 
 Scott-Hayward, L.. Novel Methods for species distribution mapping including spatial models in complex regions: Chapter 5 for SALSA2D methods. PhD Thesis, University of St Andrews. 2013
 }
-
+\author{
+Lindesay Scott-Hayward (University of St Andrews), Cameron Walker (University of Auckland)
+}
