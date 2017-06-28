@@ -160,6 +160,10 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
 
         newBasis<- eval(parse(text=labels(terms(model))[grep(varlist.in[i], labels(terms(model)))]))
         
+        if(is.null(dim(newBasis))){
+          newBasis<-as.matrix(newBasis)
+        }
+        
         if(includeB0){
           partialfit<- cbind(rep(1,500),newBasis)%*%coef(model)[coefpos]
         }else{
