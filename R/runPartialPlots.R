@@ -218,9 +218,14 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
 
         if(showKnots=="TRUE"){
           spid<-grep(varlist.in[i], sapply(splineParams, '[[','covar'))
-          if(length(splineParams[[spid]]$knots)==1 & is.character(splineParams[[(i+1)]]$knots)){
+          if(length(spid)==0){
             XX<-FALSE
-          }else{XX<-TRUE}
+          }else{
+            if(length(splineParams[[spid]]$knots)==1 & is.character(splineParams[[spid]]$knots)){
+              XX<-FALSE
+            }else{XX<-TRUE}  
+          }
+          
 
           if(XX==TRUE){
            
