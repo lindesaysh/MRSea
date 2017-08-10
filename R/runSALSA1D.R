@@ -221,7 +221,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   }
   
   initDisp<-getDispersion(baseModel)
-  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, cv.opts)$fitStat
+  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
   
   modelFits1D <- list((length(varlist)+1))
   modelFits1D[[1]] <- list(term = 'startmodel', kept=NULL, basemodelformula = baseModel$call, knotsSelected = NULL, tempfits = c(CV = cv_initial, fitStat=fitStat))
