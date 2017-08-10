@@ -1,4 +1,4 @@
-"get.measure" <- function(fitnessMeasure,measures,out.lm, initDisp, seed.in){
+"get.measure" <- function(fitnessMeasure,measures,out.lm, initDisp, cv.opts){
   
   attributes(out.lm$formula)$.Environment<-environment()
   data<-out.lm$data
@@ -127,11 +127,11 @@
       }
       eval(parse(text=textForEval))  
       require(boot)
-      set.seed(seed.in)
-      fitStat<-cv.glm(data2,tempCVFit, K=10)$delta[2] 
+      set.seed(cv.opts$cv.gamMRSea.seed)
+      fitStat<-cv.glm(data2,tempCVFit, K=cv.opts$K, cost=cv.opts$cost)$delta[2] 
     }else{
-      set.seed(seed.in)
-      fitStat<-cv.gamMRSea(data2,tempCVFit, K=10)$delta[2]    
+      set.seed(cv.opts$cv.gamMRSea.seed)
+      fitStat<-cv.gamMRSea(data2,tempCVFit, K=cv.opts$K, cost=cv.opts$cost)$delta[2]    
     }
   }
   

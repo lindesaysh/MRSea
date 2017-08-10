@@ -8,7 +8,7 @@
 
 ####################################################################################################################
 
-"improve.step_2d" <- function(gap,knotDist,radii,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, seed.in, basis){
+"improve.step_2d" <- function(gap,knotDist,radii,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis){
   attributes(baseModel$formula)$.Environment<-environment()
   print("Improving...")
   print("******************************************************************************")
@@ -80,14 +80,14 @@
           tempR<-aR
           tempR[i]<-j
           
-          output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, seed.in, basis)
+          output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
           initModel<-output$currentModel
           models<-output$models
           initBIC<-output$fitStat
             #get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, tempR,radii,radiusIndices, initDisp)$fitStat
           
           
-          out<-choose.radii(initBIC,i,radiusIndices,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in, basis)
+          out<-choose.radii(initBIC,i,radiusIndices,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
           tempRadii=out$radiusIndices
           tempOut.lm=out$out.lm
           models=out$models

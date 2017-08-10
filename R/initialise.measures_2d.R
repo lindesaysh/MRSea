@@ -1,4 +1,4 @@
-initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, seed.in, basis){
+initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis){
 
   attributes(baseModel$formula)$.Environment<-environment()
   baseModel<-update(baseModel, data=data)
@@ -280,8 +280,8 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   }
 
   if(fitnessMeasure=="cv.gamMRSea"){
-    set.seed(seed.in)
-    fitStat<-cv.gamMRSea(data, baseModel, K=10)$delta[2]
+    set.seed(cv.opts$cv.gamMRSea.seed)
+    fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
   }
 
   #cat("Evaluating new fit: ", fitStat, "\n")
@@ -295,7 +295,7 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   }
   # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
 
-  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, seed.in, basis)
+  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
 
   out.lm<-output$currentModel
   models<-output$models
@@ -322,7 +322,7 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   #print(BIC[length(BIC)])
 
   print("Fitting Initial Radii")
-  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, seed.in, basis)
+  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
   BIC=out$BIC
   radiusIndices=out$radiusIndices
   out.lm=out$out.lm

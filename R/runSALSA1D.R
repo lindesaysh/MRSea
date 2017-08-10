@@ -20,7 +20,7 @@
 #' 
 #' The object \code{salsa1dlist} contains parameters for the \code{runSALSA1D} function.
 #'   
-#' \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b.
+#' \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, cv.gamMRSea (use cv.opts in salsa1dlist to specify seed, folds, cost function (Defaults: \code{cv.opts=list(cv.gamMRSea.seed=357, K=10, cost=function(y, yhat) mean((y - yhat)^2))}).
 #' 
 #'    \code{minKnots_1d}. Minimum number of knots to be tried.
 #'    
@@ -73,8 +73,6 @@
 #' 
 #' varlist=c('observationhour', 'DayOfMonth')
 #' 
-#' # make column with foldid for cross validation calculation
-#' ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
 #' 
 #' # set initial model without the spline terms in there 
 #' # (so all other non-spline terms)
@@ -142,15 +140,18 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   #if(is.null(data$foldid)) stop('no column called "foldid" in data')
   
-  seed.in<-salsa1dlist$cv.gamMRSea.seed
-  if(is.null(seed.in)){seed.in<-357}
+  
+  if(is.null(salsa1dlist$cv.opts$cv.gamMRSea.seed)){salsa1dlist$cv.opts$cv.gamMRSea.seed<-357}
+  seed.in<-salsa1dlist$cv.opts$cv.gamMRSea.seed
   if(!is.null(panelid)){
     if(length(unique(panelid))!=nrow(data)){
       if(is.null(initialModel$cvfolds)){
-        initialModel$cvfolds<-getCVids(data, folds=10, block=panelid, seed=seed.in)  
+        initialModel$cvfolds<-getCVids(data, folds=salsa1dlist$cv.opts$K, block=panelid, seed=seed.in)  
       }}
   }
   
+  if(is.null(salsa1dlist$cv.opts$K)){salsa1dlist$cv.opts$K<-10}
+  if(is.null(salsa1dlist$cv.opts$cost)){salsa1dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -194,7 +195,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   if(removal==TRUE){
     set.seed(seed.in)
-    cv_initial <- cv.gamMRSea(data, baseModel, K=10)$delta[2]
+    cv_initial <- cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
   }else{
     cv_initial=NULL
   }
@@ -220,7 +221,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   }
   
   initDisp<-getDispersion(baseModel)
-  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, seed.in)$fitStat
+  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, cv.opts)$fitStat
   
   modelFits1D <- list((length(varlist)+1))
   modelFits1D[[1]] <- list(term = 'startmodel', kept=NULL, basemodelformula = baseModel$call, knotsSelected = NULL, tempfits = c(CV = cv_initial, fitStat=fitStat))
@@ -252,7 +253,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     
     if(removal==TRUE){
       set.seed(seed.in)
-      cv_without<-cv.gamMRSea(data, baseModel, K=10)$delta[2] 
+      cv_without<-cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
       fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, seed.in)$fitStat  
     }
     
@@ -262,7 +263,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
     sttime<- proc.time()[3]
-    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, seed.in=seed.in)
+    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, cv.opts=salsa1dlist$cv.opts)
     
     timings[(i-1)]<- proc.time()[3] - sttime
     
@@ -277,7 +278,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     # calculate a cv score here too
     if(removal==TRUE){
       set.seed(seed.in)
-      cv_with<- cv.gamMRSea(data=data, tempModel, K=10)$delta[2]  
+      cv_with<- cv.gamMRSea(data=data, tempModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]  
     }
     models<<-output$models
     knotSites<<-output$knotSites
@@ -286,7 +287,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     cat('Fitting Linear Model...')
     tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
     set.seed(seed.in)
-    cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=10)$delta[2]
+    cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
     
     cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))[1]
     
