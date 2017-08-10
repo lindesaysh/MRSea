@@ -61,7 +61,7 @@ There must be columns called \code{response} (response variable) and \code{foldi
 
 The object \code{salsa1dlist} contains parameters for the \code{runSALSA1D} function.
   
-\code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b.
+\code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, cv.gamMRSea (use cv.opts in salsa1dlist to specify seed, folds, cost function (Defaults: \code{cv.opts=list(cv.gamMRSea.seed=357, K=10, cost=function(y, yhat) mean((y - yhat)^2))}).
 
    \code{minKnots_1d}. Minimum number of knots to be tried.
    
@@ -90,8 +90,6 @@ data(ns.predict.data.re)
 
 varlist=c('observationhour', 'DayOfMonth')
 
-# make column with foldid for cross validation calculation
-ns.data.re$foldid<-getCVids(ns.data.re, folds=5)
 
 # set initial model without the spline terms in there 
 # (so all other non-spline terms)

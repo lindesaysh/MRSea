@@ -7,7 +7,7 @@
 exchange.step_2d(gap, knotDist, radii, dists, explData, response, knotgrid,
   maxIterations, fitnessMeasure, point, knotPoint, position, aR, BIC, track,
   out.lm, improveEx, maxKnots, tol = 0, baseModel, radiusIndices, models,
-  interactionTerm, data, initDisp, seed.in, basis)
+  interactionTerm, data, initDisp, cv.opts, basis)
 }
 \description{
 Function for exchanging knot locations and re-fitting model to find best one

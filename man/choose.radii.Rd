@@ -6,7 +6,7 @@
 \usage{
 choose.radii(currentFit, indices, radiusIndices, radii, out.lm, dists, aR,
   baseModel, fitnessMeasure, response, models, interactionTerm, data, initDisp,
-  seed.in, basis)
+  cv.opts, basis)
 }
 \description{
 Function to choose the radii for the CReSS local radial basis function

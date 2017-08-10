@@ -37,16 +37,14 @@ The spline paramater object that is returned as part of the model object now con
 \item{knotDist}{Matrix of knot to knot distances (k x k).  May be Euclidean or geodesic distances. Must be square and the same dimensions as \code{nrows(na.omit(knotgrid))}.  Created using \code{\link{makeDists}}.}
 \item{radii}{Sequence of range parameters for the CReSS basis from local (small) to global (large).  Determines the range of the influence of each knot.}
 \item{dist}{ Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.}
-\item{grid}{Index of knotgrid locations.  Should be same length as \code{knotgrid} but with x=integer values from 1 to number of unique x-locations and y= integer values from 1 to number of unique y-locations.}
 \item{datacoords}{Coordinates of the data locations}
 \item{response}{Vector of response data for the modelling process}
-\item{knotgrid}{Grid of legal knot locations.  Must be a regular grid with c(NA, NA) for rows with an illegal knot.}
+\item{knotgrid}{Grid of legal knot locations.}
 \item{minKnots}{Minimum number of knots to be tried.}
 \item{maxKnots}{Maximum number of knots to be tried.}
 \item{gap}{Minimum gap between knots (in unit of measurement of \code{datacoords})}
 \item{radiusIndices}{Vector of length startKnots identifying which radii (\code{splineParams[[1]]$radii}) will be used for each knot location (\code{splineParams[[1]]$knotPos})}
 \item{knotPos}{Index of knot locations. The index identifies which knots (i.e. which rows) from \code{knotgrid} were selected by SALSA}
-\item{invInd}{This is a vector of length the number of rows of \code{knotgrid}.  It is used to translate between \code{knotgrid} (used in SALSA) and \code{na.omit(knotgrid)} (used in \code{dist} and \code{LRF}).}
 }
 \description{
 This function fits a spatially adaptive two dimensional smooth of spatial coordinates with knot number and location selected by SALSA.
@@ -54,9 +52,9 @@ This function fits a spatially adaptive two dimensional smooth of spatial coordi
 \details{
 The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} function.
 
-   \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, cv.gamMRSea.
+   \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, cv.gamMRSea (use cv.opts in salsa2dlist to specify seed, folds, cost function (Defaults: \code{cv.opts=list(cv.gamMRSea.seed=357, K=10, cost=function(y, yhat) mean((y - yhat)^2))})
 
-   \code{knotgrid}. A grid of legal knot locations.  Must be a regular grid with \code{c(NA, NA)} for rows with an illegal knot.  An illegal knot position may be outside the study region or on land for a marine species for example. May be made using \code{\link{getKnotgrid}}.
+   \code{knotgrid}. A set of 'k' knot locations (k x 2 matrix or dataframe of coordinates).  May be made using \code{\link{getKnotgrid}}.
 
    \code{startknots}. Starting number of knots (initialised as spaced filled locations).
 
@@ -66,6 +64,7 @@ The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} func
 
    \code{gap}. The minimum gap between knots (in unit of measurement of coordinates).
    \code{interactionTerm}. Specifies which term in \code{baseModel} the spatial smooth will interact with.  If \code{NULL} no interaction term is fitted.
+   \code{cv.opts} Used if \code{fitnessMeasure = cv.gamMRSea}.  See above for specification.
 }
 \examples{
 # load data
