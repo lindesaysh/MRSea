@@ -326,7 +326,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
         # model with parameter linear is best
         splineParams[[varID[(i-1)]]]$knots<- 'NA'
         baseModel<-update(tempModel_lin, .~.)
-        fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, seed.in)$fitStat
+        fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
         cv_initial<-cv_linear
         varkeepid<-c(varkeepid, i)
         kept='YES - linear'
