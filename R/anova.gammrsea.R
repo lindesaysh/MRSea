@@ -23,9 +23,10 @@
 #' @export
 #' 
 anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
-
-  if(!is.null(object$varshortnames)){
+  
+  if(length(object$varshortnames)>0){
     varshortnames=object$varshortnames
+    object<-summaryshortnames(object, varshortnames)
   }
 
 
