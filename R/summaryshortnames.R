@@ -12,7 +12,7 @@ bob <- attr(object$coefficients, "names")
 
 factorlist<-names(which(attr(terms(object), 'dataClasses')=='factor'))
 
-if(is.null(varshortnames)==FALSE | length(varshortnames)==0){
+if(is.null(varshortnames)==FALSE | length(varshortnames)>0){
   bob2<-attr(terms(object), 'term.labels')
   v<-NULL
   for(i in 1:length(varshortnames)){
