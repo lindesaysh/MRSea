@@ -57,7 +57,7 @@ summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
     panelid<-object$panels
   }
 
-  if(!is.null(object$varshortnames) | length(object$varshortnames)>0){
+  if(length(object$varshortnames)>0){
     varshortnames=object$varshortnames
     object<-summaryshortnames(object, varshortnames)
   }
