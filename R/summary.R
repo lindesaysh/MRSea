@@ -59,11 +59,12 @@ summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
 
   if(!is.null(object$varshortnames)){
     varshortnames=object$varshortnames
+    object<-summaryshortnames(object, varshortnames)
   }
 
   vbeta<-sandcov(object, panelid)
 
-  object<-summaryshortnames(object, varshortnames)
+  
 
   est.disp <- FALSE
   df.r <- object$df.residual
