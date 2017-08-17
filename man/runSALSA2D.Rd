@@ -91,7 +91,7 @@ initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(l
 # I have chosen a gap parameter of 1000 (in metres) to speed up the process.
 # Note that this means there cannot be two knots within 1000m of each other.
 
-salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = knotgrid.ns,
+salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = na.omit(knotgrid.ns),
                   startKnots=6, minKnots=4, maxKnots=20, gap=1000,
                   interactionTerm="as.factor(impact)")
 
