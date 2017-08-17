@@ -255,8 +255,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(removal==TRUE){
       set.seed(seed.in)
       base_wo_coeff<-length(coef(baseModel))
-      cv_without<-cv.gamMRSea(data, baseModel_wo, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
-      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel_wo, initDisp, salsa1dlist$cv.opts)$fitStat  
+      cv_without<-cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
+      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat  
     }
     
     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceeding', sep=''))}
