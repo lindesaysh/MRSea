@@ -253,8 +253,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     
     if(removal==TRUE){
       set.seed(seed.in)
-      cv_without<-cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
-      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat  
+      baseModel_wo<-baseModel
+      cv_without<-cv.gamMRSea(data, baseModel_wo, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
+      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel_wo, initDisp, salsa1dlist$cv.opts)$fitStat  
     }
     
     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceeding', sep=''))}
@@ -289,7 +290,12 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     set.seed(seed.in)
     cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
     
-    cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))[1]
+    cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))
+    
+    if(length(cvid)>1){
+      modelcoeffs<-c(length(coeff(baseModel)),length(coef(tempModel)),length(coeff(baseModel_wo)), length(coef(tempModel_lin)))
+      cvid<-cvid[which(modelcoeffs[cvid]==min(modelcoeffs[cvid]))]
+    }
     
     cat('Choosing smooth vs linear model...')
     if(cvid==1){
