@@ -195,6 +195,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   if(removal==TRUE){
     set.seed(seed.in)
+    basecoef<-length(coef(baseModel))
     cv_initial <- cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
   }else{
     cv_initial=NULL
@@ -253,7 +254,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     
     if(removal==TRUE){
       set.seed(seed.in)
-      baseModel_wo<-baseModel
+      base_wo_coeff<-length(coef(baseModel))
       cv_without<-cv.gamMRSea(data, baseModel_wo, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
       fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel_wo, initDisp, salsa1dlist$cv.opts)$fitStat  
     }
@@ -293,7 +294,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))
     
     if(length(cvid)>1){
-      modelcoeffs<-c(length(coef(baseModel)),length(coef(tempModel)),length(coef(baseModel_wo)), length(coef(tempModel_lin)))
+      modelcoeffs<-c(basecoef,length(coef(tempModel)),base_wo_coeff, length(coef(tempModel_lin)))
       cvid<-cvid[which(modelcoeffs[cvid]==min(modelcoeffs[cvid]))]
     }
     
