@@ -293,7 +293,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))
     
     if(length(cvid)>1){
-      modelcoeffs<-c(length(coeff(baseModel)),length(coef(tempModel)),length(coeff(baseModel_wo)), length(coef(tempModel_lin)))
+      modelcoeffs<-c(length(coef(baseModel)),length(coef(tempModel)),length(coef(baseModel_wo)), length(coef(tempModel_lin)))
       cvid<-cvid[which(modelcoeffs[cvid]==min(modelcoeffs[cvid]))]
     }
     
