@@ -14,11 +14,12 @@ factorlist<-names(which(attr(terms(object), 'dataClasses')=='factor'))
 
 if(length(varshortnames)>0){
   bob2<-attr(terms(object), 'term.labels')
-  v<-NULL
-  for(i in 1:length(varshortnames)){
-    v<-c(v, ifelse(length(grep(varshortnames[i], bob2))>0, 1, 0))
-  }
-  varshortnames<-varshortnames[which(v==1)]
+  # v<-NULL
+  # for(i in 1:length(varshortnames)){
+  #   v<-c(v, ifelse(length(grep(varshortnames[i], bob2))>0, 1, 0))
+  # }
+  # varshortnames<-varshortnames[which(v==1)]
+  varshortnames<-varshortnames[varshortnames%in%bob2]
 }
 
 # interaction terms id
