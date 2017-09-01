@@ -24,10 +24,6 @@
 #' 
 anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
   
-  if(length(object$varshortnames)>0){
-    varshortnames=object$varshortnames
-    object<-summaryshortnames(object, varshortnames)
-  }
 
 
   x<-model.matrix(object)
@@ -49,6 +45,12 @@ anova.gamMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald'){
   }else{
     vbeta<-sandcov(object, id=panelid)  
   }
+  
+  if(length(object$varshortnames)>0){
+    varshortnames=object$varshortnames
+    object<-summaryshortnames(object, varshortnames)
+  }
+  
   
   ncoefs<-table(varseq)
   
