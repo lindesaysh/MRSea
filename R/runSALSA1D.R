@@ -142,6 +142,10 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   
   if(is.null(salsa1dlist$cv.opts$cv.gamMRSea.seed)){salsa1dlist$cv.opts$cv.gamMRSea.seed<-357}
+  if(is.null(salsa1dlist$cv.opts$K)){salsa1dlist$cv.opts$K<-10}
+  if(is.null(salsa1dlist$cv.opts$cost)){salsa1dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
+  
+  
   seed.in<-salsa1dlist$cv.opts$cv.gamMRSea.seed
   if(!is.null(panelid)){
     if(length(unique(panelid))!=nrow(data)){
@@ -150,8 +154,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       }}
   }
   
-  if(is.null(salsa1dlist$cv.opts$K)){salsa1dlist$cv.opts$K<-10}
-  if(is.null(salsa1dlist$cv.opts$cost)){salsa1dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
+  
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
