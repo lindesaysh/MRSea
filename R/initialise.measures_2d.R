@@ -280,9 +280,9 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   }
 
   if(fitnessMeasure=="cv.gamMRSea"){
-    # set.seed(cv.opts$cv.gamMRSea.seed)
-    # fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
-    fitStat<-Inf
+     set.seed(cv.opts$cv.gamMRSea.seed)
+     fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
+    #fitStat<-Inf
   }
 
   #cat("Evaluating new fit: ", fitStat, "\n")

@@ -170,7 +170,7 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
           partialfit<- newBasis%*%coef(model)[coefpos]
         }
         rcoefs<- NULL
-        try(rcoefs<- rmvnorm(1000,coef(model), summary(model)$cov.scaled), silent=T)
+        try(rcoefs<- rmvnorm(1000,coef(model), summary(model)$cov.robust), silent=T)
         if(is.null(rcoefs) || length(which(is.na(rcoefs)==T))>0){
           rcoefs<- rmvnorm(1000,coef(model), as.matrix(nearPD(summary(model)$cov.scaled)$mat))}
         if(includeB0){

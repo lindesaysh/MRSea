@@ -46,7 +46,7 @@ makesplineParams<-function(data, varlist, predictionData=NULL, degree=NULL){
   splineParams[[2]]=list() #1D Metadata
   splineParams[[2]]$covar <- varlist[1]
   splineParams[[2]]$explanatory<-eval(parse(text=paste('data$', varlist[1], sep=''))) #explanatory
-  splineParams[[2]]$knots<-mean(splineParams[[2]]$explanatory)
+  splineParams[[2]]$knots<-median(splineParams[[2]]$explanatory)
   splineParams[[2]]$bd<- eval(parse(text=paste("c(min(data$",varlist[1], ",predictionData$", varlist[1], "),max(data$", varlist[1], ", predictionData$", varlist[1], "))", sep="")))
   splineParams[[2]]$degree <- degree[1]
   
@@ -54,7 +54,7 @@ makesplineParams<-function(data, varlist, predictionData=NULL, degree=NULL){
     splineParams[[i]]=list() #1D Metadata
     splineParams[[i]]$covar<-varlist[(i-1)]
     splineParams[[i]]$explanatory<-eval(parse(text=paste('data$', varlist[(i-1)], sep=''))) #explanatory  
-    splineParams[[i]]$knots<-mean(splineParams[[i]]$explanatory)
+    splineParams[[i]]$knots<-median(splineParams[[i]]$explanatory)
     splineParams[[i]]$bd<- eval(parse(text=paste("c(min(data$",varlist[(i-1)], ",predictionData$", varlist[(i-1)], "),max(data$", varlist[(i-1)], ", predictionData$", varlist[(i-1)], "))", sep="")))
     splineParams[[i]]$degree <- degree[(i-1)]
   }

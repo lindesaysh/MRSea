@@ -15,7 +15,8 @@ factorlist<-names(which(attr(terms(object), 'dataClasses')=='factor'))
 if(length(varshortnames)>0){
   bob2<-attr(terms(object), 'term.labels')
  
-  varshortnames.temp<-varshortnames[varshortnames%in%bob2]
+  varshortnames.temp<-varshortnames#[varshortnames%in%bob2]
+  
   if(length(varshortnames.temp)==0){
     v<-NULL
     for(i in 1:length(varshortnames)){

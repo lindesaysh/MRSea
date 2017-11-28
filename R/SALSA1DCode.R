@@ -71,6 +71,7 @@
 # sort out baseModel formulae environment issue
   attributes(baseModel$formula)$.Environment<-environment()
   data<- baseModel$data
+  data$explanatory<-explanatory
   #family<-baseModel$family$family
   baseModel<-update(baseModel, data=data)
 

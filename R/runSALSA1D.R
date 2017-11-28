@@ -98,7 +98,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   require(splines)
   require(fields)
   
-  if(class(initialModel)[1]!='glm') stop('Class of model not supported.  Please use glm')
+  if(class(initialModel)[1]!='glm' & class(initialModel)[1]!='gamMRSea') stop('Class of model not supported.  Please use glm or gamMRSea')
   
   # check for response variable
   if(nrow(initialModel$data)!=length(initialModel$model[[1]])){
@@ -403,6 +403,10 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   }
   
  gc(verbose=FALSE)
+ 
+ keptvarlist<-varlist[(varkeepid-1)]
+ if(length(keptvarlist)==0) keptvarlist<-"none"
+ 
   #save.image("Test.RData")
-  return(list(bestModel=outModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStatlist, keptvarlist = varlist[(varkeepid-1)]))
+  return(list(bestModel=outModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStatlist, keptvarlist = keptvarlist))
 }

@@ -84,6 +84,7 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
         Call$splineParams<-splineParams
       }else{
         g2k<-NULL
+        Call$splineParams<-splineParams
       }
     }else{
       splineParams<-NULL
