@@ -105,7 +105,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   attributes(model$formula)$.Environment<-environment()
 
-  if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(initialModel, gamMRSea=TRUE)}
+  if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(model, gamMRSea=TRUE)}
 
   # check for response variable
   if(is.null(data$response)) stop('data does not contain response column')
