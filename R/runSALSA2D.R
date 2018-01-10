@@ -105,13 +105,18 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   attributes(model$formula)$.Environment<-environment()
 
-  if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(initialModel, gamMRSea=TRUE)}
+  if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(model, gamMRSea=TRUE)}
 
   # check for response variable
   if(is.null(data$response)) stop('data does not contain response column')
 
+
   # check for duplicates in knotgrid
   if(length(which(duplicated(salsa2dlist$knotgrid)==T))>0) stop ('knotgrid has duplicated locations in it. Please remove.')
+
+  # check for use of name "dists" in data
+  if("dists" %in% names(data)) stop("data must not contain column called 'dists'")
+
   
   #set input 2D input data
   if(is.null(data$x.pos)){ stop('no x.pos in data frame; rename coordinates')}
