@@ -235,7 +235,7 @@ if(length(which(knotSites==bd[2]))>0){
     output <- fit.model(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
     out.lm<-output$currentModel
     models<-output$models
-    model<<-out.lm
+    #model.out<<-out.lm
     measures<- get.measure(fitnessMeasure,measures=NA,out.lm, initDisp, cv.opts)$fitStat
     #measures <- update.measures(out.lm)
 cat("Initial fit = ", measures, aR,"\n")
