@@ -17,7 +17,7 @@ bibliography: newref.bib
 
 
 **Please reference this document as:**
-Scott-Hayward, L.A.S., Oedekoven, C.S., Mackenzie, M.L. and Walker, C.G. (2017). Vignette for the MRSea Package v0.99: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas. Centre for Research into Ecological and Environmental Modelling, University of St Andrews.
+Scott-Hayward, L.A.S., Oedekoven, C.S., Mackenzie, M.L. and Walker, C.G. (2017). Vignette for the MRSea Package v1.0.01: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas. Centre for Research into Ecological and Environmental Modelling, University of St Andrews.
 
 *******
 
@@ -26,6 +26,7 @@ require(knitcitations)
 cleanbib()
 biblio <- read.bibtex("newref.bib")
 cite_options(citation_format = 'pandoc', cite.style = 'authoryear', max.names = 1, longnamesfirst=FALSE)
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, eval=TRUE, comment = '')
 ```
 
 ## Introduction
@@ -66,7 +67,7 @@ count.data <- create.count.data(dis.data)
 ```
 
 3. Try a simple model
-```{r }
+```{r message=FALSE, warning=FALSE}
 data <- count.data
 data$response <- round(data$NHAT)
 attach(data)
@@ -82,31 +83,24 @@ fullModel <- glm(response ~ as.factor(season) + as.factor(impact) +
                  family = poisson,data = data)
 ```
 
-5.  SALSA1D requires that ```foldid``` is a column in the data set so that $k$-fold Cross-Validation (CV) may be used.  The user may specify how many folds (5 or 10 is usual) and whether or not the data has a blocking structure.  If the data are correlated then when selecting folds for the CV, the blocks must not be split up.
+5.  If the data are correlated then you may wish to specify a blocking structure in your dataset. 
 
 
 For correlated data:
 ```{r }
-# for correlated data:
 data$blockid <- paste(data$transect.id, data$season, data$impact,sep = "")
-data$foldid <- getCVids(data = data, folds = 5, block = 'blockid')
 ```
 
-or uncorrelated data:
-```{r eval=FALSE}
-# for uncorrelated data```
-data$foldid<- getCVids(data=data, folds=5)
-```
 
 ## Selection of 1D Covariates
-Run SALSA1D to select what covariates are included and whether or not they are smooth.  SALSA selects the smoothness of each term (number and location of knots) and CV is used to choose between the best smooth term, a linear term or no term at all.  To not allow the removal process the user may set ```removal = FALSE``` as a parameter in the function ```runSALSA1D```.
+Run SALSA1D to select what covariates are included and whether or not they are smooth.  SALSA selects the smoothness of each term (number and location of knots) and 10-fold CV is used to choose between the best smooth term, a linear term or no term at all.  To not allow the removal process the user may set ```removal = FALSE``` as a parameter in the function ```runSALSA1D```.
 
 6. Specify the parameters required:
 
 ```{r }
 salsa1dlist <- list(fitnessMeasure = "cv.gamMRSea", minKnots_1d = 2,maxKnots_1d = 5, 
                     startKnots_1d = 1, degree = 2, maxIterations = 10,
-                    gaps = c(0), seed.in=1)
+                    gaps = c(0), cv.opts=list(cv.gamMRSea.seed=1, K=10))
 ```
 
 7.  If you wish to make predictions once the model is fitted, then a prediction grid should be created and specified.  This is because the splines fitted here (B-splines) are unable to make predictions outside of the range they were created.  For example, if the data range for depth is smaller than the range of depths in the prediction data, predictions cannot be made.  
@@ -168,7 +162,7 @@ knotgrid<- getKnotgrid(coordData = cbind(data$x.pos, data$y.pos), numKnots = 300
 # ~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-The black points in the figure are the data and the red points, the candidate knot locations. By default, the knotgrid has 300 legal knot positions chosen.
+The black points in the figure are the data and the red points, the candidate knot locations. By default, the knotgrid has 300 knot positions chosen.
 
 10. Set up parameters for SALSA2D.  Distance matrices (data to knots and knot to knots), a fit statistic and min, max and start knots.
 
@@ -181,7 +175,7 @@ distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
 # make parameter set for running salsa2d
 salsa2dlist<-list(fitnessMeasure = 'cv.gamMRSea', knotgrid = knotgrid, 
                  startKnots=5, minKnots=4, maxKnots=12, gap=0, 
-                 interactionTerm="as.factor(impact)", cv.gamMRSea.seed=1)
+                 interactionTerm="as.factor(impact)", cv.opts=list(cv.gamMRSea.seed=1, K=10))
 ```
 
 11. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`.
@@ -208,6 +202,8 @@ points(knotgrid[salsa2dOutput$aR[[1]],],
 ```{r acfplot, fig.cap='ACF plot showing correlation in each block (grey lines), and the mean correlation by lag across blocks (red line).'}
 runACF(block = data$blockid, model = salsa2dOutput$bestModel, suppress.printout=TRUE)
 ```
+
+Here we also do a runs test to assess for correlation in the model residuals.  Since our data are over-dispersed, we must use the empirical distribution for assessment:
 
 ```{r}
 simData<-generateNoise(n=500, response=fitted(salsa2dOutput$bestModel), family='poisson', d=summary(salsa2dOutput$bestModel)$dispersion)

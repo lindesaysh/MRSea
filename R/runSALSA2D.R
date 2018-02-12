@@ -145,14 +145,16 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   if(is.null(salsa2dlist$cv.opts$cv.gamMRSea.seed)){salsa2dlist$cv.opts$cv.gamMRSea.seed<-357}
   seed.in<-salsa2dlist$cv.opts$cv.gamMRSea.seed
   
+  if(is.null(salsa2dlist$cv.opts$K)){salsa2dlist$cv.opts$K<-10}
+  if(is.null(salsa2dlist$cv.opts$cost)){salsa2dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
+  
   if(!is.null(panels)){
     if(length(unique(panels))!=nrow(data)){
     if(is.null(model$cvfolds)){
       model$cvfolds<-getCVids(data, folds=salsa2dlist$cv.opts$K, block=panels, seed=seed.in)  
     }}
   }
-  if(is.null(salsa2dlist$cv.opts$K)){salsa2dlist$cv.opts$K<-10}
-  if(is.null(salsa2dlist$cv.opts$cost)){salsa2dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
+  
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~~
