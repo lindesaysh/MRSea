@@ -154,7 +154,12 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       }}
   }
   
-  
+  if(is.null(panelid) & removal==TRUE){
+    panelid<-1:nrowdata
+    if(is.null(initialModel$cvfolds)){
+      initialModel$cvfolds<-getCVids(data, folds=salsa1dlist$cv.opts$K, block=panelid, seed=seed.in)
+    }
+  }
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
