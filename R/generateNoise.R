@@ -24,7 +24,7 @@
 #' @author LAS Scott-Hayward, University of St Andrews
 #' @export
 #'
-generateNoise<-function(n, response, family, ...){
+generateNoise<-function(n, response, family, gamma.variance...){
   simData<-matrix(NA, nrow=length(response), ncol=n)
   for(i in 1:n){
     if(family=='poisson'){
@@ -41,7 +41,7 @@ generateNoise<-function(n, response, family, ...){
     }
     if(family=='gamma'){
       mode=response
-      sd=variance
+      sd=sqrt(gamma.variance)
       ra1=(mode + sqrt(mode^2 + 4*sd^2))/(2*sd^2)
       shape1=1+mode*ra1
       simData[,i]<-rgamma(n = length(response), rate=ra1, shape=shape1)
