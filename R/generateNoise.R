@@ -36,6 +36,16 @@ generateNoise<-function(n, response, family, ...){
     if(family=='zibinomial'){
       simData[,i]<-rzibinom(n=length(response), prob=response, ...)
     }
+    if(family=='gaussian'){
+      simData[,i]<-rnorm(n=length(response), mean = response, ...)
+    }
+    if(family=='gamma'){
+      mode=response
+      sd=variance
+      ra1=(mode + sqrt(mode^2 + 4*sd^2))/(2*sd^2)
+      shape1=1+mode*ra1
+      simData[,i]<-rgamma(n = length(response), rate=ra1, shape=shape1)
+    }
   }
   return(simData)
 }
