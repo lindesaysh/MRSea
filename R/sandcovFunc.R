@@ -15,3 +15,14 @@ sandcov<-function (model, id=NULL){
   infl <- rowsum(infl, id)
   t(infl) %*% infl
 }
+
+clsandcov   <- function(dat,fm, cluster){
+  attach(dat, warn.conflicts = F)
+  library(sandwich)
+  M <- length(unique(cluster))
+  N <- length(cluster)
+  K <- fm$rank
+  dfc <- (M/(M-1))*((N-1)/(N-K))
+  uj  <- apply(estfun(fm),2, function(x) tapply(x, cluster, sum));
+  vcovCL <- dfc*sandwich(fm, meat=crossprod(uj)/N)
+  return(vcovCL)}
