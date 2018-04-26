@@ -88,7 +88,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       posKnots<-spacefillresult$best.id
 
     }else{
-      SampledPoints<- sample(1:dim(knotgrid)[1], min(1000, dim(knotgrid)[1]))
+      SampledPoints<- sample(1:dim(knotgrid)[1], min(1500, dim(knotgrid)[1]))
 
       #space-fill data (subsample - see line above) to get knot locations
       if(length(duppointid)>0){
