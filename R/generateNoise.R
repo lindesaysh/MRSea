@@ -24,7 +24,7 @@
 #' @author LAS Scott-Hayward, University of St Andrews
 #' @export
 #'
-generateNoise<-function(n, response, family, gamma.variance...){
+generateNoise<-function(n, response, family, gamma.variance, ...){
   simData<-matrix(NA, nrow=length(response), ncol=n)
   for(i in 1:n){
     if(family=='poisson'){
