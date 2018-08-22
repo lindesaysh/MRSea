@@ -155,6 +155,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     }}
   }
   
+  if(is.null(salsa2dlist$max.iter)){
+    maxIterations<-10
+  }else{
+    maxIterations<-salsa2dlist$max.iter  
+  }
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~~
