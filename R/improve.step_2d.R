@@ -87,15 +87,18 @@
             #get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, tempR,radii,radiusIndices, initDisp)$fitStat
           
           
-          out<-choose.radii(initBIC,i,radiusIndices,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
-          tempRadii=out$radiusIndices
-          tempOut.lm=out$out.lm
-          models=out$models
+          #out<-choose.radii(initBIC,i,radiusIndices,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
+          tempRadii=radiusIndices
+          tempOut.lm=output$currentModel
+#          tempRadii=out$radiusIndices
+#          tempOut.lm=out$out.lm
+#          models=out$models
           # output<-out$BIC
           #get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
           
           #fitStat<-output$tempMeasure
-          tempMeasure<-out$BIC
+#          tempMeasure<-out$BIC
+          tempMeasure<-initBIC
           #### print(length(as.vector(coefficients(tempOut.lm))))
           if (tempMeasure + tol < fitStat) {
             out.lm <- tempOut.lm
