@@ -131,7 +131,7 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
         }
 
         if(savedata==T){
-          partialdata<-data.frame(newX, partialfit, cis[1], cis[2])
+          partialdata<-data.frame(newX, partialfit, cis[,1], cis[,2])
           save(partialdata, file=paste('PartialData_', factorlist.in[i], '.RData', sep=''), compress='bzip2' )
         }
 
