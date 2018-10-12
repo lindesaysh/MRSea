@@ -33,7 +33,7 @@ do.bootstrap.cress.robust.beta<-function(model.obj, predictionGrid, splineParams
   require(Matrix)
   require(mvtnorm)
   
-  if(class(testfitbetacorr)!='betareg')stop("model must be of class betareg")
+  if(class(model.obj)!='betareg')stop("model must be of class betareg")
   
   #require(mvtnorm)
   
