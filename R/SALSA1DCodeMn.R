@@ -20,8 +20,17 @@
 #'
 #'@export
 #'
+#degree=splineParams[[varID[(i-1)]]]$degree
+#minKnots=salsa1dlist$minKnots_1d[(i-1)]
+#maxKnots=salsa1dlist$maxKnots_1d[(i-1)]
+#startKnots=salsa1dlist$startKnots_1d[(i-1)]
+#fitnessMeasure=salsa1dlist$fitnessMeasure
+#maxIterations=100
+#cv.opts=salsa1dlist$cv.opts
+#initialise=TRUE
+#initialKnots = NULL
 
-"return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl,interactionTerm=interactionTerm, suppress.printout=FALSE, cv.opts){
+"return.reg.spline.fit.mn" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl,interactionTerm=interactionTerm, suppress.printout=FALSE, cv.opts){
 
   # if(suppress.printout){
   #   sink(file = 'salsa1d.log')
@@ -67,25 +76,20 @@
 #                  position  - the index in point of ith data point
 #                              0 otherwise (position[i] = j,where point[j] = i)
 
-
+  print("a")
 # sort out baseModel formulae environment issue
-  if (isS4(baseModel)) {
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-    data <- baseModel@data
-  } else {
-    attributes(baseModel$formula)$.Environment<-environment()
-    data<- baseModel$data
-  }
+  attributes(baseModel@misc$formula)$.Environment<-environment()
+  data <- baseModel@data
   data$explanatory<-explanatory
   #family<-baseModel$family$family
   baseModel<-update(baseModel, data=data)
-
+  print("b")
 # LSH 12/3/15 added dispersion parameter calc
 initDisp<-getDispersion(baseModel)
 if(length(unique(response))!=2){
   print(paste('initialDispersion ', initDisp, sep=''))
 }
-    
+ print("c") 
 ####deal with multiple unordered x-values
 knotSites <- cbind(sort(explanatory), rep(1, length(explanatory)))
 knotSites <- knotSites[which(duplicated(knotSites)==F),]
@@ -100,7 +104,7 @@ if (nrow(knotSites) > maxSites) {
   #quantile(knotSites,probs=seq(0,1,length=maxSites),na.rm=TRUE,names=FALSE)
 }
 #print(knotSites)
-
+print("d")
 # remove locations for knots if they are also boundary knots????
 if(length(which(knotSites==bd[1]))>0){
    knotSites <- knotSites[-(which(knotSites<=(bd[1] + gap)))]
@@ -110,9 +114,9 @@ if(length(which(knotSites==bd[2]))>0){
 }
 
 #print(knotSites)
-
+print("e")
     ###########################initialisation######################################
-    output <- initialise.measures(startKnots, explanatory, response, degree, wts, initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+    output <- initialise.measures.mn(startKnots, explanatory, response, degree, wts, initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
     point <- output$point
     knotPoint <<- output$knotPoint
     position <- output$position
@@ -123,9 +127,7 @@ if(length(which(knotSites==bd[2]))>0){
 
         print("^^^^^^^^^^^Initial^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
         print(get.measure(fitnessMeasure,measures,out.lm, initDisp, cv.opts)$fitStat)
-        print(gap)
-        print(bd)
-
+print("f")
     ###################################algorithm loop#############################
     improveEx <- 1
     improveNudge <- 1
@@ -136,7 +138,7 @@ if(length(which(knotSites==bd[2]))>0){
       improveNudge <- 0
       improveDrop <- 0
     ###################################exchange step#############################
-      output <- exchange.step(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
+      output <- exchange.step.mn(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
                                  out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp, cv.opts)
       point <- output$point
       knotPoint <- output$knotPoint
@@ -146,16 +148,16 @@ if(length(which(knotSites==bd[2]))>0){
       out.lm <- output$out.lm
       models <- output$models
       improveEx <- output$improveEx
-    
+print("g")    
     print(length(unique(point)))
     print(length(point))
-    
+
       if (improveEx) {
         print("^^^^^^^^^^^Exchange^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
        # print(get.measure(fitnessMeasure,measures,out.lm)$fitStat)
       }
     #####################################improve step############################
-      output <- improve.step(degree, gap, length(aR), response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,
+      output <- improve.step.mn(degree, gap, length(aR), response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,
                                 aR,measures,out.lm,improveNudge, wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
       point <- output$point
       knotPoint <- output$knotPoint
@@ -171,9 +173,10 @@ if(length(which(knotSites==bd[2]))>0){
       }
     print(length(unique(point)))
     print(length(point))
+    print("h")
     ###################################drop step#################################
       if (length(aR) > minKnots) {
-         output <- drop.step(degree, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
+         output <- drop.step.mn(degree, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
                                   out.lm,improveDrop,minKnots, wts, baseModel,models, bd, spl, interactionTerm, initDisp, cv.opts)
          point <- output$point
          knotPoint <- output$knotPoint
@@ -193,21 +196,19 @@ if(length(which(knotSites==bd[2]))>0){
        if ((improveEx) | (improveNudge) | (improveDrop)) overallImprove = 1
       }
   print("And we're done...")
+print("i")
   list(output=c(length(aR),measures,aR),aR=aR,out.lm=out.lm,improve=overallImprove,knotSites=knotSites,models=models)
 }
 
 ########################################################################################################################
 
-"initialise.measures" <- function(num,explanatory, response, degree, wts,  initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts){
+"initialise.measures.mn" <- function(num,explanatory, response, degree, wts,  initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts){
    
-  if (isS4(baseModel)){
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-  } else {
-    attributes(baseModel$formula)$.Environment<-environment()
-  }
+  attributes(baseModel@misc$formula)$.Environment<-environment()
   
     print("Initialising...")
     models = vector("list",0)
+    print("aa")
     if (initialise) {
       step<-(knotSites[length(knotSites )]-knotSites[1])/(num + 1)
       aR <- c()
@@ -228,6 +229,7 @@ if(length(which(knotSites==bd[2]))>0){
         aR = knotSites[knotPoint]
         num=length(aR)
       }
+    print("bb")
       point<<-1:length(knotSites)
       point<-point[-knotPoint]
       position<-1:(knotPoint[1]-1)
@@ -240,10 +242,12 @@ if(length(which(knotSites==bd[2]))>0){
            }
          }
       }
+    print("cc")
     position<-c(position,0,(knotPoint[num]-(num-1)):(length(knotSites )-num))
-    output <- fit.model(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+    output <- fit.model.mn(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
     out.lm<-output$currentModel
     models<-output$models
+    print("dd")
     #model.out<<-out.lm
     measures<- get.measure(fitnessMeasure,measures=NA,out.lm, initDisp, cv.opts)$fitStat
     #measures <- update.measures(out.lm)
@@ -254,59 +258,61 @@ print("initialisation complete...")
 
 ######################################################################################################################
 
-"exchange.step" <- function(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,
+
+"exchange.step.mn" <- function(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,
                                measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
-  
-  if (isS4(baseModel)){
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-  } else {
-    attributes(baseModel$formula)$.Environment<-environment()
-  }
-  
-  # Loop - fuse used to ensure algorithm terminates
-  print("Exchanging...")
-  fuse <- 0
-  improve <- 1
-  while ( (improve) & (fuse < maxIterations) ) {
-    fuse <- fuse + 1
-    improve <- 0
-    output <- locate.max.res(point,position,gap,response,explanatory, bd, winHalfWidth,out.lm,knotPoint,aR,wts, knotSites, spl)
-    index <- output$index
-    #if (length(index)>1) browser()
-    if (length(index)>0) {
-      if (index > 0) {
-        output <- move.knot(degree, index,fitnessMeasure,measures,aR,point,response,explanatory,out.lm,improve,improveEx,
-                            maxKnots, wts,  baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
-        improve <- output$improve
-        improveEx <- output$improveEx
-        models <-output$models
-      }
-    }
-    if (1 - improve) break
-    out.lm<-output$out.lm
-    tempKnot <- output$tempKnot
-    if (tempKnot <= length(knotPoint)) {
-      position[knotPoint[tempKnot]] <- index
-      position[point[index]] <- 0
-      buff <- knotPoint[tempKnot]
-      knotPoint[tempKnot] <- point[index]
-      point[index] <- buff
-    } else {
-      knotPoint<-c(knotPoint,point[index])
-      position[point[index]]<-0
-      point<-point[-index]
-      if (length(point) >= index) {
-        for (i in index:length(point)){
-          position[point[i]]<-position[point[i]]-1
+  print("aa")
+  attributes(baseModel@misc$formula)$.Environment<-environment()
+   # Loop - fuse used to ensure algorithm terminates
+print("Exchanging...")
+   fuse <- 0
+   improve <- 1
+   while ( (improve) & (fuse < maxIterations) ) {
+     print("bb")
+      fuse <- fuse + 1
+      improve <- 0
+      ### locate max res doesn't appear to use s3 or s4 
+      output <- locate.max.res.mn(point,position,gap,response,explanatory, bd, winHalfWidth,out.lm,knotPoint,aR,wts, knotSites, spl)
+      index <- output$index
+      #if (length(index)>1) browser()
+      print("cc")
+      if (length(index)>0) {
+        if (index > 0) {
+           output <- move.knot.mn(degree, index,fitnessMeasure,measures,aR,point,response,explanatory,out.lm,improve,improveEx,
+                                  maxKnots, wts,  baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
+           improve <- output$improve
+           improveEx <- output$improveEx
+           models <-output$models
         }
       }
-    }
-    aR <- output$newR
-    measures <- output$tempMeasures
-  }
-  print("Exchanging done...")
-  list(point=point,knotPoint=knotPoint,position=position,aR=aR,
-       measures=measures,out.lm=out.lm,improveEx=improveEx,models=models)
+      print("dd")
+      if (1 - improve) break
+      out.lm<-output$out.lm
+      tempKnot <- output$tempKnot
+      if (tempKnot <= length(knotPoint)) {
+        print("a")
+         position[knotPoint[tempKnot]] <- index
+         position[point[index]] <- 0
+         buff <- knotPoint[tempKnot]
+         knotPoint[tempKnot] <- point[index]
+         point[index] <- buff
+      } else {
+         knotPoint<-c(knotPoint,point[index])
+         position[point[index]]<-0
+         point<-point[-index]
+         if (length(point) >= index) {
+            for (i in index:length(point)){
+               position[point[i]]<-position[point[i]]-1
+            }
+         }
+      }
+      print("ee")
+      aR <- output$newR
+      measures <- output$tempMeasures
+   }
+print("Exchanging done...")
+   list(point=point,knotPoint=knotPoint,position=position,aR=aR,
+          measures=measures,out.lm=out.lm,improveEx=improveEx,models=models)
 }
 
 
@@ -319,28 +325,52 @@ print("initialisation complete...")
   tempRes <<-residuals(out.lm,type="pearson")
   index <- NULL
   for (i in 1:length(knotPoint)) {
-    if (isS4(out.lm)){
-      tempRes[(explanatory <= knotSites[knotPoint[i]]+gap)&(explanatory >= knotSites[knotPoint[i]]-gap),] = 0
-      tempRes[(explanatory <= bd[1] + gap),] = 0
-      tempRes[(explanatory >= bd[2] - gap),] = 0
-    } else {
-      tempRes[(explanatory <= knotSites[knotPoint[i]]+gap)&(explanatory >= knotSites[knotPoint[i]]-gap)] = 0
-	    tempRes[(explanatory <= bd[1] + gap)] = 0
-	    tempRes[(explanatory >= bd[2] - gap)] = 0
-    }
+
+		tempRes[(explanatory <= knotSites[knotPoint[i]]+gap)&(explanatory >= knotSites[knotPoint[i]]-gap)] = 0
+		tempRes[(explanatory <= bd[1] + gap)] = 0
+		tempRes[(explanatory >= bd[2] - gap)] = 0
+   }
+   # 8/8/12 LSH
+   # add if statement to prevent random allocation of maxInd if tempRes is all zeros
+   #
+   if (max(abs(tempRes))==0) {
+		print("All Residuals Zero - no move")
+	} else {   
+	  maxInd = max.col(t(abs(tempRes)))
+      print(maxInd)
+      siteIndex = which(abs(knotSites-explanatory[maxInd])==min(abs(knotSites[position>0]-explanatory[maxInd])))[1]
+    # added the [1] to only take the first nearest point.  only an issue if selected data location to place knot is exactly equidistant to knot locations available eitherside
+    #if(length(siteIndex>1)) browser()
+      index = which(point==siteIndex)
+       point<<-point
+       position<<-position
+       knotSites<<-knotSites
+       print(index)
+       print("Maximum residual found...")
+	}
+    list(index=index)
+}
+
+
+"locate.max.res.mn" <- function(point,position,gap,response,explanatory, bd,winHalfWidth,out.lm,knotPoint,aR,wts,knotSites, spl){
+  
+  print("Locating maximum residual......")
+  tempRes <<-residuals(out.lm,type="pearson")
+  index <- NULL
+  for (i in 1:length(knotPoint)) {
+    tempRes[(explanatory <= knotSites[knotPoint[i]]+gap)&(explanatory >= knotSites[knotPoint[i]]-gap),] = 0
+    tempRes[(explanatory <= bd[1] + gap),] = 0
+    tempRes[(explanatory >= bd[2] - gap),] = 0
   }
   # 8/8/12 LSH
   # add if statement to prevent random allocation of maxInd if tempRes is all zeros
   #
   if (max(abs(tempRes))==0) {
-		print("All Residuals Zero - no move")
-	} else {
-	  if (isS4(out.lm)){
-	    maxInd = which.max(tempRes)
-	  } else {
-	    maxInd = max.col(t(abs(tempRes)))
-	  }
-    print(maxInd)
+    print("All Residuals Zero - no move")
+  } else {   
+    # maxInd = max.col(t(abs(tempRes)))
+    # for now only care about absolute maximum
+    maxInd = which.max(tempRes)
     siteIndex = which(abs(knotSites-explanatory[maxInd])==min(abs(knotSites[position>0]-explanatory[maxInd])))[1]
     # added the [1] to only take the first nearest point.  only an issue if selected data location to place knot is exactly equidistant to knot locations available eitherside
     #if(length(siteIndex>1)) browser()
@@ -350,111 +380,89 @@ print("initialisation complete...")
     knotSites<<-knotSites
     print(index)
     print("Maximum residual found...")
-	}
+  }
   list(index=index)
 }
 
 ################################################################################################################
 
-"move.knot" <- function(degree, index,fitnessMeasure,measures,aR,point,response,explanatory,out.lm,improve,improveEx,maxKnots,
+"move.knot.mn" <- function(degree, index,fitnessMeasure,measures,aR,point,response,explanatory,out.lm,improve,improveEx,maxKnots,
                             wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
   
-  if (isS4(out.lm)) {
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-  } else {
-    attributes(baseModel$formula)$.Environment<-environment()
-  }
-  
-  print("Moving knot...")
-  chck<-c()
-  tempMeasures <- measures
-  
-  for (i in 1:length(aR)) {
-    tempR<-aR
-    tempR[i]<-knotSites[point[index]]
-    chck<-rbind(chck,tempR)
-    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+  attributes(baseModel@misc$formula)$.Environment<-environment()
+print("Moving knot...")
+    chck<-c()
+    tempMeasures <- measures
+    for (i in 1:length(aR)) {
+       tempR<-aR
+       tempR[i]<-knotSites[point[index]]
+       chck<-rbind(chck,tempR)
+       output <- fit.model.mn(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
        
-    if (isS4(out.lm)) {
-      converge <- output$currentModel@iter < output$currentMode@control$maxit
-    } else {
-      converge <- output$currentModel$converge
-    }
+       converge <- output$currentMode@iter < output$currentMode@control$maxit
        
-    if (converge) {
-      tempOut.lm<-output$currentModel
-      models<-output$models
-      output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
-      tempMeasure<-output$tempMeasure
-      fitStat<-output$fitStat
-      chck<-rbind(chck,fitStat)
-      if (tempMeasure > fitStat ) { ## Lindesay: removed convergence check - already tested 7 lines above)
-      #print("t measure:")
-      #print(tempMeasure)
-      #print(tempR)
-      #print("f stat:")
-      #print(fitStat)
-      out.lm <- tempOut.lm
-      tempMeasures<- fitStat
-      newR <- tempR
-      tempKnot <- i
-      improve <- 1
-      improveEx <- 1
-      }
-    }      
-  }
-    
-  if (length(aR)<maxKnots) {
-    tempR<-c(aR,knotSites[point[index]])
-    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
-      
-    if (isS4(out.lm)) {
-      converge <- output$currentModel@iter < output$currentMode@control$maxit
+       if (converge) {
+          tempOut.lm<-output$currentModel
+          models<-output$models
+          output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
+          tempMeasure<-output$tempMeasure
+          fitStat<-output$fitStat
+          chck<-rbind(chck,fitStat)
+          if (tempMeasure > fitStat ) { ## Lindesay: removed convergence check - already tested 7 lines above)
+#              print("t measure:")
+#              print(tempMeasure)
+#              print(tempR)
+#              print("f stat:")
+#              print(fitStat)
+              out.lm <- tempOut.lm
+             tempMeasures<- fitStat
+             newR <- tempR
+             tempKnot <- i
+             improve <- 1
+             improveEx <- 1
+             }
+          }      
+       }
+    if (length(aR)<maxKnots) {
+       tempR<-c(aR,knotSites[point[index]])
+       output <- fit.model.mn(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+       converge <- output$currentMode@iter < output$currentMode@control$maxit	   
+       if (converge) {
+          tempOut.lm<-output$currentModel
+          models<-output$models
+          output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
+          tempMeasure<-output$tempMeasure
+          fitStat<-output$fitStat
+          if (tempMeasure > fitStat) {
+#              print("t measure:")
+# 	         print(tempMeasure)
+# 	         print(tempR)
+# 	         print("f stat:")
+#              print(fitStat)
+             out.lm <- tempOut.lm
+             tempMeasures<-fitStat
+             newR <- tempR
+             tempKnot <- length(aR) + 1
+             improve <- 1
+             improveEx <- 1
+             }
+          }
+	   }
+print("Knot moved...")
+    if (improve) {
+       list(tempMeasures=tempMeasures,newR=newR,tempKnot=tempKnot,improve=improve,
+             improveEx=improveEx, out.lm=out.lm,models=models)
     } else {
-      converge <- output$currentModel$converge
-    }	 
-      
-    if (converge) {
-      tempOut.lm<-output$currentModel
-      models<-output$models
-      output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
-      tempMeasure<-output$tempMeasure
-      fitStat<-output$fitStat
-      if (tempMeasure > fitStat) {
-        #print("t measure:")
-        #print(tempMeasure)
-        #print(tempR)
-        #print("f stat:")
-        #print(fitStat)
-        out.lm <- tempOut.lm
-        tempMeasures<-fitStat
-        newR <- tempR
-        tempKnot <- length(aR) + 1
-        improve <- 1
-        improveEx <- 1
-      }
+         list(improve=improve,improveEx=improveEx,models=models)
     }
-  }
 
-  print("Knot moved...")
-  if (improve) {
-    list(tempMeasures=tempMeasures,newR=newR,tempKnot=tempKnot,improve=improve,
-         improveEx=improveEx, out.lm=out.lm,models=models)
-  } else {
-    list(improve=improve,improveEx=improveEx,models=models)
-  }
 }
 
 ####################################################################################################################
 
-"improve.step" <- function(degree, gap, num,response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
-  if (isS4(baseModel)){
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-  } else {
-    attributes(baseModel$formula)$.Environment<-environment()
-  }
-
-  print("Improving...")
+"improve.step.mn" <- function(degree, gap, num,response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
+  attributes(baseModel@misc$formula)$.Environment<-environment()
+print("Improving...")
    improve <- 1
    fuse <- 0
    while ( (improve) & (fuse < maxIterations) ) {
@@ -462,7 +470,7 @@ print("initialisation complete...")
      improve <- 0
      for (i in 1:length(aR)) {
        #browser()
-       output <- local.shift.up(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
+       output <- local.shift.up.mn(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
        point <- output$point
        
        #print(length(point))
@@ -478,12 +486,11 @@ print("initialisation complete...")
        improve <- output$improve
        improveNudge <- output$improveNudge
        if (shouldBreak) {break}
-       output <- local.shift.down(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts,baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
+       output <- local.shift.down.mn(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts,baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
        point <- output$point
        
        #print(length(unique(point)))
        #print(length(point))
-       
       position <- output$position
        knotPoint <- output$knotPoint
        aR <- output$aR
@@ -503,203 +510,180 @@ print("Improving complete...")
 
 #########################################################################################################################
 
-"drop.step" <- function(degree, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,
+"drop.step.mn" <- function(degree, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,
                           improveDrop,minKnots,wts, baseModel,models, bd, spl, interactionTerm, initDisp, cv.opts) {
   
-  if (isS4(baseModel)) {
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-  } else {
-    attributes(baseModel$formula)$.Environment<-environment()
-  }
+  attributes(baseModel@misc$formula)$.Environment<-environment()
   
   print("Dropping...")
-  improve<-0
-  tempMeasures <- measures
-  for (i in 1:length(aR)) {
-    tempR <- aR
-    tempR <- tempR[-i]
-    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
-    
-    if (isS4(output$currentModel)) {
-      converge <- output$currentModel@iter < output$currentMode@control$maxit
-    } else {
-      converge <- output$currentModel$converge
+   improve<-0
+   tempMeasures <- measures
+   for (i in 1:length(aR)) {
+      tempR <- aR
+      tempR <- tempR[-i]
+      output <- fit.model.mn(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+      
+      converge <- output$currentMode@iter < output$currentMode@control$maxit
+      
+      if (converge) {
+         tempOut.lm<-output$currentModel
+         models<-output$models
+         output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
+         tempMeasure<-output$tempMeasure
+         fitStat<-output$fitStat
+         if (tempMeasure > fitStat) {
+#             print("Drop t measure:")
+# 	        print(tempMeasure)
+# 	        print(tempR)
+# 	        print("Drop f stat:")
+#             print(fitStat)
+            out.lm <- tempOut.lm
+            tempMeasures<-fitStat
+            newR <- tempR
+            tempKnot <- i
+            improve <- 1
+            improveDrop <- 1
+         }      
+      }
+   }
+   if (improve) {
+       aR <- newR
+       point <- c(point,knotPoint[tempKnot])
+       position[knotPoint[tempKnot]]<-length(point)
+       knotPoint <- knotPoint[-tempKnot]
+       }
+    print("Dropped...")
+    list(point=point,knotPoint=knotPoint,position=position,aR=aR,measures=tempMeasures,
+           out.lm=out.lm,improveDrop=improveDrop,models=models)
     }
-    
-    if (converge) {
-      tempOut.lm<-output$currentModel
-      models<-output$models
-      output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
-      tempMeasure<-output$tempMeasure
-      fitStat<-output$fitStat
-      if (tempMeasure > fitStat) {
-        #print("Drop t measure:")
-        #print(tempMeasure)
-        #print(tempR)
-        #print("Drop f stat:")
-        #print(fitStat)
-        out.lm <- tempOut.lm
-        tempMeasures<-fitStat
-        newR <- tempR
-        tempKnot <- i
-        improve <- 1
-        improveDrop <- 1
-      }      
-    }
-  }
-  if (improve) {
-    aR <- newR
-    point <- c(point,knotPoint[tempKnot])
-    position[knotPoint[tempKnot]]<-length(point)
-    knotPoint <- knotPoint[-tempKnot]
-  }
-  print("Dropped...")
-  list(point=point,knotPoint=knotPoint,position=position,aR=aR,measures=tempMeasures,
-       out.lm=out.lm,improveDrop=improveDrop,models=models)
-}
 
          
 ###################################################################################
 
-"local.shift.up" <- function(degree, out.lm, i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory,
+"local.shift.up.mn" <- function(degree, out.lm, i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory,
                                   improve,improveNudge,wts, baseModel,knotSites,models,bd , spl, interactionTerm, initDisp, cv.opts){
-  if (isS4(baseModel)){
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-  }  else {
-    attributes(baseModel$formula)$.Environment<-environment()
-  }
+    
+  attributes(baseModel@misc$formula)$.Environment<-environment()
   print("Shifting up...")
-  shouldBreak <- 0
-  move <- 1
-  tempR <- aR
-  while(move) {
-    move <- 0
-    #if (knotPoint[i] + gap + 1 <= length(knotSites)) {#have already removed illegal end knot sites at start of solve
-    if (knotPoint[i] + 1 <= length(knotSites)) {#don't go over end!
-      #check <- 1
-      #for (j in 1:gap){
-      #   check<-check*(position[knotPoint[i]+j]!=0)
-      #}
-      #if(knotPoint[i]==83) browser()
-      otherPoints=knotPoint[-i]
-      check = !any(abs(knotSites[otherPoints]-knotSites[knotPoint[i]+1])<=gap)
-      # LSH added <= (19/2/15) rather than < so no two knots in same plae
-      if (check) {
-        tempR[i] <- knotSites[knotPoint[i]+1]
-        output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
-        
-        if (isS4(baseModel)){
-          converge <- output$currentModel@iter < output$currentMode@control$maxit
-        } else {
-          converge <- output$currentModel$converge
-        }
-        
-        if (converge) {
-          tempOut.lm<-output$currentModel
-          models<-output$models
-          output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
-          tempMeasure<-output$tempMeasure
-          fitStat<-output$fitStat
-          if (fitStat < tempMeasure) {
-            #browser()
-            #print("Up t measure:")
-            #print(tempMeasure)
-            #print(tempR)
-            #print("Up f stat:")
-            #print(fitStat)
-            shouldBreak <- 1
-            improve <- 1
-            improveNudge <- 1
-            point[position[knotPoint[i]+1]] <- knotPoint[i]
-            position[knotPoint[i]] <- position[knotPoint[i]+1]
-            position[knotPoint[i]+1] <- 0
-            knotPoint[i] <- knotPoint[i]+1
-            aR <- tempR
-            out.lm<- tempOut.lm
-            measures<- fitStat
-            move<-1
-          }
-        }
+    shouldBreak <- 0
+    move <- 1
+    tempR <- aR
+    while(move) {
+       move <- 0
+       #if (knotPoint[i] + gap + 1 <= length(knotSites)) {#have already removed illegal end knot sites at start of solve
+       if (knotPoint[i] + 1 <= length(knotSites)) {#don't go over end!
+         #check <- 1
+         #for (j in 1:gap){
+         #   check<-check*(position[knotPoint[i]+j]!=0)
+         #}
+         #if(knotPoint[i]==83) browser()
+         otherPoints=knotPoint[-i]
+         check = !any(abs(knotSites[otherPoints]-knotSites[knotPoint[i]+1])<=gap)
+         # LSH added <= (19/2/15) rather than < so no two knots in same plae
+         if (check) {
+            tempR[i] <- knotSites[knotPoint[i]+1]
+            output <- fit.model.mn(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+            
+            converge <- output$currentMode@iter < output$currentMode@control$maxit
+            
+            if (converge) {
+               tempOut.lm<-output$currentModel
+               models<-output$models
+               output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
+               tempMeasure<-output$tempMeasure
+               fitStat<-output$fitStat
+               if (fitStat < tempMeasure) {
+                 #browser()
+#                   print("Up t measure:")
+# 	              print(tempMeasure)
+# 	              print(tempR)
+# 	              print("Up f stat:")
+#                  print(fitStat)
+                  shouldBreak <- 1
+                  improve <- 1
+                  improveNudge <- 1
+                  point[position[knotPoint[i]+1]] <- knotPoint[i]
+                  position[knotPoint[i]] <- position[knotPoint[i]+1]
+                  position[knotPoint[i]+1] <- 0
+                  knotPoint[i] <- knotPoint[i]+1
+                  aR <- tempR
+                  out.lm<- tempOut.lm
+                  measures<- fitStat
+                  move<-1
+               }
+            }
+         }
       }
-    }
-  }
-  print("Up done...")
-  list(out.lm=out.lm,point=point,position=position,knotPoint=knotPoint,aR=aR,measures=measures,
-       shouldBreak=shouldBreak,improve=improve,improveNudge=improveNudge,models=models)
-}
+   }
+   print("Up done...")
+   list(out.lm=out.lm,point=point,position=position,knotPoint=knotPoint,aR=aR,measures=measures,
+          shouldBreak=shouldBreak,improve=improve,improveNudge=improveNudge,models=models)
+ }
  
  ######################################################################################################################################
  
- "local.shift.down" <- function(degree, out.lm, i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory,
+ "local.shift.down.mn" <- function(degree, out.lm, i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory,
                                      improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
-  
-  if (isS4(baseModel)){
-    attributes(baseModel@misc$formula)$.Environment<-environment() 
-  } else {
-    attributes(baseModel$formula)$.Environment<-environment() 
-  }
-  print("Shifting down...") 
-  shouldBreak <- 0
-  move <- 1
-  tempR<-aR
-  while (move) {
-    move <- 0
-    #if (knotPoint[i] - gap >= 2) {#have already removed illegal end knot sites at start of solve
-    if (knotPoint[i]  >= 2) {#don't go over end!
-      otherPoints=knotPoint[-i]
-      check = !any(abs(knotSites[otherPoints]-knotSites[knotPoint[i]-1])<=gap)
-      # LSH changed to <= from < so that two of the same knots do not get addded.
-      #check <- 1
-      #for (j in 1:gap){
-      #   check<-check*(position[knotPoint[i]-j]!=0)
-      #}    
-      if (check) {
-        tempR[i]<-knotSites[knotPoint[i]-1]
-        output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
-        
-        if (isS4(baseModel)) {
-          converge <- output$currentModel@iter < output$currentMode@control$maxit
-        } else {
-          converge <- output$currentModel$converge
-        }
-        
-        if (converge) {
-          tempOut.lm<-output$currentModel
-          models<-output$models
-          output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
-	        tempMeasure<-output$tempMeasure
-          fitStat<-output$fitStat             
-          if (fitStat < tempMeasure) {
-            #print("Down t measure:")
-            #print(tempMeasure)
-            #print(tempR)
-            #print("Down f stat:")
-            #print(fitStat)
-            shouldBreak <- 1
-            improve <- 1
-            improveNudge <- 1
-            point[position[knotPoint[i]-1]] <- knotPoint[i]
-                 
-            #print(length(unique(point)))
-            # print(length(point))
-            #if(length(unique(point))!=length(point)) browser()
-                 
-            position[knotPoint[i]] <- position[knotPoint[i]-1]
-            position[knotPoint[i]-1] <- 0
-            knotPoint[i] <- knotPoint[i]-1
-            aR <- tempR
-            out.lm<-tempOut.lm
-            measures<- fitStat
-            move<-1
+   
+   attributes(baseModel@misc$formula)$.Environment<-environment()
+   print("Shifting down...") 
+    shouldBreak <- 0
+    move <- 1
+    tempR<-aR
+    while (move) {
+       move <- 0
+       #if (knotPoint[i] - gap >= 2) {#have already removed illegal end knot sites at start of solve
+       if (knotPoint[i]  >= 2) {#don't go over end!
+         otherPoints=knotPoint[-i]
+         check = !any(abs(knotSites[otherPoints]-knotSites[knotPoint[i]-1])<=gap)
+         # LSH changed to <= from < so that two of the same knots do not get addded.
+          #check <- 1
+          #for (j in 1:gap){
+          #   check<-check*(position[knotPoint[i]-j]!=0)
+          #}    
+          if (check) {
+             tempR[i]<-knotSites[knotPoint[i]-1]
+             output <- fit.model.mn(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+             
+             converge <- output$currentMode@iter < output$currentMode@control$maxit
+             
+             if (converge) {
+                tempOut.lm<-output$currentModel
+                models<-output$models
+                output<-get.measure(fitnessMeasure,measures,tempOut.lm, initDisp, cv.opts)
+	            tempMeasure<-output$tempMeasure
+                fitStat<-output$fitStat             
+                if (fitStat < tempMeasure) {
+#                    print("Down t measure:")
+#                    print(tempMeasure)
+#                    print(tempR)
+# 	               print("Down f stat:")
+#                    print(fitStat)
+                   shouldBreak <- 1
+                   improve <- 1
+                   improveNudge <- 1
+                   point[position[knotPoint[i]-1]] <- knotPoint[i]
+                   
+                   #print(length(unique(point)))
+                   # print(length(point))
+                   #if(length(unique(point))!=length(point)) browser()
+                   
+                   position[knotPoint[i]] <- position[knotPoint[i]-1]
+                   position[knotPoint[i]-1] <- 0
+                   knotPoint[i] <- knotPoint[i]-1
+                   aR <- tempR
+                   out.lm<-tempOut.lm
+                   measures<- fitStat
+                   move<-1
+                }
+             }
           }
-        }
-      }
+       }
     }
-  }
-  print("Down done...")
-  list(out.lm=out.lm,point=point,position=position,knotPoint=knotPoint,aR=aR,measures=measures,
-       shouldBreak=shouldBreak,improve=improve,improveNudge=improveNudge,models=models)
-}
+    print("Down done...")
+    list(out.lm=out.lm,point=point,position=position,knotPoint=knotPoint,aR=aR,measures=measures,
+           shouldBreak=shouldBreak,improve=improve,improveNudge=improveNudge,models=models)
+ }
  
  ####################################################################################################################################
  
@@ -758,16 +742,11 @@ getCV_type2<- function(folds, baseModel){
 }
  ###################################################################################################################################
  
- "fit.model" <- function(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts) {
+ "fit.model.mn" <- function(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts) {
  
-  if (isS4(baseModel)){
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-    data <- baseModel@data
-  } else {
-    attributes(baseModel$formula)$.Environment<-environment()
-    data<-baseModel$data
-  }
-   
+   attributes(baseModel@misc$formula)$.Environment<-environment()
+   data <- baseModel@data
+
    # ~~~~~~~~~~~~~~~~~~~~~
    # b-spline
   if(spl == 'bs'){
@@ -779,10 +758,10 @@ getCV_type2<- function(folds, baseModel){
         }
     }
     bspl<-paste(bspl, aR[length(aR)], ")",")",sep="")
-
+  print("bbb")
   
-    
     if(is.null(interactionTerm)){  
+      baseModel <- baseModel
       test<-paste("update(baseModel, .  ~ . + ",bspl,")", sep="")
       out.lm<-eval(parse(text=test))
     }else{
@@ -790,12 +769,8 @@ getCV_type2<- function(folds, baseModel){
       out.lm<-eval(parse(text=test)) 
     }
     
-    if (isS4(out.lm)) {
-      converge <- out.lm@iter < out.lm@control$maxit
-    } else {
-      converge <- out.lm$converge
-    }
-    
+    converge <- out.lm@iter < out.lm@control$maxit
+
     if(is.na(converge)) {converge = TRUE}
     #print(aR)
     #print("model fitted...")
@@ -805,7 +780,7 @@ getCV_type2<- function(folds, baseModel){
     }
     return(list(currentModel=out.lm,models=models))
   }
-  
+  print("ddd")
   # ~~~~~~~~~~~~~~~~~~~~~
   # cubic splines
   if(spl == 'cc'){
@@ -819,14 +794,9 @@ getCV_type2<- function(folds, baseModel){
     
     out.lm<- eval(parse(text=textforeval2))
     
-    if (isS4(out.lm)) {
-      converge <- out.lm@iter < out.lm@control$maxit
-    } else {
-      converge <- out.lm$converge
-    }
+    converge <- out.lm@iter < out.lm@control$maxit
     
     if(is.na(converge)) {converge = TRUE}
-    
     # out.lm<-update(baseModel, .  ~ . + splineString)
     
     #print(aR)
@@ -837,7 +807,7 @@ getCV_type2<- function(folds, baseModel){
     }
     return(list(currentModel=out.lm,models=models))
   }
-  
+
   # ~~~~~~~~~~~~~~~~~~~~~
   # natural cubics
   if(spl=="ns"){
@@ -854,21 +824,17 @@ getCV_type2<- function(folds, baseModel){
     test<-paste("update(baseModel, .  ~ . + ",bspl,")", sep="")
     out.lm<-eval(parse(text=test))
     
-    if (isS4(out.lm)) {
-      converge <- out.lm@iter < out.lm@control$maxit
-    } else {
-      converge <- out.lm$converge
-    }
+    converge <- out.lm@iter < out.lm@control$maxit
     
     if(is.na(converge)) {converge = TRUE}
-
+    
     print(aR)
     print("model fitted...")
     if (converge) {
       tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp, cv.opts)$fitStat
       models[[length(models)+1]] = list(aR, tempFit)
     }
-    
+    print("fff")
     # if(suppress.printout){
     #   sink()
     # }
