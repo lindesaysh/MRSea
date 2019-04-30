@@ -110,11 +110,14 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   
   require(splines)
   require(fields)
-  if(class(initialModel)[1]!='glm' & class(initialModel)[1]!='gamMRSea' & class(initialModel)[1]!='vglm') stop('Class of model not supported.  Please use glm or gamMRSea')
+  
+  if (class(initialModel)[1]!='glm' & class(initialModel)[1]!='gamMRSea' & class(initialModel)[1]!='vglm') {
+    stop('Class of model not supported.  Please use glm or gamMRSea')
+  }
   
   # check for response variable
   ### may need to change for aggregated multinomial
-  if (isS4(initialModel)){
+  if (isS4(initialModel)) {
     require(VGAM)
     setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="numeric", splineParams="list", data="data.frame", cvfolds="numeric")) -> vglmMRSea
     initialModel <- as(initialModel, "vglmMRSea")
@@ -126,10 +129,16 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     mdl <- length(initialModel$model[[1]])
   }
 
-  if(nrw!=mdl){
-    fam<-'BinProp'
-  }else{
-    fam<-'other'
+  if (nrw!=mdl) {
+    fam <- 'BinProp'
+  } else {
+    fam <- 'other'
+    if (isS4(initialModel)){
+      resp_in <- strsplit(as.character(initialModel@misc$formula), '~')[[2]]
+      if (resp_in != "response"){
+        fam <- 'mn_agg'
+      }
+    }
   }
 
   ### This is not triggered for current multinomial implementation may need to be sorted for aggregated data
@@ -148,12 +157,12 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     data <- initialModel@data
     ### This error should never be triggered as the data in not stored in the initial model in vglm 
     ### We have added the data slot in the vglmMRSea class and are checking against what we added
-    if(sum(abs(dim(data)-dim(datain)))>0) stop('Data dimensions do not match the data in initialModel')
+    if(sum(abs(dim(data)-dim(datain)))>0) {stop('Data dimensions do not match the data in initialModel')}
   } else{
     family<-initialModel$family$family
     link<-initialModel$family$link
     data<-initialModel$data
-    if(sum(abs(dim(data)-dim(datain)))>0) stop('Data dimensions do not match the data in initialModel')
+    if(sum(abs(dim(data)-dim(datain)))>0) {stop('Data dimensions do not match the data in initialModel')}
   }
   
   if (isS4(initialModel)){
@@ -164,14 +173,15 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   
   
   ### OK for now may need reconsidering for aggregated multinomial
-  if(fam=='other'){
-    if(is.null(data$response)) stop('data does not contain response column')  
-  }else{
+  if(fam=='BinProp'){
     if(is.null(data$successes)) stop('data does not contain successes column')
     if(is.null(data$failures)) stop('data does not contain failures column')
+  } else if (fam=='mn_agg') {
+    print("multinomial aggregated data") 
+  } else {
+    if(is.null(data$response)) stop('data does not contain response column') 
   }
   
-  print(levels(data$response))
   # check parameters in salsa1dlist are same length as varlist
   if(length(varlist)!=length(salsa1dlist$minKnots_1d)) stop('salsa1dlist$minKnots_1d not same length as varlist')
   if(length(varlist)!=length(salsa1dlist$maxKnots_1d)) stop('salsa1dlist$maxKnots_1d not same length as varlist')
@@ -189,16 +199,30 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   seed.in<-salsa1dlist$cv.opts$cv.gamMRSea.seed
   if(!is.null(panelid)){
     if(length(unique(panelid))!=nrow(data)){
-      if(is.null(initialModel$cvfolds)){
-        initialModel$cvfolds<-getCVids(data, folds=salsa1dlist$cv.opts$K, block=panelid, seed=seed.in)  
-      }}
+      if (isS4(initialModel)){
+        if(is.null(initialModel@cvfolds)){
+          initialModel@cvfolds<-getCVids(data, folds=salsa1dlist$cv.opts$K, block=panelid, seed=seed.in)  
+        }
+      } else {
+        if(is.null(initialModel$cvfolds)){
+          initialModel$cvfolds<-getCVids(data, folds=salsa1dlist$cv.opts$K, block=panelid, seed=seed.in)  
+        }
+      }
+    }
   }
   
   ### Not considered how this will be affected by multinomial yet
   if(is.null(panelid) & removal==TRUE){
     panelid<-1:nrow(data)
-    if(is.null(initialModel$cvfolds)){
-      initialModel$cvfolds<-getCVids(data, folds=salsa1dlist$cv.opts$K, block=panelid, seed=seed.in)
+    if (isS4(initialModel)){
+      if(is.null(initialModel@cvfolds)){
+        ### getCVids doesn't appear to have anythign that will be affected by S4 model
+        initialModel@cvfolds<-getCVids(data, folds=salsa1dlist$cv.opts$K, block=panelid, seed=seed.in)
+      }
+    } else {
+      if(is.null(initialModel$cvfolds)){
+        initialModel$cvfolds<-getCVids(data, folds=salsa1dlist$cv.opts$K, block=panelid, seed=seed.in)
+      }
     }
   }
   
@@ -215,14 +239,16 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
       for(i in 1:length(varlist)){
         varID[i]<-grep(varlist[i], splineParams)
       }
-    }else{varID<-(1:length(varlist))+1}
+    }else{
+      varID<-(1:length(varlist))+1
+    }
   }
   
   terms1D <- list(length(varlist))
   
   ### Have no idea how cyclics will work with multinomials...
   counter<-1 # needed to loop through cyclics if more than one
-    for(i in 2:(length(varlist)+1)){
+  for(i in 2:(length(varlist)+1)){
     if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
       require(mgcv)
       terms1D[[(i-1)]]<- paste("smooth.construct(s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots))+2), knots = list(",varlist[varID[(i-1)]-1], "=as.numeric(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2]))), data=data.frame(",varlist[varID[(i-1)]-1],"))$X[,-1]", sep="")
@@ -241,9 +267,15 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   if(fam=='BinProp'){
     baseModel <- eval(parse(text=paste("glm(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }else if (isS4(initialModel)){
-    baseModel <- eval(parse(text=paste("vglm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data =data)", sep='')))
-    baseModel <- as(baseModel, "vglmMRSea")
-    baseModel@data <- data
+    if(fam=='mn_agg'){
+      baseModel <- eval(parse(text=paste("vglm(", resp_in, " ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data =data)", sep='')))
+      baseModel <- as(baseModel, "vglmMRSea")
+      baseModel@data <- data
+    } else {
+      baseModel <- eval(parse(text=paste("vglm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data =data)", sep='')))
+      baseModel <- as(baseModel, "vglmMRSea")
+      baseModel@data <- data
+    }
   }else{
     baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }
@@ -252,7 +284,11 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   if(removal==TRUE){
     set.seed(seed.in)
     basecoef<-length(coef(baseModel))
-    cv_initial <- cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+    if (isS4(baseModel)){
+      cv_initial <- cv.gamMRSea.mn(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+    } else {
+      cv_initial <- cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+    }
   }else{
     cv_initial=NULL
   }
@@ -286,7 +322,17 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     explanatory <- splineParams[[varID[(i-1)]]]$explanatory
     if(fam=='BinProp'){
       response<-cbind(data$successes, data$failures)
-    }else{
+    }else if (fam=='mn_agg') {
+      resp_columns <- test_salsa_init_mn_agg@misc$ynames
+      response_no <- which(colnames(data)==resp_columns[1])
+      response <- data[,response_no]
+      if (length(resp_columns) > 1) {
+        for (ii in 2:length(resp_columns)) {
+          response_no <- which(colnames(data)==resp_columns[ii])
+          response <- cbind(response, data[,response_no])
+        }
+      }
+    } else { 
       response<-data$response  
     }
     bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
@@ -337,66 +383,73 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     if(removal==TRUE){
       set.seed(seed.in)
       ### need to check if cv.gamMRSea works with multinomial
-      cv_with<- cv.gamMRSea(data=data, tempModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]  
+      if (isS4(tempModel)){
+        cv_with<- cv.gamMRSea.mn(data=data, tempModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
+      } else {
+        cv_with<- cv.gamMRSea(data=data, tempModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]  
+      }
     }
     models<<-output$models
     knotSites<<-output$knotSites
 
     if(removal=='TRUE'){
-    cat('Fitting Linear Model...')
-    tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
-    set.seed(seed.in)
-    print("CV")
-    print(c(cv_initial, cv_with, cv_without, cv_linear))
-    cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
-    
-    cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))
-    
-    if(length(cvid)>1){
-      modelcoeffs<-c(basecoef,length(coef(tempModel)),base_wo_coeff, length(coef(tempModel_lin)))
-      cvid<-cvid[which(modelcoeffs[cvid]==min(modelcoeffs[cvid]))]
-    }
+      cat('Fitting Linear Model...')
+      tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
+      set.seed(seed.in)
 
-    cat('Choosing smooth vs linear model...')
-    if(cvid==1){
-      # initial model is best - keep term but with original knots
-      fitStat = fitStat
-      splineParams[[varID[(i-1)]]]$knots<- tempinitialknots
-      baseModel<-update(tempModel, .~.)
-      cv_initial<-cv_initial
-      varkeepid<-c(varkeepid, i)
-      varkeepsmid<-c(varkeepsmid, i)
-      kept='YES - initial'
-    }
-    if(cvid==2){
-      # model with covariate with new knots is best
-      fitStat = thisFit
-      splineParams[[varID[(i-1)]]]$knots= sort(output$aR)
-      baseModel<-update(tempModel, .~.)
-      cv_initial<-cv_with
-      varkeepid<-c(varkeepid, i)
-      varkeepsmid<-c(varkeepsmid, i)
-      kept='YES - new knots'
-    }
+      if (isS4(tempModel_lin)){
+        cv_linear<- cv.gamMRSea.mn(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+      } else {
+        cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+      }
+      print(c(cv_initial, cv_with, cv_without, cv_linear))
+      cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))
       
-    if(cvid==3){
-        # model with parameter removed is best
-        fitStat = fitStat_without
-        splineParams[[varID[(i-1)]]]$knots<- 'NA'
-        baseModel<-update(baseModel, .~.)
-        cv_initial<-cv_without
-        kept='NO'
-    }
-      
-    if(cvid==4){
-        # model with parameter linear is best
-        splineParams[[varID[(i-1)]]]$knots<- 'NA'
-        baseModel<-update(tempModel_lin, .~.)
-        fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
-        cv_initial<-cv_linear
+      if(length(cvid)>1){
+        modelcoeffs<-c(basecoef,length(coef(tempModel)),base_wo_coeff, length(coef(tempModel_lin)))
+        cvid<-cvid[which(modelcoeffs[cvid]==min(modelcoeffs[cvid]))]
+      }
+  
+      cat('Choosing smooth vs linear model...')
+      if(cvid==1){
+        # initial model is best - keep term but with original knots
+        fitStat = fitStat
+        splineParams[[varID[(i-1)]]]$knots<- tempinitialknots
+        baseModel<-update(tempModel, .~.)
+        cv_initial<-cv_initial
         varkeepid<-c(varkeepid, i)
-        kept='YES - linear'
-    }
+        varkeepsmid<-c(varkeepsmid, i)
+        kept='YES - initial'
+      }
+      if(cvid==2){
+        # model with covariate with new knots is best
+        fitStat = thisFit
+        splineParams[[varID[(i-1)]]]$knots= sort(output$aR)
+        baseModel<-update(tempModel, .~.)
+        cv_initial<-cv_with
+        varkeepid<-c(varkeepid, i)
+        varkeepsmid<-c(varkeepsmid, i)
+        kept='YES - new knots'
+      }
+        
+      if(cvid==3){
+          # model with parameter removed is best
+          fitStat = fitStat_without
+          splineParams[[varID[(i-1)]]]$knots<- 'NA'
+          baseModel<-update(baseModel, .~.)
+          cv_initial<-cv_without
+          kept='NO'
+      }
+        
+      if(cvid==4){
+          # model with parameter linear is best
+          splineParams[[varID[(i-1)]]]$knots<- 'NA'
+          baseModel<-update(tempModel_lin, .~.)
+          fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
+          cv_initial<-cv_linear
+          varkeepid<-c(varkeepid, i)
+          kept='YES - linear'
+      }
     }else{
 #       cvid<-which(c(cv_initial, cv_with)==min(cv_initial, cv_with))
 #       if(cvid==1){
@@ -417,7 +470,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
         varkeepid<-c(varkeepid, i)
         varkeepsmid<-c(varkeepsmid, i)
         kept='YES - new knots'
-#      }      
     }
 
     if (isS4(baseModel)){

@@ -110,49 +110,59 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
        seed = seed)
 }
 
-cv.gamMRSea.mn<-function (data, modelobject, cost = function(y, yhat) mean((y - yhat)^2), 
-                       K = n, replicate=FALSE) 
-{
+cv.gamMRSea.mn<-function (data, modelobject, cost = function(y, yhat) mean((y - yhat)^2), K = n, replicate=FALSE) {
   call <- match.call()
-  if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) 
+  if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
     runif(1)
+  }
   seed <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
   n <- nrow(data)
-  if ((K > n) || (K <= 1)) 
+  if ((K > n) || (K <= 1)) {
     stop("'K' outside allowable range")
+  }
   K.o <- K
   K <- round(K)
   kvals <- unique(round(n/(1L:floor(n/2))))
   temp <- abs(kvals - K)
-  if (!any(temp == 0)) 
+  if (!any(temp == 0)) {
     K <- kvals[temp == min(temp)][1L]
-  if (K != K.o) 
+  }
+  if (K != K.o) {
     warning(gettextf("'K' has been set to %f", K), domain = NA)
+  }
   f <- ceiling(n/K)
   
-  #if(replicate==TRUE){
-  #  if(length(unique(modelobject$panels))==nrow(data) | is.null(modelobject$panels)){
-  #    # have indep
-  #    s <- boot:::sample0(rep(1L:K, f), n)  
-  #  }else{
-  #    # not indep
-  #    s.eed<-sample(1:100000, size = 1)
-  #    ### I don't think there is anything in getcvids that means it won't work with S4
-  #    s<-getCVids(data, K, block=modelobject$panels, seed = s.eed)  
-  #  }
-  #}else{
-  #  if(is.null(modelobject$cvfolds)){
-  #    s <- boot:::sample0(rep(1L:K, f), n)  
-  #  }else{
-  #    s<-modelobject$cvfolds
-  #  }  
-  #}
+  ### function only used for multinomials so model object must be S4 check if is vglm or vglmMRSea
+  ### if not vglmMRSea can't contain panels etc already so must be indep
+  if(replicate==TRUE){
+    if (class(modelobject)[1]=="vglm") {
+      s <- boot:::sample0(rep(1L:K, f), n)  
+    } else {
+      if(length(unique(modelobject@panels))==nrow(data) | is.null(modelobject@panels)){
+        # have indep
+        s <- boot:::sample0(rep(1L:K, f), n)  
+      }else{
+        # not indep
+        s.eed<-sample(1:100000, size = 1)
+        ### I don't think there is anything in getcvids that means it won't work with S4
+        s<-getCVids(data, K, block=modelobject@panels, seed = s.eed) 
+      }
+    }
+  }else{
+    if (class(modelobject)[1]=="vglm") {
+      s <- boot:::sample0(rep(1L:K, f), n)  
+    } else {
+      if(length(modelobject@cvfolds)<1){
+        s <- boot:::sample0(rep(1L:K, f), n)  
+      }else{
+        s<-modelobject@cvfolds
+      } 
+    }
+  }
   ### being lazy for now just check if cvfolds exists or not if it is still base vglm class it can't exist
   if (class(modelobject)[1]=="vglm"){
-    s <- boot:::sample0(rep(1L:K, f), n)
     splineParams <- NULL
   } else {
-    s<-modelobject@cvfolds
     splineParams<-modelobject@splineParams
   }
   
@@ -170,15 +180,20 @@ cv.gamMRSea.mn<-function (data, modelobject, cost = function(y, yhat) mean((y - 
     
     Call$data <- data[j.in, , drop = FALSE]
     
-    if(!is.null(splineParams)){
-      splineParams<-splineParams
-      if(!is.null(splineParams[[1]]$dist)){
-        splineParams[[1]]$dist<-splineParams[[1]]$dist[j.in,]
-        g2k<-splineParams[[1]]$dist[j.out,]
-        Call$splineParams<-splineParams
-      }else{
+    if(class(modelobject)[1]=="vglmMRSea"){
+      if (length(modelobject@splineParams)>0) {
+        splineParams <- modelobject@splineParams
+        if(!is.null(splineParams[[1]]$dist)){
+          splineParams[[1]]$dist<-splineParams[[1]]$dist[j.in,]
+          g2k<-splineParams[[1]]$dist[j.out,]
+          Call$splineParams<-splineParams
+        }else{
+          g2k<-NULL
+          Call$splineParams<-splineParams
+        }
+      } else {
+        splineParams<-NULL
         g2k<-NULL
-        Call$splineParams<-splineParams
       }
     }else{
       splineParams<-NULL
@@ -188,7 +203,7 @@ cv.gamMRSea.mn<-function (data, modelobject, cost = function(y, yhat) mean((y - 
     
     d.glm <- eval.parent(Call)
     p.alpha <- n.s[i]/n
-    cost.i <- cost(glm.y[j.out], predict(object=d.glm, newdata=data[j.out, ,drop = FALSE], g2k=g2k, type = "response"))
+    cost.i <- cost(glm.y[j.out,], predict(object=d.glm, newdata=data[j.out, ,drop = FALSE], g2k=g2k, type = "response"))
     CV <- CV + p.alpha * cost.i
     
     if(!is.null(splineParams[[1]]$dist)){
