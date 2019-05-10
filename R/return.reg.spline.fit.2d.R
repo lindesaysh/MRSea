@@ -77,8 +77,13 @@
   initDisp<-getDispersion(baseModel)
   print(paste('initialDispersion ', initDisp, sep=''))
 
-  attributes(baseModel$formula)$.Environment<-environment()
-  data<- baseModel$data
+  if (isS4(baseModel)){
+    attributes(baseModel@misc$formula)$.Environment<-environment()
+    data<- baseModel@data
+  } else {
+    attributes(baseModel$formula)$.Environment<-environment()
+    data<- baseModel$data
+  }
   baseModel<-update(baseModel, data=data)
 
   ###########################triangulation of points############################
@@ -88,7 +93,11 @@
   # xvals <- max(x)
   # yvals <- max(y)
   ###########################initialisation######################################
-  output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
+  if (isS4(baseModel)) {
+    output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
+  } else {
+    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
+  }
 
   point <- output$point
   knotPoint <- output$knotPoint
@@ -101,9 +110,16 @@
   models <- (output$models)
   radiusIndices <- output$radiusIndices
 
-  out.lm$splineParams[[1]]$knotPos<-aR
-  out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
-  baseModel$splineParams<-out.lm$splineParams
+  if (isS4(out.lm)){
+    out.lm@splineParams[[1]]$knotPos<-aR
+    out.lm@splineParams[[1]]$radiusIndices<-radiusIndices
+    baseModel@splineParams<-out.lm@splineParams
+  } else {
+    out.lm$splineParams[[1]]$knotPos<-aR
+    out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
+    baseModel$splineParams<-out.lm$splineParams
+  }
+
   if(plot==TRUE){plot(knotgrid, main='Initialise'); points(knotgrid[aR,], pch=20)}
   ####################################algorithm loop#############################
   improveEx <- 1
@@ -129,9 +145,15 @@
     radiusIndices <- output$radiusIndices
     improveEx <- output$improveEx
 
-    out.lm$splineParams[[1]]$knotPos<-aR
-    out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
-    baseModel$splineParams<-out.lm$splineParams
+    if (isS4(out.lm)) {
+      out.lm@splineParams[[1]]$knotPos<-aR
+      out.lm@splineParams[[1]]$radiusIndices<-radiusIndices
+      baseModel@splineParams<-out.lm@splineParams
+    } else {
+      out.lm$splineParams[[1]]$knotPos<-aR
+      out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
+      baseModel$splineParams<-out.lm$splineParams
+    }
     if(plot==TRUE) {plot(knotgrid, main='Exchange/Add'); points(knotgrid[aR,], pch=20)}
     ######################################improve step############################
     ####track <- rbind(track,cbind("improving",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
@@ -149,10 +171,17 @@
     radiusIndices <- output$radiusIndices
     improveNudge <- output$improveNudge
 
-    out.lm$splineParams[[1]]$knotPos<-aR
-    out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
-    baseModel$splineParams<-out.lm$splineParams
+    if (isS4(out.lm)) {
+      out.lm@splineParams[[1]]$knotPos<-aR
+      out.lm@splineParams[[1]]$radiusIndices<-radiusIndices
+      baseModel@splineParams<-out.lm@splineParams
+    } else {
+      out.lm$splineParams[[1]]$knotPos<-aR
+      out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
+      baseModel$splineParams<-out.lm$splineParams
+    }
     if(plot==TRUE) {plot(knotgrid, main='Improve'); points(knotgrid[aR,], pch=20)}
+
     ###################################drop step#################################
     if (length(aR) > minKnots) {
       output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
@@ -168,9 +197,15 @@
       radiusIndices <- output$radiusIndices
       improveDrop <- output$improveDrop
 
-      out.lm$splineParams[[1]]$knotPos<-aR
-      out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
-      baseModel$splineParams<-out.lm$splineParams
+      if (isS4(out.lm)) {
+        out.lm@splineParams[[1]]$knotPos<-aR
+        out.lm@splineParams[[1]]$radiusIndices<-radiusIndices
+        baseModel@splineParams<-out.lm@splineParams
+      } else {
+        out.lm$splineParams[[1]]$knotPos<-aR
+        out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
+        baseModel$splineParams<-out.lm$splineParams
+      }
       if(plot==TRUE) {plot(knotgrid, main='Drop'); points(knotgrid[aR,], pch=20)}
     }
     if ((improveEx) | (improveNudge) | (improveDrop)) overallImprove = 1

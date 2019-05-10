@@ -119,7 +119,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   ### may need to change for aggregated multinomial
   if (isS4(initialModel)) {
     require(VGAM)
-    setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="numeric", splineParams="list", data="data.frame", cvfolds="numeric")) -> vglmMRSea
+    setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="numeric", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="character")) -> vglmMRSea
     initialModel <- as(initialModel, "vglmMRSea")
     initialModel@data <- datain
     nrw <- nrow(datain)
