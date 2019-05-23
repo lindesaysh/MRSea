@@ -16,7 +16,7 @@
 #' @param spl "bs" uses b-spline, "cc" uses cyclic cubic, "ns" uses natural cubic spline for fitting smooth to \code{explanatory}
 #' @param winHalfWidth Half-width of window used to calculate region with biggest average residual magnitude
 #' 
-#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#' @author Cameron Walker (Department of Enginering Science, University of Auckland), Lindesay Scott-Hayward (University of St Andrews)
 #'
 #'@export
 #'

@@ -1,4 +1,3 @@
-
 #' Running SALSA for continuous one-dimensional covariates.
 #' 
 #' This function finds spatially adaptive knot locations for one or more continuous one-dimensional covariates.  
@@ -89,7 +88,7 @@
 #'                factorlist=c('floodebb', 'impact'), 
 #'                ns.predict.data.re, splineParams=NULL, datain=ns.data.re, removal=TRUE)
 #' 
-#' @author Lindesay Scott-Hayward
+#' @author Lindesay Scott-Hayward, University of St Andrews; Cameron Walker, Department of Enginering Science, University of Auckland.
 #' 
 #' @export
 #' 

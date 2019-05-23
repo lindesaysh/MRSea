@@ -3,6 +3,7 @@ require(knitcitations)
 cleanbib()
 biblio <- read.bibtex("newref.bib")
 cite_options(citation_format = 'pandoc', cite.style = 'authoryear', max.names = 1, longnamesfirst=FALSE)
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, eval=TRUE, comment = '')
 
 ## ----message=FALSE-------------------------------------------------------
 devtools::load_all(pkg='../../MRSea')
@@ -14,7 +15,13 @@ result <- ddf(dsmodel=~mcds(key="hn", formula=~1),
               data = dis.data, method="ds", 
               meta.data=list(width=250))
 
-## ------------------------------------------------------------------------
+## ----dist, cache=TRUE, results='hide', warning=FALSE, message=FALSE------
+# create.NHAT and create.count.data are MRSea functions to adjust the 
+# sightings for the detection function estimated above.
+dis.data <- create.NHAT(dis.data,result)
+count.data <- create.count.data(dis.data)
+
+## ----message=FALSE, warning=FALSE----------------------------------------
 data <- count.data
 data$response <- round(data$NHAT)
 attach(data)
@@ -28,18 +35,12 @@ fullModel <- glm(response ~ as.factor(season) + as.factor(impact) +
                  family = poisson,data = data)
 
 ## ------------------------------------------------------------------------
-# for correlated data:
 data$blockid <- paste(data$transect.id, data$season, data$impact,sep = "")
-data$foldid <- getCVids(data = data, folds = 5, block = 'blockid')
-
-## ----eval=FALSE----------------------------------------------------------
-#  # for uncorrelated data```
-#  data$foldid<- getCVids(data=data, folds=5)
 
 ## ------------------------------------------------------------------------
 salsa1dlist <- list(fitnessMeasure = "cv.gamMRSea", minKnots_1d = 2,maxKnots_1d = 5, 
                     startKnots_1d = 1, degree = 2, maxIterations = 10,
-                    gaps = c(0), seed.in=1)
+                    gaps = c(0), cv.opts=list(cv.gamMRSea.seed=1, K=10))
 
 ## ------------------------------------------------------------------------
 data("nysted.predictdata")  # contains predict.data
@@ -74,6 +75,12 @@ summary(salsa1dOutput$bestModel)
 salsa1dOutput$splineParams[[2]]$knots
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
+## ----knotgrid, message=FALSE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, cache=TRUE----
+knotgrid<- getKnotgrid(coordData = cbind(data$x.pos, data$y.pos), numKnots = 300)
+#
+# write.csv(knotgrid, file='knotgrid_fullanalysis.csv', row.names=F)
+# ~~~~~~~~~~~~~~~~~~~~~~~
+
 ## ------------------------------------------------------------------------
 # make distance matrices for datatoknots and knottoknots
 distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
@@ -83,7 +90,7 @@ distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
 # make parameter set for running salsa2d
 salsa2dlist<-list(fitnessMeasure = 'cv.gamMRSea', knotgrid = knotgrid, 
                  startKnots=5, minKnots=4, maxKnots=12, gap=0, 
-                 interactionTerm="as.factor(impact)", cv.gamMRSea.seed=1)
+                 interactionTerm="as.factor(impact)", cv.opts=list(cv.gamMRSea.seed=1, K=10))
 
 ## ----echo=FALSE, message=FALSE, warning=FALSE, results='hide'------------
 salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, 

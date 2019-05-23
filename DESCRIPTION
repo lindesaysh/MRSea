@@ -1,5 +1,5 @@
 Package: MRSea
-Title: Marine Renewables Strategic environmental assessment - Beta Release
+Title: Marine Renewables Strategic environmental assessment
 Description: Examines animal survey data for signs of changes in animal
     abundance and distribution following marine renewables development. The
     functions of this package can be used to analyse segmented line transect data
@@ -28,7 +28,7 @@ Imports:
 License: GPL-2
 LazyData: true
 Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
-    (2017). "MRSea package (version 0.1): Statistical Modelling of bird and
+    (2018). "MRSea package: Statistical Modelling of bird and
     cetacean distributions in offshore renewables development areas".
     University of St. Andrews
 URL: http://creem2.st-and.ac.uk/software.aspx

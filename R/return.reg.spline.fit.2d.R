@@ -2,7 +2,7 @@
 #'
 #'
 #'
-#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#' @author Cameron Walker (Department of Enginering Science, University of Auckland), Lindesay Scott-Hayward (University of St Andrews)
 #'
 #' @export
 #'
