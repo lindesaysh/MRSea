@@ -88,7 +88,7 @@
   # xvals <- max(x)
   # yvals <- max(y)
   ###########################initialisation######################################
-  output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
+  output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
 
   point <- output$point
   knotPoint <- output$knotPoint
