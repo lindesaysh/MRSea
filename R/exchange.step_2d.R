@@ -24,12 +24,29 @@
     indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
     #### Find available knots
     legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
-    index<-c()
-     for(i in 1:5){
-      new<-scale(knotgrid[point,],center=c(explData[indexdat[i],1],explData[indexdat[i],2]))
-      index[i]<-which.min(abs(new[,1])+abs(new[,2]))
+    if(ncol(knotgrid)>2){
+      nm<-names(knotgrid)[3]
+      residchunk<-eval(parse(text=paste('data$', nm, '[indexdat[1]]')))
+      knotchunkid<-which(knotgrid[point,nm]==residchunk)
+      new<-scale(knotgrid[point[knotchunkid],1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
+      # which aR are in residchunk
+      aRresidchunk<-aR[which(knotgrid[aR,nm]==residchunk)]
+      legPos1<-position[which(knotgrid[,nm]==residchunk)]
+      legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
+      legPos<-legPos1[legPos2]
+      index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
+    }else{
+      new<-scale(knotgrid[point,1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
+      index<-which.min(abs(new[,1])+abs(new[,2]))
     }
-   index<-unique(index)
+    # ggplot() + geom_point(data=knotgrid, aes(X1, X2)) + facet_wrap(~yearmonth) +
+    #   geom_point(data=knotgrid[point[knotchunkid],], aes(X1, X2), shape=2, size=2)+
+    #   geom_point(data=knotgrid[aR,], aes(X1, X2), shape=3, size=2, col='blue') +
+    #   geom_point(data=knotgrid[aRresidchunk,], aes(X1, X2), shape=3, size=4, col='blue') +
+    #   geom_point(data=knotgrid[point[legPos1],], aes(X1, X2), shape=3, size=2, col='red')+
+    #   geom_point(data=knotgrid[point[legPos1[legPos2]],], aes(X1, X2), shape=4, size=2, col='green') +
+    #   geom_point(data=knotgrid[point[legPos],], aes(X1, X2), shape=5, size=3, col='maroon') + coord_equal() + geom_point(data=data[indexdat[1],], aes(x.pos, y.pos), size=3, col='thistle') + geom_point(data=knotgrid[point[index],], aes(X1, X2), shape=7, size=3, col='black')
+    # 
     
     if (length(legPos)>0) {
       #index<-which.min(abs(new[,1])+abs(new[,2]))

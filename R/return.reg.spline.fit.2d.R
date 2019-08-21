@@ -81,12 +81,6 @@
   data<- baseModel$data
   baseModel<-update(baseModel, data=data)
 
-  ###########################triangulation of points############################
-  # x<-as.vector(grid[,1])
-  # y<-as.vector(grid[,2])
-  # #Get dimensions of grid
-  # xvals <- max(x)
-  # yvals <- max(y)
   ###########################initialisation######################################
   output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
 
@@ -104,7 +98,7 @@
   out.lm$splineParams[[1]]$knotPos<-aR
   out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
   baseModel$splineParams<-out.lm$splineParams
-  if(plot==TRUE){plot(knotgrid, main='Initialise'); points(knotgrid[aR,], pch=20)}
+  if(plot==TRUE){plot(knotgrid[,1:2], main='Initialise'); points(knotgrid[aR,1:2], pch=20)}
   ####################################algorithm loop#############################
   improveEx <- 1
   improveNudge <- 1
