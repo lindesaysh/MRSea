@@ -4,8 +4,8 @@
 \alias{runInfluence}
 \title{Assessing the influece of each correlated block on both the precision of the parameter estimates (COVRATIO statistics) and the sensitivity of model predictions (PRESS statistics).}
 \usage{
-runInfluence(model, id, d2k = NULL, splineParams = NULL, save = FALSE,
-  dots = FALSE)
+runInfluence(model, id, d2k = NULL, splineParams = NULL,
+  save = FALSE, dots = FALSE)
 }
 \arguments{
 \item{model}{Fitted model object (glm, gamMRSea or gam)}

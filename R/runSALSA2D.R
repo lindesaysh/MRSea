@@ -13,6 +13,10 @@
 #' @param tol Numeric stating the tolerance for the fitness Measure. e.g. tol=2 with AIC would only allow changes to be made if the AIC score improves by 2 units.
 #' @param plot logical stating whether to print out the chosen knot locations at each iteration. \code{default = FALSE}.
 #' @param basis One of 'gaussian' (default) or 'exponential'. Specifys what kind of local radial function to use (\code{\link{LRF.g}} or \code{\link{LRF.e}})
+#' @param initialise (Defauls: \code{FALSE}). Logical stating whether to allow the \code{runSALSA2D} function to find some starting knot locations.  If \code{FALSE}, one of \code{initialKnots} or \code{initialKnPos} must be specified.
+#' @param initialKnots c x 2 dataframe or matrix specifying the coordinates of the starting locations of knots. c is the number of initial knots (should match what is specified in \code{SALSA2dlist})
+#' @param initialKnPos vector of length c denoting the rows of the \code{knotgrid} to use as the initial starting locations of knots. 
+#' 
 #' 
 #' @references Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
 #'

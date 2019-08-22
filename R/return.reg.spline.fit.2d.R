@@ -126,7 +126,7 @@
     out.lm$splineParams[[1]]$knotPos<-aR
     out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
     baseModel$splineParams<-out.lm$splineParams
-    if(plot==TRUE) {plot(knotgrid, main='Exchange/Add'); points(knotgrid[aR,], pch=20)}
+    if(plot==TRUE) {plot(knotgrid[,1:2], main='Exchange/Add'); points(knotgrid[aR,1:2], pch=20)}
     ######################################improve step############################
     ####track <- rbind(track,cbind("improving",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
     ####print("here im")
@@ -146,7 +146,7 @@
     out.lm$splineParams[[1]]$knotPos<-aR
     out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
     baseModel$splineParams<-out.lm$splineParams
-    if(plot==TRUE) {plot(knotgrid, main='Improve'); points(knotgrid[aR,], pch=20)}
+    if(plot==TRUE) {plot(knotgrid[,1:2], main='Improve'); points(knotgrid[aR,1:2], pch=20)}
     ###################################drop step#################################
     if (length(aR) > minKnots) {
       output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
@@ -165,7 +165,7 @@
       out.lm$splineParams[[1]]$knotPos<-aR
       out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
       baseModel$splineParams<-out.lm$splineParams
-      if(plot==TRUE) {plot(knotgrid, main='Drop'); points(knotgrid[aR,], pch=20)}
+      if(plot==TRUE) {plot(knotgrid[,1:2], main='Drop'); points(knotgrid[aR,1:2], pch=20)}
     }
     if ((improveEx) | (improveNudge) | (improveDrop)) overallImprove = 1
   }

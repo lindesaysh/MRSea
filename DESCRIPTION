@@ -8,8 +8,8 @@ Description: Examines animal survey data for signs of changes in animal
     bootstrapping is available to estimate uncertainty. Several model assessment
     tools are also available. Recent updates include the direct estimation of robust
     standard errors, given a panel structure.
-Version: 1.0.01
-Date: 2018-02-01
+Version: 1.01
+Date: 2019-08-21
 Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique
     Mackenzie, Cameron Walker <cameron.walker@auckland.ac.nz>
 Maintainer: Lindesay Scott-Hayward <lass@st-and.ac.uk>
@@ -24,7 +24,8 @@ Imports:
     mgcv (>= 1.8-0),
     mrds (>= 2.1.6),
     mvtnorm (>= 1.0-0),
-    splines (>= 3.1.1)
+    splines (>= 3.1.1),
+    dplyr
 License: GPL-2
 LazyData: true
 Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
@@ -32,7 +33,7 @@ Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
     cetacean distributions in offshore renewables development areas".
     University of St. Andrews
 URL: http://creem2.st-and.ac.uk/software.aspx
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 Suggests:
     knitr,
     rmarkdown,

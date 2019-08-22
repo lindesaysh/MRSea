@@ -1,3 +1,15 @@
+MRSea 1.01
+----------
+
+Notes
+
+ * Addition of an interaction term where the choice of knot locations for each level of the interaction are different.  Requires specialist set up of the knot grid and distance matrix.  These will be provided in a vignette shortly. 
+ * The user may also now specifiy which knots from the knotgrid they would like to use for initialising. See the help file for runSALSA2D for more. 
+
+Bug Fixes
+  
+  * Fixed major bug in the improve step - issue with finding the nearest neighbours for a given knot.  
+
 
 MRSea 1.0-beta
 -----------

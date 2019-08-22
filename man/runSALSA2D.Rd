@@ -5,8 +5,9 @@
 \title{Running SALSA for a spatial smooth with a CReSS basis}
 \usage{
 runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL,
-  chooserad = FALSE, panels = NULL, suppress.printout = FALSE, tol = 0,
-  plot = FALSE, basis = "gaussian")
+  chooserad = FALSE, panels = NULL, suppress.printout = FALSE,
+  tol = 0, plot = FALSE, basis = "gaussian", initialise = TRUE,
+  initialKnots = NULL, initialKnPos = NULL)
 }
 \arguments{
 \item{model}{A model with no spatial smooth}
@@ -30,6 +31,12 @@ runSALSA2D(model, salsa2dlist, d2k, k2k, splineParams = NULL,
 \item{plot}{logical stating whether to print out the chosen knot locations at each iteration. \code{default = FALSE}.}
 
 \item{basis}{One of 'gaussian' (default) or 'exponential'. Specifys what kind of local radial function to use (\code{\link{LRF.g}} or \code{\link{LRF.e}})}
+
+\item{initialise}{(Defauls: \code{FALSE}). Logical stating whether to allow the \code{runSALSA2D} function to find some starting knot locations.  If \code{FALSE}, one of \code{initialKnots} or \code{initialKnPos} must be specified.}
+
+\item{initialKnots}{c x 2 dataframe or matrix specifying the coordinates of the starting locations of knots. c is the number of initial knots (should match what is specified in \code{SALSA2dlist})}
+
+\item{initialKnPos}{vector of length c denoting the rows of the \code{knotgrid} to use as the initial starting locations of knots.}
 }
 \value{
 The spline paramater object that is returned as part of the model object now contains a list in the first element (previously reserved for the spatial component).  This list contains the objects required for the SALSA2D fitting process:
