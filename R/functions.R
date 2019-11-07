@@ -77,15 +77,20 @@
 #   return(r_seq)
 # }
 
-getRadiiChoices<-function(numberofradii=10, distMatrix, basis){
+getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
   
   distMatrix[which(is.infinite(distMatrix), arr.ind = T)]<-NA
   
   if(basis=='gaussian'){
     minDist <- mean(apply(distMatrix,2,min, na.rm=TRUE))
     meanDist <- mean(apply(distMatrix,2,mean, na.rm=TRUE))
-    rval_max<- sqrt(-log(0.7)/meanDist**2)
-    rval_min<- sqrt(-log(0.001)/meanDist**2)
+    if (is.null(rvin)) {
+      rval_max<- sqrt(-log(0.7)/meanDist**2)
+      rval_min<- sqrt(-log(0.001)/meanDist**2)
+    } else {
+      rval_max = rvin[1]
+      rval_min <- rvin[2]
+    }
     r_seq<- exp(seq(log(rval_min), log(rval_max), length=numberofradii))
     return(r_seq)  
   }

@@ -295,7 +295,6 @@ radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
     cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
   }
   # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
-
   output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
 
   out.lm<-output$currentModel
@@ -539,7 +538,7 @@ initialise.measures_2d.mn<- function(knotDist,maxIterations,gap,radii,dists,expl
   
   print("Initialising model...")
   models = vector("list",0)
-  
+
   if(fitnessMeasure=="AIC"){
     fitStat <- AIC(baseModel)}
   

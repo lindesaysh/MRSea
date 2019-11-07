@@ -109,6 +109,8 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     data <- datain
   }
 
+  print("112")
+  
   if(isS4(model)){
     setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="numeric", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="character")) -> vglmMRSea
     model <- as(model, "vglmMRSea")
@@ -140,7 +142,22 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   #grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
   #gridResp<-salsa2dlist$knotgrid[,1]
   
-  r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k, basis)
+  print("145")
+  print(basis)
+  
+  if (!is.null(salsa2dlist)){
+    norad <- salsa2dlist$noradii
+  } else {
+    norad <- 10
+  }
+  
+  if (is.null(salsa2dlist$radin)) {
+    r_seq<-getRadiiChoices(numberofradii = norad, distMatrix = d2k, basis)
+  } else {
+    r_seq<-getRadiiChoices(numberofradii = norad, distMatrix = d2k, basis, salsa2dlist$radin)
+  }
+  
+  print("149")
   
   if(chooserad==FALSE){
     if(length(r_seq)>1){
@@ -153,6 +170,8 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   }
   winHalfWidth = 0
   
+  print("160")
+  
   interactionTerm<-salsa2dlist$interactionTerm
   
   if(is.null(salsa2dlist$cv.opts$cv.gamMRSea.seed)){salsa2dlist$cv.opts$cv.gamMRSea.seed<-357}
@@ -160,7 +179,9 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   
   if(is.null(salsa2dlist$cv.opts$K)){salsa2dlist$cv.opts$K<-10}
   if(is.null(salsa2dlist$cv.opts$cost)){salsa2dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
-  
+ 
+  print("170")
+   
   if(!is.null(panels)){
     if(length(unique(panels))!=nrow(data)){
       if (isS4(model)) {
@@ -174,12 +195,16 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
       }
     }
   }
+  
+  print("185")
 
   if(is.null(salsa2dlist$max.iter)){
     maxIterations<-10
   }else{
     maxIterations<-salsa2dlist$max.iter  
   }
+  
+  print("188")
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~~
@@ -232,6 +257,8 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     if(salsa2dlist$fitnessMeasure=='BIC' & model$family$family=='quasipoisson' ){stop('Please use fitness Measure appropriate for quasi family, e.g. QICb')}
   }
 
+    print("241")
+  
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ 2D SALSA RUN ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -244,6 +271,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
 
   output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=maxIterations, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=TRUE,  initialKnots=NULL, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, cv.opts = salsa2dlist$cv.opts, basis)
 
+  print("255")
   
   baseModel<- output$out.lm
 
@@ -272,6 +300,8 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
       #output$aR<- output$models[[bestModNo]][[1]]
     }
 
+    print("284")
+    
     # use initialise step to change radii
     radii = r_seq
     # x <- as.vector(splineParams[[1]]$grid[,1])
@@ -311,6 +341,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     aRout = output$aR
   }
   
+  print("325")
 
   # dists<-splineParams[[1]]$dist
   # aR<-splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
@@ -333,9 +364,13 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     baseModel$interactionterm<-interactionTerm
   }
   
+  print("348")
   
   eval(parse(text=paste(substitute(dataname),"<-data", sep="" )))
+  print(paste("update(baseModel, .~., data=", substitute(dataname),")", sep=""))
   baseModel<-eval(parse(text=paste("update(baseModel, .~., data=", substitute(dataname),")", sep="")))
+  
+  print("362")
   
   if (isS4(baseModel)) {
     attributes(baseModel@misc$formula)$.Environment<-globalenv()
@@ -353,6 +388,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     sink()
   }
   
-  
+  print("end")
   return(list(bestModel=baseModel, splineParams=splineParams, fitStat=modelFit, aR=aRout))
 }
+

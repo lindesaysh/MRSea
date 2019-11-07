@@ -93,6 +93,7 @@
   # xvals <- max(x)
   # yvals <- max(y)
   ###########################initialisation######################################
+
   if (isS4(baseModel)) {
     output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
   } else {
