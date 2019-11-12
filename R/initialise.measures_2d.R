@@ -298,6 +298,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }
   # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  
+>>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
 =======
   
 >>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
@@ -342,6 +346,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   
   
   
+<<<<<<< HEAD
 }
 
 initialise.measures_2d.mn<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis){
@@ -727,4 +732,6 @@ initialise.measures_2d.mn<- function(knotDist,maxIterations,gap,radii,dists,expl
   
   
   
+=======
+>>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
 }
