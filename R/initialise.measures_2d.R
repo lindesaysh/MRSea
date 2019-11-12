@@ -297,14 +297,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
   }
   # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  
->>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
-=======
-  
->>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
+
   output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
   
   out.lm<-output$currentModel
@@ -346,10 +339,9 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   
   
   
-<<<<<<< HEAD
 }
 
-initialise.measures_2d.mn<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR=NULL, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis){
+initialise.measures_2d.mn<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis){
   
   ### changed for mn
   attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -456,6 +448,10 @@ initialise.measures_2d.mn<- function(knotDist,maxIterations,gap,radii,dists,expl
     
     options('warn'=0)
     
+    if (dim(initialKnots)[1]<numNeeded) {
+      print("WARNING: less knots positioned than desired")
+    }
+    
     # posKnots = cbind()
     # legPos=mapInd
     # for (i in 1:(dim(initialKnots)[1])) {
@@ -531,9 +527,6 @@ initialise.measures_2d.mn<- function(knotDist,maxIterations,gap,radii,dists,expl
     
   } # end of ifelse statement related to initialise  = T/F
   
-  if (dim(initialKnots)[1]<numNeeded) {
-    print("WARNING: less knots positioned than desired")
-  }
   knotPoint<- posKnots
   # print(c('knots: ',knotPoint))
   aR <- knotPoint
@@ -731,7 +724,4 @@ initialise.measures_2d.mn<- function(knotDist,maxIterations,gap,radii,dists,expl
   list(point=point,knotPoint=knotPoint,position=position,aR=aR,BIC=BIC,track=track,out.lm=out.lm, radiusIndices=radiusIndices,models=models)
   
   
-  
-=======
->>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
 }
