@@ -17,7 +17,7 @@ bibliography: newref.bib
 
 
 **Please reference this document as:**
-Scott-Hayward, L.A.S., Oedekoven, C.S., Mackenzie, M.L. and Walker, C.G. (2017). Vignette for the MRSea Package v1.0.01: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas. Centre for Research into Ecological and Environmental Modelling, University of St Andrews.
+Scott-Hayward, L.A.S., Oedekoven, C.S., Mackenzie, M.L. and Walker, C.G. (2019). Vignette for the MRSea Package v1.01: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas. Centre for Research into Ecological and Environmental Modelling, University of St Andrews.
 
 *******
 
@@ -30,15 +30,15 @@ knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, eval=TRUE, comment
 ```
 
 ## Introduction
-The ```MRSea``` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to other studies as well. This vignette gives an updated example of the code for version 0.3.  For additional information regarding methods, see `r citet(biblio[['Mac2013']])` and `r citet(biblio[['ScottH2013a']])`.  The user should be familiar with generalised linear models and their assumptions and model selection. The ```MRSea``` package primarily allows spatially adaptive model selection for both one and two dimensional covariates using the functions ```runSALSA1D``` and ```runSALSA2D```, which implement the methods of `r citet(biblio[['Walker2010']])` and `r citet(biblio[['ScottH2013']])`. 
+The ```MRSea``` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to other studies as well. This vignette gives an updated example of the code for version 1.01.  For additional information regarding methods, see `r citet(biblio[['Mac2013']])` and `r citet(biblio[['ScottH2013a']])`.  The user should be familiar with generalised linear models and their assumptions and model selection. The ```MRSea``` package primarily allows spatially adaptive model selection for both one and two dimensional covariates using the functions ```runSALSA1D``` and ```runSALSA2D```, which implement the methods of `r citet(biblio[['Walker2010']])` and `r citet(biblio[['ScottH2013']])`. 
 
 The major update to this package is that a class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object infomation regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given).
 
-Other functions include diagnostics (to assess residual correlation: ```runACF```, smooth relationships: ``` runPartialPlots``` and model selection (ANOVA) for robust standard errros: ```anova.gamMRSea```) and inference (```do.bootstrap.cress```). 
+Other functions include diagnostics (to assess residual correlation: ```runACF```, smooth relationships: ``` runPartialPlots``` and model selection (ANOVA) for robust standard errros: ```anova.gamMRSea```) and inference (```do.bootstrap.cress.robust```). 
 
 
 ![alt text](MRSea_workflow.png)
-Example of the modelling process using MRSea.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst MRSea functions are in red.  GEE (far right), stands for Generalised Estimating Equations.
+Example of the modelling process using MRSea.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst MRSea functions are in red.  
 
 
 A full description of each of the functions within the ```MRSea``` package can be found in the reference manual at: 
@@ -48,7 +48,7 @@ http://creem2.st-and.ac.uk/software.aspx.  The manual and this document use vers
 
 1. Load data and fit detection function (Distance Sampling)
 ```{r message=FALSE}
-devtools::load_all(pkg='../../MRSea')
+devtools::load_all(path = '../../MRSea')
 # we will use the dataset with a known re-distribution of animals
 data(dis.data.re)
 dis.data<-dis.data.re

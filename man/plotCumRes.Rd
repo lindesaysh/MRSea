@@ -4,8 +4,8 @@
 \alias{plotCumRes}
 \title{Calculate cumulative residuals and plot.}
 \usage{
-plotCumRes(model, varlist, d2k = NULL, splineParams = NULL, label = "",
-  save = FALSE)
+plotCumRes(model, varlist, d2k = NULL, splineParams = NULL,
+  label = "", save = FALSE)
 }
 \arguments{
 \item{model}{Fitted model object (glm or gam)}

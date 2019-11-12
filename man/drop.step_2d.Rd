@@ -4,10 +4,10 @@
 \alias{drop.step_2d}
 \title{Function that tries dropping knots to find an improvement in fit}
 \usage{
-drop.step_2d(radii, invInd, dists, explData, response, knotgrid, maxIterations,
-  fitnessMeasure, point, knotPoint, position, aR, BIC, track, out.lm,
-  improveDrop, minKnots, tol = 0, baseModel, radiusIndices, models,
-  interactionTerm, data, initDisp, cv.opts, basis)
+drop.step_2d(radii, invInd, dists, explData, response, knotgrid,
+  maxIterations, fitnessMeasure, point, knotPoint, position, aR, BIC,
+  track, out.lm, improveDrop, minKnots, tol = 0, baseModel,
+  radiusIndices, models, interactionTerm, data, initDisp, cv.opts, basis)
 }
 \description{
 Function that tries dropping knots to find an improvement in fit
