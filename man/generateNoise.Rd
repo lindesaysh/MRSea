@@ -4,7 +4,7 @@
 \alias{generateNoise}
 \title{Function to generate noisy data}
 \usage{
-generateNoise(n, response, family, gamma.variance...)
+generateNoise(n, response, family, gamma.variance, ...)
 }
 \arguments{
 \item{n}{number of simulations to generate}

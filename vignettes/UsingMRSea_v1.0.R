@@ -3,9 +3,10 @@ require(knitcitations)
 cleanbib()
 biblio <- read.bibtex("newref.bib")
 cite_options(citation_format = 'pandoc', cite.style = 'authoryear', max.names = 1, longnamesfirst=FALSE)
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, eval=TRUE, comment = '')
 
 ## ----message=FALSE-------------------------------------------------------
-devtools::load_all(pkg='../../MRSea')
+#devtools::load_all(path='../../MRSea/')
 # we will use the dataset with a known re-distribution of animals
 data(dis.data.re)
 dis.data<-dis.data.re
@@ -14,7 +15,7 @@ result <- ddf(dsmodel=~mcds(key="hn", formula=~1),
               data = dis.data, method="ds", 
               meta.data=list(width=250))
 
-## ------------------------------------------------------------------------
+## ----message=FALSE, warning=FALSE----------------------------------------
 data <- count.data
 data$response <- round(data$NHAT)
 attach(data)
@@ -28,18 +29,12 @@ fullModel <- glm(response ~ as.factor(season) + as.factor(impact) +
                  family = poisson,data = data)
 
 ## ------------------------------------------------------------------------
-# for correlated data:
 data$blockid <- paste(data$transect.id, data$season, data$impact,sep = "")
-data$foldid <- getCVids(data = data, folds = 5, block = 'blockid')
-
-## ----eval=FALSE----------------------------------------------------------
-#  # for uncorrelated data```
-#  data$foldid<- getCVids(data=data, folds=5)
 
 ## ------------------------------------------------------------------------
 salsa1dlist <- list(fitnessMeasure = "cv.gamMRSea", minKnots_1d = 2,maxKnots_1d = 5, 
                     startKnots_1d = 1, degree = 2, maxIterations = 10,
-                    gaps = c(0), seed.in=1)
+                    gaps = c(0), cv.opts=list(cv.gamMRSea.seed=1, K=10))
 
 ## ------------------------------------------------------------------------
 data("nysted.predictdata")  # contains predict.data
@@ -83,7 +78,7 @@ distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
 # make parameter set for running salsa2d
 salsa2dlist<-list(fitnessMeasure = 'cv.gamMRSea', knotgrid = knotgrid, 
                  startKnots=5, minKnots=4, maxKnots=12, gap=0, 
-                 interactionTerm="as.factor(impact)", cv.gamMRSea.seed=1)
+                 interactionTerm="as.factor(impact)", cv.opts=list(cv.gamMRSea.seed=1, K=10))
 
 ## ----echo=FALSE, message=FALSE, warning=FALSE, results='hide'------------
 salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, 
@@ -94,11 +89,12 @@ salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist,
 #                               d2k=distMats$dataDist, k2k=distMats$knotDist)
 
 ## ------------------------------------------------------------------------
-plot(data$x.pos, data$y.pos, col="grey", pch=16,
-    xlab="X", ylab="Y", asp=1)
-points(knotgrid, pch=16, col=4)
-points(knotgrid[salsa2dOutput$aR[[1]],], 
-       col="darkgreen", pch=16, cex=2)  
+require(ggplot2)
+ggplot() + geom_point(data=data, aes(x=x.pos, y=y.pos), colour='grey') +
+  theme_bw() + 
+  geom_point(data=data.frame(knotgrid), aes(X1, X2), col='blue') + 
+  geom_point(data=data.frame(knotgrid)[salsa2dOutput$aR[[1]],], aes(X1, X2), col='darkgreen', size=4) 
+
 
 ## ----acfplot, fig.cap='ACF plot showing correlation in each block (grey lines), and the mean correlation by lag across blocks (red line).'----
 runACF(block = data$blockid, model = salsa2dOutput$bestModel, suppress.printout=TRUE)
@@ -134,15 +130,10 @@ dists<-makeDists(cbind(predictData$x.pos, predictData$y.pos),
 # make predictions on response scale
 preds<-predict.gamMRSea(newdata = predictData, g2k = dists, object = salsa2dOutput$bestModel)
 
-## ----fig=TRUE, fig.align='center', fig.width=9, fig.height=6-------------
-par(mfrow=c(1,2))
-quilt.plot(predictData$x.pos[predictData$impact==0], 
-           predictData$y.pos[predictData$impact==0], 
-           preds[predictData$impact==0], nrow=104, ncol=55, asp=1)
-
-quilt.plot(predictData$x.pos[predictData$impact==1], 
-           predictData$y.pos[predictData$impact==1], 
-           preds[predictData$impact==1], nrow=104, ncol=55, asp=1)
+## ----fig=TRUE, fig.align='center', fig.width=9, fig.height=4-------------
+require(RColorBrewer)
+predictData$preds<-preds[,1]
+ggplot() + geom_tile(data=predictData, aes(x.pos, y.pos, fill=preds), height=0.5, width=0.5) + facet_wrap(~impact) + theme_bw() + coord_equal() + scale_fill_distiller(palette = "Spectral",name="Animal Counts")
 
 ## ----boots, warning=FALSE, message=FALSE, results='hide'-----------------
 dis.data$seasonimpact <- paste(dis.data$season, dis.data$impact)
@@ -176,4 +167,16 @@ points(predictData$x.pos[predictData$impact == 0][marker == (-1)],
        predictData$y.pos[predictData$impact == 0][marker == (-1)],
        col = "darkgrey", cex = 0.75)
 points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey")
+
+require(dplyr)
+diffdata<-data.frame(predictData[predictData$impact==0,], mediandiff, marker)
+diffdata_s1<-filter(diffdata, season==1)
+wf<-data.frame(x=(681417.3/1000), y= (6046910/1000))
+ggplot() + geom_tile(data=diffdata_s1, aes(x=x.pos, y=y.pos, fill=mediandiff), height=0.5, width=0.5) + 
+  geom_point(data=filter(diffdata_s1, marker == 1), aes(x=x.pos, y=y.pos), shape=3, colour='darkgrey', size=1) +
+    geom_point(data=filter(diffdata_s1, marker == -1), aes(x=x.pos, y=y.pos), shape=1, colour='darkgrey', size=1.5) + 
+  theme_bw() + coord_equal() + facet_wrap(~season) + 
+  scale_fill_distiller(palette = "Spectral",name="Difference") + 
+  geom_point(data=wf, aes(x, y), shape=8, size=4)
+  
 

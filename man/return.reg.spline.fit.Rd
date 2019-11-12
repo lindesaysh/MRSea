@@ -45,5 +45,5 @@ return.reg.spline.fit(response, explanatory, degree, minKnots, maxKnots,
 Code for adaptively spacing knots for a given covariate.
 }
 \author{
-Cameron Walker, Department of Enginering Science, University of Auckland.
+Cameron Walker (Department of Enginering Science, University of Auckland), Lindesay Scott-Hayward (University of St Andrews)
 }

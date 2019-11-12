@@ -20,17 +20,16 @@
 bref <- c(
   bibentry(
     bibtype = "Manual",
-    title = "MRSea package (version 1.0-beta): Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
+    title = "MRSea package: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
     author = c(
       person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
              email = "lass@st-andrews.ac.uk"),
       person(c("Cornelia", "S."), "Oedekoven", role = c("aut", "ctb")),
       person(c("Monique", "L."), "Mackenzie", role = c("ctb")),
-      person(c("Cameron", "G."), "Walker", role = c("aut","ctb")),
-      person("Eric", "Rexstad", role = c("ctb"))
+      person(c("Cameron", "G."), "Walker", role = c("aut","ctb"))
     ),
     Institution = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
-    year = "2017",
+    year = "2018",
     note = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
     url = "http://creem2.st-and.ac.uk/software.aspx",
     key = "mrsea-package"
@@ -38,7 +37,7 @@ bref <- c(
   
   bibentry(
     bibtype = "TechReport",
-    title = "Vignette for the MRSea Package v0.2.0: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas.",
+    title = "Vignette for the MRSea Package v1.01: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas.",
     author = c(
       person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
              email = "lass@st-andrews.ac.uk"),
@@ -47,10 +46,10 @@ bref <- c(
       person(c("Cameron", "G."), "Walker", role = c("aut","ctb"))
     ),
     Institution = "University of St. Andrews",
-    year = "2015",
+    year = "2019",
     note = "Centre for Research into Ecological and Environmental Modelling",
     url = "http://creem2.st-and.ac.uk/software.aspx",
-    key = "mrsea-guide2015"
+    key = "mrsea-guide2018"
   ),
 
 bibentry(

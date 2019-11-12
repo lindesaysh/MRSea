@@ -4,9 +4,9 @@
 \alias{fit.thinPlate_2d}
 \title{Function to fit a local radial basis function (CReSS) as a two dimensional smooth}
 \usage{
-fit.thinPlate_2d(fitnessMeasure, dists, aR, radii, baseModel, radiusIndices,
-  models, currentFit, interactionTerm, data, initDisp, cv.opts,
-  basis = "gaussian")
+fit.thinPlate_2d(fitnessMeasure, dists, aR, radii, baseModel,
+  radiusIndices, models, currentFit, interactionTerm, data, initDisp,
+  cv.opts, basis = "gaussian")
 }
 \description{
 Function to fit a local radial basis function (CReSS) as a two dimensional smooth

@@ -17,7 +17,7 @@ bibliography: newref.bib
 
 
 **Please reference this document as:**
-Scott-Hayward, L.A.S., Oedekoven, C.S., Mackenzie, M.L. and Walker, C.G. (2017). Vignette for the MRSea Package v1.0.01: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas. Centre for Research into Ecological and Environmental Modelling, University of St Andrews.
+Scott-Hayward, L.A.S., Oedekoven, C.S., Mackenzie, M.L. and Walker, C.G. (2019). Vignette for the MRSea Package v1.01: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas. Centre for Research into Ecological and Environmental Modelling, University of St Andrews.
 
 *******
 
@@ -48,7 +48,7 @@ http://creem2.st-and.ac.uk/software.aspx.  The manual and this document use vers
 
 1. Load data and fit detection function (Distance Sampling)
 ```{r message=FALSE}
-devtools::load_all(pkg='../../MRSea')
+#devtools::load_all(path='../../MRSea/')
 # we will use the dataset with a known re-distribution of animals
 data(dis.data.re)
 dis.data<-dis.data.re
@@ -190,11 +190,12 @@ salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist,
 ```
 
 ```{r }
-plot(data$x.pos, data$y.pos, col="grey", pch=16,
-    xlab="X", ylab="Y", asp=1)
-points(knotgrid, pch=16, col=4)
-points(knotgrid[salsa2dOutput$aR[[1]],], 
-       col="darkgreen", pch=16, cex=2)  
+require(ggplot2)
+ggplot() + geom_point(data=data, aes(x=x.pos, y=y.pos), colour='grey') +
+  theme_bw() + 
+  geom_point(data=data.frame(knotgrid), aes(X1, X2), col='blue') + 
+  geom_point(data=data.frame(knotgrid)[salsa2dOutput$aR[[1]],], aes(X1, X2), col='darkgreen', size=4) 
+
 ```
 
 12.  Are the residuals correlated? Make a suitable blocking structure, within which residuals are expected to be correlated but between which they are independent.  Use ```runACF``` to assess the blocking structure.
@@ -247,15 +248,10 @@ preds<-predict.gamMRSea(newdata = predictData, g2k = dists, object = salsa2dOutp
 ```
 
 Plotting the predictions pre and post impact:
-```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
-par(mfrow=c(1,2))
-quilt.plot(predictData$x.pos[predictData$impact==0], 
-           predictData$y.pos[predictData$impact==0], 
-           preds[predictData$impact==0], nrow=104, ncol=55, asp=1)
-
-quilt.plot(predictData$x.pos[predictData$impact==1], 
-           predictData$y.pos[predictData$impact==1], 
-           preds[predictData$impact==1], nrow=104, ncol=55, asp=1)
+```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=4}
+require(RColorBrewer)
+predictData$preds<-preds[,1]
+ggplot() + geom_tile(data=predictData, aes(x.pos, y.pos, fill=preds), height=0.5, width=0.5) + facet_wrap(~impact) + theme_bw() + coord_equal() + scale_fill_distiller(palette = "Spectral",name="Animal Counts")
 ```
 
 ## Bootstrapped Confidence Intervals and Difference Surfaces
@@ -300,5 +296,17 @@ points(predictData$x.pos[predictData$impact == 0][marker == (-1)],
        predictData$y.pos[predictData$impact == 0][marker == (-1)],
        col = "darkgrey", cex = 0.75)
 points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey")
+
+require(dplyr)
+diffdata<-data.frame(predictData[predictData$impact==0,], mediandiff, marker)
+diffdata_s1<-filter(diffdata, season==1)
+wf<-data.frame(x=(681417.3/1000), y= (6046910/1000))
+ggplot() + geom_tile(data=diffdata_s1, aes(x=x.pos, y=y.pos, fill=mediandiff), height=0.5, width=0.5) + 
+  geom_point(data=filter(diffdata_s1, marker == 1), aes(x=x.pos, y=y.pos), shape=3, colour='darkgrey', size=1) +
+    geom_point(data=filter(diffdata_s1, marker == -1), aes(x=x.pos, y=y.pos), shape=1, colour='darkgrey', size=1.5) + 
+  theme_bw() + coord_equal() + facet_wrap(~season) + 
+  scale_fill_distiller(palette = "Spectral",name="Difference") + 
+  geom_point(data=wf, aes(x, y), shape=8, size=4)
+  
 ```
 

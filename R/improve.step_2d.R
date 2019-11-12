@@ -57,7 +57,7 @@
 #       }
 
       # find 6 nearest knot points to current knot point
-      nhbrs<-order(knotDist[i,])[2:6]
+      nhbrs<-order(knotDist[knotPoint[i],])[2:6]
       nhbrs<-na.omit(nhbrs)
       # remove options if already a knot point      
       if(length(na.omit(match(nhbrs, knotPoint)))>0){
