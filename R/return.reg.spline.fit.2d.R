@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 #' Wrapper function for running SALSA2D
 #'
 #'
@@ -229,6 +230,8 @@
 
 }
 =======
+=======
+>>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
 #' Wrapper function for running SALSA2D
 #'
 #'
@@ -416,4 +419,7 @@
   
 
 }
+<<<<<<< HEAD
+>>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
+=======
 >>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
