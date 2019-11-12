@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #' Code for adaptively spacing knots for a given covariate.
 #' 
 #' @param response vector of response data for the modelling process
@@ -878,7 +877,7 @@ getCV_type2<- function(folds, baseModel){
   }
 } # end of function
  
-=======
+
 #' Code for adaptively spacing knots for a given covariate.
 #' 
 #' @param response vector of response data for the modelling process
@@ -1647,4 +1646,3 @@ getCV_type2<- function(folds, baseModel){
   }
 } # end of function
  
->>>>>>> db9b725369a5ca5f1360047d041fd62454edef7b
