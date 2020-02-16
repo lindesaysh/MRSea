@@ -130,9 +130,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     nrw <- nrow(initialModel$data)
     mdl <- length(initialModel$model[[1]])
   }
-  
-  print(paste("test panels a", is.null(initialModel@panels)))
-  
+
   if (nrw!=mdl) {
     fam <- 'BinProp'
   } else {
@@ -175,8 +173,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     attributes(initialModel$formula)$.Environment<-environment()
   }
   
-  print(paste("test panels b", is.null(initialModel@panels)))
-  
   ### OK for now may need reconsidering for aggregated multinomial
   if(fam=='BinProp'){
     if(is.null(data$successes)) stop('data does not contain successes column')
@@ -216,8 +212,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     }
   }
   
-  print(paste("test panels c", is.null(initialModel@panels)))
-  
   ### Not considered how this will be affected by multinomial yet
   if(is.null(panelid) & removal==TRUE){
     panelid<-1:nrow(data)
@@ -232,8 +226,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
       }
     }
   }
-  
-  print(paste("test panels d", is.null(initialModel@panels)))
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -269,8 +261,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   }
 
   splineParams<<-splineParams
-  
-  print(paste("test panels e", is.null(initialModel@panels)))
+
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # initial model is all variables in varlist with knots at locations in splineParams and NO 2D smooth
@@ -285,7 +276,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
       baseModel@data <- data
       baseModel@interactionterm <- NULL
       baseModel@splineParams <- splineParams
-      print(paste("test panels f", is.null(baseModel@panels)))
     } else {
       baseModel <- eval(parse(text=paste("vglm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data =data)", sep='')))
       baseModel <- as(baseModel, "vglmMRSea")
@@ -297,8 +287,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   }else{
     baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }
-
-  print(paste("test panels g", is.null(baseModel@panels)))
   
   ### ### ### Need to check how cv.gamMRSea works with multinomial
   if(removal==TRUE){
@@ -312,8 +300,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   }else{
     cv_initial=NULL
   }
-  
-  print(paste("test panels h", is.null(baseModel@panels)))
 
   ### multinomial always have dispersion 1 so no quasi versions
   
@@ -340,8 +326,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   timings<- vector(length=length(varlist))
   knots=NULL
   varkeepid=varkeepsmid=NULL
-  
-  print(paste("test panels i", is.null(baseModel@panels)))
 
   for (i in 2:(length(varlist)+1)){
     explanatory <- splineParams[[varID[(i-1)]]]$explanatory
@@ -414,8 +398,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     }
     models<<-output$models
     knotSites<<-output$knotSites
-    
-    print(paste("test panels j", is.null(baseModel@panels)))
 
     if(removal=='TRUE'){
       cat('Fitting Linear Model...')
@@ -476,8 +458,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
           kept='YES - linear'
       }
       
-      print(paste("test panels k", is.null(baseModel@panels)))
-      
     }else{
 #       cvid<-which(c(cv_initial, cv_with)==min(cv_initial, cv_with))
 #       if(cvid==1){
@@ -508,8 +488,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     splineParams<<-splineParams
   }
   
-  print(paste("test panels l", is.null(baseModel@panels)))
-  
   # turn the model data back into what came in
   
   outTerms <- list(length(varlist_cyclicSplines))
@@ -525,8 +503,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   } else {
     outModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(origfamily), "(link=", substitute(link),"))",  sep='')))
   }
-  
-  print(paste("test panels m", is.null(baseModel@panels)))
   
   eval(parse(text=paste(substitute(datain),"<-data", sep="" )))
   #  for(i in 2:(length(varlist)+1)){
@@ -568,8 +544,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   if(suppress.printout){
     sink()
   }
-  
-  print(paste("test panels n", is.null(baseModel@panels)))
 
  gc(verbose=FALSE)
  

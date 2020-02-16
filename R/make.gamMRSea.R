@@ -50,18 +50,14 @@ make.vglmMRSea<-function(model, panelid=NULL, splineParams=NULL, varshortnames=N
 
   newmodel<-model
   
-  print(paste("test panels", is.null(panelid), is.null(model@panels)))
-  
   if(class(model)[1]!='vglmMRSea'){
     newmodel<-as(newmodel,'vglmMRSea')
   }
   
   if(is.null(panelid) & is.null(model@panels)){
     if (nrow(model@data)>0) {
-      print(nrow(model@data))
       newmodel@panels <- 1:nrow(model@data)
     } else {
-      print(nrow(model@data))
       newmodel@panels<-NULL
     }
   }
@@ -86,8 +82,6 @@ make.vglmMRSea<-function(model, panelid=NULL, splineParams=NULL, varshortnames=N
     newmodel@call[[1]]<-quote(vglmMRSea)
     newmodel@call$splineParams<-quote(splineParams)
   }
-  
-  print(paste("check panelid", panelid))
   
   return(newmodel)
 }
