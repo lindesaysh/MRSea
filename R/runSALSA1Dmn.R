@@ -111,7 +111,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   require(splines)
   require(fields)
   
-  if (class(initialModel)[1]!='glm' & class(initialModel)[1]!='gamMRSea' & class(initialModel)[1]!='vglm') {
+  if (class(initialModel)[1]!='glm' & class(initialModel)[1]!='gamMRSea' & class(initialModel)[1]!='vglm' & class(initialModel)[1]!='vglmMRSea') {
     stop('Class of model not supported.  Please use glm or gamMRSea')
   }
   
@@ -119,16 +119,20 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   ### may need to change for aggregated multinomial
   if (isS4(initialModel)) {
     require(VGAM)
-    setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="numeric", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="character")) -> vglmMRSea
+    setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="ANY", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="ANY")) -> vglmMRSea
     initialModel <- as(initialModel, "vglmMRSea")
     initialModel@data <- datain
+    initialModel<-make.vglmMRSea(initialModel, vglmMRSea=TRUE)
+    attributes(initialModel@misc$formula)$.Environment<-environment()
     nrw <- nrow(datain)
     mdl <- nrow(initialModel@x)
   } else {
     nrw <- nrow(initialModel$data)
     mdl <- length(initialModel$model[[1]])
   }
-
+  
+  print(paste("test panels a", is.null(initialModel@panels)))
+  
   if (nrw!=mdl) {
     fam <- 'BinProp'
   } else {
@@ -140,7 +144,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
       }
     }
   }
-
+  
   ### This is not triggered for current multinomial implementation may need to be sorted for aggregated data
   if(is.null(factorlist)==F & fam=='other'){
     # check factor level counts:
@@ -171,6 +175,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     attributes(initialModel$formula)$.Environment<-environment()
   }
   
+  print(paste("test panels b", is.null(initialModel@panels)))
   
   ### OK for now may need reconsidering for aggregated multinomial
   if(fam=='BinProp'){
@@ -211,6 +216,8 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     }
   }
   
+  print(paste("test panels c", is.null(initialModel@panels)))
+  
   ### Not considered how this will be affected by multinomial yet
   if(is.null(panelid) & removal==TRUE){
     panelid<-1:nrow(data)
@@ -225,6 +232,8 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
       }
     }
   }
+  
+  print(paste("test panels d", is.null(initialModel@panels)))
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -260,6 +269,8 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   }
 
   splineParams<<-splineParams
+  
+  print(paste("test panels e", is.null(initialModel@panels)))
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # initial model is all variables in varlist with knots at locations in splineParams and NO 2D smooth
@@ -270,16 +281,25 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     if(fam=='mn_agg'){
       baseModel <- eval(parse(text=paste("vglm(", resp_in, " ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data =data)", sep='')))
       baseModel <- as(baseModel, "vglmMRSea")
+      baseModel <- make.vglmMRSea(baseModel, vglmMRSea=TRUE)
       baseModel@data <- data
+      baseModel@interactionterm <- NULL
+      baseModel@splineParams <- splineParams
+      print(paste("test panels f", is.null(baseModel@panels)))
     } else {
       baseModel <- eval(parse(text=paste("vglm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family, ", data =data)", sep='')))
       baseModel <- as(baseModel, "vglmMRSea")
+      baseModel <- make.vglmMRSea(baseModel, vglmMRSea=TRUE)
       baseModel@data <- data
+      baseModel@interactionterm <- NULL
+      baseModel@splineParams <- splineParams
     }
   }else{
     baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }
 
+  print(paste("test panels g", is.null(baseModel@panels)))
+  
   ### ### ### Need to check how cv.gamMRSea works with multinomial
   if(removal==TRUE){
     set.seed(seed.in)
@@ -292,6 +312,8 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   }else{
     cv_initial=NULL
   }
+  
+  print(paste("test panels h", is.null(baseModel@panels)))
 
   ### multinomial always have dispersion 1 so no quasi versions
   
@@ -299,13 +321,14 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   initDisp<-getDispersion(baseModel)
 
   fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
-
+  
   modelFits1D <- list((length(varlist)+1))
   if (isS4(baseModel)){
     modelFits1D[[1]] <- list(term = 'startmodel', kept=NULL, basemodelformula = baseModel@call, knotsSelected = NULL, tempfits = c(CV = cv_initial, fitStat=fitStat))
   } else {
     modelFits1D[[1]] <- list(term = 'startmodel', kept=NULL, basemodelformula = baseModel$call, knotsSelected = NULL, tempfits = c(CV = cv_initial, fitStat=fitStat))
   }
+
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ loop through 1D covar ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -317,13 +340,15 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   timings<- vector(length=length(varlist))
   knots=NULL
   varkeepid=varkeepsmid=NULL
+  
+  print(paste("test panels i", is.null(baseModel@panels)))
 
   for (i in 2:(length(varlist)+1)){
     explanatory <- splineParams[[varID[(i-1)]]]$explanatory
     if(fam=='BinProp'){
       response<-cbind(data$successes, data$failures)
     }else if (fam=='mn_agg') {
-      resp_columns <- test_salsa_init_mn_agg@misc$ynames
+      resp_columns <- initialModel@misc$ynames
       response_no <- which(colnames(data)==resp_columns[1])
       response <- data[,response_no]
       if (length(resp_columns) > 1) {
@@ -335,6 +360,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     } else { 
       response<-data$response  
     }
+    
     bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
     gap <- (salsa1dlist$gaps[(i-1)])
     term <- terms1D[[(i-1)]]
@@ -342,7 +368,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     interactionTerm <-NULL  #(salsa1dlist$interactionTerm[(i-1)])
     baseModel <- eval(parse(text=paste("update(baseModel, .~. -", term, ")", sep="")))
 
-    print(class(baseModel)[1])
     if(removal==TRUE){
       set.seed(seed.in)
       base_wo_coeff<-length(coef(baseModel))
@@ -354,7 +379,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
       fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
     }
 
-    print(class(baseModel)[1])
     if (isS4(baseModel)){
       if(length(grep(varlist[(i-1)], baseModel@misc$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceeding', sep=''))}
     } else {
@@ -363,12 +387,10 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
       
     if(varlist[(i-1)]%in%varlist_cyclicSplines){spl<- "cc"}else{spl="bs"}
 
-    print(class(baseModel)[1])
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
     sttime<- proc.time()[3]
-
     output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, cv.opts=salsa1dlist$cv.opts)
-
+    
     timings[(i-1)]<- proc.time()[3] - sttime
 
     thisFit <- output$output[2] 
@@ -379,6 +401,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     #}
     # update best model to have new knot locations and covariate back in model
     tempModel<- eval(parse(text=paste("update(baseModel, .~. +", term, ")", sep="")))
+    
     # calculate a cv score here too
     if(removal==TRUE){
       set.seed(seed.in)
@@ -391,6 +414,8 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     }
     models<<-output$models
     knotSites<<-output$knotSites
+    
+    print(paste("test panels j", is.null(baseModel@panels)))
 
     if(removal=='TRUE'){
       cat('Fitting Linear Model...')
@@ -409,7 +434,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
         modelcoeffs<-c(basecoef,length(coef(tempModel)),base_wo_coeff, length(coef(tempModel_lin)))
         cvid<-cvid[which(modelcoeffs[cvid]==min(modelcoeffs[cvid]))]
       }
-  
+      
       cat('Choosing smooth vs linear model...')
       if(cvid==1){
         # initial model is best - keep term but with original knots
@@ -450,6 +475,9 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
           varkeepid<-c(varkeepid, i)
           kept='YES - linear'
       }
+      
+      print(paste("test panels k", is.null(baseModel@panels)))
+      
     }else{
 #       cvid<-which(c(cv_initial, cv_with)==min(cv_initial, cv_with))
 #       if(cvid==1){
@@ -480,6 +508,8 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     splineParams<<-splineParams
   }
   
+  print(paste("test panels l", is.null(baseModel@panels)))
+  
   # turn the model data back into what came in
   
   outTerms <- list(length(varlist_cyclicSplines))
@@ -495,6 +525,9 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   } else {
     outModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(origfamily), "(link=", substitute(link),"))",  sep='')))
   }
+  
+  print(paste("test panels m", is.null(baseModel@panels)))
+  
   eval(parse(text=paste(substitute(datain),"<-data", sep="" )))
   #  for(i in 2:(length(varlist)+1)){
   #if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
@@ -502,8 +535,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   outModel<-eval(parse(text=paste("update(outModel, ~ ., data=", substitute(datain),")", sep="")))
   #    counter<-counter+1
   #   }
-  
-  print(splineParams)
   
   if (isS4(baseModel)){
     outModel<-as(outModel,'vglmMRSea')
@@ -514,7 +545,6 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
     outModel@splineParams<-splineParams
     outModel@data <- datain
     attributes(outModel@misc$formula)$.Environment<-.GlobalEnv
-    
   } else {
     class(outModel)<-c('gamMRSea', class(outModel))
     outModel$varshortnames<-varlist[(varkeepid-1)]
@@ -530,7 +560,7 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   }
 
   if (isS4(outModel)){
-    outModel<-make.gamMRSea.mn(outModel, gamMRSea=TRUE)
+    outModel<-make.vglmMRSea(outModel, vglmMRSea=TRUE)
   } else {
     outModel<-make.gamMRSea(outModel, gamMRSea=TRUE)
   }
@@ -538,6 +568,8 @@ runSALSA1Dmn<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, pred
   if(suppress.printout){
     sink()
   }
+  
+  print(paste("test panels n", is.null(baseModel@panels)))
 
  gc(verbose=FALSE)
  

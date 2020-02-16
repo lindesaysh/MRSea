@@ -104,26 +104,38 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   }
   if(class(model)[1]=='vglmMRSea'){
     data <- model@data
+    panels <- model@panels
   }
   if(class(model)[1]=='vglm'){
     data <- datain
   }
-
-  print("112")
+  
+  print(paste("test panels a", is.null(model@panels)))
   
   if(isS4(model)){
-    setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="numeric", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="character")) -> vglmMRSea
+    setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="ANY", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="ANY")) -> vglmMRSea
     model <- as(model, "vglmMRSea")
     attributes(model@misc$formula)$.Environment<-environment()
-    if(class(model)[1]!='vglmMRSea'){model<-make.gamMRSea.mn(model, gamMRSea=TRUE)}
     model@data <- data
+    # model<-make.vglmMRSea(model, vglmMRSea=TRUE)
+    # if(class(model)[1]!='vglmMRSea'){model<-make.vglmMRSea(model, vglmMRSea=TRUE)}
   } else {
     attributes(model$formula)$.Environment<-environment()
     if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(model, gamMRSea=TRUE)}
   }
+  
+  print(paste("test panels b", is.null(model@panels)))
 
   # check for response variable
-  if(is.null(data$response)) stop('data does not contain response column')
+  if (!isS4(model)){
+    if(is.null(data$response)) stop('data does not contain response column')
+  } else {
+    if (dim(model@y)[2]==1) {
+      if(is.null(data$response)) stop('data does not contain response column')
+    } else {
+      print('data is aggregated response is more than one column')
+    }
+  }
   
   
   # check for duplicates in knotgrid
@@ -142,10 +154,9 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   #grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
   #gridResp<-salsa2dlist$knotgrid[,1]
   
-  print("145")
   print(basis)
   
-  if (!is.null(salsa2dlist)){
+  if (!is.null(salsa2dlist$noradii)){
     norad <- salsa2dlist$noradii
   } else {
     norad <- 10
@@ -156,8 +167,6 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   } else {
     r_seq<-getRadiiChoices(numberofradii = norad, distMatrix = d2k, basis, salsa2dlist$radin)
   }
-  
-  print("149")
   
   if(chooserad==FALSE){
     if(length(r_seq)>1){
@@ -170,8 +179,6 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   }
   winHalfWidth = 0
   
-  print("160")
-  
   interactionTerm<-salsa2dlist$interactionTerm
   
   if(is.null(salsa2dlist$cv.opts$cv.gamMRSea.seed)){salsa2dlist$cv.opts$cv.gamMRSea.seed<-357}
@@ -179,9 +186,9 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   
   if(is.null(salsa2dlist$cv.opts$K)){salsa2dlist$cv.opts$K<-10}
   if(is.null(salsa2dlist$cv.opts$cost)){salsa2dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
- 
-  print("170")
    
+  print(paste("test panels c", is.null(model@panels)))
+  
   if(!is.null(panels)){
     if(length(unique(panels))!=nrow(data)){
       if (isS4(model)) {
@@ -196,15 +203,13 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     }
   }
   
-  print("185")
+  print(paste("test panels d", is.null(model@panels)))
 
   if(is.null(salsa2dlist$max.iter)){
     maxIterations<-10
   }else{
     maxIterations<-salsa2dlist$max.iter  
   }
-  
-  print("188")
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~~
@@ -230,7 +235,15 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   splineParams[[1]][[4]]= NULL                        #starting radius indices
   #splineParams[[1]][['gridResp']]= gridResp
   #splineParams[[1]][['grid']]= grid
-  splineParams[[1]][['response']]= data$response
+  if (!isS4(model)) {
+    splineParams[[1]][['response']]= data$response
+  } else {
+    if (dim(model@y)[2] > 1) {
+      splineParams[[1]][['response']]= model@y
+    } else {
+      splineParams[[1]][['response']]= data$response
+    }
+  }
   splineParams[[1]][['knotgrid']]= salsa2dlist$knotgrid
   splineParams[[1]][['datacoords']]= explData
   splineParams[[1]][['radii']]= radii
@@ -249,6 +262,8 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     model$splineParams<-splineParams
   }
   
+  print(paste("test panels e", is.null(model@panels)))
+  
   if(dim(k2k)[2]==salsa2dlist$minKnots & dim(k2k)[2]==salsa2dlist$maxKnots & dim(k2k)[2]==salsa2dlist$startKnots){stop('Min, Max and Start knots all identical and equal to the total number of valid knots\n Please add more valid knot locations (knotgrid) or reduce min/max/start')}
   
   if(dim(k2k)[2]<salsa2dlist$minKnots | dim(k2k)[2]<salsa2dlist$startKnots){stop('Starting number of knots or min knots more than number of valid knot locations in knotgrid')}
@@ -256,8 +271,6 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   if (!isS4(model)) {
     if(salsa2dlist$fitnessMeasure=='BIC' & model$family$family=='quasipoisson' ){stop('Please use fitness Measure appropriate for quasi family, e.g. QICb')}
   }
-
-    print("241")
   
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ 2D SALSA RUN ~~~~~~~~~~~~~~~~~~~~~~~
@@ -266,14 +279,18 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     sink(file='salsa2d.log')
   }
   
-  baseModel1D<- model
-  baseModel<- baseModel1D
+  print(paste("test panels f", is.null(model@panels)))
+  
+  baseModel1D <- model
+  baseModel <- baseModel1D
+  
+  print(paste("test panels g", is.null(baseModel@panels)))
 
   output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=maxIterations, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=initialise,  initialKnots=initialKnots, initialaR=initialKnPos, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, cv.opts = salsa2dlist$cv.opts, basis)
-
-  print("255")
   
   baseModel<- output$out.lm
+  
+  print(paste("test panels h", is.null(baseModel@panels)))
 
   #   if(length(output$models)==0){
   #     output$aR<- output$invInd[output$aR]
@@ -299,8 +316,6 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
       
       #output$aR<- output$models[[bestModNo]][[1]]
     }
-
-    print("284")
     
     # use initialise step to change radii
     radii = r_seq
@@ -315,12 +330,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
       radiusIndices<- rep(1, length(output$aR))
     }
     initDisp<-getDispersion(baseModel)
-    if (isS4(baseModel)) {
-      output_radii<- initialise.measures_2d.mn(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis)
-      
-    } else {
-      output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis)
-    }
+    output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis)
     
     splineParams[[1]]$radii= radii
     splineParams[[1]][['knotPos']]= output_radii$aR
@@ -331,6 +341,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     aRout<- list(aR1=output$aR, aR2=output_radii$aR)
     
     baseModel<-output_radii$out.lm
+    print(paste("test panels h", is.null(baseModel@panels)))
   }else{
     splineParams[[1]]$radii= radii
     splineParams[[1]][['knotPos']]= output$aR
@@ -341,8 +352,6 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     aRout = output$aR
   }
   
-  print("325")
-
   # dists<-splineParams[[1]]$dist
   # aR<-splineParams[[1]]$invInd[splineParams[[1]]$knotPos]
   # radiusIndices<-splineParams[[1]]$radiusIndices
@@ -357,6 +366,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     if (!is.null(interactionTerm)){
       baseModel@interactionterm<-interactionTerm
     }
+    print(paste("test panels i", is.null(baseModel@panels)))
   } else {
     dataname<-languageEl(model$call, which='data')
     baseModel$varshortnames<-model$varshortnames
@@ -364,25 +374,26 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     baseModel$interactionterm<-interactionTerm
   }
   
-  print("348")
-  
   eval(parse(text=paste(substitute(dataname),"<-data", sep="" )))
   print(paste("update(baseModel, .~., data=", substitute(dataname),")", sep=""))
   baseModel<-eval(parse(text=paste("update(baseModel, .~., data=", substitute(dataname),")", sep="")))
   
-  print("362")
+  print(paste("test panels k", is.null(baseModel@panels)))
   
   if (isS4(baseModel)) {
     attributes(baseModel@misc$formula)$.Environment<-globalenv()
     #save.image(paste("salsa2D_k", splineParams[[1]]$startKnots, ".RData", sep=''))
-    
-    baseModel<-make.gamMRSea.mn(baseModel, gamMRSea=TRUE)
+    if(class(model)[1]!='vglmMRSea') {
+      baseModel<-make.vglmMRSea(baseModel, vglmMRSea=TRUE)
+    }
   } else {
     attributes(baseModel$formula)$.Environment<-globalenv()
     #save.image(paste("salsa2D_k", splineParams[[1]]$startKnots, ".RData", sep=''))
     
     baseModel<-make.gamMRSea(baseModel, gamMRSea=TRUE)
   }
+  
+  print(paste("test panels l", is.null(baseModel@panels)))
   
   if(suppress.printout){
     sink()

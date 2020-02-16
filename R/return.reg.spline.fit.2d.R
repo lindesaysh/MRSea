@@ -79,21 +79,22 @@
 
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
-    data<- baseModel@data
+    data <- baseModel@data
+    baseModel@data <- data
   } else {
     attributes(baseModel$formula)$.Environment<-environment()
-    data<- baseModel$data
+    data <- baseModel$data
+    baseModel<-update(baseModel, data=data)
   }
-  baseModel<-update(baseModel, data=data)
 
   ###########################initialisation######################################
 
-  if (isS4(baseModel)) {
-    output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
-  } else {
+  #if (isS4(baseModel)) {
+  #  output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
+  #} else {
     output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
-  }
-
+  #}
+  
   point <- output$point
   knotPoint <- output$knotPoint
   position <- output$position
@@ -129,6 +130,7 @@
     ####track <- rbind(track,cbind("exchanging",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
     output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
     #  ####print("here e")
+
     point <- output$point
     knotPoint <- output$knotPoint
     position <- output$position
@@ -191,6 +193,8 @@
       out.lm <- output$out.lm
       radiusIndices <- output$radiusIndices
       improveDrop <- output$improveDrop
+      
+      print("e")
 
       if (isS4(out.lm)) {
         out.lm@splineParams[[1]]$knotPos<-aR
@@ -221,3 +225,4 @@
   
 
 }
+
