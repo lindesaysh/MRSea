@@ -17,7 +17,7 @@ anova.vglmMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald')
   if(length(unique(panelid))<nrow(object@data) && test=='F'){
     stop("If panels are provided (number of panels < number of observations), please use type = 'Wald' to make use of the robust standard errors.")
   }
-  
+
   sumobj <- summaryvglm(object)
   
   if(max(table(panelid))==1){
@@ -32,7 +32,7 @@ anova.vglmMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald')
   }
   
   ncoefs<-table(varseq_adj)
-  
+
   if(test=='Wald'){
     X2Vec<-NULL
     
@@ -56,12 +56,11 @@ anova.vglmMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald')
     table<-data.frame(resdf, resdev, 1-pchisq(resdev, resdf))
     
   }
-  
+
   if(test=='F'){
     which.nms <- function(name) which(varseq_adj == which(names == name))
     df.res <- df.residual(object)
     error.SS <- sum(residuals(object, "pearson")^2, na.rm = TRUE)
-    
     fac <- attr(terms(object), "factors")
     names <- labels(terms(object))
     n.terms <- length(names)
@@ -94,9 +93,15 @@ anova.vglmMRSea<-function(object, varshortnames=NULL, panelid=NULL, test='Wald')
       }
       BasesNoVar <- BasesFromMod[,colmask]
       newdf <- as.data.frame(cbind(y, BasesNoVar))
-      text_mod <- paste0("mod.1<-vglm(cbind(", paste(colnames(y),collapse=','), ")~", 
-                         paste(colnames(BasesNoVar)[2:ncol(BasesNoVar)],collapse='+'),
-                         ",family='multinomial',data=newdf)")
+      # deal with intercept only model
+      if (sum(colmask) > 1) {
+        text_mod <- paste0("mod.1<-vglm(cbind(", paste(colnames(y),collapse=','), ")~", 
+                           paste(colnames(BasesNoVar)[2:ncol(BasesNoVar)],collapse='+'),
+                           ",family='multinomial',data=newdf)")
+      } else {
+        text_mod <- paste0("mod.1<-vglm(cbind(", paste(colnames(y),collapse=','), 
+                           ")~1,family='multinomial',data=newdf)")
+      }
       eval(parse(text=text_mod))
       dev.1 <- deviance(mod.1)
       mod.2 <- object
@@ -172,14 +177,18 @@ get_all_bases <- function(modin) {
   radiusIndices <- splineParams[[1]]$radiusIndices
   nbspl <- length(labels(terms(modin)))
   base_mod_cols <- modin@varshortnames
-  for (nb in 1:length(base_mod_cols)){
-    createcoltext <- paste0(base_mod_cols[nb],"<-data$", base_mod_cols[nb])
-    eval(parse(text=createcoltext))
+  if (length(base_mod_cols) > 0){
+    for (nb in 1:length(base_mod_cols)){
+      createcoltext <- paste0(base_mod_cols[nb],"<-data$", base_mod_cols[nb])
+      eval(parse(text=createcoltext))
+    }
   }
   BasesInMod <- eval(parse(text=labels(terms(modin))[1]))
-  for (nb in 2:nbspl){
-    newBas <- eval(parse(text=labels(terms(modin))[nb]))
-    BasesInMod <- cbind(BasesInMod, newBas)
+  if (nbspl >= 2) {
+    for (nb in 2:nbspl){
+      newBas <- eval(parse(text=labels(terms(modin))[nb]))
+      BasesInMod <- cbind(BasesInMod, newBas)
+    }
   }
   # add intercept
   BasesInMod <- cbind(rep(1, nrow(BasesInMod)),BasesInMod)
@@ -194,10 +203,12 @@ create_temp_col_names <- function(mod_in){
   varz <- mod_in@varshortnames
   n_bases <- c()
   new_col_names <- c()
-  for (vv in 1:length(varz)){
-    n_bas <- length(mod_in@splineParams[[vv+1]]$knots) + 2
-    n_bases <- c(n_bases, n_bas)
-    new_col_names <- c(new_col_names, paste0(rep(varz[vv], n_bas), seq(n_bas)))
+  if (length(varz)>0){
+    for (vv in 1:length(varz)){
+      n_bas <- length(mod_in@splineParams[[vv+1]]$knots) + 2
+      n_bases <- c(n_bases, n_bas)
+      new_col_names <- c(new_col_names, paste0(rep(varz[vv], n_bas), seq(n_bas)))
+    }
   }
   n_smooth <- length(mod_in@splineParams[[1]]$knotPos)
   n_bases <- c(n_bases, n_smooth)
