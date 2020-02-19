@@ -9,7 +9,11 @@
 ####################################################################################################################
 
 "improve.step_2d" <- function(gap,knotDist,radii,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis){
-  attributes(baseModel$formula)$.Environment<-environment()
+  if (isS4(baseModel)){
+    attributes(baseModel@misc$formula)$.Environment<-environment()
+  } else {
+    attributes(baseModel$formula)$.Environment<-environment()
+  }
   print("Improving...")
   print("******************************************************************************")
   # cat('Current Fit in: ', BIC, '\n')

@@ -17,24 +17,24 @@ make.gamMRSea<-function(model, panelid=NULL, splineParams=NULL, varshortnames=NU
   if(class(model)[1]!='gamMRSea'){
     class(newmodel)<-c('gamMRSea', class(model))
   }
-if(is.null(panelid) & is.null(model$panels)){
-  newmodel$panels<-1:nrow(model$data)
-}
-if(!is.null(panelid)){
-  newmodel$panels<-panelid
-}
-if(is.null(panelid) & !is.null(model$panels)){
-  newmodel$panels<-model$panels
-}
+
+  if(is.null(panelid) & is.null(model$panels)){
+    newmodel$panels<-1:nrow(model$data)
+  }
+  if(!is.null(panelid)){
+    newmodel$panels<-panelid
+  }
+
+  if(is.null(panelid) & !is.null(model$panels)){
+    newmodel$panels<-model$panels
+  }
 
   if(!is.null(splineParams)){
     newmodel$splineParams<-splineParams
   }
   
-  
-  
   if(!is.null(varshortnames)){
-    newmodel$varshortnames<-varshortnames  
+      newmodel$varshortnames<-varshortnames  
   }
   
 
@@ -45,3 +45,44 @@ if(is.null(panelid) & !is.null(model$panels)){
 
   return(newmodel)
 }
+
+make.vglmMRSea<-function(model, panelid=NULL, splineParams=NULL, varshortnames=NULL, vglmMRSea=FALSE){
+
+  newmodel<-model
+  
+  if(class(model)[1]!='vglmMRSea'){
+    newmodel<-as(newmodel,'vglmMRSea')
+  }
+  
+  if(is.null(panelid) & is.null(model@panels)){
+    if (nrow(model@data)>0) {
+      newmodel@panels <- 1:nrow(model@data)
+    } else {
+      newmodel@panels<-NULL
+    }
+  }
+  
+  if(!is.null(panelid)){
+    newmodel@panels<-panelid
+  }
+  
+  if(is.null(panelid) & !is.null(model@panels)){
+    newmodel@panels<-model@panels
+  }
+  
+  if(!is.null(splineParams)){
+    newmodel@splineParams<-splineParams
+  }
+  
+  if(!is.null(varshortnames)){
+    newmodel@varshortnames<-varshortnames  
+  }
+
+  if(vglmMRSea){
+    newmodel@call[[1]]<-quote(vglmMRSea)
+    newmodel@call$splineParams<-quote(splineParams)
+  }
+  
+  return(newmodel)
+}
+

@@ -18,10 +18,15 @@
   # cat('Current Fit in: ', BIC, '\n')
   fuse <- 0
   improve <- 1
+
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
+    if (isS4(baseModel)){
+      indexdat<-order(rowSums(abs(residuals(baseModel, type='pearson'))), decreasing = TRUE)[1:5]
+    } else {
+      indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
+    }
     #### Find available knots
     legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
     if(ncol(knotgrid)>2){
@@ -54,6 +59,7 @@
         output <- move.knot_2D(radii,dists,explData,index,fitnessMeasure,BIC,aR,point,
                                response,knotgrid,out.lm,improve,improveEx, track,
                                maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
+
         improve <- output$improve
         improveEx <- output$improveEx
         models <- thinModels(output$models)
@@ -80,6 +86,7 @@
         aR <- output$newR
         BIC <- output$fitStat
         radiusIndices <- output$radiusIndices
+
         ####track<- rbind(track,cbind("exchange",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
       }
     }else {
