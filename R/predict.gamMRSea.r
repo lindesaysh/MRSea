@@ -63,20 +63,10 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
   # radiusIndices <- splineParams[[1]]$radiusIndices
   # dists <- g2k
   
-  if (isS4(object)){
-    splineParams <- object@splineParams
-  } else {
-    splineParams <- object$splineParams
-  }
-  
-  if(is.null(newdata)){
-    if (isS4(object)){
-      newdata <- object@data
-    } else {
-      newdata <- object$data
-    }
-  }
-  
+  splineParams <- object$splineParams
+
+  newdata <- object$data
+
   require(splines)
   x2 <- data.frame(response = rpois(nrow(newdata), lambda = 5),
                    newdata)
@@ -87,11 +77,7 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
     splineParams[[1]]$dist<-g2k
   }
   
-  if (isS4(object)) {
-    xlev <- object@xlevels
-  } else {
-    xlev <- object$xlevels
-  }
+  xlev <- object$xlevels
   
   m <- model.frame.gamMRSea(Terms, newdata, xlev = xlev, splineParams=splineParams)
   modmat <- model.matrix(Terms, m)
@@ -102,39 +88,21 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
     for (i in off.num) offset <- offset + exp(eval(attr(tt, "variables")[[i + 1]], newdata))
   # offset specified as parameter in call
   
-  if (isS4(object)){
-    if (!is.null(object@call$offset)) {
-      offset <- offset + eval(object@call$offset, newdata)
-    }
-  } else {
-    if (!is.null(object$call$offset)) {
-      offset <- offset + eval(object$call$offset, newdata)
-    }
-}
+  if (!is.null(object$call$offset)) {
+    offset <- offset + eval(object$call$offset, newdata)
+  }
   
   if (is.null(coeff)) {
-    if (isS4(object)){
-      colz <- dim(object@predictors)[2]
-      modcoef <- matrix(object@coefficients, ncol=colz, byrow=TRUE)
-    } else {
-      modcoef <- as.vector(object$coefficients)
-    }
+    modcoef <- as.vector(object$coefficients)
   } else {
     modcoef <- coeff
   }
   if (type == "response") {
-    if (isS4(object)) {
-      if (length(object@offset) > 0 & sum(object@offset) != 0) {
-        preds <- object@family@linkinv(modmat %*% modcoef, object@extra) * offset
-      } else {
-        preds <- object@family@linkinv(modmat %*% modcoef, object@extra)
-      }
+    modcoef <- matrix(modcoef, ncol=1)
+    if (length(object$offset) > 0 & sum(object$offset) != 0) {
+        preds <- object$family$linkinv(modmat %*% modcoef) * offset
     } else {
-      if (length(object$offset) > 0 & sum(object$offset) != 0) {
-          preds <- object$family$linkinv(modmat %*% modcoef) * offset
-      } else {
-        preds <- object$family$linkinv(modmat %*% modcoef)
-      }
+      preds <- object$family$linkinv(modmat %*% modcoef)
     }
   }
   if (type == "link") {
@@ -144,3 +112,68 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
   return(preds)
 }
 
+
+predict.vglmMRSea <- function(object, newdata=NULL, type="response", coeff=NULL, newdists=NULL, includeB0=TRUE) {
+  
+  if (is.null(newdata)) {
+    data <- object@data
+  } else {
+    data <- newdata
+  }
+  
+  splineParams <- object@splineParams
+  aR <- splineParams[[1]]$knotPos
+  radii <- splineParams[[1]]$radii
+  radiusIndices <- splineParams[[1]]$radiusIndices
+  varz <- object@varshortnames
+  
+  # Create bases for newdata - variables first
+  for (nv in 1:length(varz)) {
+    var_in_txt <- paste0(varz[nv], "<-data$", varz[nv])
+    var_in <- eval(parse(text=var_in_txt))
+    var_bs_txt <- paste0("bs(", varz[nv], ", knots=splineParams[[", nv+1,
+                         "]]$knots, degree=splineParams[[", nv+1, "]]$degree, ",
+                         "Boundary.knots=splineParams[[", nv+1, "]]$bd)")
+    var_bs <- eval(parse(text=var_bs_txt))
+    if (nv==1){
+      new_bs_all <- var_bs
+    } else {
+      new_bs_all <- cbind(new_bs_all, var_bs)
+    }
+  }
+  
+  # Create bases for newdata - 2d smooth
+  if (is.null(newdists)) {
+    distMats <- makeDists(
+      cbind(data$x.pos, data$y.pos),
+      na.omit(splineParams[[1]]$knotgrid)
+    )
+  } else {
+    distMats <- newdists
+  }
+  bs_lrf <- LRF.g(radiusIndices, distMats$dataDist, radii, aR)
+  new_bs_all <- cbind(new_bs_all, bs_lrf)
+  
+  if(is.null(coeff)) {
+    coefs <- object@coefficients
+  } else {
+    coefs <- coeff
+  }
+  
+  if (includeB0) {
+    new_bs_all <- cbind(rep(1, nrow(new_bs_all)), new_bs_all)
+  }
+  
+  nyy <- dim(object@y)[2] 
+  neta <- nyy - 1
+  
+  coefs <- matrix(coefs, ncol=neta, byrow=TRUE)
+  
+  preds_out = new_bs_all %*% coefs
+  
+  if (type == "response") {
+    preds_out = object@family@linkinv(preds_out, extra=object@extra)
+  }
+  
+  return(preds_out)
+}
