@@ -30,15 +30,15 @@ knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, eval=TRUE, comment
 ```
 
 ## Introduction
-The ```MRSea``` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to other studies as well. This vignette gives an updated example of the code for version 1.01.  For additional information regarding methods, see `r citet(biblio[['Mac2013']])` and `r citet(biblio[['ScottH2013a']])`.  The user should be familiar with generalised linear models and their assumptions and model selection. The ```MRSea``` package primarily allows spatially adaptive model selection for both one and two dimensional covariates using the functions ```runSALSA1D``` and ```runSALSA2D```, which implement the methods of `r citet(biblio[['Walker2010']])` and `r citet(biblio[['ScottH2013']])`. 
+The ```MRSea``` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to other studies as well. This vignette gives an updated example of the code for version 0.3.  For additional information regarding methods, see `r citet(biblio[['Mac2013']])` and `r citet(biblio[['ScottH2013a']])`.  The user should be familiar with generalised linear models and their assumptions and model selection. The ```MRSea``` package primarily allows spatially adaptive model selection for both one and two dimensional covariates using the functions ```runSALSA1D``` and ```runSALSA2D```, which implement the methods of `r citet(biblio[['Walker2010']])` and `r citet(biblio[['ScottH2013']])`. 
 
 The major update to this package is that a class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object infomation regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given).
 
-Other functions include diagnostics (to assess residual correlation: ```runACF```, smooth relationships: ``` runPartialPlots``` and model selection (ANOVA) for robust standard errros: ```anova.gamMRSea```) and inference (```do.bootstrap.cress.robust```). 
+Other functions include diagnostics (to assess residual correlation: ```runACF```, smooth relationships: ``` runPartialPlots``` and model selection (ANOVA) for robust standard errros: ```anova.gamMRSea```) and inference (```do.bootstrap.cress```). 
 
 
 ![alt text](MRSea_workflow.png)
-Example of the modelling process using MRSea.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst MRSea functions are in red.  
+Example of the modelling process using MRSea.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst MRSea functions are in red.  GEE (far right), stands for Generalised Estimating Equations.
 
 
 A full description of each of the functions within the ```MRSea``` package can be found in the reference manual at: 
@@ -48,7 +48,7 @@ http://creem2.st-and.ac.uk/software.aspx.  The manual and this document use vers
 
 1. Load data and fit detection function (Distance Sampling)
 ```{r message=FALSE}
-devtools::load_all(path = '../../MRSea')
+#devtools::load_all(path='../../MRSea/')
 # we will use the dataset with a known re-distribution of animals
 data(dis.data.re)
 dis.data<-dis.data.re
@@ -190,11 +190,12 @@ salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist,
 ```
 
 ```{r }
-plot(data$x.pos, data$y.pos, col="grey", pch=16,
-    xlab="X", ylab="Y", asp=1)
-points(knotgrid, pch=16, col=4)
-points(knotgrid[salsa2dOutput$aR[[1]],], 
-       col="darkgreen", pch=16, cex=2)  
+require(ggplot2)
+ggplot() + geom_point(data=data, aes(x=x.pos, y=y.pos), colour='grey') +
+  theme_bw() + 
+  geom_point(data=data.frame(knotgrid), aes(X1, X2), col='blue') + 
+  geom_point(data=data.frame(knotgrid)[salsa2dOutput$aR[[1]],], aes(X1, X2), col='darkgreen', size=4) 
+
 ```
 
 12.  Are the residuals correlated? Make a suitable blocking structure, within which residuals are expected to be correlated but between which they are independent.  Use ```runACF``` to assess the blocking structure.
@@ -247,15 +248,10 @@ preds<-predict.gamMRSea(newdata = predictData, g2k = dists, object = salsa2dOutp
 ```
 
 Plotting the predictions pre and post impact:
-```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
-par(mfrow=c(1,2))
-quilt.plot(predictData$x.pos[predictData$impact==0], 
-           predictData$y.pos[predictData$impact==0], 
-           preds[predictData$impact==0], nrow=104, ncol=55, asp=1)
-
-quilt.plot(predictData$x.pos[predictData$impact==1], 
-           predictData$y.pos[predictData$impact==1], 
-           preds[predictData$impact==1], nrow=104, ncol=55, asp=1)
+```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=4}
+require(RColorBrewer)
+predictData$preds<-preds[,1]
+ggplot() + geom_tile(data=predictData, aes(x.pos, y.pos, fill=preds), height=0.5, width=0.5) + facet_wrap(~impact) + theme_bw() + coord_equal() + scale_fill_distiller(palette = "Spectral",name="Animal Counts")
 ```
 
 ## Bootstrapped Confidence Intervals and Difference Surfaces
@@ -300,5 +296,17 @@ points(predictData$x.pos[predictData$impact == 0][marker == (-1)],
        predictData$y.pos[predictData$impact == 0][marker == (-1)],
        col = "darkgrey", cex = 0.75)
 points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey")
+
+require(dplyr)
+diffdata<-data.frame(predictData[predictData$impact==0,], mediandiff, marker)
+diffdata_s1<-filter(diffdata, season==1)
+wf<-data.frame(x=(681417.3/1000), y= (6046910/1000))
+ggplot() + geom_tile(data=diffdata_s1, aes(x=x.pos, y=y.pos, fill=mediandiff), height=0.5, width=0.5) + 
+  geom_point(data=filter(diffdata_s1, marker == 1), aes(x=x.pos, y=y.pos), shape=3, colour='darkgrey', size=1) +
+    geom_point(data=filter(diffdata_s1, marker == -1), aes(x=x.pos, y=y.pos), shape=1, colour='darkgrey', size=1.5) + 
+  theme_bw() + coord_equal() + facet_wrap(~season) + 
+  scale_fill_distiller(palette = "Spectral",name="Difference") + 
+  geom_point(data=wf, aes(x, y), shape=8, size=4)
+  
 ```
 
