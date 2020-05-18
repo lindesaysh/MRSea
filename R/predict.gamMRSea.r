@@ -126,19 +126,21 @@ predict.vglmMRSea <- function(object, newdata=NULL, type="response", coeff=NULL,
   radii <- splineParams[[1]]$radii
   radiusIndices <- splineParams[[1]]$radiusIndices
   varz <- object@varshortnames
-  
-  # Create bases for newdata - variables first
-  for (nv in 1:length(varz)) {
-    var_in_txt <- paste0(varz[nv], "<-data$", varz[nv])
-    var_in <- eval(parse(text=var_in_txt))
-    var_bs_txt <- paste0("bs(", varz[nv], ", knots=splineParams[[", nv+1,
-                         "]]$knots, degree=splineParams[[", nv+1, "]]$degree, ",
-                         "Boundary.knots=splineParams[[", nv+1, "]]$bd)")
-    var_bs <- eval(parse(text=var_bs_txt))
-    if (nv==1){
-      new_bs_all <- var_bs
-    } else {
-      new_bs_all <- cbind(new_bs_all, var_bs)
+
+  if (length(varz) > 0) {
+    # Create bases for newdata - variables first
+    for (nv in 1:length(varz)) {
+      var_in_txt <- paste0(varz[nv], "<-data$", varz[nv])
+      var_in <- eval(parse(text=var_in_txt))
+      var_bs_txt <- paste0("bs(", varz[nv], ", knots=splineParams[[", nv+1,
+                           "]]$knots, degree=splineParams[[", nv+1, "]]$degree, ",
+                           "Boundary.knots=splineParams[[", nv+1, "]]$bd)")
+      var_bs <- eval(parse(text=var_bs_txt))
+      if (nv==1){
+        new_bs_all <- var_bs
+      } else {
+        new_bs_all <- cbind(new_bs_all, var_bs)
+      }
     }
   }
   
@@ -148,11 +150,17 @@ predict.vglmMRSea <- function(object, newdata=NULL, type="response", coeff=NULL,
       cbind(data$x.pos, data$y.pos),
       na.omit(splineParams[[1]]$knotgrid)
     )
+    datDist <- distMats$dataDist
   } else {
-    distMats <- newdists
+    datDist <- newdists
   }
-  bs_lrf <- LRF.g(radiusIndices, distMats$dataDist, radii, aR)
-  new_bs_all <- cbind(new_bs_all, bs_lrf)
+  bs_lrf <- LRF.g(radiusIndices, datDist, radii, aR)
+  
+  if (length(varz) > 0) {
+    new_bs_all <- cbind(new_bs_all, bs_lrf)
+  } else {
+    new_bs_all <- bs_lrf
+  }
   
   if(is.null(coeff)) {
     coefs <- object@coefficients
