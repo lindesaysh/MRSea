@@ -18,6 +18,7 @@ update.vglmMRSea <- function (object, formula., ..., evaluate = TRUE, panels=NUL
   }
   if (evaluate) {
     newmodel<-eval(call) 
+    newmodel <- as(newmodel, "vglmMRSea")
     rm('splineParams', envir = globalenv())
     if(is.null(panels)){
       newmodel@panels<-object@panels  

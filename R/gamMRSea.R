@@ -6,6 +6,8 @@
 #' 
 #' @export
 #' 
+#' 
+#' 
 gamMRSea<-function (formula, family = gaussian, data, weights, subset,
                     na.action, start = NULL, etastart, mustart, offset, control = list(...),
                     model = TRUE, method = "glm.fit", x = FALSE, y = TRUE, contrasts = NULL, splineParams=NULL, ...)
@@ -99,3 +101,5 @@ gamMRSea<-function (formula, family = gaussian, data, weights, subset,
   class(fit) <- c(fit$class, c("gamMRSea", "glm", "lm"))
   fit
 }
+
+

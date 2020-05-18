@@ -139,7 +139,7 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   
   # cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
-    fitStat<- tempMeasure + 10000000
+    fitStat <- tempMeasure + 10000000
     cat("Change Fit due to fitStat=NA: ", fitStat, "\n")
   }
   if(getDispersion(out.lm)>initDisp){

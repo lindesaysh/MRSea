@@ -115,8 +115,8 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     model <- as(model, "vglmMRSea")
     attributes(model@misc$formula)$.Environment<-environment()
     model@data <- data
-    model<-make.vglmMRSea(model, vglmMRSea=TRUE)
-    # if(class(model)[1]!='vglmMRSea'){model<-make.vglmMRSea(model, vglmMRSea=TRUE)}
+    # model<-make.vglmMRSea(model, vglmMRSea=TRUE)
+    if(class(model)[1]!='vglmMRSea'){model<-make.vglmMRSea(model, vglmMRSea=TRUE)}
   } else {
     attributes(model$formula)$.Environment<-environment()
     if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(model, gamMRSea=TRUE)}
