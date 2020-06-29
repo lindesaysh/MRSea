@@ -64,8 +64,10 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
   # dists <- g2k
   
   splineParams <- object$splineParams
-
-  newdata <- object$data
+  
+  if(is.null(newdata)){
+    newdata <- object$data
+  }
 
   require(splines)
   x2 <- data.frame(response = rpois(nrow(newdata), lambda = 5),
