@@ -1,5 +1,8 @@
-model.frame.gamMRSea<-function (formula, data = NULL, subset = NULL, na.action = na.fail, drop.unused.levels = FALSE, xlev = NULL, splineParams=NULL, ...) 
+model.frame.gamMRSea<-function (formula, data = NULL, subset = NULL, na.action = na.fail,           drop.unused.levels = FALSE, xlev = NULL, splineParams=NULL, ...) 
 {
+  
+ 
+  
   possible_newdata <- !missing(data) && is.data.frame(data) && 
     identical(substitute(data), quote(newdata)) && (nr <- nrow(data)) > 
     0
@@ -143,4 +146,3 @@ model.frame.gamMRSea<-function (formula, data = NULL, subset = NULL, na.action =
   attr(data, "terms") <- formula
   data
 }
-

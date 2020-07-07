@@ -19,7 +19,6 @@ model.frame.vglmMRSea <- function (formula, data = NULL, subset = NULL, na.actio
       env <- parent.frame()
     return(eval(fcall, env))
   }
-  
   if (missing(formula)) {
     if (!missing(data) && inherits(data, "data.frame") && 
         length(attr(data, "terms"))) 
@@ -67,7 +66,7 @@ model.frame.vglmMRSea <- function (formula, data = NULL, subset = NULL, na.actio
   }else{
     env <- environment(formula)  
   }
-  
+
   rownames <- .row_names_info(data, 0L)
   vars <- attr(formula, "variables")
   predvars <- attr(formula, "predvars")
@@ -84,7 +83,6 @@ model.frame.vglmMRSea <- function (formula, data = NULL, subset = NULL, na.actio
       rownames(lhs)
     else names(lhs)
   }
-  
   if (possible_newdata && length(variables)) {
     nr2 <- max(sapply(variables, NROW))
     if (nr2 != nr) 
@@ -106,7 +104,6 @@ model.frame.vglmMRSea <- function (formula, data = NULL, subset = NULL, na.actio
   subset <- eval(substitute(subset), data, env)
   data <- .External2(stats:::C_modelframe, formula, rownames, variables, 
                      varnames, extras, extranames, subset, na.action)
-
   if (length(xlev)) {
     for (nm in names(xlev)) if (!is.null(xl <- xlev[[nm]])) {
       xi <- data[[nm]]
@@ -145,7 +142,6 @@ model.frame.vglmMRSea <- function (formula, data = NULL, subset = NULL, na.actio
       }
     }
   }
-  
   attr(formula, "dataClasses") <- vapply(data, .MFclass, "")
   attr(data, "terms") <- formula
   data
