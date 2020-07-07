@@ -63,29 +63,13 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
   # radiusIndices <- splineParams[[1]]$radiusIndices
   # dists <- g2k
   
-<<<<<<< HEAD
   splineParams <- object$splineParams
   
   if(is.null(newdata)){
     newdata <- object$data
   }
 
-=======
-  if (isS4(object)){
-    splineParams <- object@splineParams
-  } else {
-    splineParams <- object$splineParams
-  }
   
-  if(is.null(newdata)){
-    if (isS4(object)){
-      newdata <- object@data
-    } else {
-      newdata <- object$data
-    }
-  }
-  
->>>>>>> parent of 67f70ac... Merge pull request #7 from CMFell/master
   require(splines)
   x2 <- data.frame(response = rpois(nrow(newdata), lambda = 5),
                    newdata)
@@ -96,11 +80,9 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
     splineParams[[1]]$dist<-g2k
   }
   
-  if (isS4(object)) {
-    xlev <- object@xlevels
-  } else {
+  
     xlev <- object$xlevels
-  }
+  
   
   m <- model.frame.gamMRSea(Terms, newdata, xlev = xlev, splineParams=splineParams)
   modmat <- model.matrix(Terms, m)
@@ -111,40 +93,25 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
     for (i in off.num) offset <- offset + exp(eval(attr(tt, "variables")[[i + 1]], newdata))
   # offset specified as parameter in call
   
-  if (isS4(object)){
-    if (!is.null(object@call$offset)) {
-      offset <- offset + eval(object@call$offset, newdata)
-    }
-  } else {
+ 
     if (!is.null(object$call$offset)) {
       offset <- offset + eval(object$call$offset, newdata)
     }
-}
   
   if (is.null(coeff)) {
-    if (isS4(object)){
-      colz <- dim(object@predictors)[2]
-      modcoef <- matrix(object@coefficients, ncol=colz, byrow=TRUE)
-    } else {
+  
       modcoef <- as.vector(object$coefficients)
-    }
+
   } else {
     modcoef <- coeff
   }
   if (type == "response") {
-    if (isS4(object)) {
-      if (length(object@offset) > 0 & sum(object@offset) != 0) {
-        preds <- object@family@linkinv(modmat %*% modcoef, object@extra) * offset
-      } else {
-        preds <- object@family@linkinv(modmat %*% modcoef, object@extra)
-      }
-    } else {
+    
       if (length(object$offset) > 0 & sum(object$offset) != 0) {
           preds <- object$family$linkinv(modmat %*% modcoef) * offset
       } else {
         preds <- object$family$linkinv(modmat %*% modcoef)
       }
-    }
   }
   if (type == "link") {
     preds <- modmat %*% modcoef
