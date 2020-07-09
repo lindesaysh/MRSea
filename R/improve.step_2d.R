@@ -8,7 +8,7 @@
 
 ####################################################################################################################
 
-"improve.step_2d" <- function(gap,knotDist,radii,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis){
+"improve.step_2d" <- function(gap,knotDist,radii,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest){
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
   } else {
@@ -84,7 +84,7 @@
           tempR<-aR
           tempR[i]<-j
           
-          output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
+          output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
           initModel<-output$currentModel
           models<-output$models
           initBIC<-output$fitStat

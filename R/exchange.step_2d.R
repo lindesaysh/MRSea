@@ -7,7 +7,7 @@
 #'
 
 ################################################################################################################
-"exchange.step_2d" <- function(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis){
+"exchange.step_2d" <- function(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest){
 
   #attributes(baseModel$formula)$.Environment<-environment()
 
@@ -58,7 +58,7 @@
       if (!(any(knotDist[point[index[1]],aR]<gap))) {
         output <- move.knot_2D(radii,dists,explData,index,fitnessMeasure,BIC,aR,point,
                                response,knotgrid,out.lm,improve,improveEx, track,
-                               maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
+                               maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
 
         improve <- output$improve
         improveEx <- output$improveEx

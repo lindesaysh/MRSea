@@ -1,4 +1,4 @@
-initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis){
+initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis, hdetest=FALSE){
   
   if (isS4(baseModel)) {
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -336,7 +336,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       #fitStat<-Inf
     }
   }
-  
+
   #cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
     # fitStat <- fitStat + 10000000
@@ -347,9 +347,20 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     fitStat<- tempMeasure + 10000000
     cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
   }
-  # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
 
-  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
+    # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
+  
+  # check for Hauck donner effect 
+  if (hdetest) {
+    if (isS4(baseModel)){
+      hde_check <- hdeff(baseModel)
+      if (sum(hde_check) > 0){
+        fitStat <- fitStat + 10000000
+      }
+    }
+  }
+  
+  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
   out.lm<-output$currentModel
   models<-output$models
   print("Initial model fitted...")
@@ -375,7 +386,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   #print(BIC[length(BIC)])
   
   print("Fitting Initial Radii")
-  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
+  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
   BIC=out$BIC
   radiusIndices=out$radiusIndices
   out.lm=out$out.lm
