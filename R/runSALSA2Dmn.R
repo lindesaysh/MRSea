@@ -90,7 +90,7 @@
 #' @export
 #'
 
-runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian', initialise=TRUE, initialKnots=NULL, initialKnPos=NULL){
+runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian', initialise=TRUE, initialKnots=NULL, initialKnPos=NULL, hdetest=FALSE){
 
   if(class(model)[1]=='glm'){
     data<-model$data
@@ -116,7 +116,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     attributes(model@misc$formula)$.Environment<-environment()
     model@data <- data
     model<-make.vglmMRSea(model, vglmMRSea=TRUE)
-    # if(class(model)[1]!='vglmMRSea'){model<-make.vglmMRSea(model, vglmMRSea=TRUE)}
+    if(class(model)[1]!='vglmMRSea'){model<-make.vglmMRSea(model, vglmMRSea=TRUE)}
   } else {
     attributes(model$formula)$.Environment<-environment()
     if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(model, gamMRSea=TRUE)}
@@ -272,7 +272,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   baseModel1D <- model
   baseModel <- baseModel1D
 
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=maxIterations, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=initialise,  initialKnots=initialKnots, initialaR=initialKnPos, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, cv.opts = salsa2dlist$cv.opts, basis)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=maxIterations, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=initialise,  initialKnots=initialKnots, initialaR=initialKnPos, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, cv.opts = salsa2dlist$cv.opts, basis, hdetest=hdetest)
   
   baseModel<- output$out.lm
 
@@ -313,7 +313,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
       radiusIndices<- rep(1, length(output$aR))
     }
     initDisp<-getDispersion(baseModel)
-    output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis)
+    output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis, hdetest)
     
     splineParams[[1]]$radii= radii
     splineParams[[1]][['knotPos']]= output_radii$aR
@@ -374,6 +374,15 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
 
   if(suppress.printout){
     sink()
+  }
+  
+  if (isS4(baseModel)){
+    # test for huack donner effect
+    hde_test_res <- hdeff(baseModel)
+    if (sum(hde_test_res) > 0) {
+      print("Warning Hauck Donner effect present standard errors should not be relied upon")  
+      warning("Warning Hauck Donner effect present standard errors should not be relied upon")
+    }  
   }
   
   print("end")
