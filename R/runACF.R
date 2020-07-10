@@ -4,9 +4,10 @@
 #' 
 #' @param block Vector of blocks that identify data points that are correlated
 #' @param model Fitted model object (glm or gam)
-#' @param store (\code{default=F}). Logical stating whether a list of the matrix of correlations is stored (output from \code{acffunc}.)
+#' @param store (\code{default=FALSE}). Logical stating whether a list of the matrix of correlations is stored (output from \code{acffunc}.)
 #' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
-#' @param suppress.printout (Default: \code{FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.
+#' @param suppress.printout (\code{default=FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.
+#' @param  maxlag (\code{default=NULL}). Numeric entry to allow the restriction of the maximum lag on the plots.  If \code{NULL} then the length of the longest panel is used as the maximum plotted lag. 
 #' 
 #' @return
 #' Plot of lag vs correlation.  Each grey line is the correlation for each individual block in \code{block}.  The red line is the mean values for each lag.
@@ -32,10 +33,10 @@
 #' @export
 #' 
 
-runACF<-function(block, model, store=FALSE, save=F, suppress.printout=FALSE){
+runACF<-function(block, model, store=FALSE, save=F, suppress.printout=FALSE, maxlag=NULL){
   acf_result<-acffunc(block, model, suppress.printout)
   if(save==T){png('acfPlot.png', height=500, width=600)}
-  plotacf(acf_result$acfmat)
+  plotacf(acf_result$acfmat, maxlag)
   if(save==T){dev.off()}
   if(store==TRUE){return(acf_result)}
 }
@@ -83,9 +84,15 @@ acffunc<-function(block, model, suppress.printout=FALSE){
 #-----------------------------------------------------------------------------
 #' run functions to create acf matrix and plot the results
 #' @param acfmat Matrix of output from \code{acffunc} (blocks x max block length).
+#' @param  maxlag (\code{default=NULL}). Numeric entry to allow the restriction of the maximum lag on the plots.  If \code{NULL} then the length of the longest panel is used as the maximum plotted lag.
 #'  
-plotacf<-function(acfmat){
-  plot(0:(length(na.omit(acfmat[1,]))-1), na.omit(acfmat[1,]), xlim=c(0,ncol(acfmat)), ylim=c(-1,1), type='l', col='grey', xlab='Lag', ylab='Auto correlation', cex.lab=1.3, cex.axis=1.3)
+plotacf<-function(acfmat, maxlag=NULL){
+  if(is.null(maxlag)){
+    xlims = c(0,ncol(acfmat))
+  }else{
+    xlims = c(0,maxlag)
+  }
+  plot(0:(length(na.omit(acfmat[1,]))-1), na.omit(acfmat[1,]), xlim=xlims, ylim=c(-1,1), type='l', col='grey', xlab='Lag', ylab='Auto correlation', cex.lab=1.3, cex.axis=1.3)
   abline(h=0)
   for(i in 2:nrow(acfmat)){
     lines(0:(length(na.omit(acfmat[i,]))-1), na.omit(acfmat[i,]), col='grey')  
