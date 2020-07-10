@@ -141,6 +141,12 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     
     # numGot=length()
     
+    if (isS4(baseModel)) {
+      baseModel@splineParams[[1]]$initialKnots <- initialKnots
+    } else {
+      baseModel$splineParams[[1]]$initialKnots <- initialKnots
+    }
+    
   }else{
     numNeeded = nrow(initialKnots)
     knots2<-rbind(initialKnots, knotgrid)
