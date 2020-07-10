@@ -25,8 +25,9 @@
 #'
 
 cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yhat)^2), 
-          K = n, replicate=FALSE) 
+                       K = n, replicate=FALSE) 
 {
+  
   call <- match.call()
   if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) 
     runif(1)
@@ -45,6 +46,16 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
   f <- ceiling(n/K)
   
   if(replicate==TRUE){
+    if (isS4(modelobject)){
+      if(length(unique(modelobject@panels))==nrow(data) | is.null(modelobject@panels)){
+        # have indep
+        s <- boot:::sample0(rep(1L:K, f), n)  
+      }else{
+        # not indep
+        s.eed<-sample(1:100000, size = 1)
+        s<-getCVids(data, K, block=modelobject@panels, seed = s.eed)  
+      }
+    } else {
       if(length(unique(modelobject$panels))==nrow(data) | is.null(modelobject$panels)){
         # have indep
         s <- boot:::sample0(rep(1L:K, f), n)  
@@ -53,168 +64,119 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
         s.eed<-sample(1:100000, size = 1)
         s<-getCVids(data, K, block=modelobject$panels, seed = s.eed)  
       }
+    }
+    
   }else{
-    if(is.null(modelobject$cvfolds)){
-      s <- boot:::sample0(rep(1L:K, f), n)  
-    }else{
-      s<-modelobject$cvfolds
-    }  
-  }
-  
-  
-  n.s <- table(s)
-  glm.y <- modelobject$y
-  cost.0 <- cost(glm.y, fitted(modelobject))
-  ms <- max(s)
-  CV <- 0
-  Call <- modelobject$call
-  for (i in seq_len(ms)) {
-    
-    j.out <- seq_len(n)[(s == i)]
-    j.in <- seq_len(n)[(s != i)]
-    
-    
-    Call$data <- data[j.in, , drop = FALSE]
-    
-    if(!is.null(modelobject$splineParams)){
-      splineParams<-modelobject$splineParams
-      if(!is.null(splineParams[[1]]$dist)){
-        splineParams[[1]]$dist<-modelobject$splineParams[[1]]$dist[j.in,]
-        g2k<-modelobject$splineParams[[1]]$dist[j.out,]
-        Call$splineParams<-splineParams
-      }else{
-        g2k<-NULL
-        Call$splineParams<-splineParams
-      }
-    }else{
-      splineParams<-NULL
-      g2k<-NULL
-    }
-    
-    
-    d.glm <- eval.parent(Call)
-    p.alpha <- n.s[i]/n
-    cost.i <- cost(glm.y[j.out], predict(object=d.glm, newdata=data[j.out, ,drop = FALSE], g2k=g2k, type = "response"))
-    CV <- CV + p.alpha * cost.i
-    
-    if(!is.null(modelobject$splineParams[[1]]$dist)){
-      g2k<-modelobject$splineParams[[1]]$dist
-    }else{
-      g2k<-NULL
-    }
-    
-    cost.0 <- cost.0 - p.alpha * cost(glm.y, predict(object=d.glm, 
-                                                     newdata=data, g2k=g2k, type = "response"))
-  }
-  list(call = call, K = K, delta = as.numeric(c(CV, CV + cost.0)), 
-       seed = seed)
-}
-
-cv.gamMRSea.mn<-function (data, modelobject, cost = function(y, yhat) mean((y - yhat)^2), K = n, replicate=FALSE) {
-  call <- match.call()
-  if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) {
-    runif(1)
-  }
-  seed <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
-  n <- nrow(data)
-  if ((K > n) || (K <= 1)) {
-    stop("'K' outside allowable range")
-  }
-  K.o <- K
-  K <- round(K)
-  kvals <- unique(round(n/(1L:floor(n/2))))
-  temp <- abs(kvals - K)
-  if (!any(temp == 0)) {
-    K <- kvals[temp == min(temp)][1L]
-  }
-  if (K != K.o) {
-    warning(gettextf("'K' has been set to %f", K), domain = NA)
-  }
-  f <- ceiling(n/K)
-  
-  ### function only used for multinomials so model object must be S4 check if is vglm or vglmMRSea
-  ### if not vglmMRSea can't contain panels etc already so must be indep
-  if(replicate==TRUE){
-    if (class(modelobject)[1]=="vglm") {
-      s <- boot:::sample0(rep(1L:K, f), n)  
-    } else {
-      if(length(unique(modelobject@panels))==nrow(data) | is.null(modelobject@panels)){
-        # have indep
-        s <- boot:::sample0(rep(1L:K, f), n)  
-      }else{
-        # not indep
-        s.eed<-sample(1:100000, size = 1)
-        ### I don't think there is anything in getcvids that means it won't work with S4
-        s<-getCVids(data, K, block=modelobject@panels, seed = s.eed) 
-      }
-    }
-  }else{
-    if (class(modelobject)[1]=="vglm") {
-      s <- boot:::sample0(rep(1L:K, f), n)  
-    } else {
-      if(length(modelobject@cvfolds)<1){
+    if (isS4(modelobject)) {
+      if(length(modelobject@cvfolds)==0){
         s <- boot:::sample0(rep(1L:K, f), n)  
       }else{
         s<-modelobject@cvfolds
-      } 
+      }
+    } else {
+      if(is.null(modelobject$cvfolds)){
+        s <- boot:::sample0(rep(1L:K, f), n)  
+      }else{
+        s<-modelobject$cvfolds
+      }
     }
-  }
-  ### being lazy for now just check if cvfolds exists or not if it is still base vglm class it can't exist
-  if (class(modelobject)[1]=="vglm"){
-    splineParams <- NULL
-  } else {
-    splineParams<-modelobject@splineParams
+    
   }
   
-  n.s <- table(s)
-  glm.y <- modelobject@y
-  cost.0 <- cost(glm.y, fitted(modelobject))
-  ms <- max(s)
-  CV <- 0
-  Call <- modelobject@call
+  if (isS4(modelobject)) {
+    n.s <- table(s)
+    glm.y <- modelobject@y
+    # cost.0 <- cost(glm.y, fitted(modelobject))
+    cost.0 <- cost_mn_accuracy(glm.y, fitted(modelobject))
+    ms <- max(s)
+    CV <- 0
+    Call <- modelobject@call
+  } else {
+    n.s <- table(s)
+    glm.y <- modelobject$y
+    cost.0 <- cost(glm.y, fitted(modelobject))
+    ms <- max(s)
+    CV <- 0
+    Call <- modelobject$call
+  }
+  
   for (i in seq_len(ms)) {
     
     j.out <- seq_len(n)[(s == i)]
     j.in <- seq_len(n)[(s != i)]
     
-    
     Call$data <- data[j.in, , drop = FALSE]
     
-    if(class(modelobject)[1]=="vglmMRSea"){
-      if (length(modelobject@splineParams)>0) {
-        splineParams <- modelobject@splineParams
+    if (isS4(modelobject)){
+      if(!is.null(modelobject@splineParams)){
+        splineParams<-modelobject@splineParams
         if(!is.null(splineParams[[1]]$dist)){
-          splineParams[[1]]$dist<-splineParams[[1]]$dist[j.in,]
-          g2k<-splineParams[[1]]$dist[j.out,]
+          splineParams[[1]]$dist<-modelobject@splineParams[[1]]$dist[j.in,]
+          g2k<-modelobject@splineParams[[1]]$dist[j.out,]
           Call$splineParams<-splineParams
         }else{
           g2k<-NULL
           Call$splineParams<-splineParams
         }
-      } else {
+      }else{
         splineParams<-NULL
         g2k<-NULL
       }
-    }else{
-      splineParams<-NULL
-      g2k<-NULL
+    } else {
+      if(!is.null(modelobject$splineParams)){
+        splineParams<-modelobject$splineParams
+        if(!is.null(splineParams[[1]]$dist)){
+          splineParams[[1]]$dist<-modelobject$splineParams[[1]]$dist[j.in,]
+          g2k<-modelobject$splineParams[[1]]$dist[j.out,]
+          Call$splineParams<-splineParams
+        }else{
+          g2k<-NULL
+          Call$splineParams<-splineParams
+        }
+      }else{
+        splineParams<-NULL
+        g2k<-NULL
+      }
     }
-    
     
     d.glm <- eval.parent(Call)
     p.alpha <- n.s[i]/n
-    cost.i <- cost(glm.y[j.out,], predict(object=d.glm, newdata=data[j.out, ,drop = FALSE], g2k=g2k, type = "response"))
+    if (isS4(modelobject)){
+      cost.i <- cost_mn_accuracy(glm.y[j.out,], predict(object=d.glm, newdata=data[j.out, ,drop = FALSE], g2k=g2k, type = "response"))
+    } else {
+      cost.i <- cost(glm.y[j.out], predict(object=d.glm, newdata=data[j.out, ,drop = FALSE], g2k=g2k, type = "response"))
+    }
     CV <- CV + p.alpha * cost.i
     
-    if(!is.null(splineParams[[1]]$dist)){
-      g2k<-splineParams[[1]]$dist
-    }else{
-      g2k<-NULL
+    if (isS4(modelobject)) {
+      if(!is.null(modelobject@splineParams[[1]]$dist)){
+        g2k<-modelobject@splineParams[[1]]$dist
+      }else{
+        g2k<-NULL
+      }
+    } else {
+      if(!is.null(modelobject$splineParams[[1]]$dist)){
+        g2k<-modelobject$splineParams[[1]]$dist
+      }else{
+        g2k<-NULL
+      }
     }
     
-    cost.0 <- cost.0 - p.alpha * cost(glm.y, predict(object=d.glm, 
-                                                     newdata=data, g2k=g2k, type = "response"))
+    if (isS4(modelobject)){
+      cost.0 <- cost.0 - p.alpha * cost_mn_accuracy(glm.y, predict(object=d.glm, newdata=data, g2k=g2k, type = "response"))
+    } else {
+      cost.0 <- cost.0 - p.alpha * cost(glm.y, predict(object=d.glm, newdata=data, g2k=g2k, type = "response"))
+    }
   }
   list(call = call, K = K, delta = as.numeric(c(CV, CV + cost.0)), 
        seed = seed)
+}
+
+
+cost_mn_accuracy <- function(response, predictions){
+  resp_class <- apply(response,1,which.max)
+  pred_class <- apply(predictions,1,which.max)
+  correct_preds <- pred_class == resp_class
+  accuracy <- sum(correct_preds) / length(correct_preds)
+  cost <- 1- accuracy
 }

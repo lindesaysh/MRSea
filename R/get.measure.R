@@ -174,7 +174,8 @@
     #   fitStat<-cv.glm(data2,tempCVFit, K=cv.opts$K, cost=cv.opts$cost)$delta[2] 
     # }else{
     if (isS4(out.lm)){
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
+      set.seed(cv.opts$cv.gamMRSea.seed)
+      fitStat<-cv.gamMRSea(data,out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
     } else {
       set.seed(cv.opts$cv.gamMRSea.seed)
       fitStat<-cv.gamMRSea(data,out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]

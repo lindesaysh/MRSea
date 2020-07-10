@@ -95,7 +95,7 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   
   if(fitnessMeasure=="CV"){ 
     if (isS4(out.lm)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
+      fitStat <- getCV_CReSS_2D(data, out.lm, dists,aR,radii,radiusIndices)
     } else {
       fitStat <- getCV_CReSS_2D(data, out.lm, dists,aR,radii,radiusIndices)
     }
@@ -103,7 +103,8 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   
   if(fitnessMeasure=="cv.gamMRSea"){
     if (isS4(out.lm)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
+      set.seed(cv.opts$cv.gamMRSea.seed)
+      fitStat <- cv.gamMRSea(data, out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
     } else {
       set.seed(cv.opts$cv.gamMRSea.seed)
       fitStat <- cv.gamMRSea(data, out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
@@ -137,10 +138,19 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     }
   }
   
+  # calculate accuracy for vglm based multinomial
+  if(fitnessMeasure=="mn.accuracy"){ 
+    if (isS4(out.lm)) {
+      fitStat <- mn.accuracy(out.lm)
+    } else {
+      stop('Fitness measure only supported for multinomial with vglm')
+    }
+  }
+  
   # cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
     fitStat<- tempMeasure + 10000000
-    cat("Change Fit due to fitStat=NA: ", fitStat, "\n")
+    warning(paste("Change Fit due to fitStat=NA: ", fitStat))
   }
   if(getDispersion(out.lm)>initDisp){
     fitStat<- tempMeasure + 10000000
