@@ -49,6 +49,7 @@ http://creem2.st-and.ac.uk/software.aspx.  The manual and this document use vers
 1. Load data and fit detection function (Distance Sampling)
 ```{r message=FALSE}
 #devtools::load_all(path='../../MRSea/')
+require(MRSea)
 # we will use the dataset with a known re-distribution of animals
 data(dis.data.re)
 dis.data<-dis.data.re
