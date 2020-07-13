@@ -1,0 +1,159 @@
+---
+title: "Integration test for 1d salsa without panels parts of MRSea"
+author: "LAS Scott-Hayward, C Fell"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+-------
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+devtools::install_github("lindesaysh/MRSea")
+require(MRSea)
+require(tidyverse)
+require(patchwork)
+require(knitr)
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, eval=TRUE, comment = '')
+```
+
+## Introduction
+This is the second in a series of tests that can be used to check changes to the MRSea package do not break previously working elements. They replicate the case study in the vignette but broken down into chunks. This second one checks the 1D salsa functions without a panel structure.
+
+In the vignette models in sections 3 & 4 use glm from mgcv, we are interested in testing MRSea so don't care about testing mgcv so will omit those models. 
+
+```{r message=FALSE, warning=FALSE}
+count.data <- read.csv("1.count.data.csv")
+data <- count.data
+data$response <- round(data$NHAT)
+attach(data)
+```
+
+## Selection of 1D Covariates
+
+Specify the parameters required:
+
+```{r }
+
+salsa1dlist <- list(
+  fitnessMeasure = "cv.gamMRSea", 
+  minKnots_1d = 2,
+  maxKnots_1d = 5, 
+  startKnots_1d = 1, 
+  degree = 2, 
+  maxIterations = 10, 
+  gaps = c(0), 
+  cv.opts=list(cv.gamMRSea.seed=1, K=10)
+)
+
+```
+
+Set a prediction grid.  
+
+```{r, echo=FALSE}
+data("nysted.predictdata")  # contains predict.data
+# This is a spatial grid for making predictions.  All covariates in 
+# final model must be in this data frame and the naming must be the 
+# same as for the data
+predictData <- nysted.predictdata
+
+```
+
+Set up the initial model with factor covariates and offset term
+```{r message=FALSE}
+initialModel <- glm(response ~ as.factor(season) + as.factor(impact) + offset(log(area)), 
+  family = "quasipoisson", data = data)
+
+```
+
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+# run SALSA
+require(MuMIn)
+set.seed(1234)
+salsa1dOutput <- runSALSA1D(initialModel, salsa1dlist, c("depth"), predictionData=predictData, datain=data,removal=TRUE)
+```
+
+```{r, echo=FALSE, results='asis' }
+# How many knots were chosen for depth?
+depth_knots <- salsa1dOutput$splineParams[[2]]$knots
+# ~~~~~~~~~~~~~~~~~~~~~~~
+
+cat("Number of knots selected for depth:", length(depth_knots), "this should be 1. \n\n")
+cat("Location of knot selected for depth:", round(depth_knots, 4), "this should be -11.3975. \n\n")
+
+```
+
+## Predictions compared to original
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7.5}
+
+preds_out <- predict(object=salsa1dOutput$bestModel, newdata=predictData, type='response')
+
+pred_resp <- ggplot() + stat_summary_2d(data=predictData, aes(predictData$x.pos, predictData$y.pos, z=preds_out), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 2.7)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate")
+
+predict_read_in <- read.csv("2.predict.data.csv")
+
+resp_read <- ggplot() + stat_summary_2d(data=predict_read_in, aes(x.pos, y.pos, z=ResponsePredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 2.7)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate")
+
+(pred_resp + resp_read) + plot_layout(guides = 'collect')
+
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7.5}
+
+preds_out_link <- predict(object=salsa1dOutput$bestModel, newdata=predictData, type='link')
+
+pred_link <- ggplot() + stat_summary_2d(data=predictData, aes(predictData$x.pos, predictData$y.pos, z=preds_out_link), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-13, 2.5)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate")
+
+link_read <- ggplot() + stat_summary_2d(data=predict_read_in, aes(x.pos, y.pos, z=LinkPredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-13, 2.5)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate")
+
+pred_link + link_read + plot_layout(guides = 'collect')
+
+```
+
+
+
+
+```{r pred_compare, echo=FALSE, results='asis'}
+
+cat("Sum of all predictions on response scale:", sum(preds_out), "this should be 17364.31. \n\n")
+
+cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should be -55493.67. \n\n")
+
+```
+
+
+```{r, echo=FALSE}
+sum_results <- summary(salsa1dOutput$bestModel)
+kable(sum_results$coefficients, digits=3)
+
+```
+
+```{r, echo=FALSE}
+sum_results_read_in <- read.csv("2.sum.results.csv")
+kable(sum_results_read_in, digits=3)
+
+```
+
+
+
+```{r sum_compare, echo=FALSE, results='asis'}
+
+cat("Sum of all estimates:", sum(sum_results$coefficients[,1]), "this should be 21.44676. \n\n")
+
+cat("Sum of all robust SE:", sum(sum_results$coefficients[,3]), "this should be 33.41577. \n\n")
+
+cat("Dispersion:", sum_results$dispersion, "this should be 44.12647. \n\n")
+
+```
+
+
+
+
+
