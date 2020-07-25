@@ -57,38 +57,6 @@ initialModel <- glm(response ~ 1
 ```
 
 
-```{r }
-
-salsa1dlist <- list(
-  fitnessMeasure = "cv.gamMRSea", 
-  minKnots_1d = 2,
-  maxKnots_1d = 5, 
-  startKnots_1d = 1, 
-  degree = 2, 
-  maxIterations = 10, 
-  gaps = c(0), 
-  cv.opts=list(cv.gamMRSea.seed=1, K=10)
-)
-
-```
-
-
-```{r message=FALSE, warning=FALSE, results='hide'}
-# run SALSA
-set.seed(1234)
-salsa1dOutput <- runSALSA1D(initialModel, salsa1dlist, c("depth"), predictionData=predictData, datain=data, removal=TRUE, panelid = data$blockid)
-```
-
-```{r, echo=FALSE, results='asis' }
-# How many knots were chosen for depth?
-depth_knots <- salsa1dOutput$splineParams[[2]]$knots
-# ~~~~~~~~~~~~~~~~~~~~~~~
-
-cat("Number of knots selected for depth:", length(depth_knots), "this should be 1. \n\n")
-cat("Location of knot selected for depth:", round(depth_knots, 4), "this should be -12.212. \n\n")
-
-```
-
 ## Selection of flexibility for 2D smooth term
 
 Create a grid of knots that will be used as possible knot locations.
@@ -149,8 +117,9 @@ Run SALSA2D to find the appropriate number and location of knots for the 2D smoo
 
 ```{r message=FALSE, warning=FALSE, results='hide'}
 
+set.seed(1234)
 start_time <- Sys.time()
-salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, d2k=distMats$dataDist, k2k=distMats$knotDist, panels = data$blockid)
+salsa2dOutput<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, k2k=distMats$knotDist)
 total_time <- Sys.time() - start_time
 
 ```
@@ -158,13 +127,13 @@ total_time <- Sys.time() - start_time
 
 ## Predictions compared to original
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7.5}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7.5, fig.height=5}
 
 predictdistMats <- makeDists(cbind(predictData$x.pos, predictData$y.pos), knotgrid)
 
 preds_out <- predict(object=salsa2dOutput$bestModel, newdata=predictData, type='response', g2k=predictdistMats$dataDist)
 
-pred_resp_zero <- ggplot() + stat_summary_2d(data=predictData[predictData$impact==0,], aes(x.pos, y.pos, z=preds_out[predictData$impact==0]), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 11.3)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New predictions - Impact=0") 
+pred_resp_zero <- ggplot() + stat_summary_2d(data=predictData[predictData$impact==0,], aes(x.pos, y.pos, z=preds_out[predictData$impact==0]), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 3.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New predictions - Impact=0") + theme(text=element_text(size=6))
 
 knot_pos <- salsa2dOutput$splineParams[[1]]$knotPos
 knot_loc <- knotgrid[knot_pos,]
@@ -176,7 +145,7 @@ for (rr in 1:nrow(knot_loc)) {
   pred_resp_zero <- pred_resp_zero + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
-pred_resp_one <- ggplot() + stat_summary_2d(data=predictData[predictData$impact==1,], aes(x.pos, y.pos, z=preds_out[predictData$impact==1,]), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 11.3)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New predictions - Impact=1") 
+pred_resp_one <- ggplot() + stat_summary_2d(data=predictData[predictData$impact==1,], aes(x.pos, y.pos, z=preds_out[predictData$impact==1,]), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 3.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New predictions - Impact=1") + theme(text=element_text(size=6))
 
 knot_pos <- salsa2dOutput$splineParams[[1]]$knotPos
 knot_loc <- knotgrid[knot_pos,]
@@ -188,54 +157,54 @@ for (rr in 1:nrow(knot_loc)) {
   pred_resp_one <- pred_resp_one + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
-predict_read_in <- read.csv("9.predict.data.csv")
+predict_read_in <- read.csv("8.predict.data.csv")
 
-resp_read_zero <- ggplot() + stat_summary_2d(data=predict_read_in[predictData$impact==0,], aes(x.pos, y.pos, z=ResponsePredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 11.3)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved predictions - Impact=0") 
+resp_read_zero <- ggplot() + stat_summary_2d(data=predict_read_in[predictData$impact==0,], aes(x.pos, y.pos, z=ResponsePredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 3.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved predictions - Impact=0") + theme(text=element_text(size=6))
 
 for (rr in 1:nrow(knot_loc)) {
   resp_read_zero <- resp_read_zero + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
-resp_read_one <- ggplot() + stat_summary_2d(data=predict_read_in[predictData$impact==1,], aes(x.pos, y.pos, z=ResponsePredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 11.3)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved predictions - Impact=1")
+resp_read_one <- ggplot() + stat_summary_2d(data=predict_read_in[predictData$impact==1,], aes(x.pos, y.pos, z=ResponsePredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 3.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved predictions - Impact=1") + theme(text=element_text(size=6))   
 
 for (rr in 1:nrow(knot_loc)) {
   resp_read_one <- resp_read_one + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
-(pred_resp_zero | resp_read_zero) / (pred_resp_one | resp_read_one) + plot_layout(guides = 'collect')
+(pred_resp_zero + resp_read_zero) / (pred_resp_one + resp_read_one) + plot_layout(guides = 'collect')
 
 ```
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7.5}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7.5, fig.height=5}
 
 preds_out_link <- predict(object=salsa2dOutput$bestModel, newdata=predictData, type='link', g2k=predictdistMats$dataDist)
 
-pred_link_zero <- ggplot() + stat_summary_2d(data=predictData[predictData$impact==0,], aes(x.pos, y.pos, z=preds_out_link[predictData$impact==0,]), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-9.1, 4.3)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New Predictions - Impact=0")
+pred_link_zero <- ggplot() + stat_summary_2d(data=predictData[predictData$impact==0,], aes(x.pos, y.pos, z=preds_out_link[predictData$impact==0,]), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-11.5, 2.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New Predictions - Impact=0") + theme(text=element_text(size=6))
 
 for (rr in 1:nrow(knot_loc)) {
   pred_link_zero <- pred_link_zero + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
-pred_link_one <- ggplot() + stat_summary_2d(data=predictData[predictData$impact==1,], aes(x.pos, y.pos, z=preds_out_link[predictData$impact==1,]), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-9.1, 4.3)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New Predictions - Impact=1")
+pred_link_one <- ggplot() + stat_summary_2d(data=predictData[predictData$impact==1,], aes(x.pos, y.pos, z=preds_out_link[predictData$impact==1,]), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-11.5, 2.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New Predictions - Impact=1") + theme(text=element_text(size=6))
 
 for (rr in 1:nrow(knot_loc)) {
   pred_link_one <- pred_link_one + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
-link_read_zero <- ggplot() + stat_summary_2d(data=predict_read_in[predict_read_in$impact==0,], aes(x.pos, y.pos, z=LinkPredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-9.1, 4.3)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved Preds - Impact=0")
+link_read_zero <- ggplot() + stat_summary_2d(data=predict_read_in[predict_read_in$impact==0,], aes(x.pos, y.pos, z=LinkPredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-11.5, 2.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved Preds - Impact=0") + theme(text=element_text(size=6))
 
 for (rr in 1:nrow(knot_loc)) {
   link_read_zero <- link_read_zero + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
-link_read_one <- ggplot() + stat_summary_2d(data=predict_read_in[predict_read_in$impact==1,], aes(x.pos, y.pos, z=LinkPredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-9.1, 4.3)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved Preds - Impact=1")
+link_read_one <- ggplot() + stat_summary_2d(data=predict_read_in[predict_read_in$impact==1,], aes(x.pos, y.pos, z=LinkPredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-11.5, 2.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved Preds - Impact=1") + theme(text=element_text(size=6))
 
 for (rr in 1:nrow(knot_loc)) {
   link_read_one <- link_read_one + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
-(pred_link_zero + link_read_zero) / (pred_link_one + link_read_one) + plot_layout(guides = 'collect')
+(pred_link_zero | link_read_zero) / (pred_link_one | link_read_one) + plot_layout(guides = 'collect')
 
 ```
 
@@ -244,9 +213,9 @@ for (rr in 1:nrow(knot_loc)) {
 
 ```{r pred_compare, echo=FALSE, results='asis'}
 
-cat("Sum of all predictions on response scale:", sum(preds_out), "this should be 4379.561. \n\n")
+cat("Sum of all predictions on response scale:", sum(preds_out), "this should be 4313.894. \n\n")
 
-cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should be -13518.88. \n\n")
+cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should be -11826.47. \n\n")
 
 cat("Time for training:", total_time)
 
@@ -261,7 +230,7 @@ kable(sum_results$coefficients, digits=3, caption="New coefficients")
 
 
 ```{r, echo=FALSE}
-sum_results_read_in <- read.csv("9.sum.results.csv")
+sum_results_read_in <- read.csv("8.sum.results.csv")
 kable(sum_results_read_in, digits=3, caption="Saved coefficients")
 
 ```
@@ -270,13 +239,13 @@ kable(sum_results_read_in, digits=3, caption="Saved coefficients")
 
 ```{r sum_compare, echo=FALSE, results='asis'}
 
-cat("Sum of all estimates:", sum(sum_results$coefficients[,1]), "this should be 19.04515. \n\n")
+cat("Sum of all estimates:", sum(sum_results$coefficients[,1]), "this should be 22.24655. \n\n")
 
-cat("Sum of all robust SE:", sum(sum_results$coefficients[,3]), "this should be 22.32133. \n\n")
+cat("Sum of all robust SE:", sum(sum_results$coefficients[,3]), "this should be 34.82126. \n\n")
 
-cat("Standard errors are not equal to robust standard errors:", sum(sum_results$coefficients[,2])!=sum(sum_results$coefficients[,3]), "\n\n")
+cat("Standard errors are equal to robust standard errors:", sum(sum_results$coefficients[,2])==sum(sum_results$coefficients[,3]), "\n\n")
 
-cat("Dispersion:", sum_results$dispersion, "this should be 7.626664. \n\n")
+cat("Dispersion:", sum_results$dispersion, "this should be 11.4493. \n\n")
 
 ```
 
@@ -286,7 +255,7 @@ cat("Dispersion:", sum_results$dispersion, "this should be 7.626664. \n\n")
 
 mean_sum_sq <- sum((predictData$truth.re - preds_out)^2)/nrow(predictData)
 
-cat("Mean square error:", mean_sum_sq, "this should be 0.2619761. \n\n")
+cat("Mean square error:", mean_sum_sq, "this should be 0.5525449. \n\n")
 
 ```
 
