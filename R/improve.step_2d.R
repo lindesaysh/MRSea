@@ -24,37 +24,15 @@
     fuse <- fuse + 1
     improve <- 0
     fitStat<-BIC[length(BIC)]
-    for (i in 1:num) {
+    # create a random sample to randomly select knot order
+    knts <- sample(num)
+    improve_knts <- rep(0, num)
+    print("new version")
+    for (k in 1:num) {
+      # get random knot selection from sample
+      i <- knts[k]
       nhbrs<-c()
       otherKnots=aR[-i]
-#       if (grid[knotPoint[i],1] > 1) {
-#         if (!(is.na(gridResp[knotPoint[i] - 1]))) {
-#           nhbrs<- c(nhbrs, knotPoint[i] - 1)
-#         }
-#         if ((grid[knotPoint[i],2] > 1) && !(is.na(gridResp[knotPoint[i] - 1 - xVals]))) {
-#           nhbrs<-c(nhbrs,knotPoint[i] - 1 - xVals)
-#         }
-#         if ((grid[knotPoint[i],2] < yVals) && !(is.na(gridResp[knotPoint[i] - 1 + xVals]))) {
-#           nhbrs<-c(nhbrs,knotPoint[i] - 1 + xVals)
-#         }
-#       }
-#       if (grid[knotPoint[i],1] < xVals) {
-#         if (!(is.na(gridResp[knotPoint[i] + 1]))) {
-#           nhbrs<- c(nhbrs, knotPoint[i] + 1)
-#         }
-#         if ((grid[knotPoint[i],2] > 1) && !(is.na(gridResp[knotPoint[i] + 1 - xVals]))) {
-#           nhbrs<-c(nhbrs,knotPoint[i] + 1 - xVals)
-#         }
-#         if ((grid[knotPoint[i],2] < yVals) && !(is.na(gridResp[knotPoint[i] + 1 + xVals]))) {
-#           nhbrs<-c(nhbrs,knotPoint[i] + 1 + xVals)
-#         }
-#       }
-#       if ((grid[knotPoint[i],2] > 1) && !(is.na(gridResp[knotPoint[i] - xVals]))) {
-#         nhbrs<- c(nhbrs, knotPoint[i] - xVals)
-#       }
-#       if ((grid[knotPoint[i],2] < yVals) && !(is.na(gridResp[knotPoint[i] + xVals]))) {
-#         nhbrs<- c(nhbrs, knotPoint[i] + xVals)
-#       }
 
       # find 6 nearest knot points to current knot point
       nhbrs<-order(knotDist[knotPoint[i],])[2:6]
@@ -66,20 +44,6 @@
       }
 
       for (j in nhbrs){
-#         if (is.na(position[j])) {
-#           print(j)
-#           print(knotPoint[i])
-#           print(xVals)
-#           print(nhbrs)
-#         }
-        #cat(invInd[otherKnots], '\n', invInd[j], '\n', aR, '\n')
-        #cat('parta: ', length(otherKnots), '\n')
-        #cat('partb: ', min(knotDist[invInd[j],invInd[otherKnots]]), '\n')
-#         cat('other ', otherKnots, '\n')
-#         cat('invind other ', invInd[otherKnots], '\n')
-#         cat('j ', j, '\n')
-#         cat('invindj ', invInd[j], '\n')
-        
         if ((length(otherKnots)==0) || ( min(knotDist[j,otherKnots])>=gap)) {
           tempR<-aR
           tempR[i]<-j
@@ -88,22 +52,10 @@
           initModel<-output$currentModel
           models<-output$models
           initBIC<-output$fitStat
-            #get.measure_2d(fitnessMeasure,fitStat,initModel, data,  dists, tempR,radii,radiusIndices, initDisp)$fitStat
-          
-          
-          #out<-choose.radii(initBIC,i,radiusIndices,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
           tempRadii=radiusIndices
           tempOut.lm=output$currentModel
-#          tempRadii=out$radiusIndices
-#          tempOut.lm=out$out.lm
-#          models=out$models
-          # output<-out$BIC
-          #get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
-          
-          #fitStat<-output$tempMeasure
-#          tempMeasure<-out$BIC
           tempMeasure<-initBIC
-          #### print(length(as.vector(coefficients(tempOut.lm))))
+
           if (tempMeasure + tol < fitStat) {
             out.lm <- tempOut.lm
             fitStat<-tempMeasure
@@ -115,25 +67,28 @@
             adjNode <- j
             improve <- 1
             improveNudge <- 1
+            improve_knts[k] <- 1
           }      
         }
-        ##}
-        # cat(improve, '\n')
-      }    
+      } 
+      
+      if (improve_knts[k]) {
+        point[position[adjNode]] <- knotPoint[tempKnot]
+        position[knotPoint[tempKnot]] <- position[adjNode]
+        position[adjNode] <- 0
+        knotPoint[tempKnot] <- adjNode
+        aR<-newR
+        BIC <- fitStat
+      }
     }
-    if (improve) {
-      #print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-      point[position[adjNode]] <- knotPoint[tempKnot]
-      position[knotPoint[tempKnot]] <- position[adjNode]
-      position[adjNode] <- 0
-      knotPoint[tempKnot] <- adjNode
-      #tempR<-aR
-      #tempR[tempKnot] <- adjNode
-      #aR <- tempR
-      aR<-newR
-      BIC <- fitStat
-      ####track<-rbind(track,cbind("improve",t(tempR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
-    }                
+    # if (improve) {
+    #   point[position[adjNode]] <- knotPoint[tempKnot]
+    #   position[knotPoint[tempKnot]] <- position[adjNode]
+    #   position[adjNode] <- 0
+    #   knotPoint[tempKnot] <- adjNode
+    #   aR<-newR
+    #   BIC <- fitStat
+    # }                
   }
   list(point=point,knotPoint=knotPoint,position=position,aR=aR,BIC=BIC,track=track,out.lm=out.lm,improveNudge=improveNudge,
        radiusIndices=newRadii,models=models)
