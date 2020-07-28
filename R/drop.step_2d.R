@@ -20,43 +20,50 @@
   print("Simplifying model...")
   print("******************************************************************************")
   # cat('Current Fit in: ', BIC, '\n')
-  improve<-0
-  fitStat<-BIC[length(BIC)]
-  newRadii = radiusIndices
-  for (i in 1:length(aR)) {
-    
-    #if (length(aR)>minKnots) {
-    
-    tempR <- aR
-    tempR <- tempR[-i]
-    tempRadii = radiusIndices[-i]
-    output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
-    initModel<-output$currentModel
-    models<-output$models
-    initBIC<-output$fitStat
-      #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
-    out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
-    tempRadii=out$radiusIndices
-    tempOut.lm=out$out.lm
-    models=out$models
-    #output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
-    
-    #fitStat<-output$tempMeasure
-    tempMeasure<-out$BIC
-    if (tempMeasure +tol < fitStat) {
-      out.lm <- tempOut.lm
-      fitStat<-tempMeasure
-      print("drop **********************************")
-      ####print(length(as.vector(coefficients(out.lm))))
-      ####print(tempR)
-      #print(fitStat)
-      newR <- tempR
-      newRadii = tempRadii
-      tempKnot <- i
-      improve <- 1
-      improveDrop <- 1
-    }      
-   # }
+  fuse <- 0
+  improve <- 1
+  
+  while ( (improve) & (fuse < maxIterations) ) {
+    fuse <- fuse + 1
+    improve <- 0
+  
+    fitStat<-BIC[length(BIC)]
+    newRadii = radiusIndices
+    for (i in 1:length(aR)) {
+      
+      #if (length(aR)>minKnots) {
+      
+      tempR <- aR
+      tempR <- tempR[-i]
+      tempRadii = radiusIndices[-i]
+      output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+      initModel<-output$currentModel
+      models<-output$models
+      initBIC<-output$fitStat
+        #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
+      out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+      tempRadii=out$radiusIndices
+      tempOut.lm=out$out.lm
+      models=out$models
+      #output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
+      
+      #fitStat<-output$tempMeasure
+      tempMeasure<-out$BIC
+      if (tempMeasure +tol < fitStat) {
+        out.lm <- tempOut.lm
+        fitStat<-tempMeasure
+        print("drop **********************************")
+        ####print(length(as.vector(coefficients(out.lm))))
+        ####print(tempR)
+        #print(fitStat)
+        newR <- tempR
+        newRadii = tempRadii
+        tempKnot <- i
+        improve <- 1
+        improveDrop <- 1
+      }      
+     # }
+    }
   }
   
   if (improve) {
