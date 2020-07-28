@@ -14,7 +14,8 @@ vignette: >
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # devtools::install_github("lindesaysh/MRSea")
-require(MRSea)
+devtools::load_all("C:/Users/kryzi/OneDrive - University of St Andrews/PhD/Code/MRsea")
+# require(MRSea)
 require(tidyverse)
 require(patchwork)
 require(knitr)
@@ -161,14 +162,16 @@ predict_read_in <- read.csv("8.predict.data.csv")
 
 resp_read_zero <- ggplot() + stat_summary_2d(data=predict_read_in[predictData$impact==0,], aes(x.pos, y.pos, z=ResponsePredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 3.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved predictions - Impact=0") + theme(text=element_text(size=6))
 
+knot_loc_read <- read.csv("8.knot.loc.csv")
+
 for (rr in 1:nrow(knot_loc)) {
-  resp_read_zero <- resp_read_zero + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
+  resp_read_zero <- resp_read_zero + annotate("path", x=knot_loc_read$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc_read$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
 resp_read_one <- ggplot() + stat_summary_2d(data=predict_read_in[predictData$impact==1,], aes(x.pos, y.pos, z=ResponsePredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 3.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved predictions - Impact=1") + theme(text=element_text(size=6))   
 
 for (rr in 1:nrow(knot_loc)) {
-  resp_read_one <- resp_read_one + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
+  resp_read_one <- resp_read_one + annotate("path", x=knot_loc_read$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc_read$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
 (pred_resp_zero + resp_read_zero) / (pred_resp_one + resp_read_one) + plot_layout(guides = 'collect')
@@ -195,13 +198,13 @@ for (rr in 1:nrow(knot_loc)) {
 link_read_zero <- ggplot() + stat_summary_2d(data=predict_read_in[predict_read_in$impact==0,], aes(x.pos, y.pos, z=LinkPredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-11.5, 2.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved Preds - Impact=0") + theme(text=element_text(size=6))
 
 for (rr in 1:nrow(knot_loc)) {
-  link_read_zero <- link_read_zero + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
+  link_read_zero <- link_read_zero + annotate("path", x=knot_loc_read$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc_read$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
 link_read_one <- ggplot() + stat_summary_2d(data=predict_read_in[predict_read_in$impact==1,], aes(x.pos, y.pos, z=LinkPredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-11.5, 2.8)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved Preds - Impact=1") + theme(text=element_text(size=6))
 
 for (rr in 1:nrow(knot_loc)) {
-  link_read_one <- link_read_one + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
+  link_read_one <- link_read_one + annotate("path", x=knot_loc_read$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc_read$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
 (pred_link_zero | link_read_zero) / (pred_link_one | link_read_one) + plot_layout(guides = 'collect')
@@ -217,7 +220,7 @@ cat("Sum of all predictions on response scale:", sum(preds_out), "this should be
 
 cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should be -11826.47. \n\n")
 
-cat("Time for training:", total_time)
+cat("Time for training:", total_time) # 28.14797
 
 ```
 
