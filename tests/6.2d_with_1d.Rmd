@@ -133,9 +133,9 @@ Set salsa 2d parameters
 salsa2dlist<-list(
   fitnessMeasure = 'cv.gamMRSea', 
   knotgrid = knotgrid, 
-  startKnots=5, 
+  startKnots=15, 
   minKnots=4, 
-  maxKnots=12, 
+  maxKnots=20, 
   gap=0, 
   cv.opts=list(cv.gamMRSea.seed=1, K=10)
 )
@@ -194,7 +194,7 @@ preds_out_link <- predict(object=salsa2dOutput$bestModel, newdata=predictData, t
 
 pred_link <- ggplot() + stat_summary_2d(data=predictData, aes(predictData$x.pos, predictData$y.pos, z=preds_out_link), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-10.3, 3.5)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New predictions")
 
-for (rr in 1:nrow(knot_loc_read)) {
+for (rr in 1:nrow(knot_loc)) {
   pred_link <- pred_link + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
 }
 
