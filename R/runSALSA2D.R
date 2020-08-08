@@ -233,6 +233,10 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
         rIs<- output$models[[m]][[2]]
         r<- output$models[[m]][[3]]
         fitScore<- output$models[[m]][[4]]
+        print(modelNo)
+        print(knotPosition)
+        print(rIs)
+        print(fitScore)
         modRes<- rbind(modRes, data.frame(modelNo, knotPosition, rIs, fitScore))
       }
       

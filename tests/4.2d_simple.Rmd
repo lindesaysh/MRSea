@@ -14,7 +14,8 @@ vignette: >
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # devtools::install_github("lindesaysh/MRSea")
-require(MRSea)
+#require(MRSea)
+devtools::load_all("C:/Users/kryzi/OneDrive - University of St Andrews/PhD/Code/MRsea")
 require(tidyverse)
 require(patchwork)
 require(knitr)
@@ -99,9 +100,9 @@ Salsa 2D parameters
 salsa2dlist<-list(
   fitnessMeasure = 'cv.gamMRSea', 
   knotgrid = knotgrid, 
-  startKnots=5, 
+  startKnots=19, 
   minKnots=4, 
-  maxKnots=12, 
+  maxKnots=20, 
   gap=0, 
   cv.opts=list(cv.gamMRSea.seed=1, K=10)
 )
