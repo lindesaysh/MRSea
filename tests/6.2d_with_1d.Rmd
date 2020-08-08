@@ -70,7 +70,7 @@ salsa1dlist <- list(
   degree = 2, 
   maxIterations = 10, 
   gaps = c(0), 
-  cv.opts=list(cv.gamMRSea.seed=1, K=10)
+  cv.opts=list(cv.gamMRSea.seed=1, K=5)
 )
 
 ```
@@ -137,7 +137,7 @@ salsa2dlist<-list(
   minKnots=4, 
   maxKnots=20, 
   gap=0, 
-  cv.opts=list(cv.gamMRSea.seed=1, K=10)
+  cv.opts=list(cv.gamMRSea.seed=1, K=5)
 )
 ```
 
@@ -147,7 +147,7 @@ Run SALSA2D to find the appropriate number and location of knots for the 2D smoo
 ```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
 
 start_time <- Sys.time()
-salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, d2k=distMats$dataDist, k2k=distMats$knotDist)
+salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist, d2k=distMats$dataDist, k2k=distMats$knotDist, suppress.printout=TRUE)
 total_time <- Sys.time() - start_time
 
 ```
