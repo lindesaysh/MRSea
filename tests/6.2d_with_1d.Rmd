@@ -219,6 +219,18 @@ cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should b
 
 cat("Time for training:", total_time, "Original time: 14.3")
 
+salsa2dlog <- read.table('salsa2d.log')
+n_fits <- 0
+for (ii in 1:nrow(salsa2dlog)){
+  row_in <- salsa2dlog[rw]
+  row_in <- as.character(row_in)
+  if (row_in[1:4]=='Fit ') {
+    n_fits += 1
+  }
+}
+
+cat("Number of fits:", n_fits, "Original fits: ")
+
 ```
 
 
@@ -253,7 +265,27 @@ cat("Dispersion:", sum_results$dispersion, "this should be 35.85788. \n\n")
 
 mean_sum_sq <- sum((predictData$truth.re - preds_out)^2)/nrow(predictData)
 
-cat("Mean square error:", mean_sum_sq, "this should be 0.4298723. \n\n")
+cat("Mean square error to truth:", mean_sum_sq, "this should be 0.4298723. \n\n")
+
+mean_sum_sq_data <- sum((data$response - predict.gamMRSea(newdata=data, object=salsa2dOutput$bestModel))^2)/nrow(predictData)
+
+cat("residual sum square error to data:", mean_sum_sq_data, "this should be 11.44848. \n\n")
+
+data_compare <- data[,c('x.pos', 'y.pos')]
+data_compare <- distinct(data_compare)
+pred_data_compare <- predictData[,c('x.pos', 'y.pos')]
+
+rows_seen <- do.call(paste, pred_data_compare) %in% do.call(paste, data_compare)
+
+mean_sum_sq_seen <- sum((predictData$truth.re[rows_seen] - preds_out[rows_seen])^2)/nrow(predictData[rows_seen,])
+
+cat("Mean square error to truth seen:", mean_sum_sq_seen, "this should be 0.4298723. \n\n")
+
+mean_sum_sq_unseen <- sum((predictData$truth.re[!rows_seen] - preds_out[!rows_seen])^2)/nrow(predictData[!rows_seen,])
+
+cat("Mean square error to truth unseen:", mean_sum_sq_unseen, "this should be 0.4298723. \n\n")
+
+
 
 ```
 
