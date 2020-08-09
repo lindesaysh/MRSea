@@ -217,19 +217,7 @@ cat("Sum of all predictions on response scale:", sum(preds_out), "this should be
 
 cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should be -65738.33. \n\n")
 
-cat("Time for training:", total_time, "\n\n") #9.006237
-
-salsa2dlog <- readLines('salsa2d.log')
-n_fits <- 0
-for (ii in 1:length(salsa2dlog)){
-  row_in <- salsa2dlog[ii]
-  row_in <- as.character(row_in)
-  if (grepl('fit thinplate 2D', row_in, fixed = TRUE)) {
-    n_fits <- n_fits + 1
-  }
-}
-
-cat("Number of model fits:", n_fits, "Original model fits: 1045")
+cat("Time for training:", total_time, "Original time 9.0. \n\n") #9.006237
 
 salsa2dlog <- readLines('salsa2d.log')
 n_fits <- 0
