@@ -6,7 +6,7 @@
 
 
 "fit.thinPlate_2d" <- function(fitnessMeasure, dists,aR,radii,baseModel,radiusIndices,models, currentFit, interactionTerm, data, initDisp, cv.opts, basis='gaussian',hdetest) {
-
+  print("test_cases")
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
     baseModel@splineParams[[1]]$knotPos<-aR

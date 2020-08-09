@@ -120,7 +120,8 @@ Run SALSA2D to find the appropriate number and location of knots for the 2D smoo
 
 set.seed(1234)
 start_time <- Sys.time()
-salsa2dOutput<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, k2k=distMats$knotDist)
+salsa2dOutput<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist, 
+k2k=distMats$knotDist, suppress.printout=TRUE)
 total_time <- Sys.time() - start_time
 
 ```
@@ -216,11 +217,23 @@ for (rr in 1:nrow(knot_loc)) {
 
 ```{r pred_compare, echo=FALSE, results='asis'}
 
-cat("Sum of all predictions on response scale:", sum(preds_out), "this should be 4313.894. \n\n")
+cat("Sum of all predictions on response scale:", sum(preds_out), "this should be 4305.88. \n\n")
 
-cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should be -11826.47. \n\n")
+cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should be -11217.34. \n\n")
 
-cat("Time for training:", total_time) # 28.14797
+cat("Time for training:", round(total_time, 1), "Original time: 9.4. \n\n")
+
+salsa2dlog <- readLines('salsa2d.log')
+n_fits <- 0
+for (ii in 1:length(salsa2dlog)){
+  row_in <- salsa2dlog[ii]
+  row_in <- as.character(row_in)
+  if (grepl('fit thinplate 2D', row_in, fixed = TRUE)) {
+    n_fits <- n_fits + 1
+  }
+}
+
+cat("Number of model fits:", n_fits, "Original model fits: 325")
 
 ```
 
@@ -242,13 +255,13 @@ kable(sum_results_read_in, digits=3, caption="Saved coefficients")
 
 ```{r sum_compare, echo=FALSE, results='asis'}
 
-cat("Sum of all estimates:", sum(sum_results$coefficients[,1]), "this should be 22.24655. \n\n")
+cat("Sum of all estimates:", sum(sum_results$coefficients[,1]), "this should be 37.82466. \n\n")
 
-cat("Sum of all robust SE:", sum(sum_results$coefficients[,3]), "this should be 34.82126. \n\n")
+cat("Sum of all robust SE:", sum(sum_results$coefficients[,3]), "this should be 20.26282. \n\n")
 
 cat("Standard errors are equal to robust standard errors:", sum(sum_results$coefficients[,2])==sum(sum_results$coefficients[,3]), "\n\n")
 
-cat("Dispersion:", sum_results$dispersion, "this should be 11.4493. \n\n")
+cat("Dispersion:", sum_results$dispersion, "this should be 11.60884. \n\n")
 
 ```
 
@@ -258,7 +271,25 @@ cat("Dispersion:", sum_results$dispersion, "this should be 11.4493. \n\n")
 
 mean_sum_sq <- sum((predictData$truth.re - preds_out)^2)/nrow(predictData)
 
-cat("Mean square error:", mean_sum_sq, "this should be 0.5525449. \n\n")
+cat("Mean square error:", mean_sum_sq, "this should be 0.5942347. \n\n")
+
+mean_sum_sq_data <- sum((data$response - predict.gamMRSea(newdata=data, object=salsa2dOutput$bestModel))^2)/nrow(predictData)
+
+cat("Residual sum square error to data:", mean_sum_sq_data, "this should be 5.906866. \n\n")
+
+data_compare <- data[,c('x.pos', 'y.pos')]
+data_compare <- distinct(data_compare)
+pred_data_compare <- predictData[,c('x.pos', 'y.pos')]
+
+rows_seen <- do.call(paste, pred_data_compare) %in% do.call(paste, data_compare)
+
+mean_sum_sq_seen <- sum((predictData$truth.re[rows_seen] - preds_out[rows_seen])^2)/nrow(predictData[rows_seen,])
+
+cat("Mean square error to truth seen:", mean_sum_sq_seen, "this should be 0.6202788. \n\n")
+
+mean_sum_sq_unseen <- sum((predictData$truth.re[!rows_seen] - preds_out[!rows_seen])^2)/nrow(predictData[!rows_seen,])
+
+cat("Mean square error to truth unseen:", mean_sum_sq_unseen, "this should be 0.5858558. \n\n")
 
 ```
 
