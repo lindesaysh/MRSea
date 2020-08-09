@@ -70,7 +70,7 @@ salsa1dlist <- list(
   degree = 2, 
   maxIterations = 10, 
   gaps = c(0), 
-  cv.opts=list(cv.gamMRSea.seed=1, K=10)
+  cv.opts=list(cv.gamMRSea.seed=1, K=5)
 )
 
 ```
@@ -137,7 +137,7 @@ salsa2dlist<-list(
   minKnots=4, 
   maxKnots=20, 
   gap=0, 
-  cv.opts=list(cv.gamMRSea.seed=1, K=10)
+  cv.opts=list(cv.gamMRSea.seed=1, K=5)
 )
 ```
 
