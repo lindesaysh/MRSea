@@ -100,9 +100,9 @@ Salsa 2D parameters
 salsa2dlist<-list(
   fitnessMeasure = 'cv.gamMRSea', 
   knotgrid = knotgrid, 
-  startKnots=19, 
+  startKnots=5, 
   minKnots=4, 
-  maxKnots=20, 
+  maxKnots=12, 
   gap=0, 
   cv.opts=list(cv.gamMRSea.seed=1, K=10)
 )

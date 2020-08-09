@@ -231,17 +231,17 @@ for (ii in 1:length(salsa2dlog)){
 
 cat("Number of model fits:", n_fits, "Original model fits: 1045")
 
-salsa2dlog <- read.table('salsa2d.log')
+salsa2dlog <- readLines('salsa2d.log')
 n_fits <- 0
-for (ii in 1:nrow(salsa2dlog)){
-  row_in <- salsa2dlog[rw]
+for (ii in 1:length(salsa2dlog)){
+  row_in <- salsa2dlog[ii]
   row_in <- as.character(row_in)
-  if (row_in[1:4]=='Fit ') {
-    n_fits += 1
+  if (grepl('fit thinplate 2D', row_in, fixed = TRUE)) {
+    n_fits <- n_fits + 1
   }
 }
 
-cat("Number of fits:", n_fits, "Original fits: ")
+cat("Number of model fits:", n_fits, "Original model fits: 1045")
 
 ```
 

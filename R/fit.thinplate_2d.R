@@ -74,7 +74,6 @@
   #print(paste('disp= ', summary(currentModel)$dispersion, ', num knots: ', length(aR), ', fitstat: ',tempFit,sep=''))
   #print("ooooooooooooooooooooooooooooooooooooooo")
   
-  
   print(paste("fit thinplate 2D", tempFit))
   
   return(list(currentModel=currentModel,models=models, fitStat=tempFit))
