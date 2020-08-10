@@ -273,9 +273,9 @@ mean_sum_sq <- sum((predictData$truth.re - preds_out)^2)/nrow(predictData)
 
 cat("Mean square error:", mean_sum_sq, "this should be 0.5942347. \n\n")
 
-mean_sum_sq_data <- sum((data$response - predict.gamMRSea(newdata=data, object=salsa2dOutput$bestModel))^2)/nrow(predictData)
+mean_sum_sq_data <- sum((data$response - predict.gamMRSea(newdata=data, object=salsa2dOutput$bestModel))^2)/nrow(data)
 
-cat("Residual sum square error to data:", mean_sum_sq_data, "this should be 5.906866. \n\n")
+cat("Residual sum square error to data:", mean_sum_sq_data, "this should be 6.066823. \n\n")
 
 data_compare <- data[,c('x.pos', 'y.pos')]
 data_compare <- distinct(data_compare)
