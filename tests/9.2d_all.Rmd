@@ -13,8 +13,8 @@ vignette: >
 -------
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# devtools::install_github("lindesaysh/MRSea")
-require(MRSea)
+devtools::load_all("C:/Users/kryzi/OneDrive - University of St Andrews/PhD/Code/MRsea")
+# require(MRSea)
 require(tidyverse)
 require(patchwork)
 require(knitr)
@@ -303,9 +303,9 @@ mean_sum_sq <- sum((predictData$truth.re - preds_out)^2)/nrow(predictData)
 
 cat("Mean square error:", mean_sum_sq, "this should be 0.2600476. \n\n")
 
-mean_sum_sq_data <- sum((data$response - predict.gamMRSea(newdata=data, object=salsa2dOutput$bestModel))^2)/nrow(predictData)
+mean_sum_sq_data <- sum((data$response - predict.gamMRSea(newdata=data, object=salsa2dOutput$bestModel))^2)/nrow(data)
 
-cat("residual sum square error to data:", mean_sum_sq_data, "this should be 5.70696. \n\n")
+cat("residual sum square error to data:", mean_sum_sq_data, "this should be 5.861502. \n\n")
 
 data_compare <- data[,c('x.pos', 'y.pos')]
 data_compare <- distinct(data_compare)

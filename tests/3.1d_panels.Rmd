@@ -13,8 +13,8 @@ vignette: >
 -------
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# devtools::install_github("lindesaysh/MRSea")
-require(MRSea)
+devtools::load_all("C:/Users/kryzi/OneDrive - University of St Andrews/PhD/Code/MRsea")
+# require(MRSea)
 require(tidyverse)
 require(patchwork)
 require(knitr)
