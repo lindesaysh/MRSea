@@ -34,7 +34,7 @@
 #' }
 #' @export
 #' 
-runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE, dots=FALSE){
+runInfluence<-function(model, id=NULL, d2k=NULL, splineParams=NULL, save=FALSE, dots=FALSE){
   
   attributes(model$formula)$.Environment<-environment()
   response<-model$y
@@ -51,7 +51,13 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE, dots=
     dat<-model$data 
   }
   
-  
+  if(is.null(id)){
+    id<-model$panels
+    if(is.null(id)){
+      id<-1:nrow(dat)
+    }
+  }  
+    
   print("Calculating COVRATIO and PRESS Statistics")
   
   # detach("package:mgcv")
@@ -68,9 +74,7 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE, dots=
       dists<- d2k[-rowsToDel,]
     }
     if(class(model)[1]=='gamMRSea'){
-      panels<-model$panels
-      if(is.null(panels)) panels<-1:nrow(dat)
-      newMod<-update(model, .~. ,data=newData, panels=panels[-rowsToDel])
+      newMod<-update(model, .~. ,data=newData, panels=droplevels(id[-rowsToDel]))
     }else{
       newMod<-update(model, .~. ,data=newData)
     }
@@ -125,7 +129,7 @@ runInfluence<-function(model, id, d2k=NULL, splineParams=NULL, save=FALSE, dots=
     outblockb<-which(b=='Inf')
   }
   
-  influenceData <- data.frame(blocks=numericblock, covratio=inflStore[,(ncol(inflStore)-1)], press=inflStore[,ncol(inflStore)])
+  influenceData <- data.frame(blocks=unique(id), num.block=numericblock, covratio=inflStore[,(ncol(inflStore)-1)], press=inflStore[,ncol(inflStore)])
   influencePoints <- list(covratio = outblocka, press=outblockb)
   
   

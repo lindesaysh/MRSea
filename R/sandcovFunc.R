@@ -19,6 +19,12 @@ sandcov<-function (model, id=NULL){
 clsandcov   <- function(dat,fm, cluster){
   attach(dat, warn.conflicts = F)
   library(sandwich)
+  
+  if(min(table(cluster))==0){
+    cluster<-droplevels(cluster)
+    warning("Length zero found for 1 or more clusters, droplevels() has been applied")
+  }
+  
   M <- length(unique(cluster))
   N <- length(cluster)
   K <- fm$rank
