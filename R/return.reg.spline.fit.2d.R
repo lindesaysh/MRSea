@@ -117,6 +117,35 @@
   }
 
   if(plot==TRUE){plot(knotgrid[,1:2], main='Initialise'); points(knotgrid[aR,1:2], pch=20)}
+  
+  
+  ################################### reduce knots till ok initialise fit #################################
+  if (summary(out.lm)$dispersion>initDisp) {
+    output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
+    ####print("here e")
+    point <- output$point
+    knotPoint <- output$knotPoint
+    position <- output$position
+    aR <- output$aR
+    BIC <- output$BIC
+    ####track <- output$track
+    models <- thinModels(output$models)
+    out.lm <- output$out.lm
+    radiusIndices <- output$radiusIndices
+    
+    if (isS4(out.lm)) {
+      out.lm@splineParams[[1]]$knotPos<-aR
+      out.lm@splineParams[[1]]$radiusIndices<-radiusIndices
+      baseModel@splineParams<-out.lm@splineParams
+    } else {
+      out.lm$splineParams[[1]]$knotPos<-aR
+      out.lm$splineParams[[1]]$radiusIndices<-radiusIndices
+      baseModel$splineParams<-out.lm$splineParams
+    }
+    if(plot==TRUE) {plot(knotgrid[,1:2], main='Drop bad knots'); points(knotgrid[aR,1:2], pch=20)}
+  }
+  
+  
   ####################################algorithm loop#############################
   improveEx <- 1
   improveNudge <- 1
