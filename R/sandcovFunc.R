@@ -17,7 +17,7 @@ sandcov<-function (model, id=NULL){
 }
 
 clsandcov   <- function(dat,fm, cluster){
-  attach(dat, warn.conflicts = F)
+  #]attach(dat, warn.conflicts = F)
   library(sandwich)
   
   if(min(table(cluster))==0){
