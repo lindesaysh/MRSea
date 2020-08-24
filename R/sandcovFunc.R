@@ -53,7 +53,7 @@ sandcovS4<-function (model, id=NULL){
 
 
 clsandcov_mn   <- function(dat,fm, cluster){
-  attach(dat, warn.conflicts = F)
+ # attach(dat, warn.conflicts = F)
   library(sandwich)
   M <- length(unique(cluster))
   N <- length(cluster)
@@ -61,7 +61,8 @@ clsandcov_mn   <- function(dat,fm, cluster){
   dfc <- (M/(M-1))*((N-1)/(N-K))
   uj  <- apply(estfun(fm),2, function(x) tapply(x, cluster, sum));
   vcovCL <- dfc*sandwich(fm, meat=crossprod(uj)/N)
-  return(vcovCL)}
+  return(vcovCL)
+}
 
 
 bread.gamMRSea<-function (x, ...) 
