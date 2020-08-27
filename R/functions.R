@@ -244,7 +244,7 @@ getPPresiduals<-function(model){
   
   nquad<-length(data$response==0)
   discretepad <- numeric(nquad)
-  discretepad[Z] <- rp.disc
+  discretepad[z] <- rp.disc
   #wt <- w.quad(Q)
   val <- discretepad + data$pp.wts * rp.dens
   return(val)
@@ -264,7 +264,7 @@ getlargestresid<-function(model, n=5){
     indexdat<-order(rowSums(abs(residuals(model, type='pearson'))), decreasing = TRUE)[1:n]
   }else{
     data<-model$data
-    if('pp.wts' %in% names(data)){
+    if(model$splineParams[[1]]$modelType=='pointProcess'){
       val<-getPPresiduals(model)
       indexdat<-order(abs(val), decreasing = TRUE)[1:n]
     }else {
