@@ -225,3 +225,51 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
   } # end geodesic
 }
 
+
+#-----------------------------------------------------------------------------
+#' Get Pearsons residuals for point process model
+#' 
+#' This function calculates the residuals for a point process model.
+#' 
+#' @param model A point process model fitted in a glm framework
+
+
+getPPresiduals<-function(model){
+  data<-model$data
+  lambda<-fitted(model)
+  z<-data$response==1
+  indicator<-(lambda > .Machine$double.eps)
+  rp.dens<-(-indicator) * sqrt(lambda)
+  rp.disc<-1/(sqrt(lambda[z]))
+  
+  nquad<-length(data$response==0)
+  discretepad <- numeric(nquad)
+  discretepad[Z] <- rp.disc
+  #wt <- w.quad(Q)
+  val <- discretepad + data$pp.wts * rp.dens
+  return(val)
+}
+
+
+#-----------------------------------------------------------------------------
+#' Get index of n largest residuals
+#' 
+#' This function evaluates the 5 largest residuals from a model.
+#' 
+#' @param model a gamMRSea model
+#' @param n number of largest residuals to return
+
+getlargestresid<-function(model, n=5){
+  if (isS4(model)){
+    indexdat<-order(rowSums(abs(residuals(model, type='pearson'))), decreasing = TRUE)[1:n]
+  }else{
+    data<-model$data
+    if('pp.wts' %in% names(data)){
+      val<-getPPresiduals(model)
+      indexdat<-order(abs(val), decreasing = TRUE)[1:n]
+    }else {
+      indexdat<-order(abs(residuals(model, type='pearson')), decreasing = TRUE)[1:n]
+    }  
+  }
+  return(indexdat)
+}

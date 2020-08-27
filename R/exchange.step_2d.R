@@ -22,11 +22,12 @@
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    if (isS4(baseModel)){
-      indexdat<-order(rowSums(abs(residuals(baseModel, type='pearson'))), decreasing = TRUE)[1:5]
-    } else {
-      indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
-    }
+    indexdat<-getlargestresid(out.lm)
+    # if (isS4(baseModel)){
+    #   indexdat<-order(rowSums(abs(residuals(baseModel, type='pearson'))), decreasing = TRUE)[1:5]
+    # } else {
+    #   indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
+    # }
     #### Find available knots
     legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
     if(ncol(knotgrid)>2){
@@ -41,8 +42,14 @@
       legPos<-legPos1[legPos2]
       index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
     }else{
-      new<-scale(knotgrid[point,1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
-      index<-which.min(abs(new[,1])+abs(new[,2]))
+      index<-c()
+      for(d in indexdat){
+        new<-scale(knotgrid[point,1:2],center=c(explData[d,1],explData[d,2]))
+        index<-c(index, which.min(abs(new[,1])+abs(new[,2])))
+      }
+      index<-unique(index)
+      #new<-scale(knotgrid[point,1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
+      #index<-which.min(abs(new[,1])+abs(new[,2]))
     }
     # ggplot() + geom_point(data=knotgrid, aes(X1, X2)) + facet_wrap(~yearmonth) +
     #   geom_point(data=knotgrid[point[knotchunkid],], aes(X1, X2), shape=2, size=2)+
