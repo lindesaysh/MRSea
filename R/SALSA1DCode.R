@@ -84,11 +84,17 @@
   }
 
 # LSH 12/3/15 added dispersion parameter calc
-initDisp<-getDispersion(baseModel)
-if(length(unique(response))!=2){
-  print(paste('initialDispersion ', initDisp, sep=''))
-}
-    
+
+  if(splineParams[[1]]$modelType=='pointProcess'){
+    initDisp<-Inf
+  }else{
+    initDisp<-getDispersion(baseModel)
+    if(length(unique(response))!=2){
+      print(paste('initialDispersion ', initDisp, sep=''))
+    }
+  }  
+  
+
 ####deal with multiple unordered x-values
 knotSites <- cbind(sort(explanatory), rep(1, length(explanatory)))
 knotSites <- knotSites[which(duplicated(knotSites)==F),]
@@ -310,7 +316,13 @@ print("initialisation complete...")
 "locate.max.res" <- function(point,position,gap,response,explanatory, bd,winHalfWidth,out.lm,knotPoint,aR,wts,knotSites, spl){
    
   print("Locating maximum residual......")
-  tempRes <<-residuals(out.lm,type="pearson")
+  
+  if(splineParams[[1]]$modelType=='pointProcess'){
+    tempRes <<-getPPresiduals(out.lm)
+  }else{
+    tempRes <<-residuals(out.lm,type="pearson")  
+  }
+  
   index <- NULL
   for (i in 1:length(knotPoint)) {
     if (isS4(out.lm)){

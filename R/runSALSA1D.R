@@ -97,6 +97,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   require(splines)
   require(fields)
   
+  globalobjlist<-ls(envir=.GlobalEnv)
+  
+  
   if(class(initialModel)[1]!='glm' & class(initialModel)[1]!='gamMRSea') stop('Class of model not supported.  Please use glm or gamMRSea')
   
   # check for response variable
@@ -175,6 +178,14 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     }else{varID<-(1:length(varlist))+1}
   }
   
+  
+  # set the model type. default is regression but could be pointProcess (or mn????)
+  if(is.null(salsa1dlist$modelType)){
+    salsa1dlist$modelType<-'regression'
+  }
+  splineParams[[1]][['modelType']] = salsa1dlist$modelType
+  
+  
   terms1D <- list(length(varlist))
   
   counter<-1 # needed to loop through cyclics if more than one
@@ -219,7 +230,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     salsa1dlist$fitnessMeasure<-c(salsa1dlist$fitnessMeasure, summary(dispersion_Model)$dispersion)
     
     # return the splineParams object back to the original
-    splineParams<<-splineParams_base
+    splineParams<-splineParams_base
     if(dispersion_Model$conv==FALSE) stop('Model to get dispersion parameter, with max knots evenly spaced did not converge.  Use fewer max knots or change fitness measure.')
     
     # update the modelling to use the poisson family. The dispersion has been calculated and will be used by the get.measure function.
@@ -228,7 +239,11 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     baseModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(family), "(link=", substitute(link),"))", sep='')))
   }
   
-  initDisp<-getDispersion(baseModel)
+  if(splineParams[[1]]$modelType=='pointProcess'){
+    initDisp<-Inf
+  }else{
+    initDisp<-getDispersion(baseModel)
+  }
   fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
   
   modelFits1D <- list((length(varlist)+1))
@@ -271,9 +286,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(varlist[(i-1)]%in%varlist_cyclicSplines){spl<- "cc"}else{spl="bs"}
     
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
+    
     sttime<- proc.time()[3]
     output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, cv.opts=salsa1dlist$cv.opts)
-    
     timings[(i-1)]<- proc.time()[3] - sttime
     
     thisFit <- output$output[2] 
@@ -289,8 +304,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       set.seed(seed.in)
       cv_with<- cv.gamMRSea(data=data, tempModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]  
     }
-    models<<-output$models
-    knotSites<<-output$knotSites
+    models<-output$models
+    knotSites<-output$knotSites
     
     if(removal=='TRUE'){
     cat('Fitting Linear Model...')
@@ -405,11 +420,15 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   if(suppress.printout){
     sink()
   }
-  
+ 
+   
  gc(verbose=FALSE)
  
  keptvarlist<-varlist[(varkeepid-1)]
  if(length(keptvarlist)==0) keptvarlist<-"none"
+ 
+ rmid<-which(ls(envir = .GlobalEnv) %in% globalobjlist==FALSE)
+ rm(list=c(ls(envir = .GlobalEnv)[rmid]), envir = .GlobalEnv)
  
   #save.image("Test.RData")
   return(list(bestModel=outModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStatlist, keptvarlist = keptvarlist))
