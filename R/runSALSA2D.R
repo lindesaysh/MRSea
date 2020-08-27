@@ -120,7 +120,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   # check for use of name "dists" in data
   if("dists" %in% names(data)) stop("data must not contain column called 'dists'")
-
+  
+  # set the model type. default is regression but could be pointProcess (or mn????)
+  if(is.null(salsa2dlist$modelType)){
+    salsa2dlist$modelType<-'regression'
+  }
   
   #set input 2D input data
   if(is.null(data$x.pos)){ stop('no x.pos in data frame; rename coordinates')}
@@ -135,7 +139,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   
   if(chooserad==FALSE){
     if(length(r_seq)>1){
-      radii<- r_seq[round(length(r_seq)/2)]
+      if(salsa2dlist$modelType=='pointProcess'){
+        radii<- r_seq[1] 
+      }else{
+        radii<- r_seq[round(length(r_seq)/2)]  
+      }
     }else{
       radii<- r_seq[1]
     }
@@ -165,6 +173,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     maxIterations<-salsa2dlist$max.iter  
   }
   
+ 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -188,6 +197,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   splineParams[[1]][['radii']]= radii
   splineParams[[1]][['minKnots']]= salsa2dlist$minKnots
   splineParams[[1]][['maxKnots']]= salsa2dlist$maxKnots
+  splineParams[[1]][['modelType']] = salsa2dlist$modelType
   if(is.null(salsa2dlist$gap)){
     splineParams[[1]][['gap']]= 0
   }else{
@@ -257,11 +267,19 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     # yvals <- max(y)
 
     if(length(r_seq)>1){
-      radiusIndices<- rep(round(length(r_seq)/2), (length(output$aR)))
+      if(splineParams[[1]]$modelType=='pointProcess'){
+        radiusIndices<- rep(1, length(output$aR))
+      }else{
+        radiusIndices<- rep(round(length(r_seq)/2), (length(output$aR)))
+      }
     }else{
       radiusIndices<- rep(1, length(output$aR))
     }
-    initDisp<-getDispersion(baseModel)
+    if(splineParams[[1]]$modelType=='pointProcess'){
+      initDisp<-Inf
+    }else{
+      initDisp<-getDispersion(baseModel)
+    }
     output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis)
 
 

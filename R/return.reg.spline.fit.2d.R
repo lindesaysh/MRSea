@@ -60,7 +60,7 @@
   #   sink(file='salsa2d.log')
   # }
   # 
-  print("branch move_drop_step")
+  print("pointprocess residuals")
   # split out spline parameter object into its pieces
   knotDist <- splineParams[[1]]$knotDist
   radii <- splineParams[[1]]$radii
@@ -75,9 +75,13 @@
   gap <- splineParams[[1]]$gap
 
   # LSH 12/3/15 added dispersion parameter calc
-  initDisp<-getDispersion(baseModel)
-  print(paste('initialDispersion ', initDisp, sep=''))
-
+  if(splineParams[[1]]$modelType=='pointProcess'){
+    initDisp<-Inf
+  }else{
+    initDisp<-getDispersion(baseModel)
+    print(paste('initialDispersion ', initDisp, sep=''))
+  }
+  
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
     data <- baseModel@data
@@ -252,7 +256,7 @@
   
   gc(verbose=FALSE)
   
-    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,models=models,actualKnotIndices=aR,improve=overallImprove, seed.in=cv.opts$cv.gamMRSea.seed))
+    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,models=models,actualKnotIndices=aR,improve=overallImprove, seed.in=cv.opts$cv.gamMRSea.seed, initDisp = initDisp))
   
 
 }

@@ -360,6 +360,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     fitStat <- 10000000
     cat("Change Fit due to NA: ", fitStat, "\n")
   }
+  if(baseModel$splineParams[[1]]$modelType!='pointProcess')
   if(getDispersion(baseModel)>initDisp){
     fitStat<- tempMeasure + 10000000
     cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
