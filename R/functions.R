@@ -232,21 +232,28 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
 #' This function calculates the residuals for a point process model.
 #' 
 #' @param model A point process model fitted in a glm framework
+#' @param type Type of residual required. Choices are "Pearson" (default) or "raw"
 
 
-getPPresiduals<-function(model){
+getPPresiduals<-function(model, type='Pearson'){
   data<-model$data
   lambda<-fitted(model)
   z<-data$response==1
-  indicator<-(lambda > .Machine$double.eps)
-  rp.dens<-(-indicator) * sqrt(lambda)
-  rp.disc<-1/(sqrt(lambda[z]))
   
+  if(type=='Pearson'){
+    indicator<-(lambda > .Machine$double.eps)
+    rp.dens<-(-indicator) * sqrt(lambda)
+    rp.disc<-1/(sqrt(lambda[z]))
+  }
+  if(type=='raw'){
+    rp.dens <- (-lambda)
+    rp.disc <- rep.int(1, sum(z))
+  }
   nquad<-length(data$response==0)
   discretepad <- numeric(nquad)
   discretepad[z] <- rp.disc
   #wt <- w.quad(Q)
-  val <- discretepad + data$pp.wts * rp.dens
+  val <- discretepad + ((model$model$'(weights)') * rp.dens)
   return(val)
 }
 
