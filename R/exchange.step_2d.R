@@ -22,7 +22,7 @@
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    indexdat<-getlargestresid(out.lm)
+    indexdat<-getlargestresid(out.lm, n=10)
     # if (isS4(baseModel)){
     #   indexdat<-order(rowSums(abs(residuals(baseModel, type='pearson'))), decreasing = TRUE)[1:5]
     # } else {
@@ -41,6 +41,13 @@
       legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
       legPos<-legPos1[legPos2]
       index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
+      # ggplot() + geom_point(data=knotgrid, aes(X1, X2)) + facet_wrap(~yearmonth) +
+      #   geom_point(data=knotgrid[point[knotchunkid],], aes(X1, X2), shape=2, size=2)+
+      #   geom_point(data=knotgrid[aR,], aes(X1, X2), shape=3, size=2, col='blue') +
+      #   geom_point(data=knotgrid[aRresidchunk,], aes(X1, X2), shape=3, size=4, col='blue') +
+      #   geom_point(data=knotgrid[point[legPos1],], aes(X1, X2), shape=3, size=2, col='red')+
+      #   geom_point(data=knotgrid[point[legPos1[legPos2]],], aes(X1, X2), shape=4, size=2, col='green') +
+      #   geom_point(data=knotgrid[point[legPos],], aes(X1, X2), shape=5, size=3, col='maroon') + coord_equal() + geom_point(data=data[indexdat[1],], aes(x.pos, y.pos), size=3, col='thistle') + geom_point(data=knotgrid[point[index],], aes(X1, X2), shape=7, size=3, col='black')
     }else{
       index<-c()
       for(d in indexdat){
@@ -48,16 +55,12 @@
         index<-c(index, which.min(abs(new[,1])+abs(new[,2])))
       }
       index<-unique(index)
-      #new<-scale(knotgrid[point,1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
-      #index<-which.min(abs(new[,1])+abs(new[,2]))
+      # quilt.plot(data$x.pos, data$y.pos, getPPresiduals(out.lm), nrow=170, ncol=77)
+      # points(knotgrid[aR,], col='lightblue', cex=2)
+      # points(knotgrid[point[index],], cex=2, pch='x')
+      # points(data[indexdat,c('x.pos', 'y.pos')], cex=2, col='green')
     }
-    # ggplot() + geom_point(data=knotgrid, aes(X1, X2)) + facet_wrap(~yearmonth) +
-    #   geom_point(data=knotgrid[point[knotchunkid],], aes(X1, X2), shape=2, size=2)+
-    #   geom_point(data=knotgrid[aR,], aes(X1, X2), shape=3, size=2, col='blue') +
-    #   geom_point(data=knotgrid[aRresidchunk,], aes(X1, X2), shape=3, size=4, col='blue') +
-    #   geom_point(data=knotgrid[point[legPos1],], aes(X1, X2), shape=3, size=2, col='red')+
-    #   geom_point(data=knotgrid[point[legPos1[legPos2]],], aes(X1, X2), shape=4, size=2, col='green') +
-    #   geom_point(data=knotgrid[point[legPos],], aes(X1, X2), shape=5, size=3, col='maroon') + coord_equal() + geom_point(data=data[indexdat[1],], aes(x.pos, y.pos), size=3, col='thistle') + geom_point(data=knotgrid[point[index],], aes(X1, X2), shape=7, size=3, col='black')
+    
     # 
     
     if (length(legPos)>0) {
