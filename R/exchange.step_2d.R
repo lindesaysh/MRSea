@@ -23,9 +23,9 @@
     fuse <- fuse + 1
     improve <- 0
     if (isS4(baseModel)){
-      indexdat<-order(rowSums(abs(residuals(baseModel, type='pearson'))), decreasing = TRUE)[1:5]
+      indexdat<-order(rowSums(abs(residuals(out.lm, type='pearson'))), decreasing = TRUE)[1:5]
     } else {
-      indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
+      indexdat<-order(abs(residuals(out.lm, type='pearson')), decreasing = TRUE)[1:5]
     }
     #### Find available knots
     legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
