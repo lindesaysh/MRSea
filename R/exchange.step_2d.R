@@ -1,7 +1,7 @@
 #' Function for exchanging knot locations and re-fitting model to find best one
 #'
 #'
-#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#' @author Cameron Walker, Department of Enginering Science, University of Auckland and Lindesay Scott-Hayward (University of St Andrews)
 #'
 #' @export
 #'
@@ -37,8 +37,9 @@
       # which aR are in residchunk
       aRresidchunk<-aR[which(knotgrid[aR,nm]==residchunk)]
       legPos1<-position[which(knotgrid[,nm]==residchunk)]
-      legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
-      legPos<-legPos1[legPos2]
+      legPos<-legPos1
+      #legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
+      #legPos<-legPos1[legPos2]
       index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
     }else{
       new<-scale(knotgrid[point,1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
