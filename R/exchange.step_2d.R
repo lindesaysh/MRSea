@@ -22,25 +22,55 @@
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    if (isS4(baseModel)){
-      indexdat<-order(rowSums(abs(residuals(baseModel, type='pearson'))), decreasing = TRUE)[1:5]
+    if (isS4(out.lm)){
+      abs_resids <- abs(residuals(out.lm, type='pearson'))
+      indexdat = order(abs_resids, decreasing = TRUE)[1:5]
+      indexdat <- ifelse(indexdat > nrow(abs_resids), indexdat - nrow(abs_resids), indexdat)
     } else {
-      indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
+      indexdat<-order(abs(residuals(out.lm, type='pearson')), decreasing = TRUE)[1:5]
     }
     #### Find available knots
-    legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
     if(ncol(knotgrid)>2){
-      nm<-names(knotgrid)[3]
-      residchunk<-eval(parse(text=paste('data$', nm, '[indexdat[1]]')))
-      knotchunkid<-which(knotgrid[point,nm]==residchunk)
-      new<-scale(knotgrid[point[knotchunkid],1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
-      # which aR are in residchunk
-      aRresidchunk<-aR[which(knotgrid[aR,nm]==residchunk)]
-      legPos1<-position[which(knotgrid[,nm]==residchunk)]
-      legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
-      legPos<-legPos1[legPos2]
-      index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
+      if (isS4(out.lm)){
+        # find which linear predictor for  biggest residual
+        # residchunk <- knotgrid[indexdat[1],3]
+        residchunk<-data$response[indexdat[1]]
+        # get reference level
+        reflevel <- levels(knotgrid[,3])[length(levels(knotgrid[,3]))]
+        if (residchunk==reflevel){
+          knotchunkid <- seq(length(point))
+          # which aR are in residchunk
+          aRresidchunk <- aR
+          legPos1<-position
+          legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
+        } else {
+          knotchunkid<-c(which(knotgrid[point,3]==residchunk),which(knotgrid[point,3]==reflevel))
+          aRresidchunk<-aR[c(which(knotgrid[aR,3]==residchunk), which(knotgrid[aR,3]==reflevel))]
+          legPos1<-position[c(which(knotgrid[,3]==residchunk),which(knotgrid[,3]==reflevel))]
+          legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
+        }
+        # find distance to top point
+        new<-scale(knotgrid[knotchunkid,1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
+        legPos<-legPos1[legPos2]
+        index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
+      } else {
+        nm<-names(knotgrid)[3]
+        residchunk<-eval(parse(text=paste('data$', nm, '[indexdat[1]]')))
+        knotchunkid<-which(knotgrid[point,nm]==residchunk)
+        # find distance to top point
+        new<-scale(knotgrid[point[knotchunkid],1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
+        # which aR are in residchunk
+        aRresidchunk<-aR[which(knotgrid[aR,nm]==residchunk)]
+        legPos1<-position[which(knotgrid[,nm]==residchunk)]
+        # point[legPos1] gives all rows of a given residchunk that are not existing knots
+        # aRresidchunk is which existing knot positions are valid for a given residchunk
+        # for each legimate knot position for a chunk, find minimum distance to existing knot, check it is greater than gap
+        legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
+        legPos<-legPos1[legPos2]
+        index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
+      }
     }else{
+      legPos<-point[which(apply(knotDist[point,aR],1,min)>=gap)]
       new<-scale(knotgrid[point,1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
       index<-which.min(abs(new[,1])+abs(new[,2]))
     }

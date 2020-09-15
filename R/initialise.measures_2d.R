@@ -1,9 +1,9 @@
-initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis, hdetest=FALSE){
+initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis, hdetest=FALSE, minKnots=1){
   
   if (isS4(baseModel)) {
     attributes(baseModel@misc$formula)$.Environment<-environment()
     baseModel<-update(baseModel, data=data)
-    splineParams<-baseModel@splineParams  
+    splineParams<-baseModel@splineParams
   } else {
     attributes(baseModel$formula)$.Environment<-environment()
     baseModel<-update(baseModel, data=data)
@@ -44,38 +44,8 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   if (initialise) {
     require(fields)
     numNeeded = startKnots
-    #numGot = 0
-    # while ((numGot < numNeeded) && (fuse < maxIterations)) {
-    #  fuse = fuse + 1
-    #  legPos = mapInd
-    #   posKnots = cbind()
-    #  for (i in 1:numNeeded) {
-    #     newKnot=legPos[floor(runif(1,1,length(legPos)+1))]
-    #     posKnots = c(posKnots,newKnot)
-    #     numGot=length(posKnots)
-    #     if (length(legPos>1)) {
-    #       entries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[posKnots]]),1,min)>=gap)
-    #       badEntries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[newKnot]]),1,min)<gap)
-    #     } else {
-    #       if (any(knotDist[invInd[legPos],invInd[posKnots]]<gap)) {
-    #         entries=c();badEntries=invInd[legPos]
-    #       } else {
-    #         badEntries=c();entries=invInd[legPos]
-    #       }
-    #     }
-    #     fixFault<-na.omit(match(mapInd[invInd[legPos][badEntries]],legPos))
-    #     legPos<-legPos[-fixFault]
-    #     if (length(legPos)==0) break
-    #  }
-    #}
-    #if (numGot < numNeeded) print("WARNING: less knots fitted than desired")
-    #knotPoint<- posKnots
-    #print(knotPoint)
-    #aR <- knotPoint
-    #radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
-    print("Space-filling knots....")
-    set.seed(knot.seed)
     
+    set.seed(knot.seed)
     
     options('warn'=-1)
     dupPoints <-paste(knotgrid[,1], knotgrid[,2], sep='E')
@@ -84,26 +54,128 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     if(nrow(knotgrid)<1000){
       
       if(length(duppointid)>0){
-        spacefillresult<- cover.design((knotgrid)[-duppointid,], nd=numNeeded, nruns=1)
+        if (ncol(knotgrid)>2 & isS4(baseModel)) {
+          knotClasses <- knotgrid[,3]
+          classes <- sort(unique(knotClasses))
+          n_classes <- length(classes)
+          num_per_cl <- round(numNeeded / (n_classes))
+          if (num_per_cl < minKnots) {
+            num_per_cl <- minKnots
+          }
+          spacefillresultlist <- vector("list",(n_classes))
+          knotpozlist <- vector("list",(n_classes))
+          for (cl in 1:(n_classes)){
+            class_mask = knotClasses == classes[cl]
+            knotpoz <- seq(nrow(knotgrid))[class_mask]
+            knotpozlist[[cl]] <- knotpoz
+            spacefillresult <- cover.design((knotgrid)[class_mask,][-duppointid,1:2], nd=num_per_cl, nruns=1)
+            spacefillresultlist[[cl]] <- spacefillresult
+          }
+        } else {
+          spacefillresult<- cover.design((knotgrid)[-duppointid,], nd=numNeeded, nruns=1)
+        }
       }
       if(length(duppointid)==0){
-        spacefillresult<- cover.design(knotgrid, nd=numNeeded, nruns=1)
+        if (ncol(knotgrid)>2 & isS4(baseModel)) {
+          knotClasses <- knotgrid[,3]
+          classes <- sort(unique(knotClasses))
+          n_classes <- length(classes)
+          num_per_cl <- round(numNeeded / (n_classes))
+          if (num_per_cl < minKnots) {
+            num_per_cl <- minKnots
+          }
+          spacefillresultlist <- vector("list",(n_classes))
+          knotpozlist <- vector("list",(n_classes))
+          for (cl in 1:(n_classes)){
+            class_mask = knotClasses == classes[cl] 
+            knotpoz <- seq(nrow(knotgrid))[class_mask]
+            knotpozlist[[cl]] <- knotpoz
+            spacefillresult<- cover.design(knotgrid[class_mask,1:2], nd=num_per_cl, nruns=1)
+            spacefillresultlist[[cl]] <- spacefillresult
+          }
+        } else {
+          spacefillresult<- cover.design(knotgrid, nd=numNeeded, nruns=1)
+        }
       }
-      initialKnots<-spacefillresult$design
-      posKnots<-spacefillresult$best.id
-      
+      if (ncol(knotgrid)>2 & isS4(baseModel)){
+        initialKnots <- c()
+        posKnots <- c()
+        class_kt <- c()
+        for (cl in 1:(n_classes)) {
+          iK<-spacefillresultlist[[cl]]$design
+          pK<-spacefillresultlist[[cl]]$best.id
+          pK <- knotpozlist[[cl]][pK]
+          initialKnots <- rbind(initialKnots, iK)
+          posKnots <- c(posKnots, pK)
+          class_kt <- c(class_kt, rep(cl, num_per_cl))
+        }
+        # posKnots <- list(posKnots=posKnots, classKnots= class_kt)
+      } else {
+        initialKnots<-spacefillresult$design
+        posKnots<-spacefillresult$best.id
+      }
     }else{
       SampledPoints<- sample(1:dim(knotgrid)[1], min(1500, dim(knotgrid)[1]))
       
-      #space-fill data (subsample - see line above) to get knot locations
       if(length(duppointid)>0){
-        spacefillresult<- cover.design((knotgrid)[SampledPoints,][-duppointid,], nd=numNeeded, nruns=1)
+        if (ncol(knotgrid)>2 & isS4(baseModel)) {
+          knotClasses <- knotgrid[,3]
+          n_classes <- sort(unique(knotClasses))
+          num_per_cl <- round(numNeeded / (n_classes))
+          if (num_per_cl < minKnots) {
+            num_per_cl <- minKnots
+          }
+          spacefillresultlist <- vector("list",(n_classes))
+          knotpozlist <- vector("list",(n_classes))
+          for (cl in 1:(n_classes)){
+            class_mask = knotClasses == classes[cl] 
+            knotpoz <- seq(nrow(knotgrid))[class_mask]
+            knotpozlist[[cl]] <- knotpoz
+            spacefillresult<- cover.design((knotgrid)[SampledPoints,1:2][class_mask,][-duppointid,], nd=num_per_cl, nruns=1)
+            spacefillresultlist[[cl]] <- spacefillresult
+          }
+        } else {
+          spacefillresult<- cover.design((knotgrid)[SampledPoints,][-duppointid,], nd=numNeeded, nruns=1)
+        }
       }
       if(length(duppointid)==0){
-        spacefillresult<- cover.design((knotgrid)[SampledPoints,], nd=numNeeded, nruns=1)
+        if (ncol(knotgrid)>2 & isS4(baseModel)) {
+          knotClasses <- knotgrid[,3]
+          n_classes <- sort(unique(knotClasses))
+          num_per_cl <- round(numNeeded / (n_classes))
+          if (num_per_cl < minKnots) {
+            num_per_cl <- minKnots
+          }
+          spacefillresultlist <- vector("list",(n_classes))
+          knotpozlist <- vector("list",(n_classes))
+          for (cl in 1:(n_classes)){
+            class_mask = knotClasses == classes[cl] 
+            knotpoz <- seq(nrow(knotgrid))[class_mask]
+            knotpozlist[[cl]] <- knotpoz
+            spacefillresult<- cover.design((knotgrid)[SampledPoints,1:2][class_mask,], nd=num_per_cl, nruns=1)
+            spacefillresultlist[[cl]] <- spacefillresult
+          }
+        } else {
+          spacefillresult<- cover.design((knotgrid)[SampledPoints,], nd=numNeeded, nruns=1)
+        }
       }
-      initialKnots<-spacefillresult$design
-      posKnots<-spacefillresult$best.id
+      if (ncol(knotgrid)>2 & isS4(baseModel)){
+        initialKnots <- c()
+        posKnots <- c()
+        class_kt <- c()
+        for (cl in 1:(n_classes)) {
+          iK<-spacefillresultlist[[cl]]$design
+          pK<-spacefillresultlist[[cl]]$best.id
+          pK <- knotpozlist[[cl]][pK]
+          initialKnots <- rbind(initialKnots, iK)
+          posKnots <- c(posKnots, pK)
+          class_kt <- c(class_kt, rep(cl, num_per_cl))
+        }
+        # posKnots <- list(posKnots=posKnots, classKnots= class_kt)
+      } else {
+        initialKnots<-spacefillresult$design
+        posKnots<-spacefillresult$best.id
+      }
     }
     
     options('warn'=0)
@@ -111,35 +183,6 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     if (dim(initialKnots)[1]<numNeeded) {
       print("WARNING: less knots positioned than desired")
     }
-    
-    # posKnots = cbind()
-    # legPos=mapInd
-    # for (i in 1:(dim(initialKnots)[1])) {
-    #   new<-scale(knotgrid[legPos,],center=c(initialKnots[i,1],initialKnots[i,2]))
-    #   ####Pick nearest grid point that is also far enough away from another knot
-    #   ind<-which.min(abs(new[,1])+abs(new[,2]))
-    #   newKnot = legPos[ind]
-    #   posKnots = c(posKnots,newKnot)
-    #   if (length(legPos>1)) {
-    #     entries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[posKnots]]),1,min)>=gap)
-    #     badEntries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[newKnot]]),1,min)<gap)
-    #   } else {
-    #     if (any(knotDist[invInd[legPos],invInd[posKnots]]<gap)) {
-    #       entries=c();badEntries=invInd[legPos]
-    #     } else {
-    #       badEntries=c();entries=invInd[legPos]
-    #     }
-    #   }
-    #   fixFault<-na.omit(match(mapInd[invInd[legPos][badEntries]],legPos))
-    #   if(length(fixFault)>0){
-    #     legPos<-legPos[-fixFault]
-    #   }
-    #   if (length(legPos)==0) break
-    # }
-    
-    
-    
-    # numGot=length()
     
     if (isS4(baseModel)) {
       baseModel@splineParams[[1]]$initialKnots <- initialKnots
@@ -155,48 +198,11 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     }else{
       posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
     }
-    
-    
-    #   posKnots = cbind()
-    #   legPos=mapInd
-    #   for (i in 1:(dim(initialKnots)[1])) {
-    #     new<-scale(knotgrid[legPos,],center=c(initialKnots[i,1],initialKnots[i,2]))
-    #     ####Pick nearest grid point that is also far enough away from another knot
-    #     ind<-which.min(abs(new[,1])+abs(new[,2]))
-    #     newKnot = legPos[ind]
-    #     posKnots = c(posKnots,newKnot)
-    #     if (length(legPos>1)) {
-    #       entries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[posKnots]]),1,min)>=gap)
-    #       badEntries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[newKnot]]),1,min)<gap)
-    #     } else {
-    #       if (any(knotDist[invInd[legPos],invInd[posKnots]]<gap)) {
-    #         entries=c();badEntries=invInd[legPos]
-    #       } else {
-    #         badEntries=c();entries=invInd[legPos]
-    #       }
-    #     }
-    #     fixFault<-na.omit(match(mapInd[invInd[legPos][badEntries]],legPos))
-    #     if(length(fixFault)>0){
-    #       legPos<-legPos[-fixFault]
-    #     }
-    #     if (length(legPos)==0) break
-    #   }
-    #   numGot=length(posKnots)
-    #   if (numGot < length(initialKnots)) {
-    #     print("WARNING: less knots positioned than desired")
-    #     radiusIndices=radiusIndices[1:numGot]
-    #   }
-    #   knotPoint<- posKnots
-    #   #print(c('knots: ',knotPoint))
-    #   aR <- knotPoint
-    #   # print(c('actual knots: ',invInd[aR]))
-    
-  } # end of ifelse statement related to initialise  = T/F
+  } 
   
- 
-  knotPoint<- posKnots
   # print(c('knots: ',knotPoint))
-  aR <- knotPoint
+  knotPoint <- posKnots
+  aR <- posKnots
   # print(c('actual knots: ',invInd[aR]))
   radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
   
@@ -332,11 +338,11 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       fitStat<-AICh(baseModel)
     }
   }
-  
+
   if(fitnessMeasure=="cv.gamMRSea"){
     if (isS4(baseModel)) {
       set.seed(cv.opts$cv.gamMRSea.seed)
-      fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
+      fitStat<-cv.vglmMRSea(baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
       #fitStat<-Inf
     } else {
       set.seed(cv.opts$cv.gamMRSea.seed)
@@ -376,7 +382,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       }
     }
   }
-  
+
   output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
   out.lm<-output$currentModel
   models<-output$models

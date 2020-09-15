@@ -225,3 +225,107 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
   } # end geodesic
 }
 
+
+
+
+
+
+makeDists_mn<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', plot.transition=FALSE, grid.dim=c(100, 100)){
+  
+  # create masks
+  # get number of classes
+  data_classes <- datacoords[,3]
+  knot_classes <- knotcoords[,3]
+  classes <- sort(unique(data_classes))
+  n_classes <- length(classes)
+  if (n_classes != length(levels(data_classes))) {
+    print("WARNING: fewer classes present than levels in data vector")
+  }
+  # create data class mask
+  mn_mat <- matrix(rep(data_classes, length(knot_classes)), ncol=length(knot_classes))
+  cl_mat <- matrix(rep(knot_classes, length(data_classes)), ncol=length(knot_classes), byrow=T)
+  dat_classes_mask <- mn_mat == cl_mat
+  ref_level_rows <- mn_mat == classes[n_classes]
+  ref_level_cols <- cl_mat == classes[n_classes]
+  data_mask <- dat_classes_mask | ref_level_rows | ref_level_cols
+  
+  # create knot class mask
+  if (n_classes != length(levels(knot_classes))) {
+    print("WARNING: fewer classes present than levels in knot vector")
+  }
+  
+  # create knot class mask
+  knt_mat <- matrix(rep(knot_classes, length(knot_classes)), ncol=length(knot_classes))
+  knt_mat_cl <- matrix(rep(knot_classes, length(knot_classes)), ncol=length(knot_classes), byrow=T)
+  knt_classes_mask <- knt_mat == knt_mat_cl
+  knt_ref_level_rows <- knt_mat == classes[n_classes]
+  knt_ref_level_cols <- knt_mat_cl == classes[n_classes]
+  knot_mask <- knt_classes_mask | knt_ref_level_rows | knt_ref_level_cols
+  
+  if(is.null(polys)){
+    # Euclidean
+    if(length(which(is.na(knotcoords[,1])))>0) stop('remove NAs from knotcoords')
+    
+    d2k<- matrix(0, ncol=dim((knotcoords))[1], nrow=length(datacoords[,1]))
+    for(i in 1:dim(knotcoords)[1]){
+      d2k[,i]<- sqrt((datacoords[,1]-knotcoords[i,1])**2 + (datacoords[,2]-knotcoords[i,2])**2)
+    }
+    
+    d2k <- ifelse(data_mask, d2k, Inf)
+    
+    if(knotmat==T){
+      #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
+      knotDist = as.matrix(dist(na.omit(knotcoords[,1:2]), method = "euclidean", diag = TRUE, upper=TRUE))
+      knotDist <- ifelse(knot_mask, knotDist, Inf)
+      return(list(dataDist=d2k, knotDist = knotDist))
+    }else{
+      return(list(dataDist=d2k))
+    }
+    # end euclidean
+  }
+  
+  # Geodesic
+  if(!is.null(polys)){
+    
+    Nx=seq(min(c(datacoords[,1], knotcoords[,1])), max(c(datacoords[,1], knotcoords[,1])), length=grid.dim[1])
+    Ny=seq(min(c(datacoords[,2], knotcoords[,2])), max(c(datacoords[,2], knotcoords[,2])), length=grid.dim[2])
+    
+    xygrid<-expand.grid(x=Nx, y=Ny)
+    
+    if(type=='B'){
+      if(!is.null(names(datacoords))){
+        knotcoords<-data.frame(knotcoords)
+        names(knotcoords)<-names(datacoords)
+      }
+      datacoords2 = rbind(datacoords, knotcoords)
+      geodistsoutput<-getGeoDist(xygrid=xygrid, polys=polys, datalocations=datacoords2, plot.transition=plot.transition)
+      # select out knot columnns to get d2k
+      d2k<-geodistsoutput$distance[(1:nrow(datacoords)),((nrow(datacoords)+1):nrow(datacoords2))]
+      d2k <- ifelse(data_mask, d2k, Inf)
+      if(knotmat==T){
+        #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
+        knotDist = geodistsoutput$distance[(nrow(datacoords)+1):nrow(datacoords2),(nrow(datacoords)+1):nrow(datacoords2)] 
+        knotDist <- ifelse(knot_mask, knotDist, Inf)
+        return(list(dataDist=d2k, knotDist = knotDist))
+      }else{
+        return(list(dataDist=d2k))
+      }
+    } # end prediction
+    if(type=='A'){
+      # data to data matrix
+      geodistsoutput<-getGeoDist(xygrid=xygrid, polys=polys, datalocations=datacoords, plot.transition=plot.transition)
+      # select out knot columnns to get d2k
+      d2k<-geodistsoutput$distance[,attr(knotcoords, 'points.selected')]
+      d2k <- ifelse(data_mask, d2k, Inf)
+      if(knotmat==T){
+        #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
+        knotDist = geodistsoutput$distance[attr(knotcoords, 'points.selected'),attr(knotcoords, 'points.selected')] 
+        knotDist <- ifelse(knot_mask, knotDist, Inf)
+        return(list(dataDist=d2k, knotDist = knotDist))
+      }else{
+        return(list(dataDist=d2k))
+      }
+    } # end model
+  } # end geodesic
+}
+

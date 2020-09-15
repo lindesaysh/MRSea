@@ -90,7 +90,7 @@
 #' @export
 #'
 
-runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian', initialise=TRUE, initialKnots=NULL, initialKnPos=NULL, hdetest=FALSE){
+runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, vglmdatain, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian', initialise=TRUE, initialKnots=NULL, initialKnPos=NULL, hdetest=FALSE){
 
   if(class(model)[1]=='glm'){
     data<-model$data
@@ -107,7 +107,9 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
     panels <- model@panels
   }
   if(class(model)[1]=='vglm'){
-    data <- datain
+    # vglm model class doesn't include data so need datain
+    # this is used to add is to the model for vglm models only
+    data <- vglmdatain
   }
   
   if(isS4(model)){
@@ -246,7 +248,17 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, datain, splineParams=NULL, 
   }else{
     splineParams[[1]][['gap']]= salsa2dlist$gap
   }
-  splineParams[[1]][[14]]= NULL                       #this will be invInd
+  splineParams[[1]][[14]]= NULL  #this will be invInd
+  if (is.null(salsa2dlist$mn_dists)){
+    splineParams[[1]]['mn_dists']=FALSE
+  } else {
+    splineParams[[1]]['mn_dists']=salsa2dlist$mn_dists
+  }
+  if (is.null(salsa2dlist$raw_dists)){
+    splineParams[[1]]['raw_dists']=d2k
+  } else {
+    splineParams[[1]]['raw_dists']=salsa2dlist$raw_dists
+  }
   
   if (isS4(model)) {
     model@splineParams<-splineParams

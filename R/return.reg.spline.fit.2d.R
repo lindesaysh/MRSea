@@ -88,11 +88,11 @@
   }
 
   ###########################initialisation######################################
-
+  
   #if (isS4(baseModel)) {
   #  output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
   #} else {
-    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis,hdetest)
+    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis,hdetest,minKnots)
   #}
   
   point <- output$point
