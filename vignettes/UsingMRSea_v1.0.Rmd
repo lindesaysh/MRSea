@@ -22,6 +22,8 @@ Scott-Hayward, L.A.S., Oedekoven, C.S., Mackenzie, M.L. and Walker, C.G. (2019).
 *******
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
+devtools::install_github("lindesaysh/MRSea")
+require(MRSea)
 require(knitcitations)
 cleanbib()
 biblio <- read.bibtex("newref.bib")

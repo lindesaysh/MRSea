@@ -1,0 +1,263 @@
+---
+title: "Integration test for MRSea 2d salsa no 1d smooth, no other variables, no panels, no interactions"
+author: "LAS Scott-Hayward, C Fell"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+-------
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# devtools::install_github("lindesaysh/MRSea")
+devtools::load_all("C:/Users/kryzi/OneDrive - University of St Andrews/PhD/Code/MRsea")
+# require(MRSea)
+require(tidyverse)
+require(patchwork)
+require(knitr)
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, eval=TRUE, comment = '')
+```
+
+## Introduction
+This is the fourth in a series of tests that can be used to check changes to the MRSea package do not break previously working elements. They replicate the case study in the vignette but broken down into chunks. This fourth one checks the 2D salsa functions with just the 2d smooth and no other variables, no panel structure and no interactions.
+
+```{r message=FALSE, warning=FALSE}
+count.data <- read.csv("1.count.data.csv")
+data <- count.data
+data$response <- round(data$NHAT)
+data$blockid <- paste(data$transect.id, data$season, data$impact,sep = "")
+attach(data)
+```
+
+## Set up
+
+Set a prediction grid.  
+
+```{r, echo=FALSE}
+data("nysted.predictdata")  # contains predict.data
+# This is a spatial grid for making predictions.  All covariates in 
+# final model must be in this data frame and the naming must be the 
+# same as for the data
+predictData <- nysted.predictdata
+
+# Not including impact or season in the model so included data for only one impact and season, impact = 1 and season = 1 has highest count
+predictData <- predictData[predictData$impact==1&predictData$season==1,]
+
+
+```
+
+Set up the initial model with factor covariates and offset term
+```{r message=FALSE}
+initialModel <- glm(response ~ 1 + offset(log(area)), 
+  family = "quasipoisson", data = data)
+
+```
+
+
+## Selection of flexibility for 2D smooth term
+
+Create a grid of knots that will be used as possible knot locations.
+
+
+```{r knotgrid, message=FALSE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, cache=TRUE}
+
+set.seed(1234)
+knotgrid <- getKnotgrid(coordData = cbind(data$x.pos, data$y.pos), numKnots = 300)
+
+```
+
+```{r knot_comp, echo=FALSE, results='asis'}
+
+cat("Sum of knotgrid:", sum(knotgrid), "this should be 2018630. \n\n")
+
+```
+
+Calculate distance matrix
+
+```{r, echo=FALSE}
+# make distance matrices for datatoknots and knottoknots
+distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+
+```{r dist_comp, echo=FALSE, results='asis'}
+
+cat("Sum of datadist:", sum(distMats$dataDist[1,]), "this should be 8224.849. \n\n")
+cat("Sum of knotdist:", sum(distMats$knotDist), "this should be 1775357. \n\n")
+
+```
+
+Salsa 2D parameters
+
+```{r salsa_2d_params}
+
+salsa2dlist<-list(
+  fitnessMeasure = 'cv.gamMRSea', 
+  knotgrid = knotgrid, 
+  startKnots=15, 
+  minKnots=4, 
+  maxKnots=20, 
+  gap=0, 
+  cv.opts=list(cv.gamMRSea.seed=1, K=5)
+)
+
+```
+
+Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`.
+
+```{r message=FALSE, warning=FALSE, results='hide'}
+
+start_time <- Sys.time()
+salsa2dOutput<-runSALSA2D(initialModel, salsa2dlist, 
+  d2k=distMats$dataDist, k2k=distMats$knotDist, suppress.printout=TRUE)
+total_time <- Sys.time() - start_time
+
+```
+
+
+## Predictions compared to original
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7.5}
+
+predictdistMats <- makeDists(cbind(predictData$x.pos, predictData$y.pos), knotgrid)
+
+preds_out <- predict(object=salsa2dOutput$bestModel, newdata=predictData, type='response', g2k=predictdistMats$dataDist)
+
+pred_resp <- ggplot() + stat_summary_2d(data=predictData, aes(predictData$x.pos, predictData$y.pos, z=preds_out), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 3.4)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New predictions")
+
+knot_pos <- salsa2dOutput$splineParams[[1]]$knotPos
+knot_loc <- as.data.frame(knotgrid[knot_pos,])
+colnames(knot_loc) <- c("xx", "yy")
+rad_pos <- salsa2dOutput$splineParams[[1]]$radiusIndices
+radii_out <- salsa2dOutput$splineParams[[1]]$radii[rad_pos]
+knot_loc$rad <- radii_out
+
+for (rr in 1:nrow(knot_loc)) {
+  pred_resp <- pred_resp + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
+}
+
+predict_read_in <- read.csv("4.predict.data.15.csv")
+
+resp_read <- ggplot() + stat_summary_2d(data=predict_read_in, aes(x.pos, y.pos, z=ResponsePredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Animal Counts", limit=c(0, 3.4)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved predictions")
+
+knot_loc_read <- read.csv("4.knot.loc.15.csv")
+
+for (rr in 1:nrow(knot_loc_read)) {
+  resp_read <- resp_read + annotate("path", x=knot_loc_read$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc_read$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
+}
+
+(pred_resp + resp_read) + plot_layout(guides = 'collect')
+
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=7.5}
+
+preds_out_link <- predict(object=salsa2dOutput$bestModel, newdata=predictData, type='link', g2k=predictdistMats$dataDist)
+
+pred_link <- ggplot() + stat_summary_2d(data=predictData, aes(predictData$x.pos, predictData$y.pos, z=preds_out_link), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-18.6, 2.7)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("New predictions")
+
+for (rr in 1:nrow(knot_loc)) {
+  pred_link <- pred_link + annotate("path", x=knot_loc$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
+}
+
+link_read <- ggplot() + stat_summary_2d(data=predict_read_in, aes(x.pos, y.pos, z=LinkPredictions), fun=max, binwidth=c(0.5,0.5)) + theme_bw() + scale_fill_distiller(palette = "Spectral", name="Nhat on link scale", limit=c(-18.6, 2.7)) + coord_fixed(ratio = 1) + xlab("X coordinate") + ylab("Y coordinate") + ggtitle("Saved predictions")
+
+for (rr in 1:nrow(knot_loc_read)) {
+  link_read <- link_read + annotate("path", x=knot_loc_read$xx[rr] + 0.5 * cos(seq(0,2*pi,length.out=100)), y=knot_loc_read$yy[rr] + 0.5 * sin(seq(0,2*pi,length.out=100)))
+}
+
+pred_link + link_read + plot_layout(guides = 'collect')
+
+```
+
+
+
+
+```{r pred_compare, echo=FALSE, results='asis'}
+
+cat("Sum of all predictions on response scale:", sum(preds_out), "this should be 2166.568. \n\n")
+
+cat("Sum of all predictions on link scale:", sum(preds_out_link), "this should be -8723.428. \n\n")
+
+cat("Time for training:", round(total_time, 1), "Original time: 12.6. \n\n")
+
+salsa2dlog <- readLines('salsa2d.log')
+n_fits <- 0
+for (ii in 1:length(salsa2dlog)){
+  row_in <- salsa2dlog[ii]
+  row_in <- as.character(row_in)
+  if (grepl('fit thinplate 2D', row_in, fixed = TRUE)) {
+    n_fits <- n_fits + 1
+  }
+}
+
+cat("Number of model fits:", n_fits, "Original model fits: 794")
+
+```
+
+
+```{r, echo=FALSE}
+sum_results <- summary(salsa2dOutput$bestModel)
+kable(sum_results$coefficients, digits=3, caption="Coefficients from new model")
+
+```
+
+```{r, echo=FALSE}
+sum_results_read_in <- read.csv("4.sum.results.15.csv")
+kable(sum_results_read_in, digits=3, caption="Coefficients from saved model")
+
+```
+
+
+
+```{r sum_compare, echo=FALSE, results='asis'}
+
+cat("Sum of all estimates:", sum(sum_results$coefficients[,1]), "this should be -20.7902. \n\n")
+
+cat("Sum of all robust SE:", sum(sum_results$coefficients[,3]), "this should be 217.6414. \n\n")
+
+cat("Standard errors are equal to robust standard errors:", sum(sum_results$coefficients[,2])==sum(sum_results$coefficients[,3]), "\n\n")
+
+cat("Dispersion:", sum_results$dispersion, "this should be 13.85382. \n\n")
+
+```
+
+
+
+```{r mean_sum_sq, echo=FALSE, results='asis'}
+
+mean_sum_sq <- sum((predictData$truth.re - preds_out)^2)/nrow(predictData)
+
+cat("Mean square error:", mean_sum_sq, "this should be 0.6593585. \n\n")
+
+mean_sum_sq_data <- sum((data$response - predict.gamMRSea(newdata=data, object=salsa2dOutput$bestModel))^2)/nrow(data)
+
+cat("residual sum square error to data:", mean_sum_sq_data, "this should be 6.014707. \n\n")
+
+data_compare <- data[,c('x.pos', 'y.pos')]
+data_compare <- distinct(data_compare)
+pred_data_compare <- predictData[,c('x.pos', 'y.pos')]
+
+rows_seen <- do.call(paste, pred_data_compare) %in% do.call(paste, data_compare)
+
+mean_sum_sq_seen <- sum((predictData$truth.re[rows_seen] - preds_out[rows_seen])^2)/nrow(predictData[rows_seen,])
+
+cat("Mean square error to truth seen:", mean_sum_sq_seen, "this should be 0.7262826. \n\n")
+
+mean_sum_sq_unseen <- sum((predictData$truth.re[!rows_seen] - preds_out[!rows_seen])^2)/nrow(predictData[!rows_seen,])
+
+cat("Mean square error to truth unseen:", mean_sum_sq_unseen, "this should be 0.6378279. \n\n")
+
+
+```
+
+
+
+
