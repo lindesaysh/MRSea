@@ -121,7 +121,18 @@
   
   
   ################################### reduce knots till ok initialise fit #################################
-  if (summary(out.lm)$dispersion>initDisp) {
+  if (isS4(out.lm)) {
+    n_predictors <- dim(out.lm@predictors)[2]
+    hdeff_vals <- matrix(hdeff(out.lm), ncol=2, byrow=TRUE)
+    if (nrow(hdeff_vals) > length(aR)) {
+      hdeff_vals <- hdeff_vals[2:nrow(hdeff_vals),]
+    }
+    badfit_test <- ifelse(hdetest, sum(apply(hdeff_vals, 1, any)), FALSE)
+  } else {
+    badfit_test <- summary(out.lm)$dispersion > initDisp
+  }
+  
+  if (badfit_test) {
     output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
     ####print("here e")
     point <- output$point

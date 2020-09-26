@@ -24,9 +24,19 @@
     print(fitStat)
   
       if (length(aR) > minKnots) {
-        badknots<-data.frame(knots=aR, abscoeffs = abs(coef(out.lm))[-1], ses=sqrt(diag(summary(out.lm)$cov.robust))[-1])
-        badknots$dif<-badknots$abscoeffs - badknots$ses
-        i <- which(badknots$dif==min(badknots$dif))
+        if (isS4(out.lm)) {
+          n_predictors <- dim(out.lm@predictors)[2]
+          hdeff_vals <- matrix(hdeff(out.lm), ncol=2, byrow=TRUE)
+          if (nrow(hdeff_vals) > length(aR)) {
+            hdeff_vals <- hdeff_vals[2:nrow(hdeff_vals),]
+          }
+          badknots <-  seq(length(aR))[apply(hdeff_vals, 1, any)]
+          i <- sample(length(badknots), size=1)
+        } else {
+          badknots<-data.frame(knots=aR, abscoeffs = abs(coef(out.lm))[-1], ses=sqrt(diag(summary(out.lm)$cov.robust))[-1])
+          badknots$dif<-badknots$abscoeffs - badknots$ses
+          i <- which(badknots$dif==min(badknots$dif))
+        }
         tempR <- aR
         tempR <- tempR[-i]
         tempRadii = radiusIndices[-i]
@@ -42,7 +52,6 @@
         #output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
         #fitStat<-output$tempMeasure
         tempMeasure<-out$BIC
-        print(paste(tempMeasure, fitStat, length(aR), badfit, improvebadDrop))
         
           out.lm <- tempOut.lm
           fitStat<-tempMeasure
@@ -53,14 +62,23 @@
           newR <- tempR
           newRadii = tempRadii
           tempKnot <- i
-        if (summary(tempOut.lm)$dispersion>initDisp) {  
+        if (isS4(tempOut.lm)){
+          n_predictors <- dim(tempOut.lm@predictors)[2]
+          hdeff_vals <- matrix(hdeff(tempOut.lm), ncol=2, byrow=TRUE)
+          if (nrow(hdeff_vals) > length(tempR)) {
+            hdeff_vals <- hdeff_vals[2:nrow(hdeff_vals),]
+          }
+          badfit_test <- ifelse(hdetest, sum(apply(hdeff_vals, 1, any)), FALSE)
+        } else {
+          badfit_test <- summary(tempOut.lm)$dispersion > initDisp
+        }
+        if (badfit_test) {  
           badfit <- 1
           improvebadDrop <- 0
         }else{
           badfit <- 0
           improvebadDrop <- 1
         }     
-
         aR <- newR
         point <- c(point,knotPoint[tempKnot])
         position[knotPoint[tempKnot]]<-length(point)
