@@ -14,7 +14,7 @@ Author: Lindesay Scott-Hayward <lass@st-and.ac.uk>, Cornelia Oedekoven, Monique
     Mackenzie, Cameron Walker <cameron.walker@auckland.ac.nz>
 Maintainer: Lindesay Scott-Hayward <lass@st-and.ac.uk>
 Depends:
-    R (>= 3.3.1)
+    R (>= 3.5.0)
 Imports:
     calibrate (>= 1.7.2),
     car (>= 2.0-20),
@@ -33,7 +33,7 @@ Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
     cetacean distributions in offshore renewables development areas".
     University of St. Andrews
 URL: http://creem2.st-and.ac.uk/software.aspx
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Suggests:
     knitr,
     rmarkdown,
