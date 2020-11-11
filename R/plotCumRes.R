@@ -5,8 +5,6 @@
 #' 
 #' @param model Fitted model object (glm or gam)
 #' @param varlist Vector of covariate names (continous covariates only)
-#' @param d2k (default=NULL).  Distance matrix of data to knot points. Used only if there is a \code{\link{LRF.g}} or \code{\link{LRF.e}} smooth in the model formula
-#' @param splineParams (default \code{=NULL}) List object containing output from runSALSA/runSALSA2D required for updating \code{model}.  Used only if there is a \code{Local Radial Function} smooth in the model formula. See \code{\link{makesplineParams}} for details of this object.
 #' @param label Label printed at the end of the plot name to identify it if \code{save=TRUE}.
 #' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
 #'
@@ -29,7 +27,7 @@
 #' 
 #' @export
 #' 
-plotCumRes<- function(model, varlist, d2k=NULL, splineParams=NULL, label='', save=FALSE){
+plotCumRes<- function(model, varlist, label='', save=FALSE){
   
   require(splines)
   
@@ -66,7 +64,8 @@ plotCumRes<- function(model, varlist, d2k=NULL, splineParams=NULL, label='', sav
       covardat<- dat[model$y>0, coefpos[c]]
       newknots<-as.vector(quantile(covardat, seq(0.05, 0.95, length=7)))
       newknots<-unique(newknots)
-      dists<-d2k
+      #dists<-d2k
+      
       # removal term
       #term<-attributes(terms(model))$term.labels[grep(namesOfx[i], attributes(terms(model))$term.labels)]
       term<-labels(terms(model))[grep(namesOfx[c], labels(terms(model)))]

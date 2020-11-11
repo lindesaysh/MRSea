@@ -2,8 +2,6 @@
 #' 
 #' @param model Fitted model object (glm, gamMRSea or gam)
 #' @param id blocking structure
-#' @param d2k (\code{default=NULL}). (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations.
-#' @param splineParams (\code{default=NULL}). List object containng output from runSALSA (e.g. knot locations for continuous covariates). See \code{\link{makesplineParams}} for more details of this object. 
 #' @examples 
 #' # load data
 #' data(ns.data.re)
@@ -19,44 +17,51 @@
 #'
 #' @export
 #' 
-timeInfluenceCheck<-function(model, id, d2k=NULL, splineParams=NULL){
-  
-
-  attributes(model$formula)$.Environment<-environment()
-  response<-model$y
-    
-  if(class(model)[1]=='geeglm' | class(model)[1]=='gamMRSea' | class(model)[1]=='glm'){
-    dat<- model$data
+timeInfluenceCheck<-function (model, id) {
+  attributes(model$formula)$.Environment <- environment()
+  response <- model$y
+  if (class(model)[1] == "geeglm" | class(model)[1] == "gamMRSea" | 
+      class(model)[1] == "glm") {
+    dat <- model$data
   }
-  
-  if(class(model)[1]=='gam'){
-    dat<-model$model 
+  if (class(model)[1] == "gam") {
+    dat <- model$model
   }
-  
-  idUse<- sample(unique(id),1)
-  if(length(which(search()=='package:mgcv'))>0){
+  idUse <- sample(unique(id), 1)
+  if (length(which(search() == "package:mgcv")) > 0) {
     detach("package:mgcv")
   }
-  
   require(mgcv)
-  
-  inflStore<- matrix(0,nrow=length(unique(idUse)), ncol=(length(coef(model))+2))
-  
-  timeForOne<- system.time(for(i in unique(idUse)){
-    rowsToDel<- which(idUse==i)
-    pos<- which(i==idUse)
-    newData<- dat[-rowsToDel,]
-    if(is.null(d2k)==F){dists<- d2k[-rowsToDel,]}
-    options(warn=-1)
-    newMod<-update(model, .~. ,data=newData)
-    inflStore[pos,1:length(coef(model))]<-newMod$coefficients
-    presPred<- as.matrix(model.matrix(model)[rowsToDel,])%*%inflStore[pos,1:length(coef(model))]
-    inflStore[pos,ncol(inflStore)]<-sum((response[rowsToDel]-family(model)$linkinv(presPred))**2)
-    inflStore[pos,(ncol(inflStore)-1)]<-det(summary(newMod)$cov.scaled)/det(summary(model)$cov.scaled)
+  inflStore <- matrix(0, nrow = length(unique(idUse)), ncol = (length(coef(model)) + 
+                                                                 2))
+  timeForOne <- system.time(for (i in unique(idUse)) {
+    rowsToDel <- which(id == i)
+    pos <- which(i == idUse)
+    newData <- dat[-rowsToDel, ]
+    
+    presPred <- as.matrix(model.matrix(model)[rowsToDel, ]) %*% inflStore[pos, 1:length(coef(model))]
+    inflStore[pos, ncol(inflStore)] <- sum((response[rowsToDel] - family(model)$linkinv(presPred))^2)
+    model.det <- det(summary(model)$cov.scaled)
+    
+    if ("splineParams" %in% names(model)) {
+      orig.dist<-model$splineParams[[1]]$dist
+      model$splineParams[[1]]$dist<- model$splineParams[[1]]$dist[-rowsToDel,]
+    }
+    
+    options(warn = -1)
+    newMod <- update(model, . ~ ., data = newData)
+    if("panels" %in% names(newMod){
+      newMod$panels<-newMod$panels[-rowsToDel]
+    }
+    
+    inflStore[pos, 1:length(coef(newMod))] <- newMod$coefficients
+    inflStore[pos, (ncol(inflStore) - 1)] <- det(summary(newMod)$cov.scaled)/model.det
   })
-  print(paste("Calculating the influence measures will take approximately ", round(timeForOne[3]*length(unique(id))/60,0), " minutes", sep=""))
-  
-  options(warn=0)
+  print(paste("Calculating the influence measures will take approximately ", 
+              round(timeForOne[3] * length(unique(id))/60, 0), " minutes", 
+              sep = ""))
+  options(warn = 0)
+}
   
 }
 

@@ -2,8 +2,6 @@
 #' 
 #' @param model Fitted model object (glm, gamMRSea or gam)
 #' @param id blocking structure
-#' @param d2k (\code{default=NULL}). (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations.
-#' @param splineParams (\code{default=NULL}). List object containng output from runSALSA (e.g. knot locations for continuous covariates). See \code{\link{makesplineParams}} for more details of this object. 
 #' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
 #' 
 #' @details
@@ -57,7 +55,11 @@ runInfluence<-function(model, id=NULL, d2k=NULL, splineParams=NULL, save=FALSE, 
       id<-1:nrow(dat)
     }
   }  
-    
+  
+  # store the original distance matrix
+  if ("splineParams" %in% names(model)) {
+    orig.dist<-model$splineParams[[1]]$dist
+  }
   print("Calculating COVRATIO and PRESS Statistics")
   
   # detach("package:mgcv")
@@ -67,33 +69,52 @@ runInfluence<-function(model, id=NULL, d2k=NULL, splineParams=NULL, save=FALSE, 
   counter<-1
   for(i in unique(id)){
     if(dots==TRUE){if((counter/100)%%1 == 0){cat(counter, '\n')}else{cat('.')}}
+    #find rows to delete
     rowsToDel<- which(id==i)
     pos<- which(i==unique(id))
     newData<- dat[-rowsToDel,]
-    if(is.null(d2k)==F){
-      dists<- d2k[-rowsToDel,]
-    }
-    if(class(model)[1]=='gamMRSea'){
-      newMod<-update(model, .~. ,data=newData, panels=droplevels(id[-rowsToDel]))
-    }else{
-      newMod<-update(model, .~. ,data=newData)
-    }
-    inflStore[pos,(1:length(coef(model)))]<-newMod$coefficients
+    
+    # make assessment on original model
     nb<- as.matrix(model.matrix(model)[c(1),])
     nc<- as.matrix(inflStore[pos,1:length(coef(model))])
+    
     if(length(pos==1)){
       presPred <- t(nb)%*%nc
     }else{
       presPred <- nb%*%nc  
     }
+    
     inflStore[pos,ncol(inflStore)]<-sum((response[rowsToDel]-family(model)$linkinv(presPred))**2)
+    
     if(class(model)[1]=='gamMRSea'){
-      inflStore[pos,(ncol(inflStore)-1)]<-det(summary(newMod)$cov.robust)/det(summary(model)$cov.robust)
+      model.det<-det(summary(model)$cov.robust)
     }else{
-      inflStore[pos,(ncol(inflStore)-1)]<-det(summary(newMod)$cov.scaled)/det(summary(model)$cov.scaled)
+      model.det<-det(summary(model)$cov.scaled)
     }
     
+    # update model for reduced data size (includes data and distance matrix)
+    newMod<-model
+    if ("splineParams" %in% names(model)) {
+      newMod$splineParams[[1]]$dist<- newMod$splineParams[[1]]$dist[-rowsToDel,]
+    }
+    
+    if(class(model)[1]=='gamMRSea'){
+      newpanel<-id[-rowsToDel]
+      if(is.factor(newpanel)){
+        newpanel<-droplevels(newpanel)
+      }
+      newMod<-update(newMod, .~. ,data=newData, panels=newpanel)
+      newmod.det<-det(summary(newMod)$cov.robust)
+    }else{
+      newMod<-update(newMod, .~. ,data=newData)
+      newmod.det<-det(summary(newMod)$cov.scaled)
+    }
+    
+    # make assessment on new model
+    inflStore[pos,(1:length(coef(newMod)))]<-newMod$coefficients
+    inflStore[pos,(ncol(inflStore)-1)]<-newmod.det/model.det
     counter<-counter+1
+    
   }
   
   numericblock<-as.numeric(unique(id))
