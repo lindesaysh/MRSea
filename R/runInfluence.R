@@ -32,7 +32,7 @@
 #' }
 #' @export
 #' 
-runInfluence<-function(model, id=NULL, d2k=NULL, splineParams=NULL, save=FALSE, dots=FALSE){
+runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
   
   attributes(model$formula)$.Environment<-environment()
   response<-model$y
@@ -84,7 +84,7 @@ runInfluence<-function(model, id=NULL, d2k=NULL, splineParams=NULL, save=FALSE, 
       presPred <- nb%*%nc  
     }
     
-    inflStore[pos,ncol(inflStore)]<-sum((response[rowsToDel]-family(model)$linkinv(presPred))**2)
+    inflStore[pos,ncol(inflStore)]<-sum((response[rowsToDel]-c(family(model)$linkinv(presPred)))**2)
     
     if(class(model)[1]=='gamMRSea'){
       model.det<-det(summary(model)$cov.robust)
@@ -96,6 +96,7 @@ runInfluence<-function(model, id=NULL, d2k=NULL, splineParams=NULL, save=FALSE, 
     newMod<-model
     if ("splineParams" %in% names(model)) {
       newMod$splineParams[[1]]$dist<- newMod$splineParams[[1]]$dist[-rowsToDel,]
+      splineParams<<-model$splineParams
     }
     
     if(class(model)[1]=='gamMRSea'){
