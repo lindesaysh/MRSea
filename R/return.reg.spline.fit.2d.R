@@ -121,7 +121,7 @@
   
   ################################### reduce knots till ok initialise fit #################################
   if (summary(out.lm)$dispersion>initDisp) {
-    output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
+    output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
     ####print("here e")
     point <- output$point
     knotPoint <- output$knotPoint
