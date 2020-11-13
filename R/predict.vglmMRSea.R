@@ -1,4 +1,4 @@
-predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="response", coeff=NULL, includeB0=TRUE) {
+predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="response", coeff=NULL, includeB0=TRUE, conf_int=FALSE) {
 
   # If newdata and newdists are included predict from them
   # Otherwise predict from object
@@ -103,7 +103,26 @@ predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="respons
     preds_out = object@family@linkinv(preds_out, extra=object@extra)
   }
   
-  return(preds_out)
+  if (conf_int == TRUE) {
+    sum_out <- summaryvglm(object)
+    covs <- sum_out@cov.unscaled
+    rcoefs <- rmvnorm(1000, coefs, covs)
+    quant.func<- function(x){quantile(x, probs=c(0.025, 0.975))}
+    cis <- apply(rcoefs, 2, quant.func)
+    lw_ci <- matrix(cis[1,], ncol=2, byrow=T)
+    hi_ci <- matrix(cis[2,], ncol=2, byrow=T)
+    lw_lim <- new_bs_all %*% lw_ci
+    hi_lim <- new_bs_all %*% hi_ci
+    if (type == "response") {
+      lw_lim = object@family@linkinv(lw_lim, extra=object@extra)
+      hi_lim = object@family@linkinv(hi_lim, extra=object@extra)
+    }
+    return(list("predictions"=preds_out, "lower_limit"=lw_lim, "higher_limit"=hi_lim))
+    
+  } else {
+    return(preds_out)
+  }
+
 }
 
 

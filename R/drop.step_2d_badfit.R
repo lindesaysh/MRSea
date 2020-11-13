@@ -42,13 +42,13 @@
         tempRadii = radiusIndices[-i]
         output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
         initModel<-output$currentModel
-        models<-output$models
+        #models<-output$models
         initBIC<-output$fitStat
         #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
         out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
         tempRadii=out$radiusIndices
         tempOut.lm=out$out.lm
-        models=out$models
+        #models=out$models
         #output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
         #fitStat<-output$tempMeasure
         tempMeasure<-out$BIC
@@ -87,6 +87,7 @@
     }
   }
   
+  models[[length(models)+1]] <- list(aR,radiusIndices, radii, fitStat)
   
   ###   }
   list(point=point,knotPoint=knotPoint,position=position,aR=aR,BIC=fitStat,track=track,out.lm=out.lm,improveDrop=improvebadDrop,

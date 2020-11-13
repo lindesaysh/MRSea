@@ -291,9 +291,10 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, vglmdatain, splineParams=NU
   #   if(length(output$models)==0){
   #     output$aR<- output$invInd[output$aR]
   #   }
+  print("1")
   if(chooserad==FALSE){
     if(length(output$models)>0){
-      modRes<- c()
+      modRes <- c()
       for(m in 1:length(output$models)){
         modelNo<- m
         knotPosition<-output$models[[m]][[1]]
@@ -301,12 +302,20 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, vglmdatain, splineParams=NU
         r<- output$models[[m]][[3]]
         fitScore<- output$models[[m]][[4]]
         modRes<- rbind(modRes, data.frame(modelNo, knotPosition, rIs, fitScore))
+        print(paste(modelNo, "mr", modRes[m+1,4]))
       }
-      
+      #print(modRes$fitScore)
+      #print(order(modRes$fitScore))
       modRes<-modRes[order(modRes$fitScore),]
       bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
-      
+      #print(min(modRes[,4]))
+      #print(which(modRes$fitScore==min(modRes$fitScore)))
       a<-sum(as.vector(output$aR) - as.vector(unlist(output$models[[bestModNo]][1])))
+      #print(as.vector(output$aR))
+      #print(as.vector(unlist(output$models[[bestModNo]][1])))
+      #print(bestModNo)
+      #print(modRes$knotPosition)
+      #print(paste("a", a))
       if(a!=0) break
       
       #output$aR<- output$models[[bestModNo]][[1]]
@@ -326,7 +335,6 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, vglmdatain, splineParams=NU
     }
     initDisp<-getDispersion(baseModel)
     output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis, hdetest)
-    
     splineParams[[1]]$radii= radii
     splineParams[[1]][['knotPos']]= output_radii$aR
     TwoDModelsfirstStage <- output_radii$models
@@ -337,6 +345,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, vglmdatain, splineParams=NU
     
     baseModel<-output_radii$out.lm
   }else{
+    print("3")
     splineParams[[1]]$radii= radii
     splineParams[[1]][['knotPos']]= output$aR
     TwoDModelsfirstStage <- output$models
@@ -345,6 +354,7 @@ runSALSA2Dmn<-function(model, salsa2dlist, d2k, k2k, vglmdatain, splineParams=NU
     modelFit = output$outputFS[2]
     aRout = output$aR
   }
+  print("4")
   
   # dists<-splineParams[[1]]$dist
   # aR<-splineParams[[1]]$invInd[splineParams[[1]]$knotPos]

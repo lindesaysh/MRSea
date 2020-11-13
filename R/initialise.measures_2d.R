@@ -359,7 +359,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       stop('Fitness measure only supported for multinomial with vglm')
     }
   }
-
+  
   #cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
     # fitStat <- fitStat + 10000000

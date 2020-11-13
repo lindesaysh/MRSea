@@ -95,7 +95,7 @@
   #} else {
     output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis,hdetest,minKnots)
   #}
-  
+
   point <- output$point
   knotPoint <- output$knotPoint
   position <- output$position
@@ -133,15 +133,18 @@
   }
   
   if (badfit_test) {
+    print(paste("predropbad", BIC))
     output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
     ####print("here e")
     point <- output$point
     knotPoint <- output$knotPoint
     position <- output$position
     aR <- output$aR
+    print(paste("postdropbad", BIC))
     BIC <- output$BIC
     ####track <- output$track
     models <- thinModels(output$models)
+    # models <- NULL
     out.lm <- output$out.lm
     radiusIndices <- output$radiusIndices
     
