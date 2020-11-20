@@ -4,7 +4,9 @@
 \name{ns.predict.data.de}
 \alias{ns.predict.data.de}
 \title{Prediction grid data for nearshore post-impact decrease}
-\format{A data frame with 27798 rows and 11 variables}
+\format{
+A data frame with 27798 rows and 11 variables
+}
 \description{
 A simulated prediction dataset containing the true counts, the effort data and other variables of 
 grid data. The variables are as follows:

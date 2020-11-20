@@ -4,8 +4,7 @@
 \alias{anova.gamMRSea}
 \title{Anova Tables for \code{gamMRSea} Models}
 \usage{
-\method{anova}{gamMRSea}(object, varshortnames = NULL, panelid = NULL,
-  test = "Wald")
+\method{anova}{gamMRSea}(object, varshortnames = NULL, panelid = NULL, test = "Wald")
 }
 \arguments{
 \item{object}{A \code{gamMRSea} model object}

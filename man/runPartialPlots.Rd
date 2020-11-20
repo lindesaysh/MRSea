@@ -4,9 +4,19 @@
 \alias{runPartialPlots}
 \title{Plot partial plots for each of the variables listed in \code{factorlist.in} or \code{varlist.in}.}
 \usage{
-runPartialPlots(model, data, factorlist.in = NULL, varlist.in = NULL,
-  showKnots = FALSE, type = "response", partial.resid = FALSE,
-  save = FALSE, savedata = F, label = NULL, includeB0 = FALSE)
+runPartialPlots(
+  model,
+  data,
+  factorlist.in = NULL,
+  varlist.in = NULL,
+  showKnots = FALSE,
+  type = "response",
+  partial.resid = FALSE,
+  save = FALSE,
+  savedata = F,
+  label = NULL,
+  includeB0 = FALSE
+)
 }
 \arguments{
 \item{model}{Fitted model object (glm or gam)}

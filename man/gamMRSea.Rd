@@ -4,10 +4,26 @@
 \alias{gamMRSea}
 \title{gamMRSea model function}
 \usage{
-gamMRSea(formula, family = gaussian, data, weights, subset, na.action,
-  start = NULL, etastart, mustart, offset, control = list(...),
-  model = TRUE, method = "glm.fit", x = FALSE, y = TRUE,
-  contrasts = NULL, splineParams = NULL, ...)
+gamMRSea(
+  formula,
+  family = gaussian,
+  data,
+  weights,
+  subset,
+  na.action,
+  start = NULL,
+  etastart,
+  mustart,
+  offset,
+  control = list(...),
+  model = TRUE,
+  method = "glm.fit",
+  x = FALSE,
+  y = TRUE,
+  contrasts = NULL,
+  splineParams = NULL,
+  ...
+)
 }
 \description{
 See \code{\link{glm}} for details.  A \code{splineParams} object may be specified as part of the model object.

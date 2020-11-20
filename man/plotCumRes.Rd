@@ -4,17 +4,12 @@
 \alias{plotCumRes}
 \title{Calculate cumulative residuals and plot.}
 \usage{
-plotCumRes(model, varlist, d2k = NULL, splineParams = NULL,
-  label = "", save = FALSE)
+plotCumRes(model, varlist, label = "", save = FALSE)
 }
 \arguments{
 \item{model}{Fitted model object (glm or gam)}
 
 \item{varlist}{Vector of covariate names (continous covariates only)}
-
-\item{d2k}{(default=NULL).  Distance matrix of data to knot points. Used only if there is a \code{\link{LRF.g}} or \code{\link{LRF.e}} smooth in the model formula}
-
-\item{splineParams}{(default \code{=NULL}) List object containing output from runSALSA/runSALSA2D required for updating \code{model}.  Used only if there is a \code{Local Radial Function} smooth in the model formula. See \code{\link{makesplineParams}} for details of this object.}
 
 \item{label}{Label printed at the end of the plot name to identify it if \code{save=TRUE}.}
 

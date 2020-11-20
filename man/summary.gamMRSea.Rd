@@ -4,8 +4,7 @@
 \alias{summary.gamMRSea}
 \title{Summarising model fits from models fitted using the MRSea package.}
 \usage{
-\method{summary}{gamMRSea}(object, dispersion = NULL,
-  varshortnames = NULL, ...)
+\method{summary}{gamMRSea}(object, dispersion = NULL, varshortnames = NULL, ...)
 }
 \arguments{
 \item{object}{an object of class "gamMRSea", usually, a result of a call from the MRSea package.}

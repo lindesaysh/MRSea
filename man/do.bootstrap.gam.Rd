@@ -4,9 +4,19 @@
 \alias{do.bootstrap.gam}
 \title{Bootstrapping function without model selection using \code{gam} as the second stage count model}
 \usage{
-do.bootstrap.gam(orig.data, predict.data, ddf.obj = NULL, model.obj,
-  resample = "transect.id", rename = "segment.id", stratum = NULL, B,
-  name = NULL, save.data = FALSE, nhats = NULL)
+do.bootstrap.gam(
+  orig.data,
+  predict.data,
+  ddf.obj = NULL,
+  model.obj,
+  resample = "transect.id",
+  rename = "segment.id",
+  stratum = NULL,
+  B,
+  name = NULL,
+  save.data = FALSE,
+  nhats = NULL
+)
 }
 \arguments{
 \item{orig.data}{The original data. In case \code{ddf.obj} is specified, this should be the original distance data. In case \code{ddf.obj} is \code{NULL}, it should have the format equivalent to \code{count.data} where each record represents the summed up counts at the segments.}

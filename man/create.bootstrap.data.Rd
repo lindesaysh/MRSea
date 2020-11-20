@@ -4,8 +4,12 @@
 \alias{create.bootstrap.data}
 \title{Create bootstrap data for non-parametric bootstrapping}
 \usage{
-create.bootstrap.data(dis.data, resample = "transect.id",
-  rename = "segment.id", stratum = NULL)
+create.bootstrap.data(
+  dis.data,
+  resample = "transect.id",
+  rename = "segment.id",
+  stratum = NULL
+)
 }
 \arguments{
 \item{dis.data}{Original data to be bootstrapped. Requires a column that matches argument \code{resample} exactly.}

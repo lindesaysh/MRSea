@@ -4,7 +4,9 @@
 \name{ns.data.re}
 \alias{ns.data.re}
 \title{Nearshore data with redistribution post-impact}
-\format{A data frame with 27798 rows and 12 variables}
+\format{
+A data frame with 27798 rows and 12 variables
+}
 \description{
 A simulated dataset containing the observed counts, the effort data and other variables of 
 grid data. The variables are as follows:

@@ -4,8 +4,12 @@
 \alias{runsTest}
 \title{Runs Test for Randomness}
 \usage{
-runsTest(y, plot.it = FALSE, alternative = c("two.sided",
-  "positive.correlated", "negative.correlated"), emp.distribution = NULL)
+runsTest(
+  y,
+  plot.it = FALSE,
+  alternative = c("two.sided", "positive.correlated", "negative.correlated"),
+  emp.distribution = NULL
+)
 }
 \arguments{
 \item{y}{a numeric vector of data values}

@@ -4,9 +4,18 @@
 \alias{do.bootstrap.cress.robust}
 \title{Bootstrapping function without model selection for a model of class 'gamMRSea'}
 \usage{
-do.bootstrap.cress.robust(model.obj, predictionGrid, splineParams = NULL,
-  g2k = NULL, B, robust = T, name = NULL, seed = 12345,
-  nCores = 1, cat.message = TRUE)
+do.bootstrap.cress.robust(
+  model.obj,
+  predictionGrid,
+  splineParams = NULL,
+  g2k = NULL,
+  B,
+  robust = T,
+  name = NULL,
+  seed = 12345,
+  nCores = 1,
+  cat.message = TRUE
+)
 }
 \arguments{
 \item{model.obj}{The best fitting \code{CReSS} model for the original count data. Should be geeglm or a Poisson/Binomial GLM (not quasi).}

@@ -4,7 +4,9 @@
 \name{dis.data.re}
 \alias{dis.data.re}
 \title{Line transect data with redistribution post-impact}
-\format{A data frame with 10951 rows and 12 variables}
+\format{
+A data frame with 10951 rows and 12 variables
+}
 \description{
 A simulated dataset containing the observed perpendicular distances, the effort data and other variables of 
 segmented line transect data. The variables are as follows:

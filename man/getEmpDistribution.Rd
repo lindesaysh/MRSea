@@ -4,8 +4,15 @@
 \alias{getEmpDistribution}
 \title{Function to generate the empirical distribution of the runs test statistic, given some data and a model.}
 \usage{
-getEmpDistribution(n.sim, simData, model, data, plot = FALSE,
-  returnDist = TRUE, dots = TRUE)
+getEmpDistribution(
+  n.sim,
+  simData,
+  model,
+  data,
+  plot = FALSE,
+  returnDist = TRUE,
+  dots = TRUE
+)
 }
 \arguments{
 \item{n.sim}{The number of simulated sets of data.}

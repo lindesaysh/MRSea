@@ -4,10 +4,19 @@
 \alias{runSALSA1D}
 \title{Running SALSA for continuous one-dimensional covariates.}
 \usage{
-runSALSA1D(initialModel, salsa1dlist, varlist, factorlist = NULL,
-  predictionData = NULL, varlist_cyclicSplines = NULL,
-  splineParams = NULL, datain, removal = FALSE, panelid = NULL,
-  suppress.printout = FALSE)
+runSALSA1D(
+  initialModel,
+  salsa1dlist,
+  varlist,
+  factorlist = NULL,
+  predictionData = NULL,
+  varlist_cyclicSplines = NULL,
+  splineParams = NULL,
+  datain,
+  removal = FALSE,
+  panelid = NULL,
+  suppress.printout = FALSE
+)
 }
 \arguments{
 \item{initialModel}{The best fitting \code{CReSS} model with no continuous covariates specified.  This must be a model of class \code{glm}.}
