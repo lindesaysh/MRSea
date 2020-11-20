@@ -24,12 +24,18 @@
     print(fitStat)
   
       if (length(aR) > minKnots) {
-        badknots<-data.frame(knots=aR, abscoeffs = abs(coef(out.lm))[-1], ses=sqrt(diag(summary(out.lm)$cov.robust))[-1])
+        
+        twoDcoeffid <- grep("LRF.", names(coefficients(out.lm)))
+        length(twoDcoeffid)/length(aR)
+        
+        badknots<-data.frame(knots=rep(aR, by=2), abscoeffs = abs(coef(out.lm))[twoDcoeffid], ses=sqrt(diag(summary(out.lm)$cov.robust))[twoDcoeffid])
+        
         badknots$dif<-badknots$abscoeffs - badknots$ses
         i <- which(badknots$dif==min(badknots$dif))
+        badknotid<-which(aR==badknots[i,1])
         tempR <- aR
-        tempR <- tempR[-i]
-        tempRadii = radiusIndices[-i]
+        tempR <- tempR[-badknotid]
+        tempRadii = radiusIndices[-badknotid]
         output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
         initModel<-output$currentModel
         models<-output$models
@@ -52,7 +58,7 @@
           #print(fitStat)
           newR <- tempR
           newRadii = tempRadii
-          tempKnot <- i
+          tempKnot <- badknotid
         if (summary(tempOut.lm)$dispersion>initDisp) {  
           badfit <- 1
           improvebadDrop <- 0
