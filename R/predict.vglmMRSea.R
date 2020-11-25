@@ -1,5 +1,6 @@
 predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="response", coeff=NULL, includeB0=TRUE, conf_int=FALSE) {
 
+  library(mvtnorm)
   # If newdata and newdists are included predict from them
   # Otherwise predict from object
   if (is.null(newdata)) {
@@ -95,9 +96,9 @@ predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="respons
   #neta <- nyy - 1
   neta <- dim(object@predictors)[2]
   
-  coefs <- matrix(coefs, ncol=neta, byrow=TRUE)
+  coefs_mat <- matrix(coefs, ncol=neta, byrow=TRUE)
   
-  preds_out = new_bs_all %*% coefs
+  preds_out = new_bs_all %*% coefs_mat
   
   if (type == "response") {
     preds_out = object@family@linkinv(preds_out, extra=object@extra)
