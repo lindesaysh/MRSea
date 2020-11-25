@@ -1,6 +1,7 @@
 predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="response", coeff=NULL, includeB0=TRUE, conf_int=FALSE) {
 
   library(mvtnorm)
+
   # If newdata and newdists are included predict from them
   # Otherwise predict from object
   if (is.null(newdata)) {
