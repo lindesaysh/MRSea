@@ -45,7 +45,7 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
   
  splineParams <- model$splineParams
  
- setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="ANY", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="ANY")) -> vglmMRSea
+ # setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="ANY", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="ANY")) -> vglmMRSea
   
   if(save==T){
     if(type=='response'){
