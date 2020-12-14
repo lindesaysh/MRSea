@@ -1,7 +1,7 @@
 #' Function for exchanging knot locations and re-fitting model to find best one
 #'
 #'
-#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#' @author Cameron Walker, Department of Engineering Science, University of Auckland.
 #'
 #' @export
 #'
@@ -22,43 +22,64 @@
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    indexdat<-getlargestresid(out.lm, n=10)
-    # if (isS4(baseModel)){
-    #   indexdat<-order(rowSums(abs(residuals(baseModel, type='pearson'))), decreasing = TRUE)[1:5]
-    # } else {
-    #   indexdat<-order(abs(residuals(baseModel, type='pearson')), decreasing = TRUE)[1:5]
-    # }
     #### Find available knots
     legPos<-position[which(apply(knotDist[point,aR],1,min)>=gap)]
-    if(ncol(knotgrid)>2){
-      nm<-names(knotgrid)[3]
-      residchunk<-eval(parse(text=paste('data$', nm, '[indexdat[1]]')))
-      knotchunkid<-which(knotgrid[point,nm]==residchunk)
-      new<-scale(knotgrid[point[knotchunkid],1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
-      # which aR are in residchunk
-      aRresidchunk<-aR[which(knotgrid[aR,nm]==residchunk)]
-      legPos1<-position[which(knotgrid[,nm]==residchunk)]
-      legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
-      legPos<-legPos1[legPos2]
-      index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
-      # ggplot() + geom_point(data=knotgrid, aes(X1, X2)) + facet_wrap(~yearmonth) +
-      #   geom_point(data=knotgrid[point[knotchunkid],], aes(X1, X2), shape=2, size=2)+
-      #   geom_point(data=knotgrid[aR,], aes(X1, X2), shape=3, size=2, col='blue') +
-      #   geom_point(data=knotgrid[aRresidchunk,], aes(X1, X2), shape=3, size=4, col='blue') +
-      #   geom_point(data=knotgrid[point[legPos1],], aes(X1, X2), shape=3, size=2, col='red')+
-      #   geom_point(data=knotgrid[point[legPos1[legPos2]],], aes(X1, X2), shape=4, size=2, col='green') +
-      #   geom_point(data=knotgrid[point[legPos],], aes(X1, X2), shape=5, size=3, col='maroon') + coord_equal() + geom_point(data=data[indexdat[1],], aes(x.pos, y.pos), size=3, col='thistle') + geom_point(data=knotgrid[point[index],], aes(X1, X2), shape=7, size=3, col='black')
-    }else{
-      index<-c()
-      for(d in indexdat){
-        new<-scale(knotgrid[point,1:2],center=c(explData[d,1],explData[d,2]))
-        index<-c(index, which.min(abs(new[,1])+abs(new[,2])))
+    
+    if(out.lm$splineParams[[1]]$modelType=='regression'){
+      indexdat<-getlargestresid(out.lm, n=10)
+      if(ncol(knotgrid)>2){
+        nm<-names(knotgrid)[3]
+        residchunk<-eval(parse(text=paste('data$', nm, '[indexdat[1]]')))
+        knotchunkid<-which(knotgrid[point,nm]==residchunk)
+        new<-scale(knotgrid[point[knotchunkid],1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
+        # which aR are in residchunk
+        aRresidchunk<-aR[which(knotgrid[aR,nm]==residchunk)]
+        legPos1<-position[which(knotgrid[,nm]==residchunk)]
+        legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
+        legPos<-legPos1[legPos2]
+        index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
+        # ggplot() + geom_point(data=knotgrid, aes(X1, X2)) + facet_wrap(~yearmonth) +
+        #   geom_point(data=knotgrid[point[knotchunkid],], aes(X1, X2), shape=2, size=2)+
+        #   geom_point(data=knotgrid[aR,], aes(X1, X2), shape=3, size=2, col='blue') +
+        #   geom_point(data=knotgrid[aRresidchunk,], aes(X1, X2), shape=3, size=4, col='blue') +
+        #   geom_point(data=knotgrid[point[legPos1],], aes(X1, X2), shape=3, size=2, col='red')+
+        #   geom_point(data=knotgrid[point[legPos1[legPos2]],], aes(X1, X2), shape=4, size=2, col='green') +
+        #   geom_point(data=knotgrid[point[legPos],], aes(X1, X2), shape=5, size=3, col='maroon') + coord_equal() + geom_point(data=data[indexdat[1],], aes(x.pos, y.pos), size=3, col='thistle') + geom_point(data=knotgrid[point[index],], aes(X1, X2), shape=7, size=3, col='black')
+      }else{
+        index<-c()
+        for(d in indexdat){
+          # find knot point nearest to largest residual
+          new<-scale(knotgrid[point,1:2],center=c(explData[d,1],explData[d,2]))
+          index<-c(index, which.min(abs(new[,1])+abs(new[,2])))
+        }
+        index<-unique(index)
+        # quilt.plot(data$x.pos, data$y.pos, getPPresiduals(out.lm), nrow=170, ncol=77)
+        # points(knotgrid[aR,], col='lightblue', cex=2)
+        # points(knotgrid[point[index],], cex=2, pch='x')
+        # points(data[indexdat,c('x.pos', 'y.pos')], cex=2, col='green')
       }
-      index<-unique(index)
-      # quilt.plot(data$x.pos, data$y.pos, getPPresiduals(out.lm), nrow=170, ncol=77)
-      # points(knotgrid[aR,], col='lightblue', cex=2)
-      # points(knotgrid[point[index],], cex=2, pch='x')
-      # points(data[indexdat,c('x.pos', 'y.pos')], cex=2, col='green')
+    }
+    if(out.lm$splineParams[[1]]$modelType=='pointProcess'){
+      dat<-out.lm$data
+      # select only legal columns?
+      d2k_legal<-dists[,legPos]
+      dat<-dat %>%
+        mutate(nearestknot = apply(d2k_legal, 1, which.min),
+               fits = fitted(out.lm))
+      knot.pts.intensity<-dat %>%
+        group_by(nearestknot) %>% 
+        summarise(npts = sum(response))
+      
+      knot.quads.intensity<-filter(dat, response==0) %>%
+        group_by(nearestknot) %>% 
+        summarise(npts = sum(fits))
+      
+      modelfit<-left_join(knot.pts.intensity, knot.quads.intensity, by="nearestknot") %>%
+        mutate(resids = abs(npts.x - npts.y)) %>%
+        arrange(desc(resids))
+      
+      index<-modelfit$nearestknot[1:10]
+      
     }
     
     # 

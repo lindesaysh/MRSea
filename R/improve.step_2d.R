@@ -27,7 +27,7 @@
     # create a random sample to randomly select knot order
     knts <- sample(num)
     improve_knts <- rep(0, num)
-    print("new version")
+    #print("new version")
     for (k in 1:num) {
       # get random knot selection from sample
       i <- knts[k]

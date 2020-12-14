@@ -2,7 +2,7 @@
 #'
 #'
 #'
-#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#' @author Cameron Walker, Department of Engineering Science, University of Auckland.
 #'
 #' @export
 #'
@@ -60,7 +60,7 @@
   #   sink(file='salsa2d.log')
   # }
   # 
-  print("pointprocess residuals")
+  
   # split out spline parameter object into its pieces
   knotDist <- splineParams[[1]]$knotDist
   radii <- splineParams[[1]]$radii
@@ -76,6 +76,7 @@
 
   # LSH 12/3/15 added dispersion parameter calc
   if(splineParams[[1]]$modelType=='pointProcess'){
+    print("pointprocess residuals")
     initDisp<-Inf
   }else{
     initDisp<-getDispersion(baseModel)

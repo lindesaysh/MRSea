@@ -140,7 +140,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   if(chooserad==FALSE){
     if(length(r_seq)>1){
       if(salsa2dlist$modelType=='pointProcess'){
-        radii<- r_seq[1] 
+        radii<- r_seq[5] 
       }else{
         radii<- r_seq[round(length(r_seq)/2)]  
       }
@@ -243,10 +243,10 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
         rIs<- output$models[[m]][[2]]
         r<- output$models[[m]][[3]]
         fitScore<- output$models[[m]][[4]]
-        print(modelNo)
-        print(knotPosition)
-        print(rIs)
-        print(fitScore)
+        # print(modelNo)
+        # print(knotPosition)
+        # print(rIs)
+        # print(fitScore)
         modRes<- rbind(modRes, data.frame(modelNo, knotPosition, rIs, fitScore))
       }
       
@@ -254,7 +254,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
       bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
       
       a<-sum(as.vector(output$aR) - as.vector(unlist(output$models[[bestModNo]][1])))
-      print(paste('a = ', a, sep=''))
+      #print(paste('a = ', a, sep=''))
       if(a!=0) break
       
       #output$aR<- output$models[[bestModNo]][[1]]
