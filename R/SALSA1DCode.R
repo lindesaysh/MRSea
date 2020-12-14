@@ -98,6 +98,13 @@
 ####deal with multiple unordered x-values
 knotSites <- cbind(sort(explanatory), rep(1, length(explanatory)))
 knotSites <- knotSites[which(duplicated(knotSites)==F),]
+
+# remove knots sites within gap of boundary
+if(gap>0){
+  knotSites<-knotSites[-(which(knotSites[,1]<=(bd[1] + gap))),]
+  knotSites <- knotSites[-(which(knotSites[,1]>=(bd[2] - gap))),]
+}
+
 if (nrow(knotSites) > maxSites) {
  if(nrow(knotSites)>800){
    knotSites <- knotSites[sample(1:nrow(knotSites), 800),]
@@ -117,6 +124,11 @@ if(length(which(knotSites==bd[1]))>0){
 if(length(which(knotSites==bd[2]))>0){
    knotSites <- knotSites[-(which(knotSites>=(bd[2] - gap)))]
 }
+
+
+test<-as.matrix(dist(c(knotSites, explanatory)))
+test<-test[(length(knotSites) + 1): (length(knotSites) + length(explanatory)), 1:length(knotSites)]
+nearestknot = as.vector(apply(test, 1, which.min))
 
 #print(knotSites)
 
@@ -144,7 +156,7 @@ if(length(which(knotSites==bd[2]))>0){
       improveDrop <- 0
     ###################################exchange step#############################
       output <- exchange.step(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
-                                 out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp, cv.opts)
+                                 out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp, cv.opts, nearestknot)
       point <- output$point
       knotPoint <- output$knotPoint
       position <- output$position
@@ -255,7 +267,7 @@ print("initialisation complete...")
 ######################################################################################################################
 
 "exchange.step" <- function(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,
-                               measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
+                               measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts, nearestknot){
   
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -270,7 +282,7 @@ print("initialisation complete...")
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    output <- locate.max.res(point,position,gap,response,explanatory, bd, winHalfWidth,out.lm,knotPoint,aR,wts, knotSites, spl)
+    output <- locate.max.res(point,position,gap,response,explanatory, bd, winHalfWidth,out.lm,knotPoint,aR,wts, knotSites, spl, nearestknot)
     index <- output$index
     #if (length(index)>1) browser()
     if (length(index)>0) {
@@ -313,48 +325,70 @@ print("initialisation complete...")
 
 ###################################################################################################################
 
-"locate.max.res" <- function(point,position,gap,response,explanatory, bd,winHalfWidth,out.lm,knotPoint,aR,wts,knotSites, spl){
-   
+"locate.max.res" <- function(point,position,gap,response,explanatory, bd,winHalfWidth,out.lm,knotPoint,aR,wts,knotSites, spl, nearestknot){
+  
   print("Locating maximum residual......")
   
-  if(splineParams[[1]]$modelType=='pointProcess'){
-    tempRes <<-getPPresiduals(out.lm)
-  }else{
-    tempRes <<-residuals(out.lm,type="pearson")  
-  }
-  
   index <- NULL
-  for (i in 1:length(knotPoint)) {
-    if (isS4(out.lm)){
-      tempRes[(explanatory <= knotSites[knotPoint[i]]+gap)&(explanatory >= knotSites[knotPoint[i]]-gap),] = 0
-      tempRes[(explanatory <= bd[1] + gap),] = 0
-      tempRes[(explanatory >= bd[2] - gap),] = 0
+  
+  if(splineParams[[1]]$modelType=='pointProcess'){
+    #tempRes <<-getPPresiduals(out.lm)
+    
+    dat<- data.frame(response = out.lm$data$response, 
+                     explanatory, 
+                     nearestknot, 
+                     fits=fitted(out.lm))
+    
+    knot.pts.intensity<-dat %>%
+      group_by(nearestknot) %>% 
+      summarise(npts = sum(response))
+    
+    knot.quads.intensity<-filter(dat, response==0) %>%
+      group_by(nearestknot) %>% 
+      summarise(npts = sum(fits))
+    
+    modelfit<-left_join(knot.pts.intensity, knot.quads.intensity, by="nearestknot") %>%
+      mutate(resids = abs(npts.x - npts.y)) %>%
+      filter(nearestknot %in% knotPoint == FALSE) %>%
+      arrange(desc(resids)) 
+    
+    if (nrow(modelfit)==0) {
+      print("No move available")
+    }else{
+      index<-which(point==modelfit$nearestknot[1])  
+    } 
+    
+  }else{
+    tempRes <-residuals(out.lm,type="pearson")  
+    for (i in 1:length(knotPoint)) {
+      tempRes[(explanatory <= knotSites[knotPoint[i]] + gap) & 
+                (explanatory >= knotSites[knotPoint[i]] - gap)] = 0
+      tempRes[(explanatory <= bd[1] + gap)] = 0
+      tempRes[(explanatory >= bd[2] - gap)] = 0
+    }
+    # 8/8/12 LSH
+    # add if statement to prevent random allocation of maxInd if tempRes is all zeros
+    #
+    if (max(abs(tempRes))==0) {
+      print("No move available")
     } else {
-      tempRes[(explanatory <= knotSites[knotPoint[i]]+gap)&(explanatory >= knotSites[knotPoint[i]]-gap)] = 0
-	    tempRes[(explanatory <= bd[1] + gap)] = 0
-	    tempRes[(explanatory >= bd[2] - gap)] = 0
+      if (isS4(out.lm)){
+        maxInd = which.max(tempRes)
+      } else {
+        maxInd = max.col(t(abs(tempRes)))
+      }
+      siteIndex = which(abs(knotSites-explanatory[maxInd])==min(abs(knotSites[position>0]-explanatory[maxInd])))[1]
+      # added the [1] to only take the first nearest point.  only an issue if selected data location to place knot is exactly equidistant to knot locations available eitherside
+      #if(length(siteIndex>1)) browser()
+      index = which(point==siteIndex)
     }
   }
-  # 8/8/12 LSH
-  # add if statement to prevent random allocation of maxInd if tempRes is all zeros
-  #
-  if (max(abs(tempRes))==0) {
-		print("All Residuals Zero - no move")
-	} else {
-	  if (isS4(out.lm)){
-	    maxInd = which.max(tempRes)
-	  } else {
-	    maxInd = max.col(t(abs(tempRes)))
-	  }
-    siteIndex = which(abs(knotSites-explanatory[maxInd])==min(abs(knotSites[position>0]-explanatory[maxInd])))[1]
-    # added the [1] to only take the first nearest point.  only an issue if selected data location to place knot is exactly equidistant to knot locations available eitherside
-    #if(length(siteIndex>1)) browser()
-    index = which(point==siteIndex)
-    point<<-point
-    position<<-position
-    knotSites<<-knotSites
+    point<-point
+    position<-position
+    knotSites<-knotSites
+    
     print("Maximum residual found...")
-	}
+    
   list(index=index)
 }
 

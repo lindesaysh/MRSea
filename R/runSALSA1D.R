@@ -183,8 +183,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   if(is.null(salsa1dlist$modelType)){
     salsa1dlist$modelType<-'regression'
   }
-  splineParams[[1]][['modelType']] = salsa1dlist$modelType
-  
+  initialModel$modelType = salsa1dlist$modelType
+  splineParams[[1]]$modelType= salsa1dlist$modelType
   
   terms1D <- list(length(varlist))
   
@@ -208,8 +208,12 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   if(fam=='BinProp'){
     baseModel <- eval(parse(text=paste("glm(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }else{
-    baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+    termcall<-paste(terms1D, collapse="+")
+    baseModel<-eval(parse(text=paste0("update(initialModel, .~. +", paste(termcall), ")")))
+    #baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }
+  
+  
   
   if(removal==TRUE){
     set.seed(seed.in)
@@ -266,7 +270,11 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(fam=='BinProp'){
       response<-cbind(data$successes, data$failures)
     }else{
-      response<-data$response  
+      if(splineParams[[1]]$modelType=="pointProcess"){
+        response<-data$response/data$pp.wts
+      }else{
+        response<-data$response    
+      }
     }
     bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
     gap <- (salsa1dlist$gaps[(i-1)])
