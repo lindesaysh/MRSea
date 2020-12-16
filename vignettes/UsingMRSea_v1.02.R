@@ -16,6 +16,12 @@ result <- ddf(dsmodel=~mcds(key="hn", formula=~1),
               data = dis.data, method="ds", 
               meta.data=list(width=250))
 
+## ----dist, cache=TRUE, results='hide', warning=FALSE, message=FALSE-----------
+# create.NHAT and create.count.data are MRSea functions to adjust the 
+# sightings for the detection function estimated above.
+dis.data <- create.NHAT(dis.data,result)
+count.data <- create.count.data(dis.data)
+
 ## ----message=FALSE, warning=FALSE---------------------------------------------
 data <- count.data
 data$response <- round(data$NHAT)
@@ -75,6 +81,12 @@ summary(salsa1dOutput$bestModel)
 ## -----------------------------------------------------------------------------
 # How many knots were chosen for depth?
 salsa1dOutput$splineParams[[2]]$knots
+# ~~~~~~~~~~~~~~~~~~~~~~~
+
+## ----knotgrid, message=FALSE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, cache=TRUE----
+knotgrid<- getKnotgrid(coordData = cbind(data$x.pos, data$y.pos), numKnots = 300)
+#
+# write.csv(knotgrid, file='knotgrid_fullanalysis.csv', row.names=F)
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 ## -----------------------------------------------------------------------------

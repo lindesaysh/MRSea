@@ -37,5 +37,5 @@ drop.step_2d(
 Function that tries dropping knots to find an improvement in fit
 }
 \author{
-Cameron Walker, Department of Enginering Science, University of Auckland.
+Cameron Walker, Department of Engineering Science, University of Auckland.
 }
