@@ -23,6 +23,7 @@ predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="respons
   radiusIndices <- splineParams[[1]]$radiusIndices
   #varz <- object@varshortnames
   varz <- names(object@misc$orig.assign)
+  varz_short <- object@varshortnames
   n_sp <- length(splineParams)
   
   if (varz[1]=="(Intercept)"){
@@ -54,11 +55,12 @@ predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="respons
   if (length(varz) > 0) {
     # Create bases for newdata - 1d variables first
     for (nv in 1:length(varz)) {
-      var_in_txt <- paste0(varz[nv], "<-data$", varz[nv])
+      var_in_txt <- paste0(varz_short[nv], "<-data$", varz_short[nv])
       var_in <- eval(parse(text=var_in_txt))
-      var_bs_txt <- paste0("bs(", varz[nv], ", knots=splineParams[[", nv + 1,
-                           "]]$knots, degree=splineParams[[", nv + 1, "]]$degree, ",
-                           "Boundary.knots=splineParams[[", nv+ 1, "]]$bd)")
+      #var_bs_txt <- paste0("bs(", varz_short[nv], ", knots=splineParams[[", nv + 1,
+      #                     "]]$knots, degree=splineParams[[", nv + 1, "]]$degree, ",
+      #                     "Boundary.knots=splineParams[[", nv+ 1, "]]$bd)")
+      var_bs_txt <- varz[nv]
       var_bs <- eval(parse(text=var_bs_txt))
       if (nv==1){
         new_bs_all <- var_bs
