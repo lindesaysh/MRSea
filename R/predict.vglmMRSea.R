@@ -110,8 +110,8 @@ predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="respons
     rcoefs <- rmvnorm(1000, coefs, covs)
     quant.func<- function(x){quantile(x, probs=c(0.025, 0.975))}
     cis <- apply(rcoefs, 2, quant.func)
-    lw_ci <- matrix(cis[1,], ncol=2, byrow=T)
-    hi_ci <- matrix(cis[2,], ncol=2, byrow=T)
+    lw_ci <- matrix(cis[1,], ncol=neta, byrow=T)
+    hi_ci <- matrix(cis[2,], ncol=neta, byrow=T)
     lw_lim <- new_bs_all %*% lw_ci
     hi_lim <- new_bs_all %*% hi_ci
     if (type == "response") {

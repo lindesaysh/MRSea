@@ -25,7 +25,11 @@
     if (isS4(out.lm)){
       abs_resids <- abs(residuals(out.lm, type='pearson'))
       indexdat = order(abs_resids, decreasing = TRUE)[1:5]
-      indexdat <- ifelse(indexdat > nrow(abs_resids), indexdat - nrow(abs_resids), indexdat)
+      for (id in 1:5){
+        while (indexdat[id] > nrow(abs_resids)) {
+          indexdat[id] <- indexdat - nrow(abs_resids)
+        }
+      }
     } else {
       indexdat<-order(abs(residuals(out.lm, type='pearson')), decreasing = TRUE)[1:5]
     }

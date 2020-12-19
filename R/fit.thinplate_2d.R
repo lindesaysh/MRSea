@@ -25,7 +25,6 @@
 
   #cat("R Indices: ", radiusIndices, "\n")
 
-
   # print(aR)
   if(basis=='gaussian'){
     bspl<- "LRF.g(radiusIndices, dists, radii, aR)"  
@@ -73,7 +72,7 @@
   #print(paste('disp= ', summary(currentModel)$dispersion, ', num knots: ', length(aR), ', fitstat: ',tempFit,sep=''))
   #print("ooooooooooooooooooooooooooooooooooooooo")
   
-  print(paste("fit thinplate 2D", tempFit))
+  #print(paste("fit thinplate 2D", tempFit))
   
   return(list(currentModel=currentModel,models=models, fitStat=tempFit))
 

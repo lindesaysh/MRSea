@@ -65,11 +65,10 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
   
   splineParams <- object$splineParams
   
-  if (is.null(newdata)) {
-    data <- object$data
-  } else {
-    data <- newdata
+  if(is.null(newdata)){
+    newdata <- object$data
   }
+  
   
   require(splines)
   x2 <- data.frame(response = rpois(nrow(newdata), lambda = 5),
@@ -81,7 +80,9 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
     splineParams[[1]]$dist<-g2k
   }
   
+  
   xlev <- object$xlevels
+  
   
   m <- model.frame.gamMRSea(Terms, newdata, xlev = xlev, splineParams=splineParams)
   modmat <- model.matrix(Terms, m)
@@ -92,17 +93,20 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
     for (i in off.num) offset <- offset + exp(eval(attr(tt, "variables")[[i + 1]], newdata))
   # offset specified as parameter in call
   
+  
   if (!is.null(object$call$offset)) {
     offset <- offset + eval(object$call$offset, newdata)
   }
   
   if (is.null(coeff)) {
+    
     modcoef <- as.vector(object$coefficients)
+    
   } else {
     modcoef <- coeff
   }
   if (type == "response") {
-    modcoef <- matrix(modcoef, ncol=1)
+    
     if (length(object$offset) > 0 & sum(object$offset) != 0) {
       preds <- object$family$linkinv(modmat %*% modcoef) * offset
     } else {
@@ -115,4 +119,3 @@ predict.gamMRSea<- function (newdata=NULL, g2k=NULL, object, type = "response",c
   }
   return(preds)
 }
-
