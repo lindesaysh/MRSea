@@ -1,1 +1,4 @@
 exportPattern("^[[:alpha:]]+")
+S3method(summary,gamMRSea)
+S3method(print, summary.gamMRSea)
+S3method(anova, gamMRSea)

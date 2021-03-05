@@ -58,7 +58,9 @@ summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
   }
 
   #vbeta<-sandcov(object, panelid)
-  vbeta<-clsandcov(object$data, object, panelid)
+  obj.glm<-object
+  class(obj.glm) <- c("glm", "lm")
+  vbeta<-clsandcov(object$data, obj.glm, panelid)
   
   if(length(object$varshortnames)>0){
     varshortnames=object$varshortnames
