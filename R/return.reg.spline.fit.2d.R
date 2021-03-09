@@ -98,7 +98,7 @@
   #if (isS4(baseModel)) {
   #  output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
   #} else {
-    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis,hdetest)
+    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
   #}
   
   point <- output$point
@@ -166,7 +166,7 @@
     
     ###################################drop step#################################
     if (length(aR) > minKnots) {
-      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
+      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
       ####print("here e")
       point <- output$point
       knotPoint <- output$knotPoint
@@ -193,7 +193,7 @@
     
     ####################################exchange step#############################
     ####track <- rbind(track,cbind("exchanging",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
-    output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
+    output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
     #  ####print("here e")
 
     point <- output$point
@@ -220,7 +220,7 @@
     ######################################improve step############################
     ####track <- rbind(track,cbind("improving",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
     ####print("here im")
-    output <- improve.step_2d(gap,knotDist,radii,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
+    output <- improve.step_2d(gap,knotDist,radii,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
     ####print("here im")
     point <- output$point
     knotPoint <- output$knotPoint

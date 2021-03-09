@@ -368,17 +368,17 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
 
     # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
   
-  # check for Hauck donner effect 
-  if (hdetest) {
-    if (isS4(baseModel)){
-      hde_check <- hdeff(baseModel)
-      if (sum(hde_check) > 0){
-        fitStat <- fitStat + 10000000
-      }
-    }
-  }
+  # # check for Hauck donner effect 
+  # if (hdetest) {
+  #   if (isS4(baseModel)){
+  #     hde_check <- hdeff(baseModel)
+  #     if (sum(hde_check) > 0){
+  #       fitStat <- fitStat + 10000000
+  #     }
+  #   }
+  # }
   
-  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
   out.lm<-output$currentModel
   models<-output$models
   print("Initial model fitted...")
@@ -404,7 +404,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   #print(BIC[length(BIC)])
   
   print("Fitting Initial Radii")
-  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest)
+  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
   BIC=out$BIC
   radiusIndices=out$radiusIndices
   out.lm=out$out.lm

@@ -4,7 +4,7 @@
 #' 
 
 choose.radii <- function(currentFit,indices,radiusIndices,radii,out.lm,dists,
-                         aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest) {
+                         aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis) {
   #print("+++++++++++++++++++++++++++")
   #print("Fitting Radii")
   #print("+++++++++++++++++++++++++++")
@@ -27,7 +27,7 @@ choose.radii <- function(currentFit,indices,radiusIndices,radii,out.lm,dists,
           while (thisImprove) {
             thisImprove = 0
             tempRadii[i] = tempRadii[i] - 1
-            output<- fit.thinPlate_2d(fitnessMeasure, dists,aR,radii,baseModel,tempRadii,models, currentFit, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+            output<- fit.thinPlate_2d(fitnessMeasure, dists,aR,radii,baseModel,tempRadii,models, currentFit, interactionTerm, data, initDisp, cv.opts, basis)
             tempModel<-output$currentModel
             models<-output$models
 #            tempFit <- get.measure_2d(fitnessMeasure,currentFit,tempModel, data, dists,aR,radii, tempRadii, initDisp)$fitStat
@@ -51,7 +51,7 @@ choose.radii <- function(currentFit,indices,radiusIndices,radii,out.lm,dists,
           while (thisImprove) {
             thisImprove = 0
             tempRadii[i] = tempRadii[i] + 1
-            output<- fit.thinPlate_2d(fitnessMeasure, dists,aR,radii,baseModel,tempRadii,models, currentFit, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+            output<- fit.thinPlate_2d(fitnessMeasure, dists,aR,radii,baseModel,tempRadii,models, currentFit, interactionTerm, data, initDisp, cv.opts, basis)
             tempModel<-output$currentModel
             models<-output$models
             tempFit <- output$fitStat
