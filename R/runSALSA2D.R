@@ -254,8 +254,10 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
       bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
       
       a<-sum(as.vector(output$aR) - as.vector(unlist(output$models[[bestModNo]][1])))
+
       #print(paste('a = ', a, sep=''))
-      if(a!=0) break
+      #if(a!=0) break
+
       
       #output$aR<- output$models[[bestModNo]][[1]]
     }

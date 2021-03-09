@@ -4,8 +4,13 @@
 \alias{cv.gamMRSea}
 \title{Cross-validation for gamMRSea Models}
 \usage{
-cv.gamMRSea(data, modelobject, cost = function(y, yhat) mean((y -
-  yhat)^2), K = n, replicate = FALSE)
+cv.gamMRSea(
+  data,
+  modelobject,
+  cost = function(y, yhat) mean((y - yhat)^2),
+  K = n,
+  replicate = FALSE
+)
 }
 \arguments{
 \item{data}{A matrix or data frame containing the data. The rows should be cases and the columns correspond to variables, one of which is the response.}

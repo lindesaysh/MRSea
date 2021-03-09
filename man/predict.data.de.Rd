@@ -4,7 +4,9 @@
 \name{predict.data.de}
 \alias{predict.data.de}
 \title{Prediction grid data for post-impact decrease}
-\format{A data frame with 37928 rows and 8 variables}
+\format{
+A data frame with 37928 rows and 8 variables
+}
 \description{
 A simulated dataset containing the true number of birds, the effort data and other variables of 
 prediction grid data. The variables are as follows:

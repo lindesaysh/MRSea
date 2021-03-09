@@ -1,6 +1,6 @@
 #' Function that tries dropping knots to find an improvement in fit
 #' 
-#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#' @author Cameron Walker, Department of Engineering Science, University of Auckland.
 #' 
 #' @export
 #' 
@@ -25,7 +25,9 @@
   fitStat<-BIC[length(BIC)]
   newRadii = radiusIndices
   while ((improve) & (fuse < maxIterations) ) {
+
     #print(paste("drop", fuse))
+
     fuse <- fuse + 1
     improve <- 0
     print(fitStat)
@@ -34,19 +36,21 @@
         tempR <- aR
         tempR <- tempR[-i]
         tempRadii = radiusIndices[-i]
-        output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+        output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
         initModel<-output$currentModel
         models<-output$models
         initBIC<-output$fitStat
-          #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
-        out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+        #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
+        out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
         tempRadii=out$radiusIndices
         tempOut.lm=out$out.lm
         models=out$models
         #output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
         #fitStat<-output$tempMeasure
         tempMeasure<-out$BIC
+
         #print(paste(tempMeasure, fitStat, length(aR), improve, improveDrop))
+
         if (tempMeasure +tol < fitStat) {
           out.lm <- tempOut.lm
           fitStat<-tempMeasure
@@ -71,7 +75,6 @@
     }
   }
   
-
   ###   }
   list(point=point,knotPoint=knotPoint,position=position,aR=aR,BIC=fitStat,track=track,out.lm=out.lm,improveDrop=improveDrop,
        radiusIndices=radiusIndices,models=models)

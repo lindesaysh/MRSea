@@ -4,8 +4,13 @@
 \alias{make.gamMRSea}
 \title{Function to make model of class \code{gamMRSea}}
 \usage{
-make.gamMRSea(model, panelid = NULL, splineParams = NULL,
-  varshortnames = NULL, gamMRSea = FALSE)
+make.gamMRSea(
+  model,
+  panelid = NULL,
+  splineParams = NULL,
+  varshortnames = NULL,
+  gamMRSea = FALSE
+)
 }
 \arguments{
 \item{model}{model object of class glm or gamMRSea}

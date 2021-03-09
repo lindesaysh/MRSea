@@ -4,17 +4,12 @@
 \alias{runInfluence}
 \title{Assessing the influece of each correlated block on both the precision of the parameter estimates (COVRATIO statistics) and the sensitivity of model predictions (PRESS statistics).}
 \usage{
-runInfluence(model, id, d2k = NULL, splineParams = NULL,
-  save = FALSE, dots = FALSE)
+runInfluence(model, id = NULL, save = FALSE, dots = FALSE)
 }
 \arguments{
 \item{model}{Fitted model object (glm, gamMRSea or gam)}
 
 \item{id}{blocking structure}
-
-\item{d2k}{(\code{default=NULL}). (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations.}
-
-\item{splineParams}{(\code{default=NULL}). List object containng output from runSALSA (e.g. knot locations for continuous covariates). See \code{\link{makesplineParams}} for more details of this object.}
 
 \item{save}{(\code{default=FALSE}). Logical stating whether plot should be saved into working directory.}
 }

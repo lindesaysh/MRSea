@@ -4,19 +4,27 @@
 \alias{runACF}
 \title{run functions to create acf matrix and plot the results}
 \usage{
-runACF(block, model, store = FALSE, save = F,
-  suppress.printout = FALSE)
+runACF(
+  block,
+  model,
+  store = FALSE,
+  save = F,
+  suppress.printout = FALSE,
+  maxlag = NULL
+)
 }
 \arguments{
 \item{block}{Vector of blocks that identify data points that are correlated}
 
 \item{model}{Fitted model object (glm or gam)}
 
-\item{store}{(\code{default=F}). Logical stating whether a list of the matrix of correlations is stored (output from \code{acffunc}.)}
+\item{store}{(\code{default=FALSE}). Logical stating whether a list of the matrix of correlations is stored (output from \code{acffunc}.)}
 
 \item{save}{(\code{default=FALSE}). Logical stating whether plot should be saved into working directory.}
 
-\item{suppress.printout}{(Default: \code{FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.}
+\item{suppress.printout}{(\code{default=FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.}
+
+\item{maxlag}{(\code{default=NULL}). Numeric entry to allow the restriction of the maximum lag on the plots.  If \code{NULL} then the length of the longest panel is used as the maximum plotted lag.}
 }
 \value{
 Plot of lag vs correlation.  Each grey line is the correlation for each individual block in \code{block}.  The red line is the mean values for each lag.

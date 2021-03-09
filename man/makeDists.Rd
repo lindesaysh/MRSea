@@ -4,8 +4,15 @@
 \alias{makeDists}
 \title{Make Euclidean distance matrices for use in CReSS and SALSA model frameworks}
 \usage{
-makeDists(datacoords, knotcoords, knotmat = TRUE, polys = NULL,
-  type = "A", plot.transition = FALSE, grid.dim = c(100, 100))
+makeDists(
+  datacoords,
+  knotcoords,
+  knotmat = TRUE,
+  polys = NULL,
+  type = "A",
+  plot.transition = FALSE,
+  grid.dim = c(100, 100)
+)
 }
 \arguments{
 \item{datacoords}{Coordinates of the data locations}

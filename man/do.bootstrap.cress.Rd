@@ -4,10 +4,23 @@
 \alias{do.bootstrap.cress}
 \title{Bootstrapping function without model selection using CReSS/SALSA for fitting the second stage count model}
 \usage{
-do.bootstrap.cress(orig.data, predict.data, ddf.obj = NULL, model.obj,
-  splineParams, g2k, resample = "transect.id", rename = "segment.id",
-  stratum = NULL, B, name = NULL, save.data = FALSE, nhats = FALSE,
-  seed = 12345, nCores = 1)
+do.bootstrap.cress(
+  orig.data,
+  predict.data,
+  ddf.obj = NULL,
+  model.obj,
+  splineParams,
+  g2k,
+  resample = "transect.id",
+  rename = "segment.id",
+  stratum = NULL,
+  B,
+  name = NULL,
+  save.data = FALSE,
+  nhats = FALSE,
+  seed = 12345,
+  nCores = 1
+)
 }
 \arguments{
 \item{orig.data}{The original data. In case \code{ddf.obj} is specified, this should be the original distance data. In case \code{ddf.obj} is \code{NULL}, it should have the format equivalent to \code{count.data} where each record represents the summed up counts at the segments.}

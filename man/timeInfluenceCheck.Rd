@@ -4,16 +4,12 @@
 \alias{timeInfluenceCheck}
 \title{Timing check to see how long it will take to run \code{runInfluence}.}
 \usage{
-timeInfluenceCheck(model, id, d2k = NULL, splineParams = NULL)
+timeInfluenceCheck(model, id)
 }
 \arguments{
 \item{model}{Fitted model object (glm, gamMRSea or gam)}
 
 \item{id}{blocking structure}
-
-\item{d2k}{(\code{default=NULL}). (n x k) Matrix of distances between all data points in \code{model} and all valid knot locations.}
-
-\item{splineParams}{(\code{default=NULL}). List object containng output from runSALSA (e.g. knot locations for continuous covariates). See \code{\link{makesplineParams}} for more details of this object.}
 }
 \description{
 Timing check to see how long it will take to run \code{runInfluence}.

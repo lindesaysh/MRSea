@@ -52,13 +52,19 @@
 
 summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
 {
-  if(is.null(object$panels)){panelid<-1:nrow(object$data)
+  if(is.null(object$panels)){
+    panelid<-1:nrow(object$data)
   }else{
     panelid<-object$panels
   }
 
   #vbeta<-sandcov(object, panelid)
-  vbeta<-clsandcov(object$data, object, panelid)
+  if(max(table(panelid))>1){
+    obj.glm<-object
+    class(obj.glm) <- c("glm", "lm")
+    vbeta<-clsandcov(object$data, obj.glm, panelid)
+  }
+ 
   
   if(length(object$varshortnames)>0){
     varshortnames=object$varshortnames

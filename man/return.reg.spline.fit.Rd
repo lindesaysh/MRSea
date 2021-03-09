@@ -4,11 +4,26 @@
 \alias{return.reg.spline.fit}
 \title{Code for adaptively spacing knots for a given covariate.}
 \usage{
-return.reg.spline.fit(response, explanatory, degree, minKnots, maxKnots,
-  startKnots, gap, winHalfWidth, fitnessMeasure = "BIC",
-  maxIterations = 100, initialise = TRUE, initialKnots = NULL,
-  baseModel = NULL, bd, spl, interactionTerm = interactionTerm,
-  suppress.printout = FALSE, cv.opts)
+return.reg.spline.fit(
+  response,
+  explanatory,
+  degree,
+  minKnots,
+  maxKnots,
+  startKnots,
+  gap,
+  winHalfWidth,
+  fitnessMeasure = "BIC",
+  maxIterations = 100,
+  initialise = TRUE,
+  initialKnots = NULL,
+  baseModel = NULL,
+  bd,
+  spl,
+  interactionTerm = interactionTerm,
+  suppress.printout = FALSE,
+  cv.opts
+)
 }
 \arguments{
 \item{response}{vector of response data for the modelling process}
@@ -45,5 +60,5 @@ return.reg.spline.fit(response, explanatory, degree, minKnots, maxKnots,
 Code for adaptively spacing knots for a given covariate.
 }
 \author{
-Cameron Walker (Department of Enginering Science, University of Auckland), Lindesay Scott-Hayward (University of St Andrews)
+Cameron Walker, Department of Enginering Science, University of Auckland, University of Auckland), Lindesay Scott-Hayward (University of St Andrews)
 }

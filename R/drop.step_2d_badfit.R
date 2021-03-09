@@ -1,5 +1,7 @@
 "drop.step_2d_badfit" <- function(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,
-                           point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis,hdetest) {
+                           point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol=0,baseModel,radiusIndices,models, 
+						   interactionTerm, data, initDisp, cv.opts, basis) {
+
   
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -24,18 +26,24 @@
     print(fitStat)
   
       if (length(aR) > minKnots) {
-        badknots<-data.frame(knots=aR, abscoeffs = abs(coef(out.lm))[-1], ses=sqrt(diag(summary(out.lm)$cov.robust))[-1])
+        
+        twoDcoeffid <- grep("LRF.", names(coefficients(out.lm)))
+        length(twoDcoeffid)/length(aR)
+        
+        badknots<-data.frame(knots=rep(aR, by=2), abscoeffs = abs(coef(out.lm))[twoDcoeffid], ses=sqrt(diag(summary(out.lm)$cov.robust))[twoDcoeffid])
+        
         badknots$dif<-badknots$abscoeffs - badknots$ses
         i <- which(badknots$dif==min(badknots$dif))
+        badknotid<-which(aR==badknots[i,1])
         tempR <- aR
-        tempR <- tempR[-i]
-        tempRadii = radiusIndices[-i]
-        output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+        tempR <- tempR[-badknotid]
+        tempRadii = radiusIndices[-badknotid]
+        output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
         initModel<-output$currentModel
         models<-output$models
         initBIC<-output$fitStat
         #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
-        out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, hdetest)
+        out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
         tempRadii=out$radiusIndices
         tempOut.lm=out$out.lm
         models=out$models
@@ -52,7 +60,7 @@
           #print(fitStat)
           newR <- tempR
           newRadii = tempRadii
-          tempKnot <- i
+          tempKnot <- badknotid
         if (summary(tempOut.lm)$dispersion>initDisp) {  
           badfit <- 1
           improvebadDrop <- 0

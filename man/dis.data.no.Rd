@@ -4,7 +4,9 @@
 \name{dis.data.no}
 \alias{dis.data.no}
 \title{Line transect data with no post-impact consequence}
-\format{A data frame with 10771 rows and 12 variables}
+\format{
+A data frame with 10771 rows and 12 variables
+}
 \description{
 A simulated dataset containing the observed perpendicular distances, the effort data and other variables of 
 segmented line transect data. The variables are as follows:

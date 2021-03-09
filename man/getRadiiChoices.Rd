@@ -4,7 +4,7 @@
 \alias{getRadiiChoices}
 \title{Function for obtaining a sequence of range parameters for the CReSS smoother}
 \usage{
-getRadiiChoices(numberofradii = 10, distMatrix, basis)
+getRadiiChoices(numberofradii = 10, distMatrix, basis, rvin = NULL)
 }
 \arguments{
 \item{numberofradii}{The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.}

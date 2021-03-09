@@ -4,7 +4,9 @@
 \name{dis.data.de}
 \alias{dis.data.de}
 \title{Line transect data with decrease post-impact}
-\format{A data frame with 10759 rows and 12 variables}
+\format{
+A data frame with 10759 rows and 12 variables
+}
 \description{
 A simulated dataset containing the observed perpendicular distances, the effort data and other variables of 
 segmented line transect data. The variables are as follows:

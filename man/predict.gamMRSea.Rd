@@ -4,8 +4,7 @@
 \alias{predict.gamMRSea}
 \title{Function for making predictions for a model containing a CReSS basis (two dimensional local smooth).}
 \usage{
-\method{predict}{gamMRSea}(newdata = NULL, g2k = NULL, object,
-  type = "response", coeff = NULL)
+\method{predict}{gamMRSea}(newdata = NULL, g2k = NULL, object, type = "response", coeff = NULL)
 }
 \arguments{
 \item{newdata}{Data frame of covariate values to make predictions to}

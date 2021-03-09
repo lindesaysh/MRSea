@@ -4,8 +4,14 @@
 \alias{predict.cress}
 \title{Function for making predictions for a model containing a CReSS basis (two dimensional local smooth).}
 \usage{
-\method{predict}{cress}(predict.data, splineParams, g2k, model,
-  type = "response", coeff = NULL)
+\method{predict}{cress}(
+  predict.data,
+  splineParams,
+  g2k,
+  model,
+  type = "response",
+  coeff = NULL
+)
 }
 \arguments{
 \item{predict.data}{Data frame of covariate values to make predictions to}

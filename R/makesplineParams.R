@@ -63,11 +63,11 @@ makesplineParams<-function(data, varlist, predictionData=NULL, degree=NULL){
 }
 
 median_alt <- function(var_in){
-  med_val <- median(var_in)
-  max_val <- max(var_in)
-  min_val <- min(var_in)
+  med_val <- median(var_in, na.rm=TRUE)
+  max_val <- max(var_in,na.rm = TRUE)
+  min_val <- min(var_in, na.rm = TRUE)
   if ((med_val == max_val) | (med_val == min_val)) {
-    med_val <- median(unique(var_in))
+    med_val <- median(unique(var_in), na.rm = TRUE)
   }
   return(med_val)
 }

@@ -4,10 +4,12 @@
 \alias{plotacf}
 \title{run functions to create acf matrix and plot the results}
 \usage{
-plotacf(acfmat)
+plotacf(acfmat, maxlag = NULL)
 }
 \arguments{
 \item{acfmat}{Matrix of output from \code{acffunc} (blocks x max block length).}
+
+\item{maxlag}{(\code{default=NULL}). Numeric entry to allow the restriction of the maximum lag on the plots.  If \code{NULL} then the length of the longest panel is used as the maximum plotted lag.}
 }
 \description{
 run functions to create acf matrix and plot the results

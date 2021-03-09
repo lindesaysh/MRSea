@@ -1,3 +1,19 @@
+MRSea 1.02
+----------
+
+Notes
+ * option added to runACF/plotacf functions to specify the the maximum lag to be plotted (maxlag=NULL).  This helps when there may be one long panel and you wish to see the detail in the smaller ones. 
+ * vignette updated
+ * drop step added to the initialise 2D step.  If the initial starting knots do not give a model that has converged then knots are dropped until convergence is achieved. Then the algorithm proceeds as normal (looping over exchange, improve, drop).
+ 
+ 
+Bug Fixes
+
+ * Fix to exchange step - error finding largest residual
+ * Fix issue clsandcov function which occurred when old factor levels remained in the panel variable (droplevels used to counter this)
+ * Fix issue in plotCumRes and runInfluence functions.  These work with gamMRSea type model now. 
+
+
 MRSea 1.01
 ----------
 
