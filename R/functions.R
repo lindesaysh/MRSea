@@ -280,3 +280,71 @@ getlargestresid<-function(model, n=5){
   }
   return(indexdat)
 }
+
+
+#-----------------------------------------------------------------------------
+#' Get block leave-one-out CV score for point process model
+#' 
+#' This function calculates a leave-one-out cross-validation score for point process models
+#' 
+#' @param model.obj a point process gamMRSea model
+#' @param d2k_cv distance matrix for determining nearest points.
+#' @param showProgress (default = FALSE) logical stating whether to print progress bar
+
+getPPCV <- function(model.obj, d2k_cv, showProgress = FALSE){
+  
+  if(class(model.obj)[1]!='gamMRSea')stop('Model object not of class gamMRSea')
+  
+  if(model.obj$splineParams[[1]]$modelType!='pointProcess')stop('Model object not a point process model')
+  
+  dat<-model.obj$data
+  
+  # find the nearest knot to each data point
+  dat<-dat %>%
+    mutate(nearestknot = apply(d2k_cv, 1, which.min)) %>%
+    arrange(nearestknot)
+  
+  # not all knots will be selected, find the unique ones
+  nks <- unique(dat$nearestknot)
+  # make object to store squared resid
+  lo_rss <- vector(length=length(nks))
+  
+  for(b in nks){
+    if(showProgress) {if((b/20)%%1 == 0){cat(b, '\n')}else{cat('.')}}
+    #cat(k, "\n")
+    # select training data
+    lo_dat <- filter(dat, nearestknot!=b)
+    
+    # update distance matrix for reduced dataset
+    sp<-model.obj$splineParams
+    sp[[1]]$dist <- model.obj$splineParams[[1]]$dist[which(dat$nearestknot!=b),]
+    
+    # update model for reduced data set
+    lom_model <- update.gamMRSea(model.obj, .~., data=lo_dat, splineParams=sp)
+    
+    # get predicted intensity for all points
+    mydat_temp = dat %>% 
+      mutate(preds =  predict.gamMRSea(object = lom_model, newdata = dat, g2k = d2k_cv))
+    
+    # for each knot block, find sum of presences (observed count)
+    knot.pts.intensity<-mydat_temp %>%
+      group_by(nearestknot) %>% 
+      summarise(npts = sum(response))
+    
+    # for each knotblock, find the sum of the estimated intensity for quad points
+    knot.quads.intensity<-filter(mydat_temp, response==0) %>%
+      group_by(nearestknot) %>% 
+      summarise(npts = sum(preds))
+    
+    # join the two together to get data frame of model fit and observed count for
+    # each block and calculate absolute residual. 
+    # select only the validation block b
+    modelfit<-left_join(knot.pts.intensity, knot.quads.intensity, by="nearestknot") %>%
+      mutate(resids = abs(npts.x - npts.y)) %>%
+      filter(nearestknot == b)
+    
+    # find squared residual and append for all b
+    lo_rss[b] <- modelfit$resids**2
+  } # end k loop
+  return(list(cv = mean(lo_rss, na.rm=TRUE), scores = lo_rss))
+}
