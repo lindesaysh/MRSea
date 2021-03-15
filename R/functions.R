@@ -288,63 +288,87 @@ getlargestresid<-function(model, n=5){
 #' This function calculates a leave-one-out cross-validation score for point process models
 #' 
 #' @param model.obj a point process gamMRSea model
-#' @param d2k_cv distance matrix for determining nearest points.
+#' @param proj4string string giving CRS of x.pos and y.pos in date in `model.obj`
+#' @param blocksize size of the blocks, give in m if `proj4string` is in degrees or m, or in km if data in  `model.obj`/`proj4string` is in km
+#' @param folds (default = 10). number stating many folds for CV
+#' @param replicates (default = 100). number stating how many times to replicate the CV score
 #' @param showProgress (default = FALSE) logical stating whether to print progress bar
 
-getPPCV <- function(model.obj, d2k_cv, showProgress = FALSE){
+getPPCV <- function(model.obj, proj4string, blocksize, 
+                    folds = 10, replicates = 100, showProgress = FALSE){
   
   if(class(model.obj)[1]!='gamMRSea')stop('Model object not of class gamMRSea')
-  
   if(model.obj$splineParams[[1]]$modelType!='pointProcess')stop('Model object not a point process model')
   
+  
   dat<-model.obj$data
+  spdata<-sp::SpatialPoints(coords = cbind(dat$x.pos, dat$y.pos), 
+                            proj4string = proj4string)
   
-  # find the nearest knot to each data point
-  dat<-dat %>%
-    mutate(nearestknot = apply(d2k_cv, 1, which.min)) %>%
-    arrange(nearestknot)
+  offset <- seq(0, 1, by = 0.1)
+  scores<-vector(length=replicates)
   
-  # not all knots will be selected, find the unique ones
-  nks <- unique(dat$nearestknot)
-  # make object to store squared resid
-  lo_rss <- vector(length=length(nks))
-  
-  for(b in nks){
-    if(showProgress) {if((b/20)%%1 == 0){cat(b, '\n')}else{cat('.')}}
-    #cat(k, "\n")
-    # select training data
-    lo_dat <- filter(dat, nearestknot!=b)
+  for(r in 1:replicates){
+    if(showProgress) {if((r/10)%%1 == 0){cat(b, '\n')}else{cat('.')}}
     
-    # update distance matrix for reduced dataset
-    sp<-model.obj$splineParams
-    sp[[1]]$dist <- model.obj$splineParams[[1]]$dist[which(dat$nearestknot!=b),]
+    test<-try(blockCV::spatialBlock(spdata, k=folds, theRange = blocksize,
+                                xOffset = sample(offset,1),
+                                yOffset = sample(offset, 1),
+                                verbose=FALSE, progress=FALSE, showBlocks = FALSE),
+              silent = TRUE)
     
-    # update model for reduced data set
-    lom_model <- update.gamMRSea(model.obj, .~., data=lo_dat, splineParams=sp)
+    if(class(test)=='try-error'){
+      scores[r]<-mean(lo_rss, na.rm=TRUE)
+    }else{
+      # find the nearest knot to each data point
+      dat<-dat %>%
+        mutate(cvblocks = test$foldID)
+      
+      # not all knots will be selected, find the unique ones
+      blocks <- unique(dat$cvblocks)
+      # make object to store squared resid
+      lo_rss <- vector(length=length(blocks))
+      
+      for(b in blocks){
+        
+        # select training data
+        lo_dat <- filter(dat, cvblocks!=b)
+        
+        # update distance matrix for reduced dataset
+        sp<-model.obj$splineParams
+        sp[[1]]$dist <- model.obj$splineParams[[1]]$dist[which(dat$cvblocks!=b),]
+        
+        # update model for reduced data set
+        lom_model <- update.gamMRSea(model.obj, .~., data=lo_dat, splineParams=sp)
+        
+        # get predicted intensity for all points
+        mydat_temp = dat %>% 
+          mutate(preds =  predict.gamMRSea(object = lom_model, newdata = dat, g2k = model.obj$splineParams[[1]]$dist))
+        
+        # for each knot block, find sum of presences (observed count)
+        knot.pts.intensity<-mydat_temp %>%
+          group_by(cvblocks) %>% 
+          summarise(npts = sum(response))
+        
+        # for each knotblock, find the sum of the estimated intensity for quad points
+        knot.quads.intensity<-filter(mydat_temp, response==0) %>%
+          group_by(cvblocks) %>% 
+          summarise(npts = sum(preds))
+        
+        # join the two together to get data frame of model fit and observed count for
+        # each block and calculate absolute residual. 
+        # select only the validation block b
+        modelfit<-left_join(knot.pts.intensity, knot.quads.intensity, by="cvblocks") %>%
+          mutate(resids = abs(npts.x - npts.y)) %>%
+          filter(cvblocks == b)
+        
+        # find squared residual and append for all b
+        lo_rss[b] <- modelfit$resids**2
+      } # end k loop
+      
+      scores[r]<-mean(lo_rss, na.rm=TRUE)
+    }
     
-    # get predicted intensity for all points
-    mydat_temp = dat %>% 
-      mutate(preds =  predict.gamMRSea(object = lom_model, newdata = dat, g2k = d2k_cv))
-    
-    # for each knot block, find sum of presences (observed count)
-    knot.pts.intensity<-mydat_temp %>%
-      group_by(nearestknot) %>% 
-      summarise(npts = sum(response))
-    
-    # for each knotblock, find the sum of the estimated intensity for quad points
-    knot.quads.intensity<-filter(mydat_temp, response==0) %>%
-      group_by(nearestknot) %>% 
-      summarise(npts = sum(preds))
-    
-    # join the two together to get data frame of model fit and observed count for
-    # each block and calculate absolute residual. 
-    # select only the validation block b
-    modelfit<-left_join(knot.pts.intensity, knot.quads.intensity, by="nearestknot") %>%
-      mutate(resids = abs(npts.x - npts.y)) %>%
-      filter(nearestknot == b)
-    
-    # find squared residual and append for all b
-    lo_rss[b] <- modelfit$resids**2
-  } # end k loop
-  return(list(cv = mean(lo_rss, na.rm=TRUE), scores = lo_rss))
+  }
+  return(list(cv = mean(scores, na.rm=TRUE), scores = scores))
 }
