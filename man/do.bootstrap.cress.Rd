@@ -156,5 +156,4 @@ do.bootstrap.cress(ns.data.re, ns.predict.data.re, ddf.obj=NULL, geeModel, splin
 load("cresspredictionboot.RData") # loading the predictions into the workspace
 # look at the first 6 lines of the bootstrap predictions (on the scale of the response)
 head(bootPreds)}
-
 }

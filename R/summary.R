@@ -1,12 +1,10 @@
 #' Summarising model fits from models fitted using the MRSea package.
 #'
-#' @param object	an object of class "gamMRSea", usually, a result of a call from the MRSea package.
-#' @param x	an object of class "summary.gamMRSea", usually, a result of a call to summary.gamMRSea.
-#' @param dispersion	the dispersion parameter for the family used. Either a single numerical value or NULL (the default), when it is inferred from object (see 'Details').
-#' @param correlation	logical; if TRUE, the correlation matrix of the estimated parameters is returned and printed.
+#'(object, dispersion = NULL, varshortnames=NULL, ...)
+#'
+#' @param object an object of class "gamMRSea", usually, a result of a call from the MRSea package.
+#' @param dispersion the dispersion parameter for the family used. Either a single numerical value or NULL (the default), when it is inferred from object (see 'Details').
 #' @param digits	the number of significant digits to use when printing.
-#' @param symbolic.cor	logical. If TRUE, print the correlations in a symbolic form (see symnum) rather than as numbers.
-#' @param signif.stars	logical. If TRUE, 'significance stars' are printed for each coefficient.
 #' @param varshortnames vector stating the short versions of the covariate names if required.
 #' @param ...	further arguments passed to or from other methods.
 #'
@@ -50,7 +48,7 @@
 #'
 #' @export
 
-summary.gamMRSea<-function (object, dispersion = NULL, varshortnames=NULL, ...)
+summary.gamMRSea<-function (object, dispersion = NULL, digits=7, varshortnames=NULL, ...)
 {
   if(is.null(object$panels)){
     panelid<-1:nrow(object$data)

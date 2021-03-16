@@ -5,12 +5,13 @@
 #' @param n number of simulations to generate
 #' @param response vector of 'true' means to genereate from
 #' @param family one of \code{poisson}, \code{binomial} or \code{zibinomial}
+#' @param gamma.variance variance parameter for \code{gamma} distribution.
 #' @param ... Other parameters required for the family specified
 #'
 #' @details
 #' An additional parameter for the Poisson distribution is the dispersion parameter, specified by d=
-#' The additional parameters for the Binomial distribution can be found in \link{rbinom}
-#' The zibinomial family requires the \code{VGAM} library to generate zero inflated binomial data. Additional parameters can be found in the help for \link{rzibinom}.
+#' The additional parameters for the Binomial distribution can be found in \code{?VGAM::rbinom}
+#' The zibinomial family requires the \code{VGAM} library to generate zero inflated binomial data. Additional parameters can be found in the help for \code{rzibinom}.
 #'
 #' @examples
 #'
@@ -50,7 +51,9 @@ generateNoise<-function(n, response, family, gamma.variance, ...){
   return(simData)
 }
 
-
+#' Generating overdispersed poisson data
+#'
+#' 
 rpois.od<-function(n, lambda, d=1){
   if(d[1]==1)
     rpois(n, lambda)
@@ -64,7 +67,6 @@ rpois.od<-function(n, lambda, d=1){
 #'
 #' @author VGAM package
 #'
-#' @export
 #' 
 qzibinom<-function (p, size, prob, pstr0 = 0)
 {
@@ -93,13 +95,19 @@ qzibinom<-function (p, size, prob, pstr0 = 0)
   ans
 }
 
-
+#' rzibinom function from the VGAM package
+#'
+#' @author VGAM package
+#'
+#' 
 rzibinom<-function (n, size, prob, pstr0 = 0)
 {
   qzibinom(runif(n), size, prob, pstr0 = pstr0)
 }
 
-
+#' qposbinom function
+#'
+#' 
 qposbinom<-function (p, size, prob){
   ans <- qbinom(pbinom(0, size, prob, lower.tail = FALSE) *
                   p + dbinom(0, size, prob), size, prob)

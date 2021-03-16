@@ -7,7 +7,7 @@
 getDispersion(model)
 }
 \arguments{
-\item{model}{}
+\item{model}{gamMRSea or glm model object}
 }
 \value{
 single number of dispersion parameter estimation

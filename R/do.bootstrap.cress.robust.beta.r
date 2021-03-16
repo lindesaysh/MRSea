@@ -26,7 +26,6 @@
 #'
 #'
 #'
-#' @export
 
 do.bootstrap.cress.robust.beta<-function(model.obj, predictionGrid, splineParams=NULL, g2k=NULL, B, robust=T,name=NULL, seed=12345, nCores=1, cat.message=TRUE){
   

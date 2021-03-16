@@ -80,15 +80,18 @@
 #'                     family='quasipoisson',data=ns.data.re)
 #' 
 #' #set some input info for SALSA
-#' salsa1dlist<-list(fitnessMeasure = 'QBIC', minKnots_1d=c(2,2), maxKnots_1d = c(5, 5), 
-#'                   startKnots_1d = c(2,2), degree=c(2,2), maxIterations = 10, gaps=c(1,1))
+#' salsa1dlist<-list(fitnessMeasure = 'QBIC', 
+#'                   minKnots_1d=c(2,2), 
+#'                   maxKnots_1d = c(5, 5), 
+#'                   startKnots_1d = c(2,2), 
+#'                   degree=c(2,2))
 #' 
 #' # run SALSA
 #' salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist, 
 #'                factorlist=c('floodebb', 'impact'), 
-#'                ns.predict.data.re, splineParams=NULL, datain=ns.data.re, removal=TRUE)
+#'                ns.predict.data.re, datain=ns.data.re, removal=TRUE)
 #' 
-#' @author Lindesay Scott-Hayward, University of St Andrews; Cameron Walker, Department of Enginering Science, University of Auckland.
+#' @author Lindesay Scott-Hayward, University of St Andrews; Cameron Walker, Department of Engineering Science, University of Auckland.
 #' 
 #' @export
 #' 

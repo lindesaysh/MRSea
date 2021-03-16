@@ -11,7 +11,7 @@
 #' 
 #' The black line is the line of sequences of positive or negative residuals.  The vertical lines are the change between a sequence of positive to negative residuals (or vice versa).
 #' 
-#' The p-values are from a \code{\link{runs.test}} and indicate whether there is correlation in the residuals (p<0.05) or independence (p>0.05).  The test statistic determines the type of correlation (positive/negative) and the result printed at the bottom of the figure. 
+#' The p-values are from a \code{\link{runsTest}} and indicate whether there is correlation in the residuals (p<0.05) or independence (p>0.05).  The test statistic determines the type of correlation (positive/negative) and the result printed at the bottom of the figure. 
 #' 
 #' Note: if the covariate is discrete in nature (like the example below), there will be a lot of overplotting of runs.  Some jittering occurs at each discrete value (for covariates with <= 25 unique values).
 #' 

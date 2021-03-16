@@ -55,10 +55,16 @@ return.reg.spline.fit(
 \item{bd}{the x-coordinate of the boundary knots of \code{explanatory}}
 
 \item{spl}{"bs" uses b-spline, "cc" uses cyclic cubic, "ns" uses natural cubic spline for fitting smooth to \code{explanatory}}
+
+\item{interactionTerm}{character stating the variable to use as an interaction}
+
+\item{suppress.printout}{\code{default=FALSE}. If TRUE, progress is printed into the workspace. If FALSE, a .log file is created in the working directory.}
+
+\item{cv.opts}{A list object containing options for \code{cv.gamMRSea}.}
 }
 \description{
 Code for adaptively spacing knots for a given covariate.
 }
 \author{
-Cameron Walker, Department of Enginering Science, University of Auckland, University of Auckland), Lindesay Scott-Hayward (University of St Andrews)
+Cameron Walker, Department of Engineering Science, University of Auckland, University of Auckland), Lindesay Scott-Hayward (University of St Andrews)
 }
