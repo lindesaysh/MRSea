@@ -14,7 +14,7 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='#>', 
                       message=FALSE, eval=FALSE,
-                      collapse=TRUE)
+                      collapse=TRUE, dev='png')
 ```
 
 This vignette is in addition to the main vignette for the package but shows an analysis where you can allow different knot locations for different levels of a spatial interaction term.

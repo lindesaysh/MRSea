@@ -30,7 +30,7 @@ biblio <- read.bibtex("newref.bib")
 cite_options(citation_format = 'pandoc', cite.style = 'authoryear', max.names = 1, longnamesfirst=FALSE)
 knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, 
                       eval=FALSE, cache=FALSE,
-                      comment = '#>', collapse=TRUE)
+                      comment = '#>', collapse=TRUE, dev='png')
 ```
 
 ## Introduction
@@ -39,7 +39,7 @@ The ```MRSea``` package was developed for analysing data that was collected for 
 
 The major update to this package (from version 0 to version 1)is that a class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object information regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given).
 
-Other functions include diagnostics (to assess residual correlation: ```runACF```, smooth relationships: ``` runPartialPlots``` and model selection (ANOVA) for robust standard errors: ```anova.gamMRSea```) and inference (```do.bootstrap.cress```). 
+Other functions include diagnostics (to assess residual correlation: ```runACF```, smooth relationships: ```runPartialPlots``` and model selection (ANOVA) for robust standard errors: ```anova.gamMRSea```) and inference (```do.bootstrap.cress```). 
 
 
 ![alt text](MRSea_workflow.png)
