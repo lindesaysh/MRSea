@@ -49,9 +49,16 @@ There are two vignettes available with the package:
 
 -   Statistical Modelling of bird and cetacean distributions in offshore
     renewables development areas
+    -   This vignette takes you through a line transect data example
+        with both one and two dimensional smooth terms and a spatial
+        interaction with construction phase.
 -   MRSea: 2D Interaction Example
+    -   This vignette shows an alternative way to specify knots in the
+        interaction term.
+    -   It is particularly useful if the survey areas between levels
+        differ.
 
-These are available here;
+These are available here:
 
 -   PDF/html versions on
     [Github](https://github.com/lindesaysh/MRSea/tree/master/inst/docs)
