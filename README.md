@@ -33,7 +33,7 @@ You can install the latest bugfix release of MRSea from
 devtools::install_github("lindesaysh/MRSea", ref="stable")
 ```
 
-You can install the development version of inlabru from
+You can install the development version of MRSea from
 [GitHub](https://github.com/lindesaysh/MRSea) with:
 
 ``` r
