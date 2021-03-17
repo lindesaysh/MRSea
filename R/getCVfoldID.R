@@ -7,7 +7,7 @@
 #' @param block column in data indicating the blocking structure for cross-validation (if \code{block} = NULL, individual observations will be used as blocks)
 #' @param seed integer number used to set the seed of the fold generation.  By default this is set to `1234`.
 #'
-#' @details The function returns a random sequence of 1:folds of the same length as observations in data. It is called by other functions, e.g. \code{\link{getCV_CReSS}}.
+#' @details The function returns a random sequence of 1:folds of the same length as observations in data.
 #'
 #' @examples
 #' # load data

@@ -4,29 +4,21 @@
 \alias{summary.gamMRSea}
 \title{Summarising model fits from models fitted using the MRSea package.}
 \usage{
-\method{summary}{gamMRSea}(object, dispersion = NULL, varshortnames = NULL, ...)
+\method{summary}{gamMRSea}(object, dispersion = NULL, digits = 7, varshortnames = NULL, ...)
 }
 \arguments{
 \item{object}{an object of class "gamMRSea", usually, a result of a call from the MRSea package.}
 
 \item{dispersion}{the dispersion parameter for the family used. Either a single numerical value or NULL (the default), when it is inferred from object (see 'Details').}
 
+\item{digits}{the number of significant digits to use when printing.}
+
 \item{varshortnames}{vector stating the short versions of the covariate names if required.}
 
 \item{...}{further arguments passed to or from other methods.}
-
-\item{x}{an object of class "summary.gamMRSea", usually, a result of a call to summary.gamMRSea.}
-
-\item{correlation}{logical; if TRUE, the correlation matrix of the estimated parameters is returned and printed.}
-
-\item{digits}{the number of significant digits to use when printing.}
-
-\item{symbolic.cor}{logical. If TRUE, print the correlations in a symbolic form (see symnum) rather than as numbers.}
-
-\item{signif.stars}{logical. If TRUE, 'significance stars' are printed for each coefficient.}
 }
 \description{
-Summarising model fits from models fitted using the MRSea package.
+(object, dispersion = NULL, varshortnames=NULL, ...)
 }
 \details{
 \code{print.summary.gamMRSea} tries to be smart about formatting the coefficients, standard errors, etc. and additionally gives 'significance stars' if signif.stars is TRUE. The coefficients component of the result gives the estimated coefficients and their estimated standard errors (raw and robust), together with their ratio (from robust s.e.). The third column gives the robust standard errors calculated using the sandwich estimator.  If no correlation is present, the second and third columns are the same as the sandwich estimator is not used when data points are independent. The fourth column is labelled Wald and gives the Wald test statistic, based on the robust standard errors. The fifth column gives the two-tailed p-value corresponding to the Wald test ().

@@ -119,8 +119,6 @@
 #' load("cresspredictionboot.RData") # loading the predictions into the workspace
 #' # look at the first 6 lines of the bootstrap predictions (on the scale of the response)
 #' head(bootPreds)}
-#' 
-#' @export
 
 do.bootstrap.cress<-function(orig.data,predict.data,ddf.obj=NULL,model.obj,splineParams, g2k, resample="transect.id",rename="segment.id",stratum=NULL,B,name=NULL, save.data=FALSE, nhats=FALSE, seed=12345, nCores=1){
   

@@ -2,7 +2,7 @@
 #' 
 #' This function calculates the dispersion parameter for Normal, Binomial, Poisson and Gamma distributions
 #' 
-#' @param model
+#' @param model gamMRSea or glm model object
 #' 
 #' @details
 #' some details
@@ -17,16 +17,6 @@
 #' 
 getDispersion<-function(model){
   
-  ### multinomial is the only S4 type allowed - check phi calculation
-  if (isS4(model)){
-    n<-model@df.total
-    k<-model@rank
-    fits<- fitted(model)
-    raw<- model@y
-    sqresid<-(raw-fits)^2
-    phi <- sum(sqresid/fits^2) * 1/(n-k)
-    phi <- model@dispersion
-  } else {
     n<-model$df.null + 1
     k<-model$rank
     fits<- fitted(model)
@@ -52,6 +42,5 @@ getDispersion<-function(model){
       phi = sum(sqresid/fits^2) * 1/(n-k)
       
     }
-  }
   return(phi)
 }

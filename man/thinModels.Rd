@@ -6,9 +6,12 @@
 \usage{
 thinModels(models)
 }
+\arguments{
+\item{models}{list of models fitted}
+}
 \description{
 function to thin the number of models
 }
 \author{
-Cameron Walker, Department of Enginering Science, University of Auckland.
+Cameron Walker, Department of Engineering Science, University of Auckland.
 }

@@ -37,11 +37,11 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     } else {
       if(out.lm$family[1]=="quasipoisson"){
         PoisMod<-update(out.lm, round(.)~., family=poisson)
-        fitStat <- QAIC(PoisMod, chat = initDisp)
+        fitStat <- MuMIn::QAIC(PoisMod, chat = initDisp)
       }
       if(out.lm$family[1]=="quasibinomial"){
         BinMod<-update(out.lm, family=binomial)
-        fitStat <- QAIC(BinMod, chat = initDisp)
+        fitStat <- MuMIn::QAIC(BinMod, chat = initDisp)
       }
     }
   }
@@ -52,11 +52,11 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     } else {
       if(out.lm$family[1]=="quasipoisson"){
         PoisMod<-update(out.lm, family=poisson)
-        fitStat <- QAICc(PoisMod, chat = initDisp)}
+        fitStat <- MuMIn::QAICc(PoisMod, chat = initDisp)}
       
       if(out.lm$family[1]=="quasibinomial"){
         BinMod<-update(out.lm, family=binomial)
-        fitStat <- QAICc(BinMod, chat = initDisp)}
+        fitStat <- MuMIn::QAICc(BinMod, chat = initDisp)}
     }
   }
   
@@ -65,10 +65,10 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
       stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
     } else {
       if(out.lm$family[1]=='quasipoisson'){
-        fitStat <- QAIC(update(out.lm,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(out.lm$data)))
+        fitStat <- MuMIn::QAIC(update(out.lm,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(out.lm$data)))
       }
       if(out.lm$family[1]=='quasibinomial'){
-        fitStat <- QAIC(update(out.lm, family=binomial), chat = initDisp,k=log(nrow(out.lm$data)))
+        fitStat <- MuMIn::QAIC(update(out.lm, family=binomial), chat = initDisp,k=log(nrow(out.lm$data)))
       }
     }
   }

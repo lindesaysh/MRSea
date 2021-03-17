@@ -3,6 +3,7 @@
 #' @param model Fitted model object (glm, gamMRSea or gam)
 #' @param id blocking structure
 #' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
+#' @param dots (\code{default=FALSE}). If TRUE, progress dots are printed.
 #' 
 #' @details
 #' Always run \code{\link{timeInfluenceCheck}} first to see how long it will take to produce the plots.

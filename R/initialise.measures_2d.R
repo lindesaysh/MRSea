@@ -21,73 +21,37 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   numRand <- 0
   
   track <- cbind()
-  # # recall: gridResp has x coordinates of possible knot locations
-  # #         or NA if knot location is outside legal region
-  # oInd<- 1:length(gridResp)
-  # resp<- na.omit(gridResp)
-  # 
-  # # determine  index of legal knotpoints in gridResp (and hence gridData)
-  # if (length(gridResp) > length(resp)) {
-  #   mapInd<- oInd[-na.action(resp)]
-  # } else {
-  #   mapInd<- oInd
-  # }
-  # # make pointer to determine where in mapInd each legal knot is stored - else = 0
-  # # e.g. if 693 grid points but only 500 legal positions, if the 300th knot poistion is
-  # # the 200th legal position, then invInd[300] = 200
-  # invInd <- rep(0,length(gridResp))
-  # for (i in 1:length(mapInd)) {
-  #   invInd[mapInd[i]] <- i
-  # }
+ 
   
   #if initialise is TRUE:
   if (initialise) {
     require(fields)
     numNeeded = startKnots
-    #numGot = 0
-    # while ((numGot < numNeeded) && (fuse < maxIterations)) {
-    #  fuse = fuse + 1
-    #  legPos = mapInd
-    #   posKnots = cbind()
-    #  for (i in 1:numNeeded) {
-    #     newKnot=legPos[floor(runif(1,1,length(legPos)+1))]
-    #     posKnots = c(posKnots,newKnot)
-    #     numGot=length(posKnots)
-    #     if (length(legPos>1)) {
-    #       entries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[posKnots]]),1,min)>=gap)
-    #       badEntries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[newKnot]]),1,min)<gap)
-    #     } else {
-    #       if (any(knotDist[invInd[legPos],invInd[posKnots]]<gap)) {
-    #         entries=c();badEntries=invInd[legPos]
-    #       } else {
-    #         badEntries=c();entries=invInd[legPos]
-    #       }
-    #     }
-    #     fixFault<-na.omit(match(mapInd[invInd[legPos][badEntries]],legPos))
-    #     legPos<-legPos[-fixFault]
-    #     if (length(legPos)==0) break
-    #  }
-    #}
-    #if (numGot < numNeeded) print("WARNING: less knots fitted than desired")
-    #knotPoint<- posKnots
-    #print(knotPoint)
-    #aR <- knotPoint
-    #radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
+    
     print("Space-filling knots....")
     set.seed(knot.seed)
+
+    #   if(ncol(knotgrid)>2){
+    #     duppointid<-c()
+    #     chunks<-unique(knotgrid[,3])
+    #     for(z in 1:length(chunks)){
+    #       dupPoints <-paste(knotgrid[,1][which(knotgrid[,3]==chunks[z])], knotgrid[,2][which(knotgrid[,3]==chunks[z])], sep='E')
+    #       duppointid<-c(duppointid, which(duplicated(dupPoints)==T))
+    #     }
+    # }else{
+      options('warn'=-1)
+      dupPoints <-paste(knotgrid[,1], knotgrid[,2], sep='E')
+      duppointid<-which(duplicated(dupPoints)==T)
+    # }
     
-    
-    options('warn'=-1)
-    dupPoints <-paste(knotgrid[,1], knotgrid[,2], sep='E')
-    duppointid<-which(duplicated(dupPoints)==T)
     
     if(nrow(knotgrid)<1000){
       
       if(length(duppointid)>0){
-        spacefillresult<- cover.design((knotgrid)[-duppointid,], nd=numNeeded, nruns=1)
+        spacefillresult<- cover.design((knotgrid[,1:2])[-duppointid,], nd=numNeeded, nruns=1)
       }
       if(length(duppointid)==0){
-        spacefillresult<- cover.design(knotgrid, nd=numNeeded, nruns=1)
+        spacefillresult<- cover.design(knotgrid[,1:2], nd=numNeeded, nruns=1)
       }
       initialKnots<-spacefillresult$design
       posKnots<-spacefillresult$best.id
@@ -97,10 +61,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       
       #space-fill data (subsample - see line above) to get knot locations
       if(length(duppointid)>0){
-        spacefillresult<- cover.design((knotgrid)[SampledPoints,][-duppointid,], nd=numNeeded, nruns=1)
+        spacefillresult<- cover.design((knotgrid[,1:2])[SampledPoints,][-duppointid,], nd=numNeeded, nruns=1)
       }
       if(length(duppointid)==0){
-        spacefillresult<- cover.design((knotgrid)[SampledPoints,], nd=numNeeded, nruns=1)
+        spacefillresult<- cover.design((knotgrid[,1:2])[SampledPoints,], nd=numNeeded, nruns=1)
       }
       initialKnots<-spacefillresult$design
       posKnots<-spacefillresult$best.id
@@ -111,85 +75,18 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     if (dim(initialKnots)[1]<numNeeded) {
       print("WARNING: less knots positioned than desired")
     }
+
     
-    # posKnots = cbind()
-    # legPos=mapInd
-    # for (i in 1:(dim(initialKnots)[1])) {
-    #   new<-scale(knotgrid[legPos,],center=c(initialKnots[i,1],initialKnots[i,2]))
-    #   ####Pick nearest grid point that is also far enough away from another knot
-    #   ind<-which.min(abs(new[,1])+abs(new[,2]))
-    #   newKnot = legPos[ind]
-    #   posKnots = c(posKnots,newKnot)
-    #   if (length(legPos>1)) {
-    #     entries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[posKnots]]),1,min)>=gap)
-    #     badEntries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[newKnot]]),1,min)<gap)
-    #   } else {
-    #     if (any(knotDist[invInd[legPos],invInd[posKnots]]<gap)) {
-    #       entries=c();badEntries=invInd[legPos]
-    #     } else {
-    #       badEntries=c();entries=invInd[legPos]
-    #     }
-    #   }
-    #   fixFault<-na.omit(match(mapInd[invInd[legPos][badEntries]],legPos))
-    #   if(length(fixFault)>0){
-    #     legPos<-legPos[-fixFault]
-    #   }
-    #   if (length(legPos)==0) break
-    # }
-    
-    
-    
-    # numGot=length()
-    
-    if (isS4(baseModel)) {
-      baseModel@splineParams[[1]]$initialKnots <- initialKnots
-    } else {
       baseModel$splineParams[[1]]$initialKnots <- initialKnots
-    }
-    
+
   }else{
-    numNeeded = nrow(initialKnots)
-    knots2<-rbind(initialKnots, knotgrid)
     if(length(initialaR)>0){
       posKnots<-initialaR
     }else{
+      numNeeded = nrow(initialKnots)
+      knots2<-rbind(initialKnots, knotgrid)
       posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
     }
-    
-    
-    #   posKnots = cbind()
-    #   legPos=mapInd
-    #   for (i in 1:(dim(initialKnots)[1])) {
-    #     new<-scale(knotgrid[legPos,],center=c(initialKnots[i,1],initialKnots[i,2]))
-    #     ####Pick nearest grid point that is also far enough away from another knot
-    #     ind<-which.min(abs(new[,1])+abs(new[,2]))
-    #     newKnot = legPos[ind]
-    #     posKnots = c(posKnots,newKnot)
-    #     if (length(legPos>1)) {
-    #       entries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[posKnots]]),1,min)>=gap)
-    #       badEntries=which(apply(as.matrix(knotDist[invInd[legPos],invInd[newKnot]]),1,min)<gap)
-    #     } else {
-    #       if (any(knotDist[invInd[legPos],invInd[posKnots]]<gap)) {
-    #         entries=c();badEntries=invInd[legPos]
-    #       } else {
-    #         badEntries=c();entries=invInd[legPos]
-    #       }
-    #     }
-    #     fixFault<-na.omit(match(mapInd[invInd[legPos][badEntries]],legPos))
-    #     if(length(fixFault)>0){
-    #       legPos<-legPos[-fixFault]
-    #     }
-    #     if (length(legPos)==0) break
-    #   }
-    #   numGot=length(posKnots)
-    #   if (numGot < length(initialKnots)) {
-    #     print("WARNING: less knots positioned than desired")
-    #     radiusIndices=radiusIndices[1:numGot]
-    #   }
-    #   knotPoint<- posKnots
-    #   #print(c('knots: ',knotPoint))
-    #   aR <- knotPoint
-    #   # print(c('actual knots: ',invInd[aR]))
     
   } # end of ifelse statement related to initialise  = T/F
   
@@ -238,10 +135,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     } else {
       if(baseModel$family[1]=="quasipoisson"){
         PoisMod<-update(baseModel, round(.)~., family=poisson)
-        fitStat <- QAIC(PoisMod, chat = initDisp)}
+        fitStat <- MuMIn::QAIC(PoisMod, chat = initDisp)}
       if(baseModel$family[1]=="quasibinomial"){
         BinMod<-update(baseModel, family=binomial)
-        fitStat <- QAIC(BinMod, round(.)~., chat = initDisp)}
+        fitStat <- MuMIn::QAIC(BinMod, round(.)~., chat = initDisp)}
     }
   }
   
@@ -251,10 +148,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     } else {
       if(baseModel$family[1]=="quasipoisson"){
         PoisMod<-update(baseModel, family=poisson)
-        fitStat <- QAICc(PoisMod, chat = initDisp)}
+        fitStat <- MuMIn::QAICc(PoisMod, chat = initDisp)}
       if(baseModel$family[1]=="quasibinomial"){
         BinMod<-update(baseModel, family=binomial)
-        fitStat <- QAICc(BinMod, chat = initDisp)}
+        fitStat <- MuMIn::QAICc(BinMod, chat = initDisp)}
     }
   }
   
@@ -263,10 +160,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
     } else {
       if(baseModel$family[1]=='quasipoisson'){
-        fitStat <- QAIC(update(baseModel,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(baseModel$data)))
+        fitStat <- MuMIn::QAIC(update(baseModel,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(baseModel$data)))
       }
       if(baseModel$family[1]=='quasibinomial'){
-        fitStat <- QAIC(update(baseModel, family=binomial), chat = initDisp,k=log(nrow(baseModel$data)))
+        fitStat <- MuMIn::QAIC(update(baseModel, family=binomial), chat = initDisp,k=log(nrow(baseModel$data)))
       }
     }
   }
@@ -334,49 +231,25 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }
   
   if(fitnessMeasure=="cv.gamMRSea"){
-    if (isS4(baseModel)) {
-      set.seed(cv.opts$cv.gamMRSea.seed)
-      fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
-      #fitStat<-Inf
-    } else {
       set.seed(cv.opts$cv.gamMRSea.seed)
       fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
       #fitStat<-Inf
     }
-  }
   
-  # calculate accuracy for vglm based multinomial
-  if(fitnessMeasure=="mn.accuracy"){ 
-    if (isS4(baseModel)) {
-      fitStat <- mn.accuracy(baseModel)
-    } else {
-      stop('Fitness measure only supported for multinomial with vglm')
-    }
-  }
-
+ 
   #cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
     # fitStat <- fitStat + 10000000
     fitStat <- 10000000
     cat("Change Fit due to NA: ", fitStat, "\n")
   }
-  if(baseModel$splineParams[[1]]$modelType!='pointProcess')
-  if(getDispersion(baseModel)>initDisp){
+  
+  if(baseModel$splineParams[[1]]$modelType!='pointProcess'){
+    if(getDispersion(baseModel)>initDisp){
     fitStat<- tempMeasure + 10000000
     cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
-  }
-
-    # output<-fit.thinPlate_2d(fitnessMeasure,dists,invInd[aR],radii,baseModel,radiusIndices,models)
-  
-  # # check for Hauck donner effect 
-  # if (hdetest) {
-  #   if (isS4(baseModel)){
-  #     hde_check <- hdeff(baseModel)
-  #     if (sum(hde_check) > 0){
-  #       fitStat <- fitStat + 10000000
-  #     }
-  #   }
-  # }
+	}
+	}
   
   output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
   out.lm<-output$currentModel
@@ -419,5 +292,3 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   
   
 }
-
-

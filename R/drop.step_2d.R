@@ -25,12 +25,10 @@
   fitStat<-BIC[length(BIC)]
   newRadii = radiusIndices
   while ((improve) & (fuse < maxIterations) ) {
-
     #print(paste("drop", fuse))
-
     fuse <- fuse + 1
     improve <- 0
-    print(fitStat)
+   # print(fitStat)
     if (length(aR) > minKnots) {
       for (i in 1:length(aR)) {
         tempR <- aR
@@ -48,9 +46,7 @@
         #output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
         #fitStat<-output$tempMeasure
         tempMeasure<-out$BIC
-
         #print(paste(tempMeasure, fitStat, length(aR), improve, improveDrop))
-
         if (tempMeasure +tol < fitStat) {
           out.lm <- tempOut.lm
           fitStat<-tempMeasure

@@ -93,8 +93,6 @@ data(ns.predict.data.re)
 # load knot grid data
 data(knotgrid.ns)
 
-splineParams<-makesplineParams(data=ns.data.re, varlist=c('observationhour'))
-
 #set some input info for SALSA
 ns.data.re$response<- ns.data.re$birds
 
@@ -115,7 +113,7 @@ salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = na.omit(knotgrid.ns),
                   interactionTerm="as.factor(impact)")
 
 salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
-                            k2k=distMats$knotDist, splineParams=splineParams)
+                            k2k=distMats$knotDist)
 
 }
 \references{

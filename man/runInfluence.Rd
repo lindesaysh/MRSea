@@ -12,6 +12,8 @@ runInfluence(model, id = NULL, save = FALSE, dots = FALSE)
 \item{id}{blocking structure}
 
 \item{save}{(\code{default=FALSE}). Logical stating whether plot should be saved into working directory.}
+
+\item{dots}{(\code{default=FALSE}). If TRUE, progress dots are printed.}
 }
 \value{
 Two plots one each for COVRATIO and PRESS statistics, giving the influence of each block on precision of the parameter estimates and the sensitivity of model predictions.

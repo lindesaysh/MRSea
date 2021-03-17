@@ -1,3 +1,15 @@
+MRSea 1.3.1
+----------
+
+Notes
+ * Package compiled using version of R >=4.0
+ * Removal of various now obsolete functions (predict.cress, getCVcress, getPvalues).  These have been superceded by (predict.gamMRSea, cv.gamMRSea and anova.gamMRSea)
+ * Updates to vignettes
+ 
+Bug Fixes
+
+* Various fixes to comply with updated version of R
+
 MRSea 1.02
 ----------
 

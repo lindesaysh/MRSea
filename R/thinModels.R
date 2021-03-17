@@ -1,6 +1,8 @@
 #' function to thin the number of models
 #' 
-#' @author Cameron Walker, Department of Enginering Science, University of Auckland.
+#' @param models list of models fitted
+#' 
+#' @author Cameron Walker, Department of Engineering Science, University of Auckland.
 #' 
 #' @export
 #' 

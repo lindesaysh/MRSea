@@ -13,6 +13,8 @@ generateNoise(n, response, family, gamma.variance, ...)
 
 \item{family}{one of \code{poisson}, \code{binomial} or \code{zibinomial}}
 
+\item{gamma.variance}{variance parameter for \code{gamma} distribution.}
+
 \item{...}{Other parameters required for the family specified}
 }
 \description{
@@ -20,8 +22,8 @@ The function generates a random sample from poisson, overdispersed poisson, bino
 }
 \details{
 An additional parameter for the Poisson distribution is the dispersion parameter, specified by d=
-The additional parameters for the Binomial distribution can be found in \link{rbinom}
-The zibinomial family requires the \code{VGAM} library to generate zero inflated binomial data. Additional parameters can be found in the help for \link{rzibinom}.
+The additional parameters for the Binomial distribution can be found in \code{?VGAM::rbinom}
+The zibinomial family requires the \code{VGAM} library to generate zero inflated binomial data. Additional parameters can be found in the help for \code{rzibinom}.
 }
 \examples{
 
