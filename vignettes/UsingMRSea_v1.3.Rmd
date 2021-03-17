@@ -2,7 +2,9 @@
 title: "Statistical Modelling of bird and cetacean distributions in offshore renewables development areas"
 author: "LAS Scott-Hayward, CG Walker and ML Mackenzie"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  - rmarkdown::html_vignette
+  - rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Statistical Modelling of bird and cetacean distributions in offshore renewables development areas}
   %\VignetteEngine{knitr::rmarkdown}
@@ -26,7 +28,8 @@ require(knitcitations)
 cleanbib()
 biblio <- read.bibtex("newref.bib")
 cite_options(citation_format = 'pandoc', cite.style = 'authoryear', max.names = 1, longnamesfirst=FALSE)
-knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, eval=TRUE, 
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, 
+                      eval=FALSE, cache=FALSE,
                       comment = '#>', collapse=TRUE)
 ```
 
@@ -40,10 +43,21 @@ Other functions include diagnostics (to assess residual correlation: ```runACF``
 
 
 ![alt text](MRSea_workflow.png)
-Example of the modelling process using MRSea.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst MRSea functions are in red.  GEE (far right), stands for Generalised Estimating Equations.
+Example of the modelling process using MRSea.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst MRSea functions are in red.  
 
 
 ## Distance sampling using the ```mrds``` library
+
+```{r eval=TRUE, echo=FALSE}
+# load workpace
+load(file='mrseavignetteworkspace.RData')
+require(mrds)
+require(MRSea)
+require(ggplot2)
+require(RColorBrewer)
+require(splines)
+require(fields)
+```
 
 1. Load data and fit detection function (Distance Sampling)
 ```{r message=FALSE}
@@ -58,9 +72,18 @@ result <- ddf(dsmodel=~mcds(key="hn", formula=~1),
               meta.data=list(width=250))
 ```
 
+```{r eval=TRUE}
+result
+```
+
+```{r eval=TRUE}
+plot(result)
+```
+
+
 2. Adjust sightings for detectability 
 
-```{r dist, cache=TRUE, results='hide', warning=FALSE, message=FALSE}
+```{r dist, results='hide', warning=FALSE, message=FALSE}
 # create.NHAT and create.count.data are MRSea functions to adjust the 
 # sightings for the detection function estimated above.
 dis.data <- create.NHAT(dis.data,result)
@@ -70,11 +93,9 @@ count.data <- create.count.data(dis.data)
 3. Try a simple model
 
 ```{r message=FALSE, warning=FALSE}
-data <- count.data
-data$response <- round(data$NHAT)
-attach(data)
+count.data$response <- round(count.data$NHAT)
 fullModel <- glm(response ~ as.factor(season) + as.factor(impact) +
-                   depth + x.pos + y.pos, family = poisson, data = data)
+                   depth + x.pos + y.pos, family = poisson, data = count.data)
 ```
 
 4.  Try a model with a smooth term for depth
@@ -83,15 +104,16 @@ fullModel <- glm(response ~ as.factor(season) + as.factor(impact) +
 require(splines)
 fullModel <- glm(response ~ as.factor(season) + as.factor(impact) +
                    bs(depth, knots = mean(depth)) + x.pos + y.pos, 
-                 family = poisson,data = data)
+                 family = poisson,data = count.data)
 ```
 
 5.  If the data are correlated then you may wish to specify a blocking structure in your dataset. 
 
-
 For correlated data:
 ```{r }
-data$blockid <- paste(data$transect.id, data$season, data$impact,sep = "")
+count.data$blockid <- paste(count.data$transect.id, 
+                            count.data$season, 
+                            count.data$impact,sep = "")
 ```
 
 
@@ -107,7 +129,7 @@ data("nysted.predictdata")  # contains predict.data
 # final model must be in this data frame and the naming must be the 
 # same as for the data
 predictData <- nysted.predictdata
-range(data$depth)
+range(count.data$depth)
 range(predictData$depth)
 ```
 
@@ -118,45 +140,49 @@ Here the range of the predictions is slightly wider than the range of the data, 
 ```{r message=FALSE}
 initialModel <- glm(response ~ as.factor(season) + as.factor(impact) 
                     + offset(log(area)), family = "quasipoisson", 
-                    data = data)
+                    data = count.data)
 ```
+
+The fitness measure can be one of several options (AIC, BIC, QAIC, QBIC, CV). Here we use QBIC. 
+
+```{r }
+salsa1dlist <- list(fitnessMeasure = "QBIC", 
+                    minKnots_1d = 2,
+                    maxKnots_1d = 5, 
+                    startKnots_1d = 1, 
+                    degree = 2,
+                    gaps = c(0))
+```
+
+If you want to use CV, you will need an additional parameter in the list; `cv.opts`
 
 ```{r }
 salsa1dlist <- list(fitnessMeasure = "cv.gamMRSea", 
                     minKnots_1d = 2,
-                    maxKnots_1d = 5, 
+                    maxKnots_1d = 3, 
                     startKnots_1d = 1, 
-                    degree = 2, 
-                    maxIterations = 10,
+                    degree = 2,
                     gaps = c(0), 
                     cv.opts=list(cv.gamMRSea.seed=1, K=10))
 ```
 
 8. Run SALSA;
 
-```{r message=FALSE, warning=FALSE, echo=FALSE, results='hide'}
+```{r message=FALSE, warning=FALSE, echo=TRUE, results='hide'}
 # run SALSA
 require(MuMIn)
 salsa1dOutput <- runSALSA1D(initialModel, salsa1dlist, c("depth"),
-                      predictionData=predictData, datain=data, removal=TRUE, 
-                      panelid = data$blockid)
-```
-
-```{r eval=FALSE}
-# run SALSA
-salsa1dOutput <- runSALSA1D(initialModel, salsa1dlist, c("depth"),
-                      predictionData=predictData, datain=data, removal=TRUE, 
-                      panelid = data$blockid)
+                      predictionData=predictData, datain=count.data, removal=TRUE)
 ```
 
 Use the built in summary function (`summary.gamMRSea`) to look at the summary of the model.  Note that robust standard errors are given alongside the raw standard errors and information regarding panels is at the bottom of the output. If each data point is a panel, then independence is assumed.
 
-```{r }
+```{r eval=TRUE}
 summary(salsa1dOutput$bestModel)
 ```
 
 
-```{r }
+```{r eval=TRUE}
 # How many knots were chosen for depth?
 salsa1dOutput$splineParams[[2]]$knots
 # ~~~~~~~~~~~~~~~~~~~~~~~
@@ -167,107 +193,104 @@ salsa1dOutput$splineParams[[2]]$knots
 
 9. Create a grid of knots that will be used as possible knot locations.  This may take while and could be different every time you run it so I suggest saving the knotgrid as a file.
 
-```{r knotgrid, message=FALSE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, cache=TRUE}
-knotgrid<- getKnotgrid(coordData = cbind(data$x.pos, data$y.pos), numKnots = 300)
+```{r knotgrid, fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
+knotgrid<- getKnotgrid(coordData = cbind(count.data$x.pos, count.data$y.pos), 
+                       numKnots = 300,
+                       plot = FALSE)
 #
 # write.csv(knotgrid, file='knotgrid_fullanalysis.csv', row.names=F)
 # ~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-The black points in the figure are the data and the red points, the candidate knot locations. By default, the knotgrid has 300 knot positions chosen.
-
 10. Set up parameters for SALSA2D.  Distance matrices (data to knots and knot to knots), a fit statistic and min, max and start knots.
 
 ```{r }
 # make distance matrices for datatoknots and knottoknots
-distMats <- makeDists(cbind(data$x.pos, data$y.pos), knotgrid)
+distMats <- makeDists(cbind(count.data$x.pos, count.data$y.pos), knotgrid)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~
 
 # make parameter set for running salsa2d
-salsa2dlist<-list(fitnessMeasure = 'cv.gamMRSea', 
+salsa2dlist<-list(fitnessMeasure = 'QBIC', 
                   knotgrid = knotgrid,
                   startKnots=10, 
                   minKnots=4, 
                   maxKnots=15, 
                   gap=0, 
-                  interactionTerm="as.factor(impact)", 
-                  cv.opts=list(cv.gamMRSea.seed=1, K=10))
+                  interactionTerm="as.factor(impact)")
 ```
 
-11. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`.
+11. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`. The model inputted to the SALSA algorithm is the model output from the 1D SALSA run.  If you have no univariate smooth terms, you can put in the initial model in this step. 
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide'}
-salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, 
-                          salsa2dlist, 
+```{r echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+salsa2dOutput<-runSALSA2D(model = salsa1dOutput$bestModel, 
+                          salsa2dlist = salsa2dlist, 
                           d2k=distMats$dataDist,
                           k2k=distMats$knotDist)
 ```
 
-```{r echo=TRUE, eval=FALSE}
-salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, 
-                          salsa2dlist, 
-                          d2k=distMats$dataDist, 
-                          k2k=distMats$knotDist)
-```
 
-```{r }
+```{r eval=TRUE}
 require(ggplot2)
-ggplot() + geom_point(data=data, aes(x=x.pos, y=y.pos), colour='grey') +
+ggplot() + geom_point(data=count.data, aes(x=x.pos, y=y.pos), colour='grey') +
   theme_bw() + 
   geom_point(data=data.frame(knotgrid), aes(X1, X2), col='blue') + 
-  geom_point(data=data.frame(knotgrid)[salsa2dOutput$aR[[1]],], aes(X1, X2), col='darkgreen', size=4) 
+  geom_point(data=data.frame(knotgrid)[salsa2dOutput$aR[[1]],], 
+             aes(X1, X2), col='darkgreen', size=4) +
+  coord_equal()
 
 ```
 
 12.  Are the residuals correlated? Make a suitable blocking structure, within which residuals are expected to be correlated but between which they are independent.  Use `runACF` to assess the blocking structure.
 
-```{r acfplot, fig.cap='ACF plot showing correlation in each block (grey lines), and the mean correlation by lag across blocks (red line).'}
-runACF(block = data$blockid, model = salsa2dOutput$bestModel, suppress.printout=TRUE)
+```{r eval=TRUE, acfplot, fig.cap='ACF plot showing correlation in each block (grey lines), and the mean correlation by lag across blocks (red line).'}
+runACF(block = count.data$blockid, model = salsa2dOutput$bestModel,
+       suppress.printout=TRUE)
 ```
 
 Here we also do a runs test to assess for correlation in the model residuals.  Since our data are over-dispersed, we must use the empirical distribution for assessment:
 
 ```{r}
 simData<-generateNoise(n=500, response=fitted(salsa2dOutput$bestModel), family='poisson', d=summary(salsa2dOutput$bestModel)$dispersion)
-empdist<-getEmpDistribution(500, simData, salsa2dOutput$bestModel, data=data,dots=FALSE)
+empdist<-getEmpDistribution(500, simData, salsa2dOutput$bestModel, data=count.data,dots=FALSE)
+```
+
+```{r eval=TRUE}
 runsTest(residuals(salsa2dOutput$bestModel, type='pearson'),emp.distribution=empdist)
 ```
 
 
 13. Model selection
-```{r }
+
+```{r eval=TRUE}
 set.seed(1)
 # 2D model
-cv.gamMRSea(data=data, modelobject = salsa2dOutput$bestModel, K=10)$delta[2]
+cv.gamMRSea(data=count.data, modelobject = salsa2dOutput$bestModel, K=10)$delta[2]
 # salsa2dOutput$fitStat # alternatively
 
 # 1D model
-cv.gamMRSea(data=data, modelobject = salsa1dOutput$bestModel, K=10)$delta[2]
+cv.gamMRSea(data=count.data, modelobject = salsa1dOutput$bestModel, K=10)$delta[2]
 
 # intitial model
-cv.gamMRSea(data=data, modelobject = initialModel, K=10)$delta[2]
-
-# full glm model with simple depth smooth
-cv.gamMRSea(data=data, modelobject = fullModel, K=10)$delta[2]
+cv.gamMRSea(data=count.data, modelobject = initialModel, K=10)$delta[2]
 
 ```
 
-```{r}
+```{r eval=TRUE}
 anova(salsa2dOutput$bestModel)
 ```
 
-```{r fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE}
+```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE}
 par(mfrow=c(2,2))
-runPartialPlots(model = salsa2dOutput$bestModel, data = data, 
+runPartialPlots(model = salsa2dOutput$bestModel, data = count.data, 
                 factorlist.in = c('season', 'impact'), 
                 varlist.in = 'depth', showKnots = T, 
                 includeB0 = TRUE)
 ```
 
-```{r fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE}
+```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE}
 par(mfrow=c(2,2))
-runPartialPlots(model = salsa2dOutput$bestModel, data = data, 
+runPartialPlots(model = salsa2dOutput$bestModel, data = count.data, 
                 factorlist = c('season', 'impact'), varlist = 'depth', 
                 showKnots = T, type='link', 
                 includeB0 = TRUE)
@@ -277,20 +300,29 @@ runPartialPlots(model = salsa2dOutput$bestModel, data = data,
 
 ```{r }
 preddist<-makeDists(cbind(predictData$x.pos, predictData$y.pos), 
-                 knotgrid,knotmat=FALSE)$dataDist
+                 knotgrid, knotmat=FALSE)$dataDist
 
 
 # make predictions on response scale
-preds<-predict.gamMRSea(newdata = predictData, g2k = preddist, object = salsa2dOutput$bestModel)
+preds<-predict(newdata = predictData, 
+               g2k = preddist, 
+               object = salsa2dOutput$bestModel)
 ```
 
 Plotting the predictions pre and post impact:
 
-```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=4}
+```{r }
 require(RColorBrewer)
+imp.labs <- c("Pre-Construction", "Post-Construction")
+names(imp.labs) <- c("0", "1")
 predictData$preds<-preds[,1]
-ggplot() + geom_tile(data=predictData, aes(x.pos, y.pos, fill=preds), height=0.5, width=0.5) +
-  facet_wrap(~impact + season, nrow=2) + theme_bw() + coord_equal() + 
+```
+
+```{r eval=TRUE, fig=TRUE, fig.align='center', fig.height=10, fig.width=8}
+ggplot() + 
+  geom_tile(data=predictData, aes(x.pos, y.pos, fill=preds), height=0.5, width=0.5) +
+  facet_grid(season~impact , labeller = labeller(impact=imp.labs)) +
+  theme_bw() + coord_equal() + 
   scale_fill_distiller(palette = "Spectral",name="Animal Counts")
 ```
 
@@ -324,7 +356,7 @@ differences <- getDifferences(beforePreds =
 
 16. Plot differences and indicate where significant positive/negative differences lie.  The grey circles indicate a significant negative difference (abundance after impact is less than the abundance before impact) and the grey crosses indicate a significant positive difference.  The colour of the cell indicates the size of the difference. 
 
-```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
+```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
 mediandiff <- differences$mediandiff
 # The marker for each after - before difference:
 # positive ('1') and negative ('-') significant differences
@@ -346,7 +378,7 @@ points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey")
 
 Select a single season to plot (here I have chosen season 1):
 
-```{r fig.width=9, fig.height=6}
+```{r eval=TRUE, fig.width=9, fig.height=6}
 require(dplyr)
 diffdata<-data.frame(predictData[predictData$impact==0,], mediandiff, marker)
 diffdata_s1<-filter(diffdata, season==1)
@@ -365,9 +397,9 @@ ggplot() + geom_tile(data=diffdata_s1, aes(x=x.pos, y=y.pos, fill=mediandiff),
   
 ```
 
-Or, all seasons:
+Or, all seasons (remember season is only in as a factor variable so there will be no change in spatial distribution between seasons, only an increase or decrease in numbers):
 
-```{r, fig.width=9, fig.height=7}
+```{r, eval=TRUE, fig.width=9, fig.height=7}
 ggplot() + geom_tile(data=diffdata, aes(x=x.pos, y=y.pos, fill=mediandiff), 
                      height=0.5, width=0.5) + 
   geom_point(data=filter(diffdata, marker == 1), aes(x=x.pos, y=y.pos), 
@@ -391,7 +423,7 @@ finalmod<-salsa2dOutput$bestModel
 
 This function creates observed vs fitted and fitted vs scaled pearsons residual plots.
 
-```{r, fig.width=9, fig.height=6}
+```{r, eval=TRUE, fig.width=9, fig.height=6}
 runDiagnostics(finalmod)
 ```
 
@@ -399,33 +431,57 @@ runDiagnostics(finalmod)
 
 These functions assess the influence of different blocks on the data. 
 
-```{r}
-timeInfluenceCheck(finalmod, id = data$blockid)
+```{r eval=TRUE}
+timeInfluenceCheck(finalmod, id = count.data$blockid)
 ```
 
-```{r, fig.width=9, fig.height=6}
-runInfluence(finalmod, id = data$blockid)
+```{r, eval=TRUE, fig.width=9, fig.height=6}
+inflpoints<-runInfluence(finalmod, id = count.data$blockid)
 ```
+
 ### Cumulative residual plots
 
 Cumulative residual plots are returned for residuals ordered by each covariate in `varlist`, predicted value and index of observations (temporally). The blue dots are the residuals and the black line is the line of cumulative residual. On the covariate plots (those in `varlist`) the grey line indicates what we would expect from a well fitted covariate. i.e. one that is fitted with excessive knots.
 
-```{r,fig.width=9, fig.height=7}
+```{r,eval=TRUE, fig.width=9, fig.height=7}
 plotCumRes(model = finalmod, varlist = 'depth')
 ```
 
 
 ### Making any `glm` model into an `gamMRSea` object
 
-This can be done using the `make.gamMRSea` function.  
+This can be done using the `make.gamMRSea` function.  Here we use the `fullmodel` which is a `glm` model with `family='poisson'`
+
+```{r eval=TRUE}
+fullModel$call
+```
+
 
 ```{r}
-fullModel.gamMRSea <- make.gamMRSea(fullModel, panelid = data$blockid, gamMRSea = TRUE)
+fullModel.gamMRSea <- make.gamMRSea(fullModel,  
+                                    gamMRSea = TRUE)
+                                    
+```
+
+```{r eval=TRUE}
 summary(fullModel.gamMRSea)
 ```
 
-Additionally, if you choose to fit the salsa models without a panel structure, the `make.gamMRSea` function can be used to add a panel structure afterward. Assuming model m1 is a model output from either `runSALSA1D` or `runSALSA2D`:
+Additionally, if you choose to fit the SALSA or GLM models without a panel structure, the `make.gamMRSea` function can be used to add a panel structure afterwards.
 
 ```{r, eval=FALSE}
-m1.robustse <- make.gamMRSea(m1, panelid =  data$blockid)
+finalmod.robustse <- make.gamMRSea(finalmod,  
+                                    gamMRSea = TRUE,
+                                    panelid = count.data$blockid)
+```
+
+```{r}
+summary(finalmod.robustse)
+```
+
+
+
+
+```{r, eval=FALSE, echo=FALSE, include=FALSE}
+save.image(file='mrseavignetteworkspace.RData', compress="bzip2")
 ```

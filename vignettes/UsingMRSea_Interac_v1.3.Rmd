@@ -2,7 +2,9 @@
 title: "MRSea: 2D Interaction Example"
 author: "LAS Scott-Hayward, CG Walker and ML Mackenzie"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  - rmarkdown::html_vignette
+  - rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{MRSea: 2D Interaction Example}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,7 +12,8 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='#>', message=FALSE,
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='#>', 
+                      message=FALSE, eval=FALSE,
                       collapse=TRUE)
 ```
 
@@ -20,8 +23,12 @@ This vignette is in addition to the main vignette for the package but shows an a
 <!-- devtools::load_all(pkg='../../MRSea') -->
 <!-- ``` -->
 
-```{r, eval=TRUE}
+```{r, eval=TRUE, echo=FALSE}
 require(MRSea)
+require(splines)
+require(ggplot2)
+require(dplyr)
+load(file='MRSeainteracWorkspace.RData')
 ```
 
 ## Load data
@@ -42,7 +49,7 @@ mydata$blockid <- paste(mydata$transect.id, mydata$season, mydata$impact,sep = "
 
 3. Create a grid of knots that will be used as possible knot locations.  Create one grid for before and one for after. As we have complete spatial overlap between the two `impact` levels, I have chosen the same number of candidate knot locations for each. 
 
-```{r knotgridnotrun, message=FALSE, eval=TRUE, cache=TRUE}
+```{r knotgridnotrun}
 nk=150 # number of knots per interaction level
 myknots<-NULL
 for(i in 1:length(unique(mydata$impact))){
@@ -52,7 +59,11 @@ for(i in 1:length(unique(mydata$impact))){
 }
 ```
 
-```{r selknots, fig.cap='Figure showing the candidate knot locations for each of the interaction levels'}
+```{r eval=TRUE}
+head(myknots)
+```
+
+```{r selknots, eval=TRUE, fig.cap='Figure showing the candidate knot locations for each of the interaction levels'}
 require(ggplot2)
 ggplot() +
   geom_point(data=mydata, aes(x.pos, y.pos)) +
@@ -114,35 +125,34 @@ initialModel <- glm(response ~ as.factor(season) + as.factor(impact)
 # make parameter set for running salsa2d
 salsa2dlist<-list(fitnessMeasure = "QAIC", 
                   knotgrid = myknots, 
-                  startKnots=5, 
+                  startKnots=10, 
                   minKnots=4, 
                   maxKnots=12)
 ```
 
-```{r echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
-salsa2dOutput<-runSALSA2D(initialModel, 
-                          salsa2dlist,
-                          d2k=d2k,k2k=k2k, 
-                          suppress.printout = TRUE)
+```{r echo=TRUE,  results='hide'}
+salsa2dOutput<-runSALSA2D(model = initialModel, 
+                          salsa2dlist = salsa2dlist,
+                          d2k=d2k,k2k=k2k)
 ```
 
-<!-- ```{r echo=TRUE, eval=FALSE} -->
-<!-- salsa2dOutput<-runSALSA2D(salsa1dOutput$bestModel, salsa2dlist,  -->
-<!--                              d2k=distMatsGeo$dataDist, k2k=distMatsGeo$knotDist) -->
-<!-- ``` -->
 
 6. Assess the output for the location of the selected knots.
 
 ```{r , fig.height=6, fig.width=8}
 mymodel<-salsa2dOutput$bestModel
 chosenknots <- myknots[mymodel$splineParams[[1]]$knotPos,]
+```
+
+```{r, eval=TRUE}
 count(chosenknots, impact)
 #startingknots <- myknots[startknotlocs,]
 ```
 
-```{r fig.height=6, fig.width=8}
+```{r eval=TRUE, fig.height=6, fig.width=8}
 imp.labs <- c("Pre-Construction", "Post-Construction")
 names(imp.labs) <- c("0", "1")
+
 # quick look to see what was chosen
 ggplot(myknots) +
   geom_point(aes(x=X1, y=X2)) +
@@ -154,20 +164,15 @@ ggplot(myknots) +
 
 ```
 
-7. You can find the knot locations chosen by querying either the output from `runSALSA2D` or the model object itself. 
+7. You can find the knot locations chosen by querying model object. 
 
-```{r}
-salsa2dOutput$aR[[1]]
-```
-
-```{r}
+```{r eval=TRUE}
 mymodel$splineParams[[1]]$knotPos
 ```
 
-```{r}
+```{r, eval=TRUE}
 set.seed(1)
-cv.gamMRSea(mydata, salsa2dOutput$bestModel, K=10)$delta
-salsa2dOutput$fitStat
+cv.gamMRSea(mydata, mymodel, K=10)$delta[1]
 ```
 
 ## Making predictions
@@ -193,16 +198,16 @@ g2k<-g2k_temp
 ```
 
 ```{r}
-#newmod<-update(salsa2dOutput$bestModel, .~. - LocalRadialFunction(radiusIndices, dists, radii, aR):as.factor(impact))
-
 # make predictions on response scale
-nysted.predictdata$preds<-predict.gamMRSea(newdata = nysted.predictdata, g2k =g2k, object = salsa2dOutput$bestModel)
+nysted.predictdata$preds<-predict.gamMRSea(newdata = nysted.predictdata, 
+                                           g2k =g2k, 
+                                           object = mymodel)
 ```
 
 
 Plotting the predictions pre and post impact:
 
-```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
+```{r eval = TRUE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
 ggplot() +
   geom_tile(aes(x=x.pos, y=y.pos, fill=preds), height=0.5, width=0.5, data=filter(nysted.predictdata, season==1)) +
   coord_equal()+
@@ -215,7 +220,7 @@ ggplot() +
 
 and, since this is simulated data, we can also look at the truth:
 
-```{r fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
+```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
 ggplot() +
   geom_tile(aes(x=x.pos, y=y.pos, fill=truth.re), height=0.5, width=0.5, data=filter(nysted.predictdata, season==1)) +
   coord_equal()+
@@ -226,7 +231,7 @@ ggplot() +
   facet_wrap(~impact, ncol=1, labeller = labeller(impact = imp.labs))
 ```
 
-## Choosing your own starting knots
+# Choosing your own starting knot locations
 
 In the above analysis, the SALSA algorithm will space-fill across all knot locations to initialise the first set of knots.  This could mean that in the initial step, one of the levels gets very few starting locations.  If you wish to have a more even set of starting locations, you can specify these locations.  Here I am specifying 5 locations from each level of the interaction.
 
@@ -260,19 +265,57 @@ As before, we can look to see where the model has placed the knots. The starting
 
 ```{r , fig.height=6, fig.width=8}
 mymodel_sk<-salsa2doutput_stkn$bestModel
-chosenknots <- myknots[mymodel_sk$splineParams[[1]]$knotPos,]
-count(chosenknots, impact)
+chosenknots_sk <- myknots[mymodel_sk$splineParams[[1]]$knotPos,]
 startingknots <- myknots[startknotlocs,]
 ```
 
-```{r fig.height=6, fig.width=8}
+```{r}
+count(chosenknots_sk, impact)
+```
+
+```{r eval=TRUE, fig.height=6, fig.width=8, fig.cap='Black dots are candidate knot locations, grey squares with crosses are initial knot locations and red diamonds are final knot locations.'}
 # quick look to see what was chosen
 ggplot(myknots) +
   geom_point(aes(x=X1, y=X2)) +
-  geom_point(aes(x=X1, y=X2, size=2),data=chosenknots, alpha=4/5, 
+  geom_point(aes(x=X1, y=X2, size=2),data=chosenknots_sk, alpha=4/5, 
              show.legend = FALSE, shape=5, colour = 'firebrick') +
-  geom_point(aes(x=X1, y=X2, size=2), shape = 7, data=startingknots, colour = 'darkgrey', show.legend = FALSE) +
+  geom_point(aes(x=X1, y=X2, size=2), shape = 7, data=startingknots, 
+             colour = 'darkgrey', show.legend = FALSE) +
   theme_bw() + xlab('Easting (Km)') + ylab('Northing (Km)') + 
   coord_equal() +
   facet_wrap(~impact, ncol=1, labeller = labeller(impact=imp.labs))
 ```
+
+
+```{r eval=TRUE}
+set.seed(1)
+cv.gamMRSea(mydata, mymodel_sk, K=10)$delta[1]
+```
+
+This model is better than the earlier one which used a space-filled selection of all knots for starting locations.  However, bear in mind that both models are using a simplistic number of start knots and could be improved. 
+
+```{r}
+# make predictions on response scale
+nysted.predictdata$preds_sk<-predict.gamMRSea(newdata = nysted.predictdata, 
+                                           g2k =g2k, 
+                                           object = mymodel_sk)
+```
+
+
+Plotting the predictions pre and post impact:
+
+```{r eval = TRUE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
+ggplot() +
+  geom_tile(aes(x=x.pos, y=y.pos, fill=preds_sk), height=0.5, width=0.5, data=filter(nysted.predictdata, season==1)) +
+  coord_equal()+
+  scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
+  theme_bw() +
+  xlab('Easting (Km)') + ylab('Northing (Km)') +
+  #geom_polygon(data=nysted.coast, aes(x, y), fill='grey') +
+  facet_wrap(~impact, ncol=1, labeller = labeller(impact = imp.labs))
+```
+
+```{r, eval=FALSE, echo=FALSE, include=FALSE}
+save.image(file='MRSeainteracWorkspace.RData', compress="bzip2")
+```
+

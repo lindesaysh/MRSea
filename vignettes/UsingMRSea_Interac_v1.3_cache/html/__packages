@@ -6,6 +6,8 @@ grDevices
 graphics
 stats
 MRSea
+splines
+ggplot2
 dotCall64
 grid
 spam
