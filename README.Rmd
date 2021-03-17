@@ -1,0 +1,32 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  dev = "png",
+  dev.args = list(type = "cairo-png"),
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# MRSea
+
+## Installation
+
+You can install the latest bugfix release of MRSea from [GitHub](https://github.com/lindesaysh/MRSea) with:
+
+```{r gh-bugfix-installation, eval = FALSE}
+# install.packages("devtools")
+devtools::install_github("lindesaysh/MRSea", ref="stable")
+```
+
+You can install the development version of inlabru from [GitHub](https://github.com/lindesaysh/MRSea) with:
+```{r gh-installation, eval = FALSE}
+devtools::install_github("lindesaysh/MRSea", ref="master")
+```
