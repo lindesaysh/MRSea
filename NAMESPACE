@@ -6,7 +6,6 @@ S3method(update, gamMRSea)
 S3method(model.frame, gamMRSea)
 S3method(predict, gamMRSea)
 S3method(print, gamMRSea)
-S3method(qr, lm)
 importFrom("grDevices", "dev.off", "devAskNewPage", "png")
 importFrom("graphics", "abline", "axis", "hist", "lines", "par",
                 "points", "rug", "segments", "text", "title")
