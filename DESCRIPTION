@@ -1,6 +1,6 @@
-Package: MRSea
+Package: MRSeaPP
 Type: Package
-Title: Spatially adaptive regression splines using SALSA
+Title: Spatially adaptive regression splines using SALSA - Point Process models
 Description: Examines animal survey data for signs of changes in animal
     abundance and distribution following marine renewables development. The
     functions of this package can be used to analyse segmented line transect data
@@ -11,8 +11,8 @@ Description: Examines animal survey data for signs of changes in animal
     bootstrapping is available to estimate uncertainty. Several model assessment
     tools are also available. Recent updates include the direct estimation of robust
     standard errors, given a panel structure.
-Version: 1.3.1
-Date: 2021-03-15
+Version: 0.1
+Date: 2021-03-17
 Authors@R: c(
     person("Lindesay", "Scott-Hayward", email = "lass@st-and.ac.uk",
             role = c("aut", "cre", "cph"),
