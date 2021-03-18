@@ -17,50 +17,101 @@
 ##print(rref, style = "R")
 
 ## References for MRSea package and associated guide
-bref <- c(
+
+citHeader("To cite MRSea and associated publications use:")
+
+
+  
+bibentry(
+  bibtype = "article",
+  key = "scott2014",
+  author = c(
+      person(given = "Lindesay A.S.", family = "Scott-Hayward"),
+      person(given = "Monique L.", family = "Mackenzie"),
+      person(given = "Cameron G.", family = "Walker"),
+      person(given = "Carl R.", family = "Donovan"),
+      person(given = "Erin", family = "Ashe")
+    ),
+	Journal = "Journal of Computational and Graphical Statistics",
+	Number = "2",
+	Pages = "340-360",
+	Title = "Complex Region Spatial Smoother CReSS",
+	Volume = "23",
+	Year = "2014"
+	)
+
+bibentry(
+  bibtype = "article",
+  title = "SALSA - A Spatially Adaptive Local Smoothing Algorithm",
+  key = "Walk2011",
+  author = c(
+      person(given = "Cameron G.", family = "Walker"),
+      person(given = "Monique L.", family = "Mackenzie"),
+      person(given = "Carl R.", family = "Donovan"),
+      person(given = "Michael J.", family = "O\'Sullivan")
+    ),
+  journal       = "Journal of Statistical Computation and Simulation",
+  year          = "2010",
+  volume        = "81",
+  number        = "2",
+  pages         = "179-191"
+)
+
+
+bibentry(
+    bibtype = "TechReport",
+    title = "Vignette for the MRSea Package v1.3: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas.",
+    author = c(
+      person(given = "Lindesay A.S.", family = "Scott-Hayward",
+          role = c("aut", "cre", "ctb"),
+          email = "lass@st-andrews.ac.uk"),
+      person(given = "Cameron G.", family = "Walker",
+          role = c("aut","ctb")),
+      person(given = "Monique L.", family = "Mackenzie", 
+          role = c("aut","ctb"))
+    ),
+    Institution = "University of St. Andrews",
+    year = "2021",
+    note = "Centre for Research into Ecological and Environmental Modelling",
+    url = "https://github.com/lindesaysh/MRSea/tree/master/vignettes",
+    key = "mrsea-guide2021"
+  )
   bibentry(
     bibtype = "Manual",
     title = "MRSea package: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
     author = c(
-      person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
-             email = "lass@st-andrews.ac.uk"),
-      person(c("Cornelia", "S."), "Oedekoven", role = c("aut", "ctb")),
-      person(c("Monique", "L."), "Mackenzie", role = c("ctb")),
-      person(c("Cameron", "G."), "Walker", role = c("aut","ctb"))
+      person(given = "Lindesay A.S.", family = "Scott-Hayward",
+          role = c("aut", "cre", "ctb"),
+          email = "lass@st-andrews.ac.uk"),
+      person(given = "Cornelia S.", family="Oedekoven", 
+          role = c("aut", "ctb")),
+      person(given = "Monique L.", family = "Mackenzie",
+          role = c("ctb")),
+      person(given = "Cameron G.", family = "Walker", 
+          role = c("aut","ctb"))
     ),
     Institution = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
     year = "2014",
     note = "University of St. Andrews: Contract with Marine Scotland: SB9 (CR/2012/05)",
     url = "http://creem2.st-and.ac.uk/software.aspx",
     key = "mrsea-package"
-  ),
+  )
   
-  bibentry(
-    bibtype = "TechReport",
-    title = "Vignette for the MRSea Package v1.3: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas.",
-    author = c(
-      person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
-             email = "lass@st-andrews.ac.uk"),
-      person(c("Cameron", "G."), "Walker", role = c("aut","ctb"),
-      person(c("Monique", "L."), "Mackenzie", role = c("aut","ctb")))
-    ),
-    Institution = "University of St. Andrews",
-    year = "2021",
-    note = "Centre for Research into Ecological and Environmental Modelling",
-    url = "http://creem2.st-and.ac.uk/software.aspx",
-    key = "mrsea-guide2018"
-  ),
-
 bibentry(
     bibtype = "TechReport",
     title = "User Guide for the MRSea Package: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas",
     author = c(
-      person(c("Lindesay", "A.", "S."), "Scott-Hayward", role = c("aut", "cre", "ctb"),
-             email = "lass@st-andrews.ac.uk"),
-      person(c("Cornelia", "S."), "Oedekoven", role = c("aut", "ctb")),
-      person(c("Monique", "L."), "Mackenzie", role = c("aut","ctb")),
-      person(c("Cameron", "G."), "Walker", role = c("aut","ctb")),
-      person("Eric", "Rexstad", role = c("aut","ctb"))
+      person(given = "Lindesay A.S.", family = "Scott-Hayward", 
+          role = c("aut", "cre", "ctb"),
+          email = "lass@st-andrews.ac.uk"),
+      person(given = "Cornelia S.", family="Oedekoven", 
+          role = c("aut", "ctb")),
+      person(given = "Monique L.", family = "Mackenzie", 
+          role = c("aut","ctb")),
+      person(given = "Cameron G.", family = "Walker", 
+          role = c("aut","ctb")),
+      person(given = "Eric", family = "Rexstad", 
+          role = c("aut","ctb"))
     ),
     Institution = "University of St. Andrews",
     year = "2013",
@@ -68,7 +119,7 @@ bibentry(
     url = "http://creem2.st-and.ac.uk/software.aspx",
     key = "mrsea-guide"
   )
-)
+
 
 ## Combining and subsetting
 ##c(rref, bref)
