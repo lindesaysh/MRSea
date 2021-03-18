@@ -318,7 +318,7 @@ getPPCV <- function(model.obj, proj4string, blocksize,
               silent = TRUE)
     
     if(class(test)=='try-error'){
-      scores[r]<-mean(lo_rss, na.rm=TRUE)
+      scores[r]<-NA
     }else{
       # find the nearest knot to each data point
       dat<-dat %>%
