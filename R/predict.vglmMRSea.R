@@ -110,17 +110,45 @@ predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="respons
     sum_out <- summaryvglm(object)
     covs <- sum_out@cov.unscaled
     rcoefs <- rmvnorm(1000, coefs, covs)
-    quant.func<- function(x){quantile(x, probs=c(0.025, 0.975))}
-    cis <- apply(rcoefs, 2, quant.func)
-    lw_ci <- matrix(cis[1,], ncol=neta, byrow=T)
-    hi_ci <- matrix(cis[2,], ncol=neta, byrow=T)
-    lw_lim <- new_bs_all %*% lw_ci
-    hi_lim <- new_bs_all %*% hi_ci
-    if (type == "response") {
-      lw_lim = object@family@linkinv(lw_lim, extra=object@extra)
-      hi_lim = object@family@linkinv(hi_lim, extra=object@extra)
+    #quant.func<- function(x){quantile(x, probs=c(0.025, 0.975))}
+    #cis <- apply(rcoefs, 2, quant.func)
+    #lw_ci <- matrix(cis[1,], ncol=neta, byrow=T)
+    #hi_ci <- matrix(cis[2,], ncol=neta, byrow=T)
+    #lw_lim <- new_bs_all %*% lw_ci
+    #hi_lim <- new_bs_all %*% hi_ci
+    #if (type == "response") {
+    #  lw_lim = object@family@linkinv(lw_lim, extra=object@extra)
+    #  hi_lim = object@family@linkinv(hi_lim, extra=object@extra)
+    #}
+    get_bootstrap <- function(rcoef){
+      bsin <- matrix(rcoef, ncol=neta, byrow=T)
+      linkvals <- new_bs_all %*% bsin
+      respvals <- object@family@linkinv(linkvals, extra=object@extra)
+      return(respvals)
     }
-    return(list("predictions"=preds_out, "lower_limit"=lw_lim, "higher_limit"=hi_lim))
+    resvalz <- get_bootstrap(rcoefs[1,])
+    # try storing as separate arrays for each outcome more efficient to add to smaller arrays
+    yvalz <- rep(list(matrix(NA, nrow=nrow(resvalz), ncol=1000)),ncol(resvalz))
+    for (ii in 1:1000){
+      resval <- get_bootstrap(rcoefs[ii,])
+      for (yy in 1:ncol(resvalz)){
+        yvalz[[yy]][,ii] <- resval[,yy]
+      }
+    }
+    lowerci <- apply(yvalz[[1]], 1, quantile, probs=c(0.025))
+    upperci <- apply(yvalz[[1]], 1, quantile, probs=c(0.975))
+    
+    for (aa in 2:6) {
+      yval <- yvalz[[aa]]
+      anicilw <- apply(yval, 1, quantile, probs=c(0.025))
+      anicihi <- apply(yval, 1, quantile, probs=c(0.975))
+      lowerci <- cbind(lowerci, anicilw)
+      upperci <- cbind(upperci, anicihi)
+    }
+    namez <- colnames(object@y)
+    colnames(lowerci) <- namez
+    colnames(upperci) <- namez
+    return(list("predictions"=preds_out, "lower_limit"=lowerci, "higher_limit"=upperci))
     
   } else {
     return(preds_out)
