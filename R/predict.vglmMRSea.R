@@ -106,6 +106,8 @@ predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="respons
     preds_out = object@family@linkinv(preds_out, extra=object@extra)
   }
   
+  print(dim(preds_out))
+  
   if (conf_int == TRUE) {
     sum_out <- summaryvglm(object)
     covs <- sum_out@cov.unscaled
@@ -138,7 +140,9 @@ predict.vglmMRSea <- function(object, newdata=NULL, newdists=NULL, type="respons
     lowerci <- apply(yvalz[[1]], 1, quantile, probs=c(0.025))
     upperci <- apply(yvalz[[1]], 1, quantile, probs=c(0.975))
     
-    for (aa in 2:6) {
+    nclass = dim(preds_out)[2]
+    
+    for (aa in 2:nclass) {
       yval <- yvalz[[aa]]
       anicilw <- apply(yval, 1, quantile, probs=c(0.025))
       anicihi <- apply(yval, 1, quantile, probs=c(0.975))
