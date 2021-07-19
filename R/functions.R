@@ -294,81 +294,179 @@ getlargestresid<-function(model, n=5){
 #' @param replicates (default = 100). number stating how many times to replicate the CV score
 #' @param showProgress (default = FALSE) logical stating whether to print progress bar
 
-getPPCV <- function(model.obj, proj4string, blocksize, 
-                    folds = 10, replicates = 100, showProgress = FALSE){
+# getPPCV <- function(model.obj, proj4string, blocksize, 
+#                     folds = 10, replicates = 100, showProgress = FALSE){
+#   
+#   if(class(model.obj)[1]!='gamMRSea')stop('Model object not of class gamMRSea')
+#   if(model.obj$splineParams[[1]]$modelType!='pointProcess')stop('Model object not a point process model')
+#   
+#   
+#   dat<-model.obj$data
+#   spdata<-sp::SpatialPointsDataFrame(coords = cbind(dat$x.pos, dat$y.pos), 
+#                                      data = dat,
+#                                      proj4string = proj4string)
+#   
+#   #offset <- seq(0.1, 0.9, by = 0.1)
+#   scores<-vector(length=replicates)
+#   
+#   for(r in 1:replicates){
+#     if(showProgress) {if((r/10)%%1 == 0){cat(b, '\n')}else{cat('.')}}
+#     
+#     test<-try(blockCV::spatialBlock(spdata, species='response', k=folds, 
+#                                     theRange = blocksize,
+#                                 xOffset = 0.5, #sample(offset,1),
+#                                 yOffset = 0.5, #sample(offset, 1),
+#                                 verbose=FALSE, progress=FALSE, 
+#                                 showBlocks = FALSE),
+#               silent = TRUE)
+#     
+#     if(class(test)=='try-error'){
+#       scores[r]<-NA
+#     }else{
+#       # match folds to data
+#       dat<-dat %>%
+#         mutate(cvfolds = test$foldID,
+#                index = 1:nrow(dat))
+#       
+#       # vector of folds
+#       cv.folds <- sort(unique(dat$cvfolds))
+#       # make object to store squared resid
+#       lo_rss <- vector(length=length(cv.folds))
+#       
+#       for(b in cv.folds){
+#         
+#         # # select training data
+#         # NOT NEEDED, CHANGE WEIGHTS NOT DATASET SIZE
+#         # lo_dat0 <- filter(dat, response==0)
+#         # lo_dat1 <- filter(dat, response>=1, cvfolds!=b)
+#         # lo_dat <- rbind(lo_dat1, lo_dat0)
+#         
+#         cvdat<-dat
+#         cvdat$pp.wts.f <- cvdat$pp.wts
+#         cvdat$pp.wts.f[dat$cvfolds==b] <- 0
+#         
+#         # ggplot() + 
+#         #   geom_tile(data=filter(dat, response==0), 
+#         #             aes(x.pos, y.pos, fill=as.factor(cvblocks)),
+#         #             height=2, width=2, alpha=1/2) + 
+#         #   coord_equal() + theme_bw() + 
+#         #   geom_point(data=filter(dat, response==1), 
+#         #             aes(x.pos, y.pos, colour=as.factor(cvblocks)),
+#         #            size=1, alpha=1)
+#         # 
+#         # ggplot() + 
+#         #   geom_tile(data=filter(dat, response==0), 
+#         #             aes(x.pos, y.pos, fill=as.factor(cvblocks)),
+#         #             height=2, width=2, alpha=1/2, show.legend = FALSE) + 
+#         #   coord_equal() + theme_bw() + 
+#         #   geom_point(data=filter(dat, response==1), 
+#         #              aes(x.pos, y.pos),
+#         #              size=1, alpha=1) + 
+#         #   geom_point(data=filter(lo_dat, response==1), 
+#         #              aes(x.pos, y.pos, colour=as.factor(cvblocks)),
+#         #              size=1, alpha=1, show.legend = FALSE)
+#         
+#         # # update distance matrix for reduced dataset
+#         #NOT NEEDED AS DATASIZE NOT CHANGING
+#         # sp<-model.obj$splineParams
+#         # sp[[1]]$dist <- model.obj$splineParams[[1]]$dist[lo_dat$index,]
+#         # 
+#         # update model for reduced data set
+#         lom_model <- update.gamMRSea(model.obj, .~., data=cvdat,weights=pp.wts.f)
+#         
+#         # get predicted intensity for all points
+#         mydat_temp = dat %>% 
+#           mutate(preds =  predict.gamMRSea(object = lom_model, newdata = dat, g2k = model.obj$splineParams[[1]]$dist))
+#         
+#         # for each cv fold, find sum of presences (observed count)
+#         cv.fold.intensity<-mydat_temp %>%
+#           group_by(cvfolds) %>% 
+#           summarise(npts = sum(response))
+#         
+#         # for each cvfold, find the sum of the estimated intensity for quad points
+#         cv.fold.quads.intensity<-filter(mydat_temp, response==0) %>%
+#           group_by(cvfolds) %>% 
+#           summarise(npts = sum(preds))
+#         
+#         # join the two together to get data frame of model fit and observed count for
+#         # each fold and calculate absolute residual. 
+#         # select only the validation fold b
+#         modelfit<-left_join(cv.fold.intensity, cv.fold.quads.intensity, by="cvfolds") %>%
+#           mutate(resids = abs(npts.x - npts.y)) %>%
+#           filter(cvfolds == b)
+#         
+#         # find squared residual and append for all b
+#         lo_rss[b] <- modelfit$resids**2
+#       } # end k loop
+#       
+#       scores[r]<-mean(lo_rss, na.rm=TRUE)
+#     }
+#     
+#   }
+#   return(list(cv = mean(scores, na.rm=TRUE), scores = scores))
+# }
+
+
+
+getCVpp<-function(model.obj, folddata, kfold=10, replicates=1){
   
   if(class(model.obj)[1]!='gamMRSea')stop('Model object not of class gamMRSea')
   if(model.obj$splineParams[[1]]$modelType!='pointProcess')stop('Model object not a point process model')
   
-  
-  dat<-model.obj$data
-  spdata<-sp::SpatialPoints(coords = cbind(dat$x.pos, dat$y.pos), 
-                            proj4string = proj4string)
-  
-  offset <- seq(0, 1, by = 0.1)
-  scores<-vector(length=replicates)
+  scores<-matrix(NA, nrow=replicates, ncol=kfold)
   
   for(r in 1:replicates){
-    if(showProgress) {if((r/10)%%1 == 0){cat(b, '\n')}else{cat('.')}}
-    
-    test<-try(blockCV::spatialBlock(spdata, k=folds, theRange = blocksize,
-                                xOffset = sample(offset,1),
-                                yOffset = sample(offset, 1),
-                                verbose=FALSE, progress=FALSE, showBlocks = FALSE),
-              silent = TRUE)
-    
-    if(class(test)=='try-error'){
-      scores[r]<-NA
+    if(replicates>1){
+      myfold <- folddata[[r]]
     }else{
-      # find the nearest knot to each data point
-      dat<-dat %>%
-        mutate(cvblocks = test$foldID)
-      
-      # not all knots will be selected, find the unique ones
-      blocks <- unique(dat$cvblocks)
-      # make object to store squared resid
-      lo_rss <- vector(length=length(blocks))
-      
-      for(b in blocks){
-        
-        # select training data
-        lo_dat <- filter(dat, cvblocks!=b)
-        
-        # update distance matrix for reduced dataset
-        sp<-model.obj$splineParams
-        sp[[1]]$dist <- model.obj$splineParams[[1]]$dist[which(dat$cvblocks!=b),]
-        
-        # update model for reduced data set
-        lom_model <- update.gamMRSea(model.obj, .~., data=lo_dat, splineParams=sp)
-        
-        # get predicted intensity for all points
-        mydat_temp = dat %>% 
-          mutate(preds =  predict.gamMRSea(object = lom_model, newdata = dat, g2k = model.obj$splineParams[[1]]$dist))
-        
-        # for each knot block, find sum of presences (observed count)
-        knot.pts.intensity<-mydat_temp %>%
-          group_by(cvblocks) %>% 
-          summarise(npts = sum(response))
-        
-        # for each knotblock, find the sum of the estimated intensity for quad points
-        knot.quads.intensity<-filter(mydat_temp, response==0) %>%
-          group_by(cvblocks) %>% 
-          summarise(npts = sum(preds))
-        
-        # join the two together to get data frame of model fit and observed count for
-        # each block and calculate absolute residual. 
-        # select only the validation block b
-        modelfit<-left_join(knot.pts.intensity, knot.quads.intensity, by="cvblocks") %>%
-          mutate(resids = abs(npts.x - npts.y)) %>%
-          filter(cvblocks == b)
-        
-        # find squared residual and append for all b
-        lo_rss[b] <- modelfit$resids**2
-      } # end k loop
-      
-      scores[r]<-mean(lo_rss, na.rm=TRUE)
+      myfold <- folddata
     }
     
+    # make object to store squared resid
+    sqresid = absresid = vector(length=length(kfold))
+    
+    for(f in 1:kfold){
+      
+      dat <- model.obj$data
+      # select training data
+      # set weights for fold data to zero to be equivalent to thinning
+      dat$pp.wts.f <- dat$pp.wts
+      dat$pp.wts.f[myfold[[f]][[2]]] <- 0
+      # 
+      # update model for reduced data set
+      lom_model <- update.gamMRSea(model.obj, .~., data=dat,weights=pp.wts.f)
+      
+      # get predicted intensity for all points
+      mydat_temp = dat %>% 
+        mutate(preds =  predict.gamMRSea(object = lom_model, newdata = dat, g2k = model.obj$splineParams[[1]]$dist))
+      
+      # for each cv fold, find sum of presences (observed count)
+      cv.fold.intensity<-sum(mydat_temp$response[myfold[[f]][[2]]])
+      
+      # for each cvfold, find the sum of the estimated intensity for quad points
+      cv.fold.quads.intensity<-sum(mydat_temp$preds[which(mydat_temp$response == 0 &  mydat_temp$pp.wts.f==0)])
+      
+      # join the two together to get data frame of model fit and observed count for
+      # each fold and calculate absolute residual. 
+      # select only the validation fold b
+      resid = cv.fold.intensity - cv.fold.quads.intensity
+      
+      # find squared residual and append for all b
+      sqresid[f] <- resid**2
+      #absresid[f] <- abs(resid)
+    } # end k loop
+    
+    scores[r,]<-sqresid
+    
   }
-  return(list(cv = mean(scores, na.rm=TRUE), scores = scores))
+  
+  allcvs <- apply(scores, 1, mean)
+  cv = mean(allcvs)
+  
+  if(replicates>1){
+    cis<-quantile(allcvs, probs = c(0.025,0.975))
+    return(list(cv = cv, cis = cis, scores = scores))
+  }else{
+    return(list(cv = cv, scores = scores))
+  }
 }
