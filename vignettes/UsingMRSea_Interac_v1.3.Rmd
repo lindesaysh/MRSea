@@ -1,14 +1,12 @@
 ---
-title: "MRSea: 2D Interaction Example"
+title: 'MRSea: 2D Interaction Example'
 author: "LAS Scott-Hayward, CG Walker and ML Mackenzie"
 date: "`r Sys.Date()`"
 output:
-  - rmarkdown::html_vignette
-  - rmarkdown::pdf_document
-vignette: >
-  %\VignetteIndexEntry{MRSea: 2D Interaction Example}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  html_document:
+    df_print: paged
+vignette: |
+  %\VignetteIndexEntry{MRSea: 2D Interaction Example} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
@@ -17,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='#>',
                       collapse=TRUE, dev='png')
 ```
 
-This vignette is in addition to the main vignette for the package but shows an analysis where you can allow different knot locations for different levels of a spatial interaction term.
+This vignette is in addition to the main vignette for the package and shows an analysis which allows different knot locations for different levels of a spatial interaction term. This may be particularly useful where the spatial coverage of the two levels is not the same. 
 
 <!-- ```{r, echo=FALSE} -->
 <!-- devtools::load_all(pkg='../../MRSea') -->
@@ -54,7 +52,9 @@ nk=150 # number of knots per interaction level
 myknots<-NULL
 for(i in 1:length(unique(mydata$impact))){
   faclevel<-unique(mydata$impact)[i]
-  tempkg<-getKnotgrid(coordData = cbind(mydata$x.pos[mydata$impact==faclevel], mydata$y.pos[mydata$impact==faclevel]), numKnots = nk, plot = FALSE)
+  tempkg<-getKnotgrid(coordData = cbind(mydata$x.pos[mydata$impact==faclevel],
+                                        mydata$y.pos[mydata$impact==faclevel]), 
+                      numKnots = nk, plot = FALSE)
   myknots<-rbind(myknots, data.frame(tempkg, impact =paste(faclevel)))
 }
 ```
@@ -90,7 +90,10 @@ d2k = dists$dataDist
 k2k = dists$knotDist
 
 n.level<-length(unique(myknots[,3]))
-nk.in.level<-data.frame(myknots %>% mutate(id = row_number()) %>% group_by(impact) %>% summarise(beg=first(id), end=last(id)))
+nk.in.level<-data.frame(myknots %>% 
+                          mutate(id = row_number()) %>% 
+                          group_by(impact) %>% 
+                          summarise(beg=first(id), end=last(id)))
 k2k_temp<-matrix(Inf, nrow = nrow(k2k), ncol = ncol(k2k))
 for(i in 1:n.level){
   kid<-nk.in.level[i,'beg']:nk.in.level[i,'end']
@@ -99,8 +102,12 @@ for(i in 1:n.level){
 k2k<-k2k_temp
 
 n.level<-length(unique(myknots[,3]))
-nk.in.level<-data.frame(myknots %>% mutate(id = row_number()) %>% group_by(impact) %>% summarise(beg=first(id), end=last(id)))
-ncoords.in.level <- data.frame(mydata %>% mutate(id = row_number()) %>% group_by(impact) %>% summarise(beg=first(id), end=last(id)))
+nk.in.level<-data.frame(myknots %>% mutate(id = row_number()) %>% 
+                          group_by(impact) %>% 
+                          summarise(beg=first(id), end=last(id)))
+ncoords.in.level <- data.frame(mydata %>% 
+                                 mutate(id = row_number()) %>% 
+                                 group_by(impact) %>% summarise(beg=first(id), end=last(id)))
 d2k_temp<-matrix(Inf, nrow = nrow(d2k), ncol = ncol(d2k))
 for(i in 1:n.level){
   kid<-nk.in.level[i,'beg']:nk.in.level[i,'end']
@@ -186,8 +193,14 @@ dists<-makeDists(datacoords = datacoords[,1:2], knotcoords = kg, knotmat = FALSE
 g2k = dists$dataDist
 
 n.level<-length(unique(myknots[,3]))
-nk.in.level<-data.frame(myknots %>% mutate(id = row_number()) %>% group_by(impact) %>% summarise(beg=first(id), end=last(id)))
-ncoords.in.level <- data.frame(datacoords %>% mutate(id = row_number()) %>% group_by(impact) %>% summarise(beg=first(id), end=last(id)))
+nk.in.level<-data.frame(myknots %>% 
+                          mutate(id = row_number()) %>% 
+                          group_by(impact) %>% 
+                          summarise(beg=first(id), end=last(id)))
+ncoords.in.level <- data.frame(datacoords %>%
+                                 mutate(id = row_number()) %>% 
+                                 group_by(impact) %>% 
+                                 summarise(beg=first(id), end=last(id)))
 g2k_temp<-matrix(Inf, nrow = nrow(g2k), ncol = ncol(g2k))
 for(i in 1:n.level){
   kid<-nk.in.level[i,'beg']:nk.in.level[i,'end']
@@ -209,7 +222,8 @@ Plotting the predictions pre and post impact:
 
 ```{r eval = TRUE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
 ggplot() +
-  geom_tile(aes(x=x.pos, y=y.pos, fill=preds), height=0.5, width=0.5, data=filter(nysted.predictdata, season==1)) +
+  geom_tile(aes(x=x.pos, y=y.pos, fill=preds), height=0.5, width=0.5,
+            data=filter(nysted.predictdata, season==1)) +
   coord_equal()+
   scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
   theme_bw() +
@@ -222,7 +236,8 @@ and, since this is simulated data, we can also look at the truth:
 
 ```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
 ggplot() +
-  geom_tile(aes(x=x.pos, y=y.pos, fill=truth.re), height=0.5, width=0.5, data=filter(nysted.predictdata, season==1)) +
+  geom_tile(aes(x=x.pos, y=y.pos, fill=truth.re), height=0.5, width=0.5,
+            data=filter(nysted.predictdata, season==1)) +
   coord_equal()+
   scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
   theme_bw() +
@@ -237,8 +252,10 @@ In the above analysis, the SALSA algorithm will space-fill across all knot locat
 
 ```{r warning=FALSE, message = FALSE}
 startknotlocs<-c(
-    as.numeric(rownames(getKnotgrid(filter(myknots, impact == 0)[,1:2], numKnots = 5, plot = FALSE))),
-    as.numeric(rownames(getKnotgrid(filter(myknots, impact == 1)[,1:2], numKnots = 5, plot = FALSE))) + 150)
+    as.numeric(rownames(getKnotgrid(filter(myknots, impact == 0)[,1:2], 
+                                    numKnots = 5, plot = FALSE))),
+    as.numeric(rownames(getKnotgrid(filter(myknots, impact == 1)[,1:2],
+                                    numKnots = 5, plot = FALSE))) + 150)
 ```
 
 The set up of the model is a little different and I have included `##` below to indicate which lines have been changed/added.
@@ -306,7 +323,8 @@ Plotting the predictions pre and post impact:
 
 ```{r eval = TRUE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6}
 ggplot() +
-  geom_tile(aes(x=x.pos, y=y.pos, fill=preds_sk), height=0.5, width=0.5, data=filter(nysted.predictdata, season==1)) +
+  geom_tile(aes(x=x.pos, y=y.pos, fill=preds_sk), height=0.5, width=0.5,
+            data=filter(nysted.predictdata, season==1)) +
   coord_equal()+
   scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
   theme_bw() +

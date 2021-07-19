@@ -1,15 +1,9 @@
 initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis, hdetest=FALSE){
   
-  if (isS4(baseModel)) {
-    attributes(baseModel@misc$formula)$.Environment<-environment()
-    baseModel<-update(baseModel, data=data)
-    splineParams<-baseModel@splineParams  
-  } else {
     attributes(baseModel$formula)$.Environment<-environment()
     baseModel<-update(baseModel, data=data)
     splineParams<-baseModel$splineParams
-  }
-  
+    
   print("******************************************************************************")
   print("Initialising...")
   print("******************************************************************************")
@@ -76,9 +70,8 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       print("WARNING: less knots positioned than desired")
     }
 
+    baseModel$splineParams[[1]]$initialKnots <- initialKnots
     
-      baseModel$splineParams[[1]]$initialKnots <- initialKnots
-
   }else{
     if(length(initialaR)>0){
       posKnots<-initialaR
@@ -122,112 +115,59 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     fitStat <- BIC(baseModel)}
 
   if (fitnessMeasure == "newCrit") {
-    if (isS4(baseModel)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
-    } else {
       fitStat <- mean((residuals(baseModel)/(1-influence(baseModel)$h))**2)
-    }
   }
   
   if(fitnessMeasure=="QAIC"){
-    if (isS4(baseModel)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
-    } else {
       if(baseModel$family[1]=="quasipoisson"){
         PoisMod<-update(baseModel, round(.)~., family=poisson)
         fitStat <- MuMIn::QAIC(PoisMod, chat = initDisp)}
       if(baseModel$family[1]=="quasibinomial"){
         BinMod<-update(baseModel, family=binomial)
         fitStat <- MuMIn::QAIC(BinMod, round(.)~., chat = initDisp)}
-    }
   }
   
   if(fitnessMeasure=="QAICc"){
-    if (isS4(baseModel)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
-    } else {
       if(baseModel$family[1]=="quasipoisson"){
         PoisMod<-update(baseModel, family=poisson)
         fitStat <- MuMIn::QAICc(PoisMod, chat = initDisp)}
       if(baseModel$family[1]=="quasibinomial"){
         BinMod<-update(baseModel, family=binomial)
         fitStat <- MuMIn::QAICc(BinMod, chat = initDisp)}
-    }
   }
   
   if(fitnessMeasure=="QBIC"){
-    if (isS4(baseModel)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
-    } else {
       if(baseModel$family[1]=='quasipoisson'){
         fitStat <- MuMIn::QAIC(update(baseModel,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(baseModel$data)))
       }
       if(baseModel$family[1]=='quasibinomial'){
         fitStat <- MuMIn::QAIC(update(baseModel, family=binomial), chat = initDisp,k=log(nrow(baseModel$data)))
-      }
     }
   }
   
   # fitStat <- get.measure_2d(fitnessMeasure, NULL, baseModel)
   if(fitnessMeasure=="CV.offset"){
-    #    if(dim(model.matrix(baseModel))[2]==1){
-    #       data2<- data.frame(response=response)
-    #       textForEval<- "tempCVFit<-glm(response~1, data=data2)"
-    #
-    #       }
-    #
-    #     if(dim(model.matrix(baseModel))[2]>1){
-    #       data2<- data.frame(response=response, model.matrix(baseModel)[,2:length(coefficients(baseModel))])
-    #
-    #   names(data2)<- c("response", paste("V", 1:(length(coefficients(baseModel))-1), sep=""))
-    #   textForEval<- paste("tempCVFit<-glm( response ~ ", paste("V", 1:(length(coefficients(baseModel))-1), sep="", collapse="+"), ", data=data2)")
-    #}
-    
-    #   eval(parse(text=textForEval))
-    #   require(boot)
-    #   fitStat<-cv.glm(data2,tempCVFit, K=5)$delta[2]
-    #
-    if (isS4(baseModel)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
-    } else {
       fitStat<- mean(getCV_type2(folds = 5, baseModel))
-    }
   }
   
   
   if(fitnessMeasure=="CV"){
-    if (isS4(baseModel)) {
       fitStat <- getCV_CReSS_2D(data, baseModel, dists,invInd[aR],radii,radiusIndices)
-    } else {
-      fitStat <- getCV_CReSS_2D(data, baseModel, dists,invInd[aR],radii,radiusIndices)
-    }
   }
   #
   
   if(fitnessMeasure=="PRESS"){
-    if (isS4(baseModel)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
-    } else {
       fitStat <- getPRESS_CReSS(data, baseModel)
-    }
   }
   
   
   if(fitnessMeasure=="QICb"){
-    if (isS4(baseModel)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
-    } else {
       fitStat <- QICb(baseModel)
-    }
   }
   
   # Hardin and Hilbe AIC statistic.  See Hilbe 2014 modelling count data book
   if(fitnessMeasure=="AICh"){
-    if (isS4(baseModel)) {
-      stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
-    } else {
-      fitStat<-AICh(baseModel)
-    }
+    fitStat<-AICh(baseModel)
   }
   
   if(fitnessMeasure=="cv.gamMRSea"){
@@ -235,6 +175,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
       #fitStat<-Inf
     }
+
   
  
   #cat("Evaluating new fit: ", fitStat, "\n")
@@ -244,6 +185,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     cat("Change Fit due to NA: ", fitStat, "\n")
   }
   
+
   if(baseModel$splineParams[[1]]$modelType!='pointProcess'){
     if(getDispersion(baseModel)>initDisp){
     fitStat<- tempMeasure + 10000000
@@ -255,8 +197,6 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   out.lm<-output$currentModel
   models<-output$models
   print("Initial model fitted...")
-  #point <- mapInd[-posKnots]
-  #point <- mapInd[-invInd[posKnots]]
   point <- (1:nrow(knotgrid))[-posKnots]
   
   position<- cbind()
@@ -271,10 +211,6 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   measures = 0
   
   BIC<-output$fitStat
-  #BIC<-get.measure_2d(fitnessMeasure,measures,out.lm, data,  dists, aR,radii,radiusIndices, initDisp)$fitStat
-  
-  
-  #print(BIC[length(BIC)])
   
   print("Fitting Initial Radii")
   out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
@@ -285,10 +221,6 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   
   print("initialising complete")
   
-  
-  ####track <- rbind(track,cbind("init",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
   list(point=point,knotPoint=knotPoint,position=position,aR=aR,BIC=BIC,track=track,out.lm=out.lm, radiusIndices=radiusIndices,models=models)
-  
-  
   
 }
