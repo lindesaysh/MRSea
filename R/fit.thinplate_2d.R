@@ -45,10 +45,11 @@
   }
 
   tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, cv.opts)$fitStat
-  if(tempFit <= (currentFit+10)){
-    models[[length(models)+1]] = list(aR,radiusIndices, radii, tempFit)
-  }
-  modelinprogress<<-currentModel
+  # if(tempFit <= (currentFit+10)){
+  #   models[[length(models)+1]] = list(aR,radiusIndices, radii, tempFit)
+  # }
+  models<-NULL
+  #modelinprogress<<-currentModel
 
   #print("ooooooooooooooooooooooooooooooooooooooo")
   #print("Model fitted...")

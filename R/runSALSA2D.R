@@ -223,26 +223,26 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   #     output$aR<- output$invInd[output$aR]
   #   }
   if(chooserad==FALSE){
-    if(length(output$models)>0){
-      modRes<- c()
-      for(m in 1:length(output$models)){
-        modelNo<- m
-        knotPosition<-output$models[[m]][[1]]
-        rIs<- output$models[[m]][[2]]
-        r<- output$models[[m]][[3]]
-        fitScore<- output$models[[m]][[4]]
-        modRes<- rbind(modRes, data.frame(modelNo, knotPosition, rIs, fitScore))
-      }
-      
-      modRes<-modRes[order(modRes$fitScore),]
-      bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
-      
-      a<-sum(as.vector(output$aR) - as.vector(unlist(output$models[[bestModNo]][1])))
-      print(paste('a = ', a, sep=''))
-      #if(a!=0) break
-      
-      #output$aR<- output$models[[bestModNo]][[1]]
-    }
+    # if(length(output$models)>0){
+    #   modRes<- c()
+    #   for(m in 1:length(output$models)){
+    #     modelNo<- m
+    #     knotPosition<-output$models[[m]][[1]]
+    #     rIs<- output$models[[m]][[2]]
+    #     r<- output$models[[m]][[3]]
+    #     fitScore<- output$models[[m]][[4]]
+    #     modRes<- rbind(modRes, data.frame(modelNo, knotPosition, rIs, fitScore))
+    #   }
+    #   
+    #   modRes<-modRes[order(modRes$fitScore),]
+    #   bestModNo<- unique(modRes$modelNo[which(modRes$fitScore==min(modRes$fitScore))])[1]
+    #   
+    #   a<-sum(as.vector(output$aR) - as.vector(unlist(output$models[[bestModNo]][1])))
+    #   print(paste('a = ', a, sep=''))
+    #   #if(a!=0) break
+    #   
+    #   #output$aR<- output$models[[bestModNo]][[1]]
+    #}
     # use initialise step to change radii
     radii = r_seq
     # x <- as.vector(splineParams[[1]]$grid[,1])
