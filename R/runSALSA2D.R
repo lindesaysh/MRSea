@@ -253,7 +253,8 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     #   #if(a!=0) break
     #   
     #   #output$aR<- output$models[[bestModNo]][[1]]
-    }
+    #}
+
     # use initialise step to change radii
     radii = r_seq
     # x <- as.vector(splineParams[[1]]$grid[,1])
