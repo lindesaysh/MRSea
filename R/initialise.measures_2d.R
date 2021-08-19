@@ -86,9 +86,9 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
  
   ########### check initialise conforms to gap ##################
   for(i in 1:length(posKnots)){
-    toocloseid<-which(knotDist[,posknots[i]] > 0 & knotDist[,posknots[i]]<gap)
+    toocloseid<-which(knotDist[,posKnots[i]] > 0 & knotDist[,posKnots[i]]<gap)
     if(length(toocloseid)>0){
-      posknots <- posknots[-toocloseid]
+      posKnots <- posKnots[-toocloseid]
       initialKnots <- initialKnots[-toocloseid]
     }
   }
