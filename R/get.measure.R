@@ -44,6 +44,7 @@
   if(fitnessMeasure=="QBIC"){ 
     if(out.lm$family[1]=='quasipoisson'){
         fitStat <- QAIC(update(out.lm,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(out.lm$data)))
+    }
         if(out.lm$family[1]=='poisson'){
           fitStat <- QAIC(update(out.lm,  round(response) ~ .), chat = initDisp, k=log(nrow(out.lm$data)))
         }
