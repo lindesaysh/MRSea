@@ -49,6 +49,7 @@
         }
       if(out.lm$family[1]=='quasibinomial'){
         fitStat <- QAIC(update(out.lm, .~.,family=binomial), chat = initDisp, k=log(nrow(out.lm$data)))
+      }
         if(out.lm$family[1]=='binomial'){
           fitStat <- QAIC(out.lm, chat = initDisp, k=log(nrow(out.lm$data)))
         }
