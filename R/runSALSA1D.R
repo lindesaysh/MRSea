@@ -198,9 +198,13 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   # initial model is all variables in varlist with knots at locations in splineParams and NO 2D smooth
   require(mgcv)
   if(fam=='BinProp'){
-    baseModel <- eval(parse(text=paste("glm(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+    baseModel <- eval(parse(text=paste("gamMRSea(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }else{
-    baseModel <- eval(parse(text=paste("glm(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+    baseModel <- eval(parse(text=paste("gamMRSea(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+  }
+  
+  if(!is.null(initialModel$cvfolds)){
+    baseModel$cvfolds <- initialModel$cvfolds
   }
   
   if(removal==TRUE){
