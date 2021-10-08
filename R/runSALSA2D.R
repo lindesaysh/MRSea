@@ -128,8 +128,12 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   #this sets the index of grid positions
   #grid<-expand.grid(1:salsa2dlist$knotdim[1], 1:salsa2dlist$knotdim[2])
   #gridResp<-salsa2dlist$knotgrid[,1]
-
-  r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k, basis)
+  
+  if(is.null(salsa2dlist$r_seq)){
+    r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k, basis)
+  }else{
+    r_seq <- salsa2dlist$r_seq
+  }
   
   if(chooserad==FALSE){
     if(length(r_seq)>1){
