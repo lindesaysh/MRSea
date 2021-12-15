@@ -39,7 +39,7 @@ do.bootstrap.cress.robust<-function(model.obj, predictionGrid, splineParams=NULL
   # ~~~~~~~~~~~ PARALLEL CODE ~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if(nCores>1){
-    #require(parallel)
+    require(parallel)
     if(cat.message) {cat('Code in parallel: No progress guide printed')}
 
     computerCores <- getOption("cl.cores", detectCores())
