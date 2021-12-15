@@ -1,3 +1,19 @@
+MRSea 1.3.2
+----------
+
+Notes
+ * Gap check added to initialise step to ensure gap parameter is obeyed during initialisation
+ * Remove storage of `models` object. Hang over from the early days of `MRSea` and taking up workspace memory.
+ * Update to the "Interaction" vignette to make it clearer and the two options of ways to include one. 
+ * Added an option to allow the user to specify their own sequence of radii. Use by adding `r_seq = ...` to `salsa2dlist`
+ 
+
+Bug Fixes
+
+* CV fold bug fixed for SALSA1D. If correlated blocks specified, these were not maintained in the base model for use later in the algorithm. 
+* reinstate `require(parallel)` in `do.bootstrap.cress.robust`
+
+
 MRSea 1.3.1
 ----------
 
