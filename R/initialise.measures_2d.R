@@ -84,6 +84,16 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   } # end of ifelse statement related to initialise  = T/F
   
  
+  ########### check initialise conforms to gap ##################
+  for(i in 1:length(posKnots)){
+    toocloseid<-which(knotDist[,posKnots[i]] > 0 & knotDist[,posKnots[i]]<gap)
+    if(length(toocloseid)>0){
+      posKnots <- posKnots[-toocloseid]
+      initialKnots <- initialKnots[-toocloseid]
+    }
+  }
+  
+  
   knotPoint<- posKnots
   # print(c('knots: ',knotPoint))
   aR <- knotPoint
