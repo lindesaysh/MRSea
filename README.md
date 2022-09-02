@@ -60,7 +60,6 @@ There are two vignettes available with the package:
 
 These are available here:
 
--   PDF/html versions on
+-   PDF versions on
     [Github](https://github.com/lindesaysh/MRSea/tree/master/inst/docs)
--   or `browseVignettes(package='MRSea')` if you installed from the
-    `.tar.gz` in the latest release.
+-   HTML versions are https://lindesaysh.github.io/MRSea and https://lindesaysh.github.io/MRSea/interaction.html
