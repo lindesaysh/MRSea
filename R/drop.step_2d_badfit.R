@@ -26,13 +26,22 @@
       if (length(aR) > minKnots) {
         
         twoDcoeffid <- grep("LRF.", names(coefficients(out.lm)))
-        length(twoDcoeffid)/length(aR)
+        #length(twoDcoeffid)/length(aR)
         
-        badknots<-data.frame(knots=rep(aR, by=2), abscoeffs = abs(coef(out.lm))[twoDcoeffid], ses=sqrt(diag(summary(out.lm)$cov.robust))[twoDcoeffid])
+        badknots<-data.frame(knots=rep(aR, by=2), 
+                             abscoeffs = abs(coef(out.lm))[twoDcoeffid], 
+                             ses=sqrt(diag(summary(out.lm)$cov.robust))[twoDcoeffid])
         
-        badknots$dif<-badknots$abscoeffs - badknots$ses
-        i <- which(badknots$dif==min(badknots$dif))
-        badknotid<-which(aR==badknots[i,1])
+        badknots$na.ses <- ifelse(is.na(badknots$ses), 1, 0)
+        
+        if(sum(badknots$na.ses) > 0){
+          badknotid <- aR[which(badknots$na.ses==1)[1]]
+        }else{
+          badknots$dif<-badknots$abscoeffs - badknots$ses
+          i <- which(badknots$dif==min(badknots$dif))
+          badknotid<-which(aR==badknots[i,1])
+        }
+
         tempR <- aR
         tempR <- tempR[-badknotid]
         tempRadii = radiusIndices[-badknotid]
