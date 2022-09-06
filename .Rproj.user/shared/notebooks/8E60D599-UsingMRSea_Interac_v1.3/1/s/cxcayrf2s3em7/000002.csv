@@ -1,0 +1,4 @@
+"0","```r
+#load('predictionboot.RData')
+cis <- makeBootCIs(bootPreds)
+```"

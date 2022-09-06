@@ -1,0 +1,8 @@
+"0","salsa2dOutput<-runSALSA2D(initialModel, 
+                          salsa2dlist,
+                          d2k=d2k,k2k=k2k, 
+                          suppress.printout = TRUE)
+"
+"2","Error in cover.design((knotgrid[1:2, ])[-duppointid, ], nd = numNeeded,  : 
+   number of design points >= the number of candidates
+"

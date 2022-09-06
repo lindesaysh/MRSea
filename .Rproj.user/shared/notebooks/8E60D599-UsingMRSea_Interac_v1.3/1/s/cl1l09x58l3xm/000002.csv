@@ -1,0 +1,4 @@
+"0","chosenknots <- myknots[salsa2doutput_intp2$bestModel$splineParams[[1]]$knotPos,]"
+"2","Error in `[.data.frame`(myknots, salsa2doutput_intp2$bestModel$splineParams[[1]]$knotPos,  : 
+  object 'salsa2doutput_intp2' not found
+"

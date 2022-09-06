@@ -1,0 +1,26 @@
+exportPattern("^[[:alpha:]]+")
+S3method(summary,gamMRSea)
+S3method(print, summary.gamMRSea)
+S3method(anova, gamMRSea)
+S3method(update, gamMRSea)
+S3method(model.frame, gamMRSea)
+S3method(predict, gamMRSea)
+S3method(print, gamMRSea)
+importFrom("grDevices", "dev.off", "devAskNewPage", "png")
+importFrom("graphics", "abline", "axis", "hist", "lines", "par",
+                "points", "rug", "segments", "text", "title")
+importFrom("methods", "languageEl")
+importFrom("stats", ".MFclass", ".getXlevels", "AIC", "BIC", "acf",
+                "aggregate", "as.formula", "binomial", "coef",
+                "coefficients", "dbinom", "delete.response", "deviance",
+                "df.residual", "dist", "family", "fitted", "formula",
+                "gaussian", "getCall", "glm", "glm.fit", "influence",
+                "is.empty.model", "logLik", "lowess", "makepredictcall",
+                "median", "model.extract", "model.frame", "model.matrix",
+                "model.offset", "model.response", "model.weights",
+                "na.fail", "na.omit", "naprint", "pbinom", "pchisq", "pf",
+                "pnorm", "poisson", "predict", "printCoefmat", "pt",
+                "qbinom", "qnorm", "quantile", "rbinom", "residuals",
+                "rgamma", "rnbinom", "rnorm", "rpois", "runif", "setNames",
+                "stepfun", "summary.glm", "symnum", "terms", "update",
+                "update.formula", "weights")

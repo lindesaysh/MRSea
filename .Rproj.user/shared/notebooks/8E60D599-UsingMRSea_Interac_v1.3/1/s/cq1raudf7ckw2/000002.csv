@@ -1,0 +1,5 @@
+"0","```r
+#newmod<-update(salsa2dOutput$bestModel, .~. - LocalRadialFunction(radiusIndices, dists, radii, aR):as.factor(impact))
+# make predictions on response scale
+preds<-predict.gamMRSea(newdata = nysted.predictdata, g2k = d2k, object = salsa2dOutput$bestModel)
+```"

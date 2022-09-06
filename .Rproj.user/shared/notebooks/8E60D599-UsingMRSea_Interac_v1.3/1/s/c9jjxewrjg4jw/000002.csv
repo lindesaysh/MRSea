@@ -1,0 +1,7 @@
+"0","nk=150 # number of knots per interaction level"
+"0","myknots<-NULL"
+"0","for(i in 1:length(unique(mydata$impact))){"
+"0","  faclevel<-unique(mydata$impact)[i]"
+"0","  tempkg<-getKnotgrid(coordData = cbind(mydata$x.pos[mydata$impact==faclevel], mydata$y.pos[mydata$impact==faclevel]), numKnots = nk, plot = FALSE)"
+"0","  myknots<-rbind(myknots, data.frame(tempkg, impact =paste(faclevel)))"
+"0","}"
