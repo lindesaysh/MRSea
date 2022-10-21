@@ -84,7 +84,8 @@
 #'                   minKnots_1d=c(2,2), 
 #'                   maxKnots_1d = c(5, 5), 
 #'                   startKnots_1d = c(2,2), 
-#'                   degree=c(2,2))
+#'                   degree=c(2,2),
+#'                   gaps=c(0,0))
 #' 
 #' # run SALSA
 #' salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist, 
