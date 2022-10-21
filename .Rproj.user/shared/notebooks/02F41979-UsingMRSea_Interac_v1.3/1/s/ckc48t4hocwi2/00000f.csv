@@ -1,0 +1,5 @@
+"0","startknotlocs<-c("
+"0","    as.numeric(rownames(getKnotgrid(filter(myknots, impact == 0)[,1:2], "
+"0","                                    numKnots = 5, plot = FALSE))),"
+"0","    as.numeric(rownames(getKnotgrid(filter(myknots, impact == 1)[,1:2],"
+"0","                                    numKnots = 5, plot = FALSE))) + 150)"

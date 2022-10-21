@@ -1,0 +1,3 @@
+"0","initialModel <- glm(response ~ as.factor(season) + as.factor(impact) "
+"0","                    + offset(log(area)), family = ""quasipoisson"", "
+"0","                    data = mydata)"

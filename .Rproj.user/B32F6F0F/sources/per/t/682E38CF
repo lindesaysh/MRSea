@@ -1,0 +1,26 @@
+{
+    "id": "682E38CF",
+    "path": "~/GitHub/MRSea/R/runSALSA2D.R",
+    "project_path": "R/runSALSA2D.R",
+    "type": "r_source",
+    "hash": "2251695144",
+    "contents": "",
+    "dirty": false,
+    "created": 1662562433275.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "152,2",
+        "scrollLine": "135"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1662469033,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1662469033,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -1,0 +1,12 @@
+pandoc: '2.18'
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  UsingMRSea_Geodesic_v0.99.1: UsingMRSea_Geodesic_v0.99.1.html
+  UsingMRSea_Interac_v1.3: UsingMRSea_Interac_v1.3.html
+  UsingMRSea_v1.3: UsingMRSea_v1.3.html
+last_built: 2022-09-07T09:35Z
+urls:
+  reference: http://lindesaysh.github.io/MRSea/reference
+  article: http://lindesaysh.github.io/MRSea/articles
+

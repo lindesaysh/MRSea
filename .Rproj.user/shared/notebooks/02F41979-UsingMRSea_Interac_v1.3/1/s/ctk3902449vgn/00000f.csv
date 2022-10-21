@@ -1,0 +1,6 @@
+"0","salsa2dlist <- list(fitnessMeasure = 'QAIC',"
+"0","                    knotgrid = myknots,"
+"0","                    startKnots = length(startknotlocs), ##"
+"0","                    minKnots = 4,"
+"0","                    maxKnots = 12,"
+"0","                    gap = 0)"
