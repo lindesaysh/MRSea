@@ -148,6 +148,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   if(is.null(salsa1dlist$cv.opts$K)){salsa1dlist$cv.opts$K<-10}
   if(is.null(salsa1dlist$cv.opts$cost)){salsa1dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
   
+  if(is.null(salsa1dlist$gaps)){salsa1dlist$gaps <- rep(0,length=length(varlist))}
   
   seed.in<-salsa1dlist$cv.opts$cv.gamMRSea.seed
   if(!is.null(panelid)){
