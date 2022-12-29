@@ -33,7 +33,6 @@ Imports:
     car (>= 2.0-20),
     Matrix (>= 1.1-4),
     mgcv (>= 1.8-0),
-    mrds (>= 2.1.6),
     mvtnorm (>= 1.0-0),
     splines (>= 3.1.1),
     fields,
@@ -42,6 +41,7 @@ Imports:
 Suggests:
     ggplot2 (>= 1.0.0),
     MuMIn,
+    mrds,
     knitr,
     rmarkdown,
     knitcitations,
