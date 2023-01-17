@@ -33,6 +33,8 @@
 #'    
 #'    \code{gaps}. The minimum gap between knots (in unit of measurement of explanatory), usually set to zero.
 #'    
+#'    \code{splines}. Specify the spline basis for each term.  Choose one of "bs" (B-spline), "cc" (cyclic-cubic) or "ns" (natural spline).
+#'    
 #'    
 #' \code{minKnots_1d}, \code{maxKnots_1d}, \code{startKnots_1d} and \code{gaps} are vectors the same length as \code{varlist}.  This enables differing values of these parameters for each covariate.
 #'
@@ -81,9 +83,9 @@
 #' 
 #' #set some input info for SALSA
 #' salsa1dlist<-list(fitnessMeasure = 'QBIC', 
-#'                   minKnots_1d=c(2,2), 
-#'                   maxKnots_1d = c(5, 5), 
-#'                   startKnots_1d = c(2,2), 
+#'                   minKnots_1d=c(1,1), 
+#'                   maxKnots_1d = c(3, 3), 
+#'                   startKnots_1d = c(1,1), 
 #'                   degree=c(2,2),
 #'                   gaps=c(0,0))
 #' 
@@ -149,6 +151,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   if(is.null(salsa1dlist$cv.opts$cost)){salsa1dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
   
   if(is.null(salsa1dlist$gaps)){salsa1dlist$gaps <- rep(0,length=length(varlist))}
+  if(is.null(salsa1dlist$splines)){salsa1dlist$splines <- rep("bs",length=length(varlist))}
   
   seed.in<-salsa1dlist$cv.opts$cv.gamMRSea.seed
   if(!is.null(panelid)){
@@ -168,7 +171,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if(is.null(splineParams)){
-    splineParams<-makesplineParams(data, varlist, predictionData, salsa1dlist$degree)
+    splineParams<-makesplineParams(data, varlist, predictionData, salsa1dlist$degree,  salsa1dlist$splines)
     varID<-(1:length(varlist))+1
   }else{
     # check whats in varlist and splineParams to see if they match
@@ -190,7 +193,12 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       splineParams[[i]]$knots<-eval(parse(text=paste('quantile(data$', varlist_cyclicSplines[counter], ', probs = c(0.25, 0.5, 0.75))', sep='')))
       counter<-counter+1
     }else{
-      terms1D[[(i-1)]]<- paste("bs(", varlist[(i-1)], ", knots = splineParams[[", varID[(i-1)], "]]$knots, degree=splineParams[[", varID[(i-1)], "]]$degree, Boundary.knots=splineParams[[",varID[(i-1)], "]]$bd)", sep='')
+      if(salsa1dlist$splines[(i-1)] == "bs"){
+        terms1D[[(i-1)]]<- paste("bs(", varlist[(i-1)], ", knots = splineParams[[", varID[(i-1)], "]]$knots, degree=splineParams[[", varID[(i-1)], "]]$degree, Boundary.knots=splineParams[[",varID[(i-1)], "]]$bd)", sep='')  
+      }
+      if(salsa1dlist$splines[(i-1)] == "ns"){
+        terms1D[[(i-1)]]<- paste("ns(", varlist[(i-1)], ", knots = splineParams[[", varID[(i-1)], "]]$knots, Boundary.knots=splineParams[[",varID[(i-1)], "]]$bd)", sep='')  
+      }
     }
   }
   
@@ -283,7 +291,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     
     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceeding', sep=''))}
     
-    if(varlist[(i-1)]%in%varlist_cyclicSplines){spl<- "cc"}else{spl="bs"}
+    if(varlist[(i-1)]%in%varlist_cyclicSplines){spl<- "cc"}
+    if(salsa1dlist$splines[(i-1)] == "bs"){spl="bs"}
+    if(salsa1dlist$splines[(i-1)] == "ns"){spl="ns"}
     
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
     sttime<- proc.time()[3]

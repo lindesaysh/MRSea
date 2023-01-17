@@ -840,7 +840,7 @@ getCV_type2<- function(folds, baseModel){
   if(spl=="ns"){
     #print("fitting model...")
     #print(aR)
-    bspl<-paste("ns(explanatory, knots= c(", sep="")
+    bspl<-paste("ns(explanatory,Boundary.knots=c(",bd[1], ",", bd[2], "), knots= c(", sep="")
     if (length(aR)>1) {
       for (i in 1:(length(aR)-1)) {
         bspl<- paste(bspl, aR[i], ",", sep="")
@@ -859,7 +859,7 @@ getCV_type2<- function(folds, baseModel){
     
     if(is.na(converge)) {converge = TRUE}
 
-    print("model fitted...")
+    #print("model fitted...")
     if (converge) {
       tempFit <- get.measure(fitnessMeasure, NA, out.lm, initDisp, cv.opts)$fitStat
       models[[length(models)+1]] = list(aR, tempFit)
