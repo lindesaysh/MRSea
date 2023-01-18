@@ -62,4 +62,4 @@ These are available here:
 
 -   PDF versions on
     [Github](https://github.com/lindesaysh/MRSea/tree/master/inst/docs)
--   HTML versions are available from the articles tag here: https://lindesaysh.github.io/MRSea
+-   HTML versions are available from the articles tab here: https://lindesaysh.github.io/MRSea
