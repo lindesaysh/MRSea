@@ -5,7 +5,7 @@
 
 The latest version is **1.3.1** (15/03/2021)
 
-The MRSea packages allows the fitting of **spatially adaptive regression
+The [MRSea](https://lindesaysh.github.io/MRSea) packages allows the fitting of **spatially adaptive regression
 splines using SALSA**.
 
 It was developed to examine animal survey data for signs of changes in
@@ -62,4 +62,4 @@ These are available here:
 
 -   PDF versions on
     [Github](https://github.com/lindesaysh/MRSea/tree/master/inst/docs)
--   HTML versions are https://lindesaysh.github.io/MRSea and https://lindesaysh.github.io/MRSea/interaction.html
+-   HTML versions are available from the articles tag here: https://lindesaysh.github.io/MRSea
