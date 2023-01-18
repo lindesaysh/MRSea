@@ -1,0 +1,8 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+\vignettes
+MRSea_workflow.pptx
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

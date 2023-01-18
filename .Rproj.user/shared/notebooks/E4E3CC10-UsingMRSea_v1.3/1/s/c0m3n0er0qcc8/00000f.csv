@@ -1,0 +1,3 @@
+"0","count.data$response <- round(count.data$NHAT)"
+"0","fullModel <- glm(response ~ as.factor(season) + as.factor(impact) +"
+"0","                   depth + x.pos + y.pos, family = poisson, data = count.data)"

@@ -1,0 +1,6 @@
+"0","# make parameter set for running salsa2d"
+"0","salsa2dlist<-list(fitnessMeasure = ""QAIC"", "
+"0","                  knotgrid = myknots, "
+"0","                  startKnots=10, "
+"0","                  minKnots=4, "
+"0","                  maxKnots=12)"

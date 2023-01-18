@@ -1,0 +1,4 @@
+"0","# make predictions on response scale"
+"0","nysted.predictdata$preds_sk<-predict.gamMRSea(newdata = nysted.predictdata, "
+"0","                                           g2k =g2k, "
+"0","                                           object = mymodel_sk)"

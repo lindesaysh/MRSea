@@ -1,0 +1,6 @@
+"0","set.seed(1)"
+"0","cv.gamMRSea(mydata, mymodel_sk, K=10)$delta[1]"
+"1","[1]"
+"1"," 5.935685"
+"1","
+"

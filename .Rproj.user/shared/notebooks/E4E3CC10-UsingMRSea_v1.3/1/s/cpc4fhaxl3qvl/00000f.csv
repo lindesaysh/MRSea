@@ -1,0 +1,7 @@
+"0","salsa1dlist <- list(fitnessMeasure = ""cv.gamMRSea"", "
+"0","                    minKnots_1d = 2,"
+"0","                    maxKnots_1d = 3, "
+"0","                    startKnots_1d = 1, "
+"0","                    degree = 2,"
+"0","                    gaps = c(0), "
+"0","                    cv.opts=list(cv.gamMRSea.seed=1, K=10))"

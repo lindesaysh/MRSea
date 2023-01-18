@@ -1,0 +1,4 @@
+"0","save.image(file='MRSeainteracWorkspace.RData', compress=""bzip2"")"
+"0","pkgdown::build_site()"
+"2","Error: Can't find DESCRIPTION
+"

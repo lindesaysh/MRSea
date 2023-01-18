@@ -1,0 +1,3 @@
+"0","finalmod.robustse <- make.gamMRSea(finalmod,  "
+"0","                                    gamMRSea = TRUE,"
+"0","                                    panelid = count.data$blockid)"

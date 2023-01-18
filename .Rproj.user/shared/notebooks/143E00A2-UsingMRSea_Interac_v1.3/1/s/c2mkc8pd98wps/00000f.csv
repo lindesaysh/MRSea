@@ -1,0 +1,3 @@
+"0","mymodel_sk<-salsa2doutput_stkn$bestModel"
+"0","chosenknots_sk <- myknots[mymodel_sk$splineParams[[1]]$knotPos,]"
+"0","startingknots <- myknots[startknotlocs,]"

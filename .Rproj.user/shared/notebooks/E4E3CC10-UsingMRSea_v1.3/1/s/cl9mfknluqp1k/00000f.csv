@@ -1,0 +1,3 @@
+"0","count.data$blockid <- paste(count.data$transect.id, "
+"0","                            count.data$season, "
+"0","                            count.data$impact,sep = """")"

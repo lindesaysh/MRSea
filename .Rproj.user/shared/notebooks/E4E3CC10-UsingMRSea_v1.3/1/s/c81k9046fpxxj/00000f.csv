@@ -1,0 +1,8 @@
+"0","mediandiff <- differences$mediandiff"
+"0","# The marker for each after - before difference:"
+"0","# positive ('1') and negative ('-') significant differences"
+"0","marker <- differences$significanceMarker"
+"0","par(mfrow = c(1, 1))"
+"0","quilt.plot(predictData$x.pos[predictData$impact == 0], "
+"0","           predictData$y.pos[predictData$impact == 0],"
+"0","           mediandiff, asp = 1, nrow = 104, ncol = 55)"

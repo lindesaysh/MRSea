@@ -1,0 +1,5 @@
+"0","ggplot() + "
+"0","  geom_tile(data=predictData, aes(x.pos, y.pos, fill=preds), height=0.5, width=0.5) +"
+"0","  facet_grid(season~impact , labeller = labeller(impact=imp.labs)) +"
+"0","  theme_bw() + coord_equal() + "
+"0","  scale_fill_distiller(palette = ""Spectral"",name=""Animal Counts"")"

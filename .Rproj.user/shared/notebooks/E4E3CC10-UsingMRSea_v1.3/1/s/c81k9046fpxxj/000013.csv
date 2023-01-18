@@ -1,0 +1,3 @@
+"0","points(predictData$x.pos[predictData$impact == 0][marker == (-1)],"
+"0","       predictData$y.pos[predictData$impact == 0][marker == (-1)],"
+"0","       col = ""darkgrey"", cex = 0.75)"

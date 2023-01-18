@@ -8,10 +8,10 @@
 <meta name="description" content="MRSea">
 <title>MRSea: 2D Interaction Example • MRSea</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="MRSea: 2D Interaction Example">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="MRSea: 2D Interaction Example">
 <meta property="og:description" content="MRSea">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -77,7 +77,7 @@
                         <h4 data-toc-skip class="author">LAS
 Scott-Hayward, CG Walker and ML Mackenzie</h4>
             
-            <h4 data-toc-skip class="date">2022-09-07</h4>
+            <h4 data-toc-skip class="date">2023-01-18</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lindesaysh/MRSea/blob/HEAD/vignettes/UsingMRSea_Interac_v1.3.Rmd" class="external-link"><code>vignettes/UsingMRSea_Interac_v1.3.Rmd</code></a></small>
       <div class="d-none name"><code>UsingMRSea_Interac_v1.3.Rmd</code></div>
@@ -132,12 +132,12 @@ chosen the same number of candidate knot locations for each.</li>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">myknots</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       X1      X2 impact</span></span>
-<span><span class="co">#&gt; 1 700.25 6050.25      0</span></span>
-<span><span class="co">#&gt; 2 670.25 6059.25      0</span></span>
-<span><span class="co">#&gt; 3 680.25 6059.13      0</span></span>
-<span><span class="co">#&gt; 4 693.75 6050.75      0</span></span>
-<span><span class="co">#&gt; 5 701.75 6036.25      0</span></span>
-<span><span class="co">#&gt; 6 674.25 6037.75      0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 678.25 6053.75      0</span></span>
+<span><span class="co">#&gt; 2 674.25 6035.25      0</span></span>
+<span><span class="co">#&gt; 3 662.25 6057.25      0</span></span>
+<span><span class="co">#&gt; 4 682.25 6036.25      0</span></span>
+<span><span class="co">#&gt; 5 672.25 6058.75      0</span></span>
+<span><span class="co">#&gt; 6 696.25 6043.75      0</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -211,6 +211,10 @@ level).</li>
 <code class="sourceCode R"><span><span class="va">initialModel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">response</span> <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">season</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">impact</span><span class="op">)</span> </span>
 <span>                    <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/offset.html" class="external-link">offset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">area</span><span class="op">)</span><span class="op">)</span>, family <span class="op">=</span> <span class="st">"quasipoisson"</span>, </span>
 <span>                    data <span class="op">=</span> <span class="va">mydata</span><span class="op">)</span></span></code></pre></div>
+<p>Note that by setting startKnots = 10, 10 knots will be space-filled
+across the combined grids which may lead to unequal starting positions
+biased towards one factor level. To avoid this, you can manually specify
+starting locations. This is described at the end of the document.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># make parameter set for running salsa2d</span></span>
 <span><span class="va">salsa2dlist</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fitnessMeasure <span class="op">=</span> <span class="st">"QAIC"</span>, </span>
@@ -233,7 +237,7 @@ level).</li>
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">chosenknots</span>, <span class="va">impact</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   impact n</span></span>
 <span><span class="co">#&gt; 1      0 4</span></span>
-<span><span class="co">#&gt; 2      1 6</span></span>
+<span><span class="co">#&gt; 2      1 4</span></span>
 <span><span class="co">#startingknots &lt;- myknots[startknotlocs,]</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">imp.labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Pre-Construction"</span>, <span class="st">"Post-Construction"</span><span class="op">)</span></span>
@@ -254,11 +258,11 @@ object.</li>
 </ol>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mymodel</span><span class="op">$</span><span class="va">splineParams</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">knotPos</span></span>
-<span><span class="co">#&gt;  [1] 193  41 240 150 106  65 203 178 199 209</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 291  89  60  93 216 262  72 280</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/cv.gamMRSea.html">cv.gamMRSea</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">mymodel</span>, K<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">$</span><span class="va">delta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 5.936069</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 5.963349</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="making-predictions">Making predictions<a class="anchor" aria-label="anchor" href="#making-predictions"></a>
@@ -360,7 +364,10 @@ locations are red diamonds</p>
 <span><span class="va">chosenknots_sk</span> <span class="op">&lt;-</span> <span class="va">myknots</span><span class="op">[</span><span class="va">mymodel_sk</span><span class="op">$</span><span class="va">splineParams</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">knotPos</span>,<span class="op">]</span></span>
 <span><span class="va">startingknots</span> <span class="op">&lt;-</span> <span class="va">myknots</span><span class="op">[</span><span class="va">startknotlocs</span>,<span class="op">]</span></span></code></pre></div>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">chosenknots_sk</span>, <span class="va">impact</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">chosenknots_sk</span>, <span class="va">impact</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   impact n</span></span>
+<span><span class="co">#&gt; 1      0 7</span></span>
+<span><span class="co">#&gt; 2      1 5</span></span></code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># quick look to see what was chosen</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">myknots</span><span class="op">)</span> <span class="op">+</span></span>
@@ -381,7 +388,7 @@ initial knot locations and red diamonds are final knot locations.
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/cv.gamMRSea.html">cv.gamMRSea</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">mymodel_sk</span>, K<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">$</span><span class="va">delta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 5.916998</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 5.935685</span></span></code></pre></div>
 <p>This model is better than the earlier one which used a space-filled
 selection of all knots for starting locations. However, bear in mind
 that both models are using a simplistic number of start knots and could
@@ -417,7 +424,7 @@ be improved.</p>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
     </footer>

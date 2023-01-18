@@ -1,0 +1,7 @@
+"0","fullModel$call"
+"1","glm(formula = response ~ as.factor(season) + as.factor(impact) + 
+"
+"1","    bs(depth, knots = mean(depth)) + x.pos + y.pos, family = poisson, 
+"
+"1","    data = count.data)
+"

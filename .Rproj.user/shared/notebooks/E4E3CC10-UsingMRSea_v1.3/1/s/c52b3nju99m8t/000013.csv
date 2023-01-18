@@ -1,0 +1,8 @@
+"0","require(knitcitations)"
+"0","cleanbib()"
+"0","#biblio <- read.bibtex(file = ""newref.bib"")"
+"0","biblio <- NULL"
+"0","cite_options(citation_format = 'pandoc', cite.style = 'authoryear', max.names = 1, longnamesfirst=FALSE)"
+"0","knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, "
+"0","                      eval=FALSE, cache=FALSE,"
+"0","                      comment = '#>', collapse=TRUE, dev='png')"

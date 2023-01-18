@@ -1,0 +1,8 @@
+"0","require(ggplot2)"
+"0","ggplot() + geom_point(data=count.data, aes(x=x.pos, y=y.pos), colour='grey') +"
+"0","  theme_bw() + "
+"0","  geom_point(data=data.frame(knotgrid), aes(X1, X2), col='blue') + "
+"0","  geom_point(data=data.frame(knotgrid)[salsa2dOutput$aR[[1]],], "
+"0","             aes(X1, X2), col='darkgreen', size=4) +"
+"0","  coord_equal()"
+"0",""

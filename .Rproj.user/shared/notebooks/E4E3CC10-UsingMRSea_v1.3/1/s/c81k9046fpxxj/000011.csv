@@ -1,0 +1,5 @@
+"0","# add + or - depending on significance of cells. Just"
+"0","# requires one significance out of all to be allocated"
+"0","points(predictData$x.pos[predictData$impact == 0][marker == 1],"
+"0","       predictData$y.pos[predictData$impact == 0][marker == 1],"
+"0","       pch = ""+"", col = ""darkgrey"", cex = 0.75)"

@@ -1,0 +1,6 @@
+"0","knotgrid<- getKnotgrid(coordData = cbind(count.data$x.pos, count.data$y.pos), "
+"0","                       numKnots = 300,"
+"0","                       plot = FALSE)"
+"0","#"
+"0","# write.csv(knotgrid, file='knotgrid_fullanalysis.csv', row.names=F)"
+"0","# ~~~~~~~~~~~~~~~~~~~~~~~"
