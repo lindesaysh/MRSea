@@ -26,7 +26,8 @@ Scott-Hayward, L.A.S., Mackenzie, M.L. and Walker, C.G. (2021). Vignette for the
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 require(knitcitations)
 cleanbib()
-biblio <- read.bibtex("newref.bib")
+#biblio <- read.bibtex(file = "newref.bib")
+biblio <- NULL
 cite_options(citation_format = 'pandoc', cite.style = 'authoryear', max.names = 1, longnamesfirst=FALSE)
 knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, 
                       eval=FALSE, cache=FALSE,

@@ -1,4 +1,5 @@
 url: http://lindesaysh.github.io/MRSea/
 template:
   bootstrap: 5
+  bootswatch: cerulean
 

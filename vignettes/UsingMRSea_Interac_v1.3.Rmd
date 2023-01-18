@@ -128,6 +128,8 @@ initialModel <- glm(response ~ as.factor(season) + as.factor(impact)
                     data = mydata)
 ```
 
+Note that by setting startKnots = 10, 10 knots will be space-filled across the combined grids which may lead to unequal starting positions biased towards one factor level.  To avoid this, you can manually specify starting locations. This is described at the end of the document. 
+
 ```{r}
 # make parameter set for running salsa2d
 salsa2dlist<-list(fitnessMeasure = "QAIC", 
@@ -140,7 +142,8 @@ salsa2dlist<-list(fitnessMeasure = "QAIC",
 ```{r echo=TRUE,  results='hide'}
 salsa2dOutput<-runSALSA2D(model = initialModel, 
                           salsa2dlist = salsa2dlist,
-                          d2k=d2k,k2k=k2k)
+                          d2k=d2k,k2k=k2k,
+                          suppress.printout = TRUE)
 ```
 
 
@@ -286,7 +289,7 @@ chosenknots_sk <- myknots[mymodel_sk$splineParams[[1]]$knotPos,]
 startingknots <- myknots[startknotlocs,]
 ```
 
-```{r}
+```{r eval=TRUE}
 count(chosenknots_sk, impact)
 ```
 
