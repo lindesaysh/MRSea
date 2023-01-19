@@ -25,7 +25,7 @@
 #'@export
 #'
 
-"return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl,interactionTerm=interactionTerm, suppress.printout=FALSE, cv.opts){
+"return.reg.spline.fit" <- function(response,explanatory,degree,minKnots,maxKnots,startKnots,gap,winHalfWidth,fitnessMeasure="BIC", maxIterations=100, initialise = TRUE, initialKnots = NULL, baseModel=NULL, bd, spl,interactionTerm=interactionTerm, suppress.printout=FALSE, cv.opts, splineParams){
 
   # if(suppress.printout){
   #   sink(file = 'salsa1d.log')
@@ -116,7 +116,7 @@ if(length(which(knotSites==bd[2]))>0){
 #print(knotSites)
 
     ###########################initialisation######################################
-    output <- initialise.measures(startKnots, explanatory, response, degree, wts, initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+    output <- initialise.measures(startKnots, explanatory, response, degree, wts, initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams=splineParams)
     point <- output$point
     knotPoint <<- output$knotPoint
     position <- output$position
@@ -139,7 +139,7 @@ if(length(which(knotSites==bd[2]))>0){
       improveDrop <- 0
     ###################################exchange step#############################
       output <- exchange.step(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
-                                 out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp, cv.opts)
+                                 out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp, cv.opts, splineParams=splineParams)
       point <- output$point
       knotPoint <- output$knotPoint
       position <- output$position
@@ -155,7 +155,7 @@ if(length(which(knotSites==bd[2]))>0){
       }
     #####################################improve step############################
       output <- improve.step(degree, gap, length(aR), response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,
-                                aR,measures,out.lm,improveNudge, wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
+                                aR,measures,out.lm,improveNudge, wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams=splineParams)
       point <- output$point
       knotPoint <- output$knotPoint
       position <- output$position
@@ -171,7 +171,7 @@ if(length(which(knotSites==bd[2]))>0){
     ###################################drop step#################################
       if (length(aR) > minKnots) {
          output <- drop.step(degree, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
-                                  out.lm,improveDrop,minKnots, wts, baseModel,models, bd, spl, interactionTerm, initDisp, cv.opts)
+                                  out.lm,improveDrop,minKnots, wts, baseModel,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams=splineParams)
          point <- output$point
          knotPoint <- output$knotPoint
          position <- output$position
@@ -193,7 +193,7 @@ if(length(which(knotSites==bd[2]))>0){
 
 ########################################################################################################################
 
-"initialise.measures" <- function(num,explanatory, response, degree, wts,  initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts){
+"initialise.measures" <- function(num,explanatory, response, degree, wts,  initialise, initialKnots,baseModel,knotSites, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams=splineParams){
    
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -236,7 +236,7 @@ if(length(which(knotSites==bd[2]))>0){
          }
       }
     position<-c(position,0,(knotPoint[num]-(num-1)):(length(knotSites )-num))
-    output <- fit.model(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+    output <- fit.model(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams)
     out.lm<-output$currentModel
     models<-output$models
     #model.out<<-out.lm
@@ -250,7 +250,8 @@ print("initialisation complete...")
 ######################################################################################################################
 
 "exchange.step" <- function(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,
-                               measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
+                               measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts,
+                            splineParams){
   
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -271,7 +272,7 @@ print("initialisation complete...")
     if (length(index)>0) {
       if (index > 0) {
         output <- move.knot(degree, index,fitnessMeasure,measures,aR,point,response,explanatory,out.lm,improve,improveEx,
-                            maxKnots, wts,  baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
+                            maxKnots, wts,  baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams=splineParams)
         improve <- output$improve
         improveEx <- output$improveEx
         models <-output$models
@@ -350,7 +351,7 @@ print("initialisation complete...")
 ################################################################################################################
 
 "move.knot" <- function(degree, index,fitnessMeasure,measures,aR,point,response,explanatory,out.lm,improve,improveEx,maxKnots,
-                            wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
+                            wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams){
   
   if (isS4(out.lm)) {
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -366,7 +367,7 @@ print("initialisation complete...")
     tempR<-aR
     tempR[i]<-knotSites[point[index]]
     chck<-rbind(chck,tempR)
-    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams)
        
     if (isS4(out.lm)) {
       converge <- output$currentModel@iter < output$currentMode@control$maxit
@@ -399,7 +400,7 @@ print("initialisation complete...")
     
   if (length(aR)<maxKnots) {
     tempR<-c(aR,knotSites[point[index]])
-    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams)
       
     if (isS4(out.lm)) {
       converge <- output$currentModel@iter < output$currentMode@control$maxit
@@ -440,7 +441,7 @@ print("initialisation complete...")
 
 ####################################################################################################################
 
-"improve.step" <- function(degree, gap, num,response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
+"improve.step" <- function(degree, gap, num,response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams){
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
   } else {
@@ -455,7 +456,7 @@ print("initialisation complete...")
      improve <- 0
      for (i in 1:length(aR)) {
        #browser()
-       output <- local.shift.up(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
+       output <- local.shift.up(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams)
        point <- output$point
        
        #print(length(point))
@@ -471,7 +472,7 @@ print("initialisation complete...")
        improve <- output$improve
        improveNudge <- output$improveNudge
        if (shouldBreak) {break}
-       output <- local.shift.down(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts,baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts)
+       output <- local.shift.down(degree, out.lm,i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory, improve,improveNudge,wts,baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams)
        point <- output$point
        
        #print(length(unique(point)))
@@ -497,7 +498,7 @@ print("Improving complete...")
 #########################################################################################################################
 
 "drop.step" <- function(degree, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,out.lm,
-                          improveDrop,minKnots,wts, baseModel,models, bd, spl, interactionTerm, initDisp, cv.opts) {
+                          improveDrop,minKnots,wts, baseModel,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams) {
   
   if (isS4(baseModel)) {
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -511,7 +512,7 @@ print("Improving complete...")
   for (i in 1:length(aR)) {
     tempR <- aR
     tempR <- tempR[-i]
-    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+    output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams)
     
     if (isS4(output$currentModel)) {
       converge <- output$currentModel@iter < output$currentMode@control$maxit
@@ -555,7 +556,7 @@ print("Improving complete...")
 ###################################################################################
 
 "local.shift.up" <- function(degree, out.lm, i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory,
-                                  improve,improveNudge,wts, baseModel,knotSites,models,bd , spl, interactionTerm, initDisp, cv.opts){
+                                  improve,improveNudge,wts, baseModel,knotSites,models,bd , spl, interactionTerm, initDisp, cv.opts, splineParams){
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
   }  else {
@@ -579,7 +580,7 @@ print("Improving complete...")
       # LSH added <= (19/2/15) rather than < so no two knots in same plae
       if (check) {
         tempR[i] <- knotSites[knotPoint[i]+1]
-        output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+        output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams)
         
         if (isS4(baseModel)){
           converge <- output$currentModel@iter < output$currentMode@control$maxit
@@ -624,7 +625,7 @@ print("Improving complete...")
  ######################################################################################################################################
  
  "local.shift.down" <- function(degree, out.lm, i,knotPoint,gap,position,fitnessMeasure,measures,aR,point,response,explanatory,
-                                     improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts){
+                                     improve,improveNudge,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts, splineParams){
   
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment() 
@@ -648,7 +649,7 @@ print("Improving complete...")
       #}    
       if (check) {
         tempR[i]<-knotSites[knotPoint[i]-1]
-        output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts)
+        output <- fit.model(explanatory,degree,tempR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams)
         
         if (isS4(baseModel)) {
           converge <- output$currentModel@iter < output$currentMode@control$maxit
@@ -751,7 +752,7 @@ getCV_type2<- function(folds, baseModel){
 }
  ###################################################################################################################################
  
- "fit.model" <- function(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts) {
+ "fit.model" <- function(explanatory,degree,aR,baseModel,models, bd, spl, fitnessMeasure, interactionTerm, initDisp, cv.opts, splineParams) {
  
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -808,13 +809,10 @@ getCV_type2<- function(folds, baseModel){
   if(spl == 'cc'){
     #print("fitting model...")
     
-    knots<- sort(c(bd[1],aR, bd[2]))
+    knots<- paste0(sort(c(bd[1],aR, bd[2])), collapse=",")
+    ccspl <- paste0("cSplineDes(x=explanatory, knots=c(", knots, "), ord=", degree+1, ")")
     
-    #print(knots)
-    
-    textforeval2<- "update(baseModel,. ~. + cSplineDes(x=explanatory, knots=knots, ord=degree+1))"
-    
-    out.lm<- eval(parse(text=textforeval2))
+    out.lm<- eval(parse(text=paste0("update(baseModel,. ~. +", ccspl,  ")")))
     
     if (isS4(out.lm)) {
       converge <- out.lm@iter < out.lm@control$maxit

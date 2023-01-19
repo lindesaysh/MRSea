@@ -7,7 +7,6 @@
 #' @param varlist Vector of variable names for the covariates required for knot selection
 #' @param factorlist vector of factor variables specified in \code{initialModel}.  Specified so that a check can be made that there are non-zero counts in all levels of each factor. Uses the function \code{checkfactorlevelcounts}. Default setting is NULL.
 #' @param predictionData The data for which predictions are to be made. Column names must correspond to the data in \code{initialModel}. If predictionData is not specified (\code{NULL}), then the range of the data is used to create the smooth terms.
-#' @param varlist_cyclicSplines Vector of variable names for covariates to be modelled with cyclic cubic splines.  This must be a subset of \code{varlist}.The default is \code{NULL}
 #' @param splineParams List object containing information for fitting splines to the covariates in \code{varlist}. If not specified (\code{NULL}) this object is created and returned. See \code{\link{makesplineParams}} for details.
 #' @param datain Data used to fit the initial Model.
 #' @param removal (Default: \code{FALSE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth. If \code{TRUE} then cross-validation is used to make model selection choices. The folds are specified by a column in the dataset called \code{foldid}.
@@ -105,6 +104,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   if(class(initialModel)[1]!='glm' & class(initialModel)[1]!='gamMRSea') stop('Class of model not supported.  Please use glm or gamMRSea')
   
+  if(!is.null(varlist_cyclicSplines)) stop('This parameter is depreciated.  Please specify spline type in the salsa1dlist object')
+  
   # check for response variable
   if(nrow(initialModel$data)!=length(initialModel$model[[1]])){
     fam<-'BinProp'
@@ -185,13 +186,13 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   terms1D <- list(length(varlist))
   
-  counter<-1 # needed to loop through cyclics if more than one
+  #counter<-1 # needed to loop through cyclics if more than one
     for(i in 2:(length(varlist)+1)){
-    if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
+    if(salsa1dlist$splines[(i-1)] == "cc"){
       require(mgcv)
-      terms1D[[(i-1)]]<- paste("smooth.construct(s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots))+2), knots = list(",varlist[varID[(i-1)]-1], "=as.numeric(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2]))), data=data.frame(",varlist[varID[(i-1)]-1],"))$X[,-1]", sep="")
-      splineParams[[i]]$knots<-eval(parse(text=paste('quantile(data$', varlist_cyclicSplines[counter], ', probs = c(0.25, 0.5, 0.75))', sep='')))
-      counter<-counter+1
+      terms1D[[(i-1)]]<- paste("smooth.construct(s(", varlist[(i-1)], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots))+2), knots = list(",varlist[(i-1)], "=as.numeric(c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2]))), data=data.frame(",varlist[(i-1)],"))$X[,-1]", sep="")
+      splineParams[[i]]$knots<-eval(parse(text=paste('quantile(data$', varlist[(i-1)], ', probs = c(0.25, 0.5, 0.75))', sep='')))
+      #counter<-counter+1
     }else{
       if(salsa1dlist$splines[(i-1)] == "bs"){
         terms1D[[(i-1)]]<- paste("bs(", varlist[(i-1)], ", knots = splineParams[[", varID[(i-1)], "]]$knots, degree=splineParams[[", varID[(i-1)], "]]$degree, Boundary.knots=splineParams[[",varID[(i-1)], "]]$bd)", sep='')  
@@ -297,13 +298,13 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     
     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceeding', sep=''))}
     
-    if(varlist[(i-1)]%in%varlist_cyclicSplines){spl<- "cc"}
+    if(salsa1dlist$splines[(i-1)] == "cc"){spl<- "cc"}
     if(salsa1dlist$splines[(i-1)] == "bs"){spl="bs"}
     if(salsa1dlist$splines[(i-1)] == "ns"){spl="ns"}
     
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
     sttime<- proc.time()[3]
-    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, cv.opts=salsa1dlist$cv.opts)
+    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, cv.opts=salsa1dlist$cv.opts, splineParams = splineParams)
     
     timings[(i-1)]<- proc.time()[3] - sttime
     
@@ -406,7 +407,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   # turn the model data back into what came in
   
-  outTerms <- list(length(varlist_cyclicSplines))
+  #outTerms <- list(length(varlist_cyclicSplines))
   counter<-1
   origfamily<-initialModel$family$family
   
