@@ -240,20 +240,26 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(dispersion_Model$conv==FALSE) stop('Model to get dispersion parameter, with max knots evenly spaced did not converge.  Use fewer max knots or change fitness measure.')
     
     # update the modelling to use the poisson family. The dispersion has been calculated and will be used by the get.measure function.
-    if(family=='quasipoisson'){family='poisson'}
-    if(family=='quasibinomial'){family='binomial'}
-    baseModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(family), "(link=", substitute(link),"))", sep='')))
+    if(family=='quasipoisson'){
+      family='poisson'
+      baseModel<-eval(parse(text=paste("update(baseModel, round(response) ~., family=",substitute(family), "(link=", substitute(link),"))", sep='')))
+    }
+    if(family=='quasibinomial'){
+      family='binomial'
+      baseModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(family), "(link=", substitute(link),"))", sep='')))
+    }
+    
   }
   
-  # temporary fix
-  baseModel$splineParams <- splineParams
-  
+  # # temporary fix
+  # baseModel$splineParams <- splineParams
+  # 
   initDisp<-getDispersion(baseModel)
   fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
   
-  # temporary fix
-  baseModel$splineParams <- NULL
-  
+  # # temporary fix
+  # baseModel$splineParams <- NULL
+  # 
   modelFits1D <- list((length(varlist)+1))
   modelFits1D[[1]] <- list(term = 'startmodel', kept=NULL, basemodelformula = baseModel$call, knotsSelected = NULL, tempfits = c(CV = cv_initial, fitStat=fitStat))
   
