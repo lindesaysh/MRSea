@@ -1,13 +1,14 @@
 ---
 title: "Getting Started with MRSea: One dimensional smoothing"
 author: "LAS Scott-Hayward"
-output: html_document
+output: 
+  rmarkdown::html_vignette
 date: "`r Sys.Date()`"
 resource_files:
   - images/MRSea_workflow.png
 bibliography: newref.bib
 vignette: >
-  %\VignetteIndexEntry{Getting Started with MRSea}
+  %\VignetteIndexEntry{Getting Started with MRSea: One dimensional smoothing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -28,24 +29,29 @@ knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE,
 
 The ```MRSea``` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to many other studies as well. For example, these methods have been used for more general spatial distribution modelling and to analyse GPS tagging data for home ranges.
 
-The `MRSea` package primarily fits Generalised Additive Models (GAMs) using a spatially adaptive model selection framework for both one and two dimensional covariates using the functions `runSALSA1D` and `runSALSA2D`.  These functions implement the methods of @Walker2010 and @ScottH2023. In addition, options are available for a variety of different splines and the estimation of robust standard errors if residual correlation is present. 
+The `MRSea` package primarily fits Generalised Additive Models (GAMs) using a spatially adaptive model selection framework for both one and two dimensional covariates using the functions `runSALSA1D` and `runSALSA2D`.  These functions implement the methods of implement the methods of @Walker2010, @ScottH2013 and @ScottH2022. In addition, options are available for a variety of different splines and the estimation of robust standard errors if residual correlation is present. 
 
 A class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object information regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given).
 
 In addition to the functions required to run the models (which we shall go through below) there are also a variety of associated functions for:
-Diagnostics:
+
+  
+**Covariate Checking/Selection:**
+
+ - `summary.gamMRSea` (summary function for models)
+ - `runPartialPlots` (to plot 1D partial smooth relationships), 
+ - `anova.gamMRSea`  (for model selection; (ANOVA) for robust standard errors) and 
+
+**Diagnostics:**
+
   - `runACF` (to assess residual correlation), 
   - `runsTest` (to assess residual correlation)
   - `runDiagnostics` (plots of observed vs fitted and fitted vs scaled Pearsons residuals), 
   - `timeInfluenceCheck`/`runInfluence` (assessing the influence of data on precision and predictions), 
   - `plotCumRes` (plots of cumulative residuals)
-  
-Covariate Checking/Selection:
- - `summary.gamMRSea` (summary function for models)
- - `runPartialPlots` (to plot 1D partial smooth relationships), 
- - `anova.gamMRSea`  (for model selection; (ANOVA) for robust standard errors) and 
 
-Inference:
+**Inference:**
+
  - `do.bootstrap.cress.robust` (percentile based confidence intervals).
  - `getDifferences` (identifying differences between two prediction surfaces)
 
@@ -331,303 +337,9 @@ By specifying `anova` it is using the `anova.gamMRSea` function (as the class of
 
 For information on:
 
-1. [Other types of 1D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea_v1.3))
+1. [Other types of 1D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea_v1.3)
 2. [Two dimensional smoothing](https://lindesaysh.github.io/MRSea/article/GettingStarted_2Dsmoothing)
 3. [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3) including information on distance sampling, `gamMRSea` model diagnostics and using robust standard errors to deal with residual correlation. 
 
-<!-- ## Selection of flexibility for 2D smooth term -->
 
-<!-- 9. Create a grid of knots that will be used as possible knot locations.  This may take while and could be different every time you run it so I suggest saving the knotgrid as a file. -->
-
-<!-- ```{r knotgrid, fig=TRUE, fig.align='center', fig.width=9, fig.height=6} -->
-<!-- knotgrid<- getKnotgrid(coordData = cbind(count.data$x.pos, count.data$y.pos),  -->
-<!--                        numKnots = 300, -->
-<!--                        plot = FALSE) -->
-<!-- # -->
-<!-- # write.csv(knotgrid, file='knotgrid_fullanalysis.csv', row.names=F) -->
-<!-- # ~~~~~~~~~~~~~~~~~~~~~~~ -->
-<!-- ``` -->
-
-<!-- 10. Set up parameters for SALSA2D.  Distance matrices (data to knots and knot to knots), a fit statistic and min, max and start knots. -->
-
-<!-- ```{r } -->
-<!-- # make distance matrices for datatoknots and knottoknots -->
-<!-- distMats <- makeDists(cbind(count.data$x.pos, count.data$y.pos), knotgrid) -->
-
-<!-- # ~~~~~~~~~~~~~~~~~~~~~~~ -->
-
-<!-- # make parameter set for running salsa2d -->
-<!-- salsa2dlist<-list(fitnessMeasure = 'QBIC',  -->
-<!--                   knotgrid = knotgrid, -->
-<!--                   startKnots=10,  -->
-<!--                   minKnots=4,  -->
-<!--                   maxKnots=15,  -->
-<!--                   gap=0,  -->
-<!--                   interactionTerm="as.factor(impact)") -->
-<!-- ``` -->
-
-<!-- 11. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`. The model inputted to the SALSA algorithm is the model output from the 1D SALSA run.  If you have no univariate smooth terms, you can put in the initial model in this step.  -->
-
-<!-- ```{r echo=TRUE, message=FALSE, warning=FALSE, results='hide'} -->
-<!-- salsa2dOutput<-runSALSA2D(model = salsa1dOutput$bestModel,  -->
-<!--                           salsa2dlist = salsa2dlist,  -->
-<!--                           d2k=distMats$dataDist, -->
-<!--                           k2k=distMats$knotDist) -->
-<!-- ``` -->
-
-
-<!-- ```{r eval=TRUE} -->
-<!-- require(ggplot2) -->
-<!-- ggplot() + geom_point(data=count.data, aes(x=x.pos, y=y.pos), colour='grey') + -->
-<!--   theme_bw() +  -->
-<!--   geom_point(data=data.frame(knotgrid), aes(X1, X2), col='blue') +  -->
-<!--   geom_point(data=data.frame(knotgrid)[salsa2dOutput$aR[[1]],],  -->
-<!--              aes(X1, X2), col='darkgreen', size=4) + -->
-<!--   coord_equal() -->
-
-<!-- ``` -->
-
-<!-- 12.  Are the residuals correlated? Make a suitable blocking structure, within which residuals are expected to be correlated but between which they are independent.  Use `runACF` to assess the blocking structure. -->
-
-<!-- ```{r eval=TRUE, acfplot, fig.cap='ACF plot showing correlation in each block (grey lines), and the mean correlation by lag across blocks (red line).'} -->
-<!-- runACF(block = count.data$blockid, model = salsa2dOutput$bestModel, -->
-<!--        suppress.printout=TRUE) -->
-<!-- ``` -->
-
-<!-- Here we also do a runs test to assess for correlation in the model residuals.  Since our data are over-dispersed, we must use the empirical distribution for assessment: -->
-
-<!-- ```{r} -->
-<!-- simData<-generateNoise(n=500, response=fitted(salsa2dOutput$bestModel), family='poisson', d=summary(salsa2dOutput$bestModel)$dispersion) -->
-<!-- empdist<-getEmpDistribution(500, simData, salsa2dOutput$bestModel, data=count.data,dots=FALSE) -->
-<!-- ``` -->
-
-<!-- ```{r eval=TRUE} -->
-<!-- runsTest(residuals(salsa2dOutput$bestModel, type='pearson'),emp.distribution=empdist) -->
-<!-- ``` -->
-
-
-<!-- 13. Model selection -->
-
-<!-- ```{r eval=TRUE} -->
-<!-- set.seed(1) -->
-<!-- # 2D model -->
-<!-- cv.gamMRSea(data=count.data, modelobject = salsa2dOutput$bestModel, K=10)$delta[2] -->
-<!-- # salsa2dOutput$fitStat # alternatively -->
-
-<!-- # 1D model -->
-<!-- cv.gamMRSea(data=count.data, modelobject = salsa1dOutput$bestModel, K=10)$delta[2] -->
-
-<!-- # intitial model -->
-<!-- cv.gamMRSea(data=count.data, modelobject = initialModel, K=10)$delta[2] -->
-
-<!-- ``` -->
-
-<!-- ```{r eval=TRUE} -->
-<!-- anova(salsa2dOutput$bestModel) -->
-<!-- ``` -->
-
-<!-- ```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE} -->
-<!-- par(mfrow=c(2,2)) -->
-<!-- runPartialPlots(model = salsa2dOutput$bestModel, data = count.data,  -->
-<!--                 factorlist.in = c('season', 'impact'),  -->
-<!--                 varlist.in = 'depth', showKnots = T,  -->
-<!--                 includeB0 = TRUE) -->
-<!-- ``` -->
-
-<!-- # ```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE} -->
-<!-- # par(mfrow=c(2,2)) -->
-<!-- # runPartialPlots(model = salsa2dOutput$bestModel, data = count.data,  -->
-<!-- #                 factorlist = c('season', 'impact'), varlist = 'depth',  -->
-<!-- #                 showKnots = T, type='link',  -->
-<!-- #                 includeB0 = TRUE) -->
-<!-- # ``` -->
-<!-- #  -->
-<!-- # ## Making Predictions -->
-
-<!-- ```{r } -->
-<!-- preddist<-makeDists(cbind(predictData$x.pos, predictData$y.pos),  -->
-<!--                  knotgrid, knotmat=FALSE)$dataDist -->
-
-
-<!-- # make predictions on response scale -->
-<!-- preds<-predict(newdata = predictData,  -->
-<!--                g2k = preddist,  -->
-<!--                object = salsa2dOutput$bestModel) -->
-<!-- ``` -->
-
-<!-- Plotting the predictions pre and post impact: -->
-
-<!-- ```{r } -->
-<!-- require(RColorBrewer) -->
-<!-- imp.labs <- c("Pre-Construction", "Post-Construction") -->
-<!-- names(imp.labs) <- c("0", "1") -->
-<!-- predictData$preds<-preds[,1] -->
-<!-- ``` -->
-
-<!-- ```{r eval=TRUE, fig=TRUE, fig.align='center', fig.height=10, fig.width=8} -->
-<!-- ggplot() +  -->
-<!--   geom_tile(data=predictData, aes(x.pos, y.pos, fill=preds), height=0.5, width=0.5) + -->
-<!--   facet_grid(season~impact , labeller = labeller(impact=imp.labs)) + -->
-<!--   theme_bw() + coord_equal() +  -->
-<!--   scale_fill_distiller(palette = "Spectral",name="Animal Counts") -->
-<!-- ``` -->
-
-<!-- ## Bootstrapped Confidence Intervals and Difference Surfaces -->
-
-<!-- Note that the coding in this section has changed slightly from the original user guide. -->
-
-<!-- 14. Bootstrap to include parameter estimation uncertainty in the detection function and parameter estimation in the spatial model. (Note: If no detection function estimated, then the bootstrap is just on the parameters of the spatial model.) -->
-
-<!-- ```{r boots, warning=FALSE, message=FALSE, results='hide'} -->
-<!-- dis.data$seasonimpact <- paste(dis.data$season, dis.data$impact) -->
-
-<!-- bootPreds<-do.bootstrap.cress.robust(model.obj = salsa2dOutput$bestModel,  -->
-<!--                                      predictionGrid = predictData, -->
-<!--                                      g2k=preddist, -->
-<!--                                      B = 100,  -->
-<!--                                      robust=TRUE) -->
-<!-- ``` -->
-
-<!-- ```{r } -->
-<!-- #load('predictionboot.RData') -->
-<!-- cis <- makeBootCIs(bootPreds) -->
-<!-- ``` -->
-
-<!-- 15. Calculate the differences before and after across all bootstraps -->
-<!-- ```{r } -->
-<!-- differences <- getDifferences(beforePreds =  -->
-<!--                       bootPreds[predictData$impact == 0, ], -->
-<!--                       afterPreds = bootPreds[predictData$impact == 1, ]) -->
-<!-- ``` -->
-
-<!-- 16. Plot differences and indicate where significant positive/negative differences lie.  The grey circles indicate a significant negative difference (abundance after impact is less than the abundance before impact) and the grey crosses indicate a significant positive difference.  The colour of the cell indicates the size of the difference.  -->
-
-<!-- ```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=9, fig.height=6} -->
-<!-- mediandiff <- differences$mediandiff -->
-<!-- # The marker for each after - before difference: -->
-<!-- # positive ('1') and negative ('-') significant differences -->
-<!-- marker <- differences$significanceMarker -->
-<!-- par(mfrow = c(1, 1)) -->
-<!-- quilt.plot(predictData$x.pos[predictData$impact == 0],  -->
-<!--            predictData$y.pos[predictData$impact == 0], -->
-<!--            mediandiff, asp = 1, nrow = 104, ncol = 55) -->
-<!-- # add + or - depending on significance of cells. Just -->
-<!-- # requires one significance out of all to be allocated -->
-<!-- points(predictData$x.pos[predictData$impact == 0][marker == 1], -->
-<!--        predictData$y.pos[predictData$impact == 0][marker == 1], -->
-<!--        pch = "+", col = "darkgrey", cex = 0.75) -->
-<!-- points(predictData$x.pos[predictData$impact == 0][marker == (-1)], -->
-<!--        predictData$y.pos[predictData$impact == 0][marker == (-1)], -->
-<!--        col = "darkgrey", cex = 0.75) -->
-<!-- points(681417.3/1000, 6046910/1000, cex = 3, pch = "*", lwd = 1, col = "grey") -->
-<!-- ``` -->
-
-<!-- Select a single season to plot (here I have chosen season 1): -->
-
-<!-- ```{r eval=TRUE, fig.width=9, fig.height=6} -->
-<!-- require(dplyr) -->
-<!-- diffdata<-data.frame(predictData[predictData$impact==0,], mediandiff, marker) -->
-<!-- diffdata_s1<-filter(diffdata, season==1) -->
-
-<!-- wf<-data.frame(x=(681417.3/1000), y= (6046910/1000)) -->
-
-<!-- ggplot() + geom_tile(data=diffdata_s1, aes(x=x.pos, y=y.pos, fill=mediandiff),  -->
-<!--                      height=0.5, width=0.5) +  -->
-<!--   geom_point(data=filter(diffdata_s1, marker == 1), aes(x=x.pos, y=y.pos),  -->
-<!--              shape=3, colour='darkgrey', size=1) + -->
-<!--   geom_point(data=filter(diffdata_s1, marker == -1), aes(x=x.pos, y=y.pos),  -->
-<!--              shape=1, colour='darkgrey', size=1.5) + -->
-<!--   theme_bw() + coord_equal() +   -->
-<!--   scale_fill_distiller(palette = "Spectral",name="Difference") +  -->
-<!--   geom_point(data=wf, aes(x, y), shape=8, size=4) -->
-
-<!-- ``` -->
-
-<!-- Or, all seasons (remember season is only in as a factor variable so there will be no change in spatial distribution between seasons, only an increase or decrease in numbers): -->
-
-<!-- ```{r, eval=TRUE, fig.width=9, fig.height=7} -->
-<!-- ggplot() + geom_tile(data=diffdata, aes(x=x.pos, y=y.pos, fill=mediandiff),  -->
-<!--                      height=0.5, width=0.5) +  -->
-<!--   geom_point(data=filter(diffdata, marker == 1), aes(x=x.pos, y=y.pos),  -->
-<!--              shape=3, colour='darkgrey', size=1) + -->
-<!--   geom_point(data=filter(diffdata, marker == -1), aes(x=x.pos, y=y.pos),  -->
-<!--              shape=1, colour='darkgrey', size=1.5) + -->
-<!--   theme_bw() + coord_equal() + facet_wrap(~season) +  -->
-<!--   scale_fill_distiller(palette = "Spectral",name="Difference") +  -->
-<!--   geom_point(data=wf, aes(x, y), shape=8, size=4) -->
-<!-- ``` -->
-
-<!-- ## Other useful functions in the MRSea package -->
-
-<!-- I will use the best model above to run some additional diagnostics. -->
-
-<!-- ```{r} -->
-<!-- finalmod<-salsa2dOutput$bestModel -->
-<!-- ``` -->
-
-<!-- ### `runDiagnostics` -->
-
-<!-- This function creates observed vs fitted and fitted vs scaled pearsons residual plots. -->
-
-<!-- ```{r, eval=TRUE, fig.width=9, fig.height=6} -->
-<!-- runDiagnostics(finalmod) -->
-<!-- ``` -->
-
-<!-- ### Influence diagnostics -->
-
-<!-- These functions assess the influence of different blocks on the data.  -->
-
-<!-- ```{r eval=TRUE} -->
-<!-- timeInfluenceCheck(finalmod, id = count.data$blockid) -->
-<!-- ``` -->
-
-<!-- ```{r, eval=TRUE, fig.width=9, fig.height=6} -->
-<!-- inflpoints<-runInfluence(finalmod, id = count.data$blockid) -->
-<!-- ``` -->
-
-<!-- ### Cumulative residual plots -->
-
-<!-- Cumulative residual plots are returned for residuals ordered by each covariate in `varlist`, predicted value and index of observations (temporally). The blue dots are the residuals and the black line is the line of cumulative residual. On the covariate plots (those in `varlist`) the grey line indicates what we would expect from a well fitted covariate. i.e. one that is fitted with excessive knots. -->
-
-<!-- ```{r,eval=TRUE, fig.width=9, fig.height=7} -->
-<!-- plotCumRes(model = finalmod, varlist = 'depth') -->
-<!-- ``` -->
-
-
-<!-- ### Making any `glm` model into an `gamMRSea` object -->
-
-<!-- This can be done using the `make.gamMRSea` function.  Here we use the `fullmodel` which is a `glm` model with `family='poisson'` -->
-
-<!-- ```{r eval=TRUE} -->
-<!-- fullModel$call -->
-<!-- ``` -->
-
-
-<!-- ```{r} -->
-<!-- fullModel.gamMRSea <- make.gamMRSea(fullModel,   -->
-<!--                                     gamMRSea = TRUE) -->
-
-<!-- ``` -->
-
-<!-- ```{r eval=TRUE} -->
-<!-- summary(fullModel.gamMRSea) -->
-<!-- ``` -->
-
-<!-- Additionally, if you choose to fit the SALSA or GLM models without a panel structure, the `make.gamMRSea` function can be used to add a panel structure afterwards. -->
-
-<!-- ```{r, eval=FALSE} -->
-<!-- finalmod.robustse <- make.gamMRSea(finalmod,   -->
-<!--                                     gamMRSea = TRUE, -->
-<!--                                     panelid = count.data$blockid) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- summary(finalmod.robustse) -->
-<!-- ``` -->
-
-
-
-
-<!-- ```{r, eval=FALSE, echo=FALSE, include=FALSE} -->
-<!-- save.image(file='mrseavignetteworkspace.RData', compress="bzip2") -->
-<!-- ``` -->
+# References

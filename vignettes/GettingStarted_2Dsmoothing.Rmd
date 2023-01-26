@@ -1,13 +1,14 @@
 ---
 title: "Getting Started with MRSea: Two dimensional smoothing"
 author: "LAS Scott-Hayward"
-output: html_document
+output: 
+  rmarkdown::html_vignette
 date: "`r Sys.Date()`"
 resource_files:
   - images/MRSea_workflow.png
 bibliography: newref.bib
 vignette: >
-  %\VignetteIndexEntry{Getting Started with MRSea}
+  %\VignetteIndexEntry{Getting Started with MRSea: Two dimensional smoothing}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -28,26 +29,32 @@ knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE,
 
 The ```MRSea``` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to many other studies as well. For example, these methods have been used for more general spatial distribution modelling and to analyse GPS tagging data for home ranges.
 
-The `MRSea` package primarily fits Generalised Additive Models (GAMs) using a spatially adaptive model selection framework for both one and two dimensional covariates using the functions `runSALSA1D` and `runSALSA2D`.  These functions implement the methods of @Walker2010 and @ScottH2023. In addition, options are available for a variety of different splines and the estimation of robust standard errors if residual correlation is present. 
+The `MRSea` package primarily fits Generalised Additive Models (GAMs) using a spatially adaptive model selection framework for both one and two dimensional covariates using the functions `runSALSA1D` and `runSALSA2D`.  These functions implement the methods of implement the methods of @Walker2010, @ScottH2013 and @ScottH2022. In addition, options are available for a variety of different splines and the estimation of robust standard errors if residual correlation is present. 
 
 A class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object information regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given).
 
 In addition to the functions required to run the models (which we shall go through below) there are also a variety of associated functions for:
-Diagnostics:
+
+  
+**Covariate Checking/Selection:**
+
+ - `summary.gamMRSea` (summary function for models)
+ - `runPartialPlots` (to plot 1D partial smooth relationships), 
+ - `anova.gamMRSea`  (for model selection; (ANOVA) for robust standard errors) and 
+
+**Diagnostics:**
+
   - `runACF` (to assess residual correlation), 
   - `runsTest` (to assess residual correlation)
   - `runDiagnostics` (plots of observed vs fitted and fitted vs scaled Pearsons residuals), 
   - `timeInfluenceCheck`/`runInfluence` (assessing the influence of data on precision and predictions), 
   - `plotCumRes` (plots of cumulative residuals)
-  
-Covariate Checking/Selection:
- - `summary.gamMRSea` (summary function for models)
- - `runPartialPlots` (to plot 1D partial smooth relationships), 
- - `anova.gamMRSea`  (for model selection; (ANOVA) for robust standard errors) and 
 
-Inference:
+**Inference:**
+
  - `do.bootstrap.cress.robust` (percentile based confidence intervals).
  - `getDifferences` (identifying differences between two prediction surfaces)
+
 
 
 
@@ -90,9 +97,9 @@ initialModel <- glm(response ~ 1 + offset(log(area)), family = "quasipoisson",
 
 First up we must create a grid of knots that will be used as candidate knot locations.  The locations are a subset of the data locations and are space-filled to have good coverage across the two-dimensional space.  
 
-Depending on the size of your dataset this could take while and be slightly different every time you run it so I suggest using a seed and perhaps saving the knotgrid as a file.
+Depending on the size of your data set this could take while and be slightly different every time you run it so I suggest using a seed and perhaps saving the knotgrid as a file.
 
-```{r knotgrid, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, fig.cap="Plot showing the candidate knot locations in red and the raw data locations in black.}
+```{r knotgrid, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, fig.cap="Plot showing the candidate knot locations in red and the raw data locations in black."}
 set.seed(123)
 knotgrid<- getKnotgrid(coordData = cbind(wfdata$x.pos, wfdata$y.pos),
                        numKnots = 300,
@@ -208,15 +215,17 @@ salsa2dlist<-list(fitnessMeasure = 'QBIC',
                   interactionTerm="as.factor(impact)")
 ```
 
-There is an example of this in use in the [case study vignette]((https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3).  The limitation to this method is that the knot locations in the different levels (e.g. before and after impact) are in the same locations and only the coefficients are permitted to change. This may not always be a sensible option especially if the spatial range of the different factor levels varies.  In this case, there is an alternative which allows the locations to differ.  An example of this is in the [interactions vignette](https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea_v1.3).
+There is an example of this in use in the [case study vignette](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3).  The limitation to this method is that the knot locations in the different levels (e.g. before and after impact) are in the same locations and only the coefficients are permitted to change. This may not always be a sensible option especially if the spatial range of the different factor levels varies.  In this case, there is an alternative which allows the locations to differ.  An example of this is in the [interactions vignette](https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea_v1.3).
 
 
 # Further information:
 
 For information on:
 
-1. Distance sampling, simple interactions, `gamMRSea` model diagnostics, inference via bootstrapping and using robust standard errors to deal with residual correlation see the [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3).
+1. [Other types of 2D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea_v1.3)
+2. Distance sampling, simple interactions, `gamMRSea` model diagnostics, inference via bootstrapping and using robust standard errors to deal with residual correlation see the [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3).
 2. More complex [interactions](https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea_v1.3).
 3. Using non Euclidean distances to measure the similarity between points. For example, using geodesic distances to represent "as the fish swims" rather than "as the crow flies".  This takes into account distances around exclusion areas such as coastlines or lakes. See [here]((https://lindesaysh.github.io/MRSea/article/Geodesic_2dsmoothing_MRSea_v1.3))
 
 
+# References

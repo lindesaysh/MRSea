@@ -1,26 +1,26 @@
 ---
-title: "Types of 1D Spline"
+title: "Types of Uni and Bivariate Splines"
 author: "Lindesay Scott-Hayward"
-date: "2023-01-19"
+date: "`r Sys.Date()`"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='#>', 
-                      message=FALSE, eval=FALSE,
+                      message=FALSE, eval=TRUE,
                       collapse=TRUE, dev='png')
 ```
 
 This document shows how to fit both one and two dimensional splines.
 
-There are three different types of 1D spline:
+There are three different types of 1D spline available:
 
 - B-spline
 - Cyclic Cubic Spline
 - Natural Cubic Spline
 
 
-and two different 2D radial basis functions
+and two different 2D radial basis functions:
 
 - exponential
 - gaussian
@@ -30,7 +30,7 @@ and two different 2D radial basis functions
 ## Starting point
 
 - Load some data
-- specify the variable of interest. In this case we pick month of the year. 
+- Specify the variable of interest. In this case we pick month of the year. 
 - Fit an initial model.  For simplicity we fit an intercept only model.
 
 ```{r}
@@ -91,7 +91,8 @@ salsa1dOutput<-runSALSA1D(initialModel,
 
 
 ```{r}
-runPartialPlots(salsa1dOutput$bestModel, data=ns.data.re, varlist.in = varlist, showKnots = TRUE)
+runPartialPlots(salsa1dOutput$bestModel, data=ns.data.re, 
+                varlist.in = varlist, showKnots = TRUE)
 ```
 
 
@@ -127,7 +128,8 @@ salsa1dOutput.cc<-runSALSA1D(initialModel,
 
 
 ```{r}
-runPartialPlots(salsa1dOutput.cc$bestModel, data=ns.data.re, varlist.in = varlist, showKnots = TRUE)
+runPartialPlots(salsa1dOutput.cc$bestModel, data=ns.data.re, 
+                varlist.in = varlist, showKnots = TRUE)
 ```
 
 
@@ -162,7 +164,8 @@ salsa1dOutput.ns<-runSALSA1D(initialModel,
 
 
 ```{r}
-runPartialPlots(salsa1dOutput.ns$bestModel, data=ns.data.re, varlist.in = varlist, showKnots = TRUE)
+runPartialPlots(salsa1dOutput.ns$bestModel, data=ns.data.re, 
+                varlist.in = varlist, showKnots = TRUE)
 ```
 
 ## Multiple different splines
@@ -197,7 +200,8 @@ salsa1dOutput.multi<-runSALSA1D(initialModel,
 
 
 ```{r}
-runPartialPlots(salsa1dOutput.multi$bestModel, data=ns.data.re, varlist.in = varlist, showKnots = TRUE)
+runPartialPlots(salsa1dOutput.multi$bestModel, data=ns.data.re, 
+                varlist.in = varlist, showKnots = TRUE)
 ```
 
 # Two dimensional Smoothing
@@ -239,7 +243,7 @@ p2k <-makeDists(preddata[, c("x.pos", "y.pos")], kg, knotmat = FALSE)$dataDist
 
 ## Default: Gaussian Radial Basis
 
-This uses a gausian radial basis implemented using `LRF.g()`.  It is the default and does not need to be specified. 
+This uses a Gaussian radial basis implemented using `LRF.g()`.  It is the default and does not need to be specified. 
 
 ```{r}
 # make parameter set for running salsa2D
@@ -261,12 +265,13 @@ salsa2dOutput<-runSALSA2D(initialModel,
 
 ```
 
-
 ```{r}
-preddata$preds.g <- predict(object = salsa2dOutput$bestModel, newdata = preddata, g2k = p2k)
+preddata$preds.g <- predict(object = salsa2dOutput$bestModel, 
+                            newdata = preddata, g2k = p2k)
 
 ggplot() +
-  geom_tile(data=preddata, aes(x.pos, y.pos, fill=preds.g, height=sqrt(area), width=sqrt(area))) + 
+  geom_tile(data=preddata, aes(x.pos, y.pos, fill=preds.g, 
+                               height=sqrt(area), width=sqrt(area))) + 
   xlab("Easting (km)") + ylab("Northing (km)") + coord_equal() +
   theme_bw() + ggtitle("Gaussian Basis") +
   scale_fill_distiller(palette = "Spectral",name="Animal Counts")
@@ -297,15 +302,18 @@ salsa2dOutput.exp<-runSALSA2D(initialModel,
 ```
 
 ```{r}
-preddata$preds.e <- predict(object = salsa2dOutput.exp$bestModel, newdata = preddata, g2k = p2k)
+preddata$preds.e <- predict(object = salsa2dOutput.exp$bestModel, 
+                            newdata = preddata, g2k = p2k)
 
 ggplot() +
-  geom_tile(data=preddata, aes(x.pos, y.pos, fill=preds.e, height=sqrt(area), width=sqrt(area))) + 
+  geom_tile(data=preddata, aes(x.pos, y.pos, fill=preds.e,
+                               height=sqrt(area), width=sqrt(area))) + 
   xlab("Easting (km)") + ylab("Northing (km)") + coord_equal() +
   theme_bw() + ggtitle("Exponential Basis") +
   scale_fill_distiller(palette = "Spectral",name="Animal Counts")
 
 ```
+
 ## Raw data for reference
 
 ```{r}
