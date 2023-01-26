@@ -1,5 +1,31 @@
 url: http://lindesaysh.github.io/MRSea/
+
 template:
   bootstrap: 5
   bootswatch: cerulean
 
+navbar:
+  components:
+    articles:
+      text: Articles
+      menu:
+      - text: Basic examples
+      - text: One-dimensional smooths
+        href: articles/web/GettingStarted_1Dsmoothing.html
+      - text: Two-dimensional smooths
+        href: articles/web/GettingStarted_2Dsmoothing.html
+      - text: ---  
+      - text: Using Different Splines
+        href: articles/web/FittingDifferentSplines_MRSea_v1.3.Rmd.html
+      - text: Interactions for 2D smooths
+        href: articles/web/Interactions_salsa2d_MRSea_v1.3
+      - text: Publications
+        href: articles/web/publications.html
+      - text: ---
+      - text: Renewables Case Study
+        href: articles/web/RenewablesCaseStudy_MRSea_v1.3.html
+      - text: ---
+      - text: More advanced Usage
+      - text: Geodesic smoothing
+        href: articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html
+     
