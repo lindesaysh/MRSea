@@ -58,7 +58,6 @@
 #' } 
 #' 
 #' This continues till all covariates in \code{varlist} have been through SALSA.}
-#' \item{splineParams}{The updated spline parameter object, with the new (if chosen) knot locations for each covariate in \code{varlist}}
 #' \item{fitstat}{The final fit statistic of \code{bestModel}.  The type of statistic was specified in \code{salsa1dlist}.}
 #' \item{keptvarlist}{The covariates from \code{varlist} that have been retained in the model}
 #' 
@@ -71,27 +70,29 @@
 #' # load prediction data
 #' data(ns.predict.data.re)
 #' 
-#' varlist=c('observationhour', 'DayOfMonth')
+#' varlist=c('DayOfMonth')
 #' 
 #' 
 #' # set initial model without the spline terms in there 
 #' # (so all other non-spline terms)
 #' ns.data.re$response<- ns.data.re$birds
-#' initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)), 
+#' initialModel<- glm(response ~ 1 + offset(log(area)), 
 #'                     family='quasipoisson',data=ns.data.re)
 #' 
 #' #set some input info for SALSA
 #' salsa1dlist<-list(fitnessMeasure = 'QBIC', 
-#'                   minKnots_1d=c(1,1), 
-#'                   maxKnots_1d = c(3, 3), 
-#'                   startKnots_1d = c(1,1), 
-#'                   degree=c(2,2),
-#'                   gaps=c(0,0))
+#'                   minKnots_1d=c(1), 
+#'                   maxKnots_1d = c(3), 
+#'                   startKnots_1d = c(1), 
+#'                   degree=c(2),
+#'                   gaps=c(0))
 #' 
 #' # run SALSA
-#' salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist, 
-#'                factorlist=c('floodebb', 'impact'), 
-#'                ns.predict.data.re, datain=ns.data.re, removal=TRUE)
+#' salsa1dOutput<-runSALSA1D(initialModel, 
+#'                           salsa1dlist, 
+#'                           varlist=varlist,
+#'                           ns.predict.data.re, 
+#'                           datain=ns.data.re)
 #' 
 #' @author Lindesay Scott-Hayward, University of St Andrews; Cameron Walker, Department of Engineering Science, University of Auckland.
 #' 
@@ -444,5 +445,5 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
  if(length(keptvarlist)==0) keptvarlist<-"none"
  
   #save.image("Test.RData")
-  return(list(bestModel=outModel, modelFits1D=modelFits1D, splineParams=splineParams, fitStat=fitStatlist, keptvarlist = keptvarlist))
+  return(list(bestModel=outModel, modelFits1D=modelFits1D, fitStat=fitStatlist, keptvarlist = keptvarlist))
 }
