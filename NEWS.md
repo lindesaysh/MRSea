@@ -2,13 +2,30 @@
 
 
 ## Notes
+* SALSA1D:
 
+  - Update documentation for `runSALSA1D` to include `gap` parameter and `splines` parameter. Default settings are `gap=0` and `splines="bs"`.
+  - Change specification of cyclic smooths (parameter now specified in `salsa1dlist`) and include additional option for a natural cubic spline.
+  
+* SALSA2D:
+
+* Other:
+
+  - Website created
+  - Update to the vignettes included within the package and additional web only tutorials created.  Still under construction but included now is a basic usage vignette and information on the different splines. 
+  - Add option for user specified label to plots in `runDiagnostics` function
+  
 ## Bug Fixes
 
+* SALSA 1D
+
+ - Issue with using Q*IC and the update function for multiple 1D covariates. Problem resolved.
+
+* SALSA 2D
+  - Fix issue in initialise drop step when initial model has NA coefficients
 
 
 # MRSea 1.3.2
-
 
 ## Notes
 * Gap check added to initialise step to ensure gap parameter is obeyed during initialisation
