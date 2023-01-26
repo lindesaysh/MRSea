@@ -29,8 +29,6 @@ runSALSA1D(
 
 \item{predictionData}{The data for which predictions are to be made. Column names must correspond to the data in \code{initialModel}. If predictionData is not specified (\code{NULL}), then the range of the data is used to create the smooth terms.}
 
-\item{varlist_cyclicSplines}{Vector of variable names for covariates to be modelled with cyclic cubic splines.  This must be a subset of \code{varlist}.The default is \code{NULL}}
-
 \item{splineParams}{List object containing information for fitting splines to the covariates in \code{varlist}. If not specified (\code{NULL}) this object is created and returned. See \code{\link{makesplineParams}} for details.}
 
 \item{datain}{Data used to fit the initial Model.}
@@ -58,7 +56,6 @@ The second element is the result of SALSA on the first term in \code{varlist}.  
 } 
 
 This continues till all covariates in \code{varlist} have been through SALSA.}
-\item{splineParams}{The updated spline parameter object, with the new (if chosen) knot locations for each covariate in \code{varlist}}
 \item{fitstat}{The final fit statistic of \code{bestModel}.  The type of statistic was specified in \code{salsa1dlist}.}
 \item{keptvarlist}{The covariates from \code{varlist} that have been retained in the model}
 }
@@ -84,6 +81,8 @@ The object \code{salsa1dlist} contains parameters for the \code{runSALSA1D} func
    
    \code{gaps}. The minimum gap between knots (in unit of measurement of explanatory), usually set to zero.
    
+   \code{splines}. Specify the spline basis for each term.  Choose one of "bs" (B-spline), "cc" (cyclic-cubic) or "ns" (natural spline).
+   
    
 \code{minKnots_1d}, \code{maxKnots_1d}, \code{startKnots_1d} and \code{gaps} are vectors the same length as \code{varlist}.  This enables differing values of these parameters for each covariate.
 
@@ -97,26 +96,29 @@ data(ns.data.re)
 # load prediction data
 data(ns.predict.data.re)
 
-varlist=c('observationhour', 'DayOfMonth')
+varlist=c('DayOfMonth')
 
 
 # set initial model without the spline terms in there 
 # (so all other non-spline terms)
 ns.data.re$response<- ns.data.re$birds
-initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)), 
+initialModel<- glm(response ~ 1 + offset(log(area)), 
                     family='quasipoisson',data=ns.data.re)
 
 #set some input info for SALSA
 salsa1dlist<-list(fitnessMeasure = 'QBIC', 
-                  minKnots_1d=c(2,2), 
-                  maxKnots_1d = c(5, 5), 
-                  startKnots_1d = c(2,2), 
-                  degree=c(2,2))
+                  minKnots_1d=c(1), 
+                  maxKnots_1d = c(3), 
+                  startKnots_1d = c(1), 
+                  degree=c(2),
+                  gaps=c(0))
 
 # run SALSA
-salsa1dOutput<-runSALSA1D(initialModel, salsa1dlist, varlist=varlist, 
-               factorlist=c('floodebb', 'impact'), 
-               ns.predict.data.re, datain=ns.data.re, removal=TRUE)
+salsa1dOutput<-runSALSA1D(initialModel, 
+                          salsa1dlist, 
+                          varlist=varlist,
+                          ns.predict.data.re, 
+                          datain=ns.data.re)
 
 }
 \references{

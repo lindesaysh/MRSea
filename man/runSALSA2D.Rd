@@ -51,6 +51,7 @@ runSALSA2D(
 \item{initialKnPos}{vector of length c denoting the rows of the \code{knotgrid} to use as the initial starting locations of knots.}
 }
 \value{
+This function returns the best model \code{bestModel} and the fitness statistic for this model \code{fitStat}
 The spline paramater object that is returned as part of the model object now contains a list in the first element (previously reserved for the spatial component).  This list contains the objects required for the SALSA2D fitting process:
 
 \item{knotDist}{Matrix of knot to knot distances (k x k).  May be Euclidean or geodesic distances. Must be square and the same dimensions as \code{nrows(na.omit(knotgrid))}.  Created using \code{\link{makeDists}}.}
@@ -101,19 +102,24 @@ distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.
 
 # set initial model without the spatial term
 # (so all other non-spline terms)
-initialModel<- glm(response ~ as.factor(floodebb) + as.factor(impact) + offset(log(area)),
+initialModel<- glm(response ~ 1 + offset(log(area)),
                    family='quasipoisson', data=ns.data.re)
 
 # make parameter set for running salsa2d
 # I have chosen a gap parameter of 1000 (in metres) to speed up the process.
 # Note that this means there cannot be two knots within 1000m of each other.
 
-salsa2dlist<-list(fitnessMeasure = 'QICb', knotgrid = na.omit(knotgrid.ns),
-                  startKnots=6, minKnots=4, maxKnots=20, gap=1000,
-                  interactionTerm="as.factor(impact)")
+salsa2dlist<-list(fitnessMeasure = 'QICb', 
+                  knotgrid = na.omit(knotgrid.ns),
+                  startKnots = 6,
+                  minKnots = 2, 
+                  maxKnots = 20, 
+                  gap=1000)
 
-salsa2dOutput_k6<-runSALSA2D(initialModel, salsa2dlist, d2k=distMats$dataDist,
-                            k2k=distMats$knotDist)
+salsa2dOutput<-runSALSA2D(initialModel, 
+                          salsa2dlist, 
+                          d2k=distMats$dataDist,
+                          k2k=distMats$knotDist)
 
 }
 \references{

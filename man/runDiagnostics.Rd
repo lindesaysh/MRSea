@@ -4,14 +4,16 @@
 \alias{runDiagnostics}
 \title{functions to create observed vs fitted and fitted vs scaled pearsons residual plots}
 \usage{
-runDiagnostics(model, plotting = "b", save = FALSE)
+runDiagnostics(model, plotting = "b", save = FALSE, label = NULL)
 }
 \arguments{
 \item{model}{Fitted model object (glm or gam)}
 
 \item{plotting}{Plotting options (\code{default='b'}). \code{b}: returns both plots, \code{f}: returns observed vs fitted only and  \code{r}: returns scale pearsons residual plot only.}
 
-\item{save}{(\code{default=FALSE}). Logical stating whether plot should be saved into working directory.}
+\item{save}{(\code{default=FALSE}). Logical stating whether plot should be saved into working directory. See \code{label} to change directory.}
+
+\item{label}{Character string indicating an label to be added to the plot when using \code{save = TRUE}. Can also include a pathway to a directory of choice.}
 }
 \value{
 Two plots:
