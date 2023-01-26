@@ -58,5 +58,5 @@ Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
     University of St. Andrews
 URL: http://creem2.st-and.ac.uk/software.aspx,
     http://lindesaysh.github.io/MRSea/
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
