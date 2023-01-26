@@ -3,12 +3,12 @@
 
 # MRSea
 
-The latest stable version is **1.3.1** (15/03/2021)
+The latest version is **1.3.1** (17/03/2021)
 
 The latest development version is **1.3.3** (01/01/2023)
 
-The [MRSea](https://lindesaysh.github.io/MRSea) packages allows the fitting of **spatially adaptive regression
-splines using SALSA**.
+The [MRSea](https://lindesaysh.github.io/MRSea) packages allows the
+fitting of **spatially adaptive regression splines using SALSA**.
 
 It was developed to examine animal survey data for signs of changes in
 animal abundance and distribution following marine renewables
@@ -22,8 +22,12 @@ smoothers using SALSA and CReSS. Euclidean or Geodesic distances can be
 used to underpin the smoothed 2D surface and a choice of Gaussian or
 exponential radial basis functions are available. Non-parametric
 bootstrapping is available to estimate uncertainty. Several model
-assessment tools are also available. Recent updates include the direct
-estimation of robust standard errors, given a panel structure.
+assessment tools are also available. For models with residual
+correlation, direct estimation of robust standard errors, given a panel
+structure, is available.
+
+Recent updates include the re-instatement of natural cubic splines and a
+package website with additional materials.
 
 ## Installation
 
@@ -47,21 +51,11 @@ latest release
 
 ## Documentation
 
-There are two vignettes available with the package:
+There are two “Getting Started” vignettes available with the package:
 
--   Statistical Modelling of bird and cetacean distributions in offshore
-    renewables development areas
-    -   This vignette takes you through a line transect data example
-        with both one and two dimensional smooth terms and a spatial
-        interaction with construction phase.
--   MRSea: 2D Interaction Example
-    -   This vignette shows an alternative way to specify knots in the
-        interaction term.
-    -   It is particularly useful if the survey areas between levels
-        differ.
+- Getting Started with MRSea: One dimensional smoothing
+- Getting Started with MRSea: Two dimensional smoothing
 
-These are available here:
-
--   PDF versions on
-    [Github](https://github.com/lindesaysh/MRSea/tree/master/inst/docs)
--   HTML versions are available from the articles tab here: https://lindesaysh.github.io/MRSea
+These are also on the
+[website](https://lindesaysh.github.io/MRSea/articles) along with a
+number of other tutorials.
