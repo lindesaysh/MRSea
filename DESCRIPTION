@@ -59,4 +59,6 @@ Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
 URL: http://creem2.st-and.ac.uk/software.aspx,
     http://lindesaysh.github.io/MRSea/
 RoxygenNote: 7.2.3
+Encoding: UTF-8
 VignetteBuilder: knitr
+BuildVignettes: true
