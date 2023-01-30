@@ -38,16 +38,16 @@
 <li class="nav-item">
   <a class="nav-link" href="../../reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Basic examples</h6>
-    <a class="dropdown-item" href="../../articles/web/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
-    <a class="dropdown-item" href="../../articles/web/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
+    <a class="dropdown-item" href="../../articles/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
+    <a class="dropdown-item" href="../../articles/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../../articles/web/FittingDifferentSplines_MRSea_v1.3.Rmd.html">Using Different Splines</a>
-    <a class="dropdown-item" href="../../articles/web/Interactions_salsa2d_MRSea_v1.3">Interactions for 2D smooths</a>
-    <a class="dropdown-item" href="../../articles/web/publications.html">Publications</a>
+    <a class="dropdown-item" href="../../articles/web/FittingDifferentSplines_MRSea_v1.3.html">Using Different Splines</a>
+    <a class="dropdown-item" href="../../articles/web/Interactions_salsa2d_MRSea_v1.3.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../../articles/web/Publications.html">Publications</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../../articles/web/RenewablesCaseStudy_MRSea_v1.3.html">Renewables Case Study</a>
     <div class="dropdown-divider"></div>
@@ -138,12 +138,12 @@ chosen the same number of candidate knot locations for each.</li>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">myknots</span><span class="op">)</span></span>
 <span><span class="co">#&gt;       X1      X2 impact</span></span>
-<span><span class="co">#&gt; 1 706.25 6044.75      0</span></span>
-<span><span class="co">#&gt; 2 698.25 6045.25      0</span></span>
-<span><span class="co">#&gt; 3 670.25 6059.25      0</span></span>
-<span><span class="co">#&gt; 4 704.25 6049.25      0</span></span>
-<span><span class="co">#&gt; 5 696.25 6056.25      0</span></span>
-<span><span class="co">#&gt; 6 666.25 6045.75      0</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 698.25 6051.75      0</span></span>
+<span><span class="co">#&gt; 2 670.25 6040.75      0</span></span>
+<span><span class="co">#&gt; 3 704.25 6043.75      0</span></span>
+<span><span class="co">#&gt; 4 700.25 6035.75      0</span></span>
+<span><span class="co">#&gt; 5 672.25 6045.75      0</span></span>
+<span><span class="co">#&gt; 6 696.25 6056.25      0</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -243,8 +243,8 @@ the document.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">chosenknots</span>, <span class="va">impact</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   impact n</span></span>
-<span><span class="co">#&gt; 1      0 8</span></span>
-<span><span class="co">#&gt; 2      1 3</span></span>
+<span><span class="co">#&gt; 1      0 6</span></span>
+<span><span class="co">#&gt; 2      1 5</span></span>
 <span><span class="co">#startingknots &lt;- myknots[startknotlocs,]</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">imp.labs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Pre-Construction"</span>, <span class="st">"Post-Construction"</span><span class="op">)</span></span>
@@ -265,11 +265,11 @@ object.</li>
 </ol>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mymodel</span><span class="op">$</span><span class="va">splineParams</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">knotPos</span></span>
-<span><span class="co">#&gt;  [1]  35  30  93 191  80 168  47 225 140  99  25</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] 140  85  94 194  74 118 219 128 297 225 218</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/cv.gamMRSea.html">cv.gamMRSea</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">mymodel</span>, K<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">$</span><span class="va">delta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 5.979011</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 5.934392</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="making-predictions">Making predictions<a class="anchor" aria-label="anchor" href="#making-predictions"></a>
@@ -345,7 +345,8 @@ each level of the interaction.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="../../reference/getKnotgrid.html">getKnotgrid</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">myknots</span>, <span class="va">impact</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, </span>
 <span>                                    numKnots <span class="op">=</span> <span class="fl">5</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="fu"><a href="../../reference/getKnotgrid.html">getKnotgrid</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">myknots</span>, <span class="va">impact</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>,</span>
-<span>                                    numKnots <span class="op">=</span> <span class="fl">5</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">150</span><span class="op">)</span></span></code></pre></div>
+<span>                                    numKnots <span class="op">=</span> <span class="fl">5</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fl">150</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "Greater than 1 optimal design; keeping first one......"</span></span></code></pre></div>
 <p>The set up of the model is a little different and I have included
 <code>##</code> below to indicate which lines have been
 changed/added.</p>
@@ -374,7 +375,7 @@ locations are red diamonds</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html" class="external-link">count</a></span><span class="op">(</span><span class="va">chosenknots_sk</span>, <span class="va">impact</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   impact n</span></span>
 <span><span class="co">#&gt; 1      0 6</span></span>
-<span><span class="co">#&gt; 2      1 5</span></span></code></pre></div>
+<span><span class="co">#&gt; 2      1 6</span></span></code></pre></div>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># quick look to see what was chosen</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">myknots</span><span class="op">)</span> <span class="op">+</span></span>
@@ -395,7 +396,7 @@ initial knot locations and red diamonds are final knot locations.
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../../reference/cv.gamMRSea.html">cv.gamMRSea</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">mymodel_sk</span>, K<span class="op">=</span><span class="fl">10</span><span class="op">)</span><span class="op">$</span><span class="va">delta</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] 5.937787</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 5.939222</span></span></code></pre></div>
 <p>This model is better than the earlier one which used a space-filled
 selection of all knots for starting locations. However, bear in mind
 that both models are using a simplistic number of start knots and could

@@ -1,0 +1,198 @@
+
+devtools::install_local("C:\\Users\\lass\\Documents\\GitHub\\MRSea")
+
+library(MRSea)
+library(dplyr)
+library(tidyr)
+
+load("C:/Users/lass/University of St Andrews/DMMethodsComparison - Documents/analyses/Alba/zc14.RData")
+
+zc14$response <- zc14$zcCount
+zc14$datetime <- as.POSIXct(zc14$Start, format="%d-%b-%Y %H:%M:%S")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Create smooth in non-zero portion
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# filter for when maxRLpp not = 0
+testdat <- filter(zc14, maxRLpp != 0)
+
+varlist = "maxRLpp"
+initialModel <- glm(response ~  1, data = testdat, family=quasipoisson)
+
+salsa1dlist <- list(fitnessMeasure = "QBIC",
+                    minKnots_1d = rep(1, length(varlist)),
+                    maxKnots_1d = rep(2, length(varlist)),
+                    startKnots_1d = rep(1, length(varlist)),
+                    degree = rep(2, length(varlist)),
+                    gaps = rep(0, length(varlist)),
+                    splines = c("ns")) ##
+
+maxRLpp_nonzero_ns <- runSALSA1D(initialModel, salsa1dlist,
+                                 varlist = varlist,
+                                 predictionData = NULL,
+                                 datain = testdat,
+                                 panelid = testdat$blockid,
+                                 removal=FALSE)
+
+summary(maxRLpp_nonzero_ns$bestModel)
+runPartialPlots(maxRLpp_nonzero_ns$bestModel, varlist.in = varlist, showKnots = TRUE, data=testdat)
+
+# -----------------------------------
+# fit spline to larger data. 
+# use the ns spline as better behaved 
+testmod <- maxRLpp_nonzero_ns$bestModel
+summary(testmod)
+# 
+modmat.maxRLLp <- model.matrix(testmod)[,(2:length(testmod$coefficients))]
+mergedata <- data.frame(datetime=testdat$datetime, modmat.maxRLLp)
+names(mergedata) <- c("datetime", "maxRLpp2.1", "maxRLpp2.2")
+# add intercept column for estimating mean at maxRLpp=0
+# this is zero where smooth applies and 1 otherwise
+mergedata$maxRLpp2.0 <- 0
+# create new variables in dataset
+zc14_2 <- left_join(zc14, mergedata) %>%
+  replace_na(list(maxRLpp2.0 = 1, maxRLpp2.1=0, maxRLpp2.2=0))
+
+# -----------------------------------
+# -----------------------------------
+# Fitting non-zero smooth to full data (with smooth intercept)
+initialModel <- glm(response ~  maxRLpp2.0 + maxRLpp2.1 + maxRLpp2.2, data = zc14_2, family=quasipoisson)
+
+varlist = "Julian"
+
+salsa1dlist <- list(fitnessMeasure = "QBIC",
+                    minKnots_1d = rep(1, length(varlist)),
+                    maxKnots_1d = rep(3, length(varlist)),
+                    startKnots_1d = rep(1, length(varlist)),
+                    degree = rep(2, length(varlist)),
+                    gaps = rep(0, length(varlist)),
+                    splines = c("bs")) ##
+
+multifit <- runSALSA1D(initialModel, salsa1dlist,
+                                 varlist = varlist,
+                                 predictionData = NULL,
+                                 datain = zc14_2,
+                                 panelid = zc14_2$blockid,
+                                 removal=FALSE)
+
+summary(multifit$bestModel)
+runPartialPlots(multifit$bestModel, varlist.in = varlist, showKnots = TRUE, data=zc14_2)
+
+runPartialPlots(multifit$bestModel, varlist.in = varlist, showKnots = TRUE, data=zc14_2, includeB0 = TRUE)
+# -----------------------------------
+# create partial plot
+newdata <- data.frame(maxRLpp = c(100:160))
+nsbasis <- cbind(0, ns(newdata$maxRLpp, 
+              knots = testmod$splineParams[[2]]$knots,  
+              Boundary.knots = testmod$splineParams[[2]]$bd))
+newdata <- data.frame(newdata, nsbasis)
+names(newdata)[2:4] = c("maxRLpp2.0", "maxRLpp2.1", "maxRLpp2.2")
+# add row for maxRLpp = 0
+newdata <- rbind(c(0,1,0,0), newdata)
+nsbasis<-rbind(c(1,0,0), nsbasis)
+# # make predictions
+# newdata$preds <- predict(object = zc_0, newdata = newdata, type="response")
+
+# sample coefficients from robust cov matrix
+rcoefs <- NULL
+rcoefs <- rmvnorm(1000, coef(multifit$bestModel), 
+                  summary(multifit$bestModel)$cov.robust)
+
+
+quant.func <- function(x) {
+  quantile(x, probs = c(0.025, 0.975))
+}
+
+# -----------------------------------
+# partial fit (use only smooth coefficients)
+rpreds <- nsbasis %*% t(rcoefs[, 2:4])
+partialfit <- nsbasis %*% coef(multifit$bestModel)[2:4]
+cis <- t(apply(rpreds, 1, quant.func))
+# convert to response scale
+partialfit <- multifit$bestModel$family$linkinv(partialfit)
+cis <- multifit$bestModel$family$linkinv(cis)
+
+y.lab = "Partial Fit (response)"
+plot(newdata$maxRLpp, partialfit, xlab = "maxRLLpp", ylab = y.lab, 
+     ylim = range(c(cis, partialfit)), cex.lab = 1.3, 
+     cex.axis = 1.3, col = "grey", cex = 0.5)
+lines(newdata$maxRLpp[-1], partialfit[-1], lwd = 2)
+lines(newdata$maxRLpp[-1], cis[-1, 1], col = "darkred", lty = 4)
+lines(newdata$maxRLpp[-1], cis[-1, 2], col = "darkred", lty = 4)
+segments(x0 = newdata$maxRLpp[1], x1 = newdata$maxRLpp[1], y0 = cis[1, 1], y1 = cis[1, 2], col = "darkred")
+
+# -----------------------------------
+# -----------------------------------
+# partial fit (smooth coefficients and model intercept)
+nsbasis<-cbind(1, nsbasis)
+rpreds <- nsbasis %*% t(rcoefs[, 1:4])
+partialfit <- nsbasis %*% coef(multifit$bestModel)[1:4]
+cis <- t(apply(rpreds, 1, quant.func))
+# convert to response scale
+partialfit <- multifit$bestModel$family$linkinv(partialfit)
+cis <- multifit$bestModel$family$linkinv(cis)
+
+y.lab = "Partial Fit (response)"
+plot(newdata$maxRLpp, partialfit, xlab = "maxRLLpp", ylab = y.lab, 
+     ylim = range(c(cis, partialfit)), cex.lab = 1.3, 
+     cex.axis = 1.3, col = "grey", cex = 0.5)
+lines(newdata$maxRLpp[-1], partialfit[-1], lwd = 2)
+lines(newdata$maxRLpp[-1], cis[-1, 1], col = "darkred", lty = 4)
+lines(newdata$maxRLpp[-1], cis[-1, 2], col = "darkred", lty = 4)
+segments(x0 = newdata$maxRLpp[1], x1 = newdata$maxRLpp[1], y0 = cis[1, 1], y1 = cis[1, 2], col = "darkred")
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# -----------------------------------
+# -----------------------------------
+# Fitting non-zero smooth to full data (with smooth intercept)
+initialModel <- glm(response ~  maxRLpp2.0 + maxRLpp2.1 + maxRLpp2.2, data = zc14_2, family=quasipoisson)
+
+varlist = c("timeofd", "Julian", "sProp2",  "sLag", "sDur2") 
+salsa1dlist <- list(fitnessMeasure = "cv.gamMRSea",
+                    minKnots_1d = rep(1, length(varlist)),
+                    maxKnots_1d = c(3,3,1,1,1),
+                    startKnots_1d = rep(1, length(varlist)),
+                    degree = rep(2, length(varlist)),
+                    gaps = rep(0, length(varlist)),
+                    splines = c("cc","cc","bs", "bs", "bs"))
+
+
+multifit <- runSALSA1D(initialModel, salsa1dlist,
+                       varlist = varlist,
+                       predictionData = NULL,
+                       datain = zc14_2,
+                       panelid = zc14_2$blockid,
+                       removal=TRUE)
+
+summary(multifit$bestModel)
+runPartialPlots(multifit$bestModel, varlist.in = varlist, showKnots = TRUE, data=zc14_2)
+
+runPartialPlots(multifit$bestModel, varlist.in = varlist, showKnots = TRUE, data=zc14_2, includeB0 = TRUE)
+# -----------------------------------
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# this was me playing during our meeting the other day
+require(mgcv)
+
+# words from the ?smooth.construct helpfile:
+# Broadly speaking the default penalized thin plate regression splines tend to give the best MSE performance, but they are slower to set up than the other bases. The knot based penalized cubic regression splines (with derivative based penalties) usually come next in MSE performance, with the P-splines doing just a little worse. However the P-splines are useful in non-standard situations.
+
+require(mgcv)
+bob <- gam(response ~ s(maxRLpp, bs = "bs"), data=zc14, family="quasipoisson")
+plot(bob)
+bob2 <- gam(response ~ s(maxRLpp, by=as.factor(sPres), bs="bs"), data=zc14, family="quasipoisson")
+plot(bob2, scale = 0) # crazy!
+
+bob3 <- gam(response ~ s(maxRLpp, as.factor(sPres), bs="fs", k=2, m=2), data=zc14, family="quasipoisson")
+plot(bob3) # maybe ok?  no uncertainty
+
+
+
+
+bob <- gam(response ~ s(sDur, bs = "bs"), data=zc14, family="quasipoisson")
+plot(bob)
+bob2 <- gam(response ~ s(sDur, bs = "cr"), data=zc14, family="quasipoisson")
+plot(bob2)

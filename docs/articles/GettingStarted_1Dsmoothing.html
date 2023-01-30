@@ -38,16 +38,16 @@
 <li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Basic examples</h6>
-    <a class="dropdown-item" href="../articles/web/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
-    <a class="dropdown-item" href="../articles/web/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
+    <a class="dropdown-item" href="../articles/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
+    <a class="dropdown-item" href="../articles/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea_v1.3.Rmd.html">Using Different Splines</a>
-    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea_v1.3">Interactions for 2D smooths</a>
-    <a class="dropdown-item" href="../articles/web/publications.html">Publications</a>
+    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea_v1.3.html">Using Different Splines</a>
+    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea_v1.3.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/Publications.html">Publications</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea_v1.3.html">Renewables Case Study</a>
     <div class="dropdown-divider"></div>
@@ -286,18 +286,18 @@ model (same as input if no model selection)</li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Deviance Residuals: </span></span>
 <span><span class="co">#&gt;     Min       1Q   Median       3Q      Max  </span></span>
-<span><span class="co">#&gt; -2.3781  -1.5364  -0.3489  -0.1543  13.4906  </span></span>
+<span><span class="co">#&gt; -2.3773  -1.5379  -0.3487  -0.1525  13.4926  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
 <span><span class="co">#&gt;             Estimate Std. Error Robust S.E. t value Pr(&gt;|t|)   </span></span>
-<span><span class="co">#&gt; (Intercept)  -0.6628     2.2101      2.2101  -0.300  0.76431   </span></span>
-<span><span class="co">#&gt; s(depth)1    -5.3659     2.6965      2.6965  -1.990  0.04683 * </span></span>
-<span><span class="co">#&gt; s(depth)2     5.9957     2.1440      2.1440   2.796  0.00525 **</span></span>
-<span><span class="co">#&gt; s(depth)3    -0.4373     2.3330      2.3330  -0.187  0.85136   </span></span>
+<span><span class="co">#&gt; (Intercept)  -0.6230     2.2029      2.2029  -0.283  0.77737   </span></span>
+<span><span class="co">#&gt; s(depth)1    -5.4618     2.6918      2.6918  -2.029  0.04268 * </span></span>
+<span><span class="co">#&gt; s(depth)2     5.9755     2.1380      2.1380   2.795  0.00528 **</span></span>
+<span><span class="co">#&gt; s(depth)3    -0.4714     2.3253      2.3253  -0.203  0.83939   </span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Dispersion parameter for quasipoisson family taken to be 6.282296)</span></span>
+<span><span class="co">#&gt; (Dispersion parameter for quasipoisson family taken to be 6.292066)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Null deviance: 4987.6  on 1153  degrees of freedom</span></span>
 <span><span class="co">#&gt; Residual deviance: 3482.4  on 1150  degrees of freedom</span></span>
@@ -312,7 +312,7 @@ case, one knot has been selected.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># How many knots were chosen for depth?</span></span>
 <span><span class="va">salsa1dOutput</span><span class="op">$</span><span class="va">bestModel</span><span class="op">$</span><span class="va">splineParams</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">knots</span></span>
-<span><span class="co">#&gt; [1] -13.462</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -13.519</span></span></code></pre></div>
 <p>Assessing model fit using a partial plot. These can be on the link
 scale:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
