@@ -1,3 +1,25 @@
+# MRSea 1.3.3.001
+
+
+## Notes
+* SALSA1D:
+  
+* SALSA2D:
+
+* Other:
+
+  
+## Bug Fixes
+
+* SALSA 1D:
+
+* SALSA 2D:
+
+* Other:
+
+  - convert data to data frame (not tibble) in `create.bootstrap.data` and `plotCumRes` functions
+
+
 # MRSea 1.3.3
 
 
