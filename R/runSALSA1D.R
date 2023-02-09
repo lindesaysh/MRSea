@@ -125,6 +125,10 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   family<-initialModel$family$family
   link<-initialModel$family$link
   data<-initialModel$data
+  if(is_tibble(data)){
+    data <- data.frame(data)
+    cat("\n model data converted from tibble to data frame\n")
+  }
   if(sum(abs(dim(data)-dim(datain)))>0) stop('Data dimensions do not match the data in initialModel')
   
   attributes(initialModel$formula)$.Environment<-environment()
