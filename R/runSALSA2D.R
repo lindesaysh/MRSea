@@ -111,6 +111,11 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     data<-model$model
   }
 
+  if(is_tibble(data)){
+    data <- data.frame(data)
+    cat("\n Model data converted from tibble to data frame\n")
+  }
+  
   attributes(model$formula)$.Environment<-environment()
 
   if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(model, gamMRSea=TRUE)}
