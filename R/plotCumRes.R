@@ -36,15 +36,15 @@ plotCumRes<- function(model, varlist, label='', save=FALSE){
   namesOfx<- c(varlist, c("Predicted", "Index"))
   
   if(class(model)[1]=='geeglm' | class(model)[1]=='glm'){
-    dat<- model$data
+    dat<- data.frame(model$data)
   }
   
   if(class(model)[1]=='gam'){
-    dat<-model$model 
+    dat<-data.frame(model$model)
   }
   
   if(class(model)[1]=='gamMRSea'){
-    dat<-model$data 
+    dat<-data.frame(model$data)
   }
   
   # find which data columns refer to the used variables
