@@ -1,0 +1,36 @@
+---
+title: "Publications"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# R package
+
+### MRSea package: 
+
+- Scott-Hayward L, Walker C, Mackenzie M (2021). “Vignette for the MRSea Package v1.3: Statistical Modelling of bird and cetacean distributions in offshore renewable development areas.” University of St. Andrews. Centre for Research into Ecological and Environmental Modelling. 
+
+### Original Contract/Package documentation (2013)
+
+- Scott-Hayward L, Oedekoven C, Mackenzie M, Walker C, Rexstad E (2013). “User Guide for the MRSea Package: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas.” University of St. Andrews. Contract with Marine Scotland: SB9 (CR/2012/05)
+
+- Mackenzie, M.L, Scott-Hayward, L.A.S., Oedekoven, C.S., Skov, H., Humphreys, E., and Rexstad E. (2013). Statistical Modelling of Seabird and Cetacean data: Guidance Document. University of St. Andrews contract for Marine Scotland; SB9 (CR/2012/05). [Marine Scotland Science Report 04/14](https://tethys.pnnl.gov/sites/default/files/publications/Mackenzie-et-al-2014.pdf)
+
+# Methods
+
+### 2D CReSS basis:
+
+- Scott-Hayward LAS, Mackenzie ML, Walker CG, Donovan C, Ashe E (2014). “Complex Region Spatial Smoother CReSS.” Journal of Computational and Graphical Statistics, 23(2), 340-360. [Online here](https://www.jstor.org/stable/43305732#metadata_info_tab_contents)
+
+- Scott-Hayward, LAS, Mackenzie, ML, Ashe, E and R. Williams. Modelling Killer Whale feeding behaviour using a spatially adaptive Complex Region Spatial Smoother (CReSS) and Generalised Estimating Equations (GEEs). JABES (Accepted).  [DOI: 10.1007/s13253-015-0209-2](https://link.springer.com/article/10.1007/s13253-015-0209-2)
+
+### SALSA 1D Algorithm:
+
+- Walker CG, Mackenzie ML, Donovan C, O'Sullivan M (2010). “SALSA - A Spatially Adaptive Local Smoothing Algorithm.” Journal of Statistical Computation and Simulation, 81(2), 179-191. [Online here](https://www.tandfonline.com/doi/full/10.1080/00949650903229041)
+
+
+### 2D SALSA Algorithm: 
+
+- Scott-Hayward, L.A.S., Mackenzie, M.L., Walker, C.G., Shatumbu, G., Kilian, J.W., du Preez, P., 2022. Automated surface feature selection using SALSA2D; An illustration using elephant mortality data in Etosha National Park. [https://doi.org/10.48550/arXiv.2202.07977](https://arxiv.org/abs/2202.07977)
+
+- Scott-Hayward, LAS. (2013) PhD Thesis: Novel Applications for Species Distribution Mapping Including Spatial Models in Complex Regions. Chapter 5: Spatially Adaptive Models for Complex Topographies. [Online here](https://core.ac.uk/download/pdf/19767108.pdf)

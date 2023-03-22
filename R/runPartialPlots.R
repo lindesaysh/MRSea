@@ -86,7 +86,7 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
             cis <- model$family$linkinv(cis)
           }
           if(partial.resid==T){
-            par.res <- residuals(model, type='partial')
+            par.res <- residuals(object = model, type='partial')
             par.res <- par.res[, c(grep(factorlist.in[i], colnames(par.res)))]
             if(type=='response'){
               par.res<-model$family$linkinv(par.res)
@@ -112,7 +112,7 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
             cis <- model$family$linkinv(cis)
           }
           if(partial.resid==T){
-            par.res <- residuals(model, type='partial')
+            par.res <- residuals(object = model, type='partial')
             par.res<- par.res[, c(grep(factorlist.in[i], colnames(par.res)))]
             if(type=='response'){
               par.res<-model$family$linkinv(par.res)
@@ -190,7 +190,7 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
           cis <- model$family$linkinv(cis)
         }
         if(partial.resid==T){
-          par.res <- residuals(model, type='partial')
+          par.res <- residuals(object = model, type='partial')
           par.res <- par.res[, c(grep(varlist.in[i], colnames(par.res)))]
           if(type=='response'){
             par.res<-model$family$linkinv(par.res)

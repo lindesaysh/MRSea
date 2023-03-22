@@ -22,7 +22,8 @@ return.reg.spline.fit(
   spl,
   interactionTerm = interactionTerm,
   suppress.printout = FALSE,
-  cv.opts
+  cv.opts,
+  splineParams
 )
 }
 \arguments{

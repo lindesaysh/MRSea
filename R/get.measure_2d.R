@@ -153,7 +153,7 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     warning(paste("Change Fit due to fitStat=NA: ", fitStat))
   }
   if(getDispersion(out.lm)>initDisp){
-    fitStat<- tempMeasure + 10000000
+    fitStat<- fitStat + 10000000
     #cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
   }
   #if(length(which(is.na(out.lm$coefficients)))>0){

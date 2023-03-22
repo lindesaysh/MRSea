@@ -3,7 +3,7 @@
 
 # MRSea - Point Process
 
-The latest version is **0.1**.
+The latest version is **0.2**.
 
 Branch updated from master Feb 2022.  
 

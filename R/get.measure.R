@@ -27,14 +27,17 @@
     fitStat <- BIC(out.lm)}
   
   if(fitnessMeasure=="QAIC"){ 
+    # all models converted to non quasi for fitting so no need for quasi part. 
       if(out.lm$family[1]=='quasipoisson'){
-        fitStat <- QAIC(update(out.lm, round(response) ~ ., family=poisson), chat = initDisp)
-      }else{
+        fitStat <- QAIC(update(out.lm,  round(response) ~ ., family=poisson), chat = initDisp)
+      }
+      if(out.lm$family[1]=='poisson'){
         fitStat <- QAIC(out.lm, chat = initDisp)
       }
       if(out.lm$family[1]=='quasibinomial'){
-        fitStat <- QAIC(update(out.lm,.~. ,family=binomial), chat = initDisp)
-      }else{
+        fitStat <- QAIC(update(out.lm,  round(response) ~ ., family=binomial), chat = initDisp)
+      }
+      if(out.lm$family[1]=='binomial'){
         fitStat <- QAIC(out.lm, chat = initDisp)
       }
   }
@@ -42,14 +45,17 @@
   if(fitnessMeasure=="QBIC"){ 
     if(out.lm$family[1]=='quasipoisson'){
         fitStat <- QAIC(update(out.lm,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(out.lm$data)))
-      }else{
-        fitStat <- QAIC(out.lm, chat = initDisp, k=log(nrow(out.lm$data)))
-      }
+    }
+        if(out.lm$family[1]=='poisson'){
+          fitStat <- QAIC(out.lm, chat = initDisp, k=log(nrow(out.lm$data)))
+        }
       if(out.lm$family[1]=='quasibinomial'){
-        fitStat <- QAIC(update(out.lm, .~.,family=binomial), chat = initDisp,k=log(nrow(out.lm$data)))
-      }else{
-        fitStat <- QAIC(out.lm, chat = initDisp, k=log(nrow(out.lm$data)))
+        fitStat <- QAIC(update(out.lm, .~.,family=binomial), chat = initDisp, k=log(nrow(out.lm$data)))
       }
+        if(out.lm$family[1]=='binomial'){
+          fitStat <- QAIC(out.lm, chat = initDisp, k=log(nrow(out.lm$data)))
+        }
+
   }
   
   if (fitnessMeasure == "newCrit") {
@@ -60,12 +66,15 @@
   if(fitnessMeasure=="QAICc"){
        if(out.lm$family[1]=='quasipoisson'){
         fitStat <- QAICc(update(out.lm,  round(response) ~ ., family=poisson), chat = initDisp)
-      }else{
-        fitStat <- QAICc(out.lm, chat = initDisp)
+
+       }
+      if(out.lm$family[1]=='poisson'){
+         fitStat <- QAICc(out.lm, chat = initDisp)
       }
       if(out.lm$family[1]=='quasibinomial'){
         fitStat <- QAICc(update(out.lm, .~.,family=binomial), chat = initDisp)
-      }else{
+      }
+      if(out.lm$family[1]=='binomial'){
         fitStat <- QAICc(out.lm, chat = initDisp)
       }
   }

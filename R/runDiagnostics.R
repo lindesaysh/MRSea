@@ -3,7 +3,8 @@
 #' 
 #' @param model Fitted model object (glm or gam)
 #' @param plotting Plotting options (\code{default='b'}). \code{b}: returns both plots, \code{f}: returns observed vs fitted only and  \code{r}: returns scale pearsons residual plot only.
-#' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
+#' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory. See \code{label} to change directory.
+#' @param label Character string indicating an label to be added to the plot when using \code{save = TRUE}. Can also include a pathway to a directory of choice.
 #' 
 #' @return
 #' Two plots:
@@ -22,7 +23,7 @@
 #' @export
 #'
 
-runDiagnostics<-function(model, plotting='b', save=FALSE){
+runDiagnostics<-function(model, plotting='b', save=FALSE, label = NULL){
   print("Assessing predictive power")
   
   response<-model$y
@@ -58,7 +59,7 @@ runDiagnostics<-function(model, plotting='b', save=FALSE){
     
     a<-a + theme_bw() + theme(panel.grid.major=element_blank(), axis.text.x=element_text(size=15), axis.text.y=element_text(size=15), axis.title.x=element_text(size=15), axis.title.y=element_text(size=15), plot.title=element_text(size=15))
     
-    if(save==T){ggsave("FitPlots_fitted.png", a, height=6, width=6)}else{
+    if(save==T){ggsave(paste0(label, "FitPlots_fitted.png"), a, height=6, width=8)}else{
       if(plotting=='b'){devAskNewPage(ask=TRUE)}
       plot(a)}
   }
@@ -69,7 +70,7 @@ runDiagnostics<-function(model, plotting='b', save=FALSE){
     
     b<- b + theme_bw() + theme(panel.grid.major=element_blank(), axis.text.x=element_text(size=15), axis.text.y=element_text(size=15), axis.title.x=element_text(size=15), axis.title.y=element_text(size=15))
     
-    if(save==T){ggsave("FitPlots_resids.png", b, height=6, width=6)}else{plot(b)}
+    if(save==T){ggsave(paste0(label, "FitPlots_resids.png"), b, height=6, width=8)}else{plot(b)}
     
   }
   
