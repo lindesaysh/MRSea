@@ -4,7 +4,13 @@
 \alias{makesplineParams}
 \title{Constructing an object of spline parameters}
 \usage{
-makesplineParams(data, varlist, predictionData = NULL, degree = NULL)
+makesplineParams(
+  data,
+  varlist,
+  predictionData = NULL,
+  degree = NULL,
+  spl_all = NULL
+)
 }
 \arguments{
 \item{data}{Data frame containing columns of covariates listed in \code{varlist}.  Column names must match with names in \code{varlist}}

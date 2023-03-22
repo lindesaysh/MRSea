@@ -3,7 +3,7 @@
 
 # MRSea - Point Process
 
-The latest version is **0.1**.
+The latest version is **0.2**.
 
 <!-- The MRSea packages allows the fitting of **spatially adaptive regression splines using SALSA**. -->
 <!-- It was developed to examine animal survey data for signs of changes in animal abundance and distribution following marine renewables development. However the methods are suitable for a wide range of applications. -->

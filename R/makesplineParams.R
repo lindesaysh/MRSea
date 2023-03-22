@@ -34,7 +34,7 @@
 #' 
 #' @export
 #' 
-makesplineParams<-function(data, varlist, predictionData=NULL, degree=NULL){
+makesplineParams<-function(data, varlist, predictionData=NULL, degree=NULL, spl_all = NULL){
   
   if(is.null(degree)){degree<-c(rep(2, length(varlist)))}
   if(is.null(predictionData)){predictionData<-data}
@@ -57,6 +57,7 @@ makesplineParams<-function(data, varlist, predictionData=NULL, degree=NULL){
     splineParams[[i]]$knots<-median_alt(splineParams[[i]]$explanatory)
     splineParams[[i]]$bd<- eval(parse(text=paste("c(min(data$",varlist[(i-1)], ",predictionData$", varlist[(i-1)], "),max(data$", varlist[(i-1)], ", predictionData$", varlist[(i-1)], "))", sep="")))
     splineParams[[i]]$degree <- degree[(i-1)]
+    splineParams[[i]]$spl <- spl_all[(i-1)]
   }
   
   return(splineParams)
