@@ -186,11 +186,11 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }
   
   if(fitnessMeasure=="AICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm)
+    fitStat<-tweedie::AICtweedie(baseModel)
   }
   
   if(fitnessMeasure=="BICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm, k=log(nrow(out.lm$data)))
+    fitStat<-tweedie::AICtweedie(baseModel, k=log(nrow(baseModel$data)))
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")

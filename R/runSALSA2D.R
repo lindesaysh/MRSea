@@ -111,7 +111,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     data<-model$model
   }
 
-  if(is_tibble(data)){
+  if(!is.data.frame(data)){
     data <- data.frame(data)
     cat("\n Model data converted from tibble to data frame\n")
   }
