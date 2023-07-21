@@ -6,7 +6,7 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   if (isS4(out.lm)) {
     attributes(out.lm@misc$formula)$.Environment<-environment()
   } else {
-    attributes(out.lm$formula)$.Environment<-environment()
+    attributes(out.lm$formula)$.Environment<-environment()  
   }
   
   tempMeasure <- measures[1]
@@ -135,6 +135,14 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     } else {
       fitStat<-AICh(out.lm)
     }
+  }
+  
+  if(fitnessMeasure=="AICtweedie"){
+    fitStat<-tweedie::AICtweedie(out.lm)
+  }
+  
+  if(fitnessMeasure=="BICtweedie"){
+    fitStat<-tweedie::AICtweedie(out.lm, k=log(nrow(out.lm$data)))
   }
   
   # cat("Evaluating new fit: ", fitStat, "\n")

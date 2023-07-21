@@ -185,6 +185,14 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
   }
   
+  if(fitnessMeasure=="AICtweedie"){
+    fitStat<-tweedie::AICtweedie(out.lm)
+  }
+  
+  if(fitnessMeasure=="BICtweedie"){
+    fitStat<-tweedie::AICtweedie(out.lm, k=log(nrow(out.lm$data)))
+  }
+  
   #cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
     # fitStat <- fitStat + 10000000

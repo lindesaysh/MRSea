@@ -4,8 +4,11 @@
     attributes(out.lm@misc$formula)$.Environment<-environment()
     data <- out.lm@data
   } else {
-    attributes(out.lm$formula)$.Environment<-environment()
-    data<-out.lm$data
+    if(grep("tweedie", fitnessMeasure) != 1){
+      attributes(out.lm$formula)$.Environment<-environment()
+      data<-out.lm$data
+    }
+    
   }
 
   if(length(fitnessMeasure)>1){
@@ -143,6 +146,15 @@
       set.seed(cv.opts$cv.gamMRSea.seed)
       fitStat<-cv.gamMRSea(data,out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
     #}
+  }
+  
+  
+  if(fitnessMeasure=="AICtweedie"){
+    fitStat<-tweedie::AICtweedie(out.lm)
+  }
+  
+  if(fitnessMeasure=="BICtweedie"){
+    fitStat<-tweedie::AICtweedie(out.lm, k=log(nrow(out.lm$data)))
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")
