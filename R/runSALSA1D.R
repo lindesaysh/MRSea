@@ -125,7 +125,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   family<-initialModel$family$family
   link<-initialModel$family$link
   data<-initialModel$data
-  if(is_tibble(data)){
+  if(!is.data.frame(data)){
     data <- data.frame(data)
     cat("\n model data converted from tibble to data frame\n")
   }
@@ -141,11 +141,11 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(is.null(data$failures)) stop('data does not contain failures column')
   }
   
-  # if(family == "tweedie"){
-  #   if( == 0) stop("power parameter set to 0, please use Gaussian distribution instead")
-  #   if( == 1) stop("power parameter set to 1, please use Quasi-Poisson distribution instead")
-  #   if( == 2) stop("power parameter set to 2, please use Gamma distribution instead")
-  # }
+   if(family == "tweedie"){
+     if(get("p", environment(initialModel$family$variance)) == 0) stop("power parameter set to 0, please use Gaussian distribution instead")
+     if(get("p", environment(initialModel$family$variance)) == 1) stop("power parameter set to 1, please use Quasi-Poisson distribution instead")
+     if( get("p", environment(initialModel$family$variance))== 2) stop("power parameter set to 2, please use Gamma distribution instead")
+   }
   # 
   
   # check parameters in salsa1dlist are same length as varlist
@@ -222,11 +222,21 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   if(fam=='BinProp'){
     baseModel <- eval(parse(text=paste("gamMRSea(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }else{
-    baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
-                                         paste(formula(initialModel)[3], sep = ""), "+", 
-                                         paste(terms1D, collapse = "+"), ", family =", 
-                                         paste0(initialModel$call[grep("tweedie", initialModel$call)]),
-                                         ", data = data)", sep = "")))
+    if(family=="Tweedie"){
+      baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
+                                           paste(formula(initialModel)[3], sep = ""), "+", 
+                                           paste(terms1D, collapse = "+"), ", family =", 
+                                           paste0(initialModel$call[grep("tweedie", initialModel$call)]),
+                                           ", data = data)", sep = "")))  
+    }else{
+      baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
+                                           paste(formula(initialModel)[3], sep = ""), "+", 
+                                           paste(terms1D, collapse = "+"), 
+                                           ", family =", family,
+                                           "(link=", link,
+                                           "), data = data)", sep = "")))
+    }
+    
   }
   
   if(!is.null(initialModel$cvfolds)){

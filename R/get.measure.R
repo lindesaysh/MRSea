@@ -4,7 +4,7 @@
     attributes(out.lm@misc$formula)$.Environment<-environment()
     data <- out.lm@data
   } else {
-    if(grep("tweedie", fitnessMeasure) != 1){
+    if(length(grep("tweedie", fitnessMeasure[1])) == 0){
       attributes(out.lm$formula)$.Environment<-environment()
       data<-out.lm$data
     }
