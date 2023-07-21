@@ -210,12 +210,18 @@ baselinedata <- filter(nysted.analysisdata, impact == 1, season == 1)
 ```
 
 ```{r}
-initialModel<- glm(response ~ 1, family='quasipoisson',data=baselinedata)
+profout <- tweedie.profile(response ~ year + impact + x.pos + y.pos + depth, 
+                           data=baselinedata,
+                           xi.vec = seq(1.01, 1.99, by=0.05), do.plot=TRUE)
+```
+
+```{r}
+initialModel<- glm(response ~ 1, family=tweedie(var.power=profout$xi.max, link.power = 0),data=baselinedata)
 ```
 
 
 ```{r}
-kg <- getKnotgrid(baselinedata[, c("x.pos", "y.pos")], numKnots = 300, plot = TRUE)
+kg <- getKnotgrid(baselinedata[, c("x.pos", "y.pos")], numKnots = 300, plot = FALSE)
 ```
 
 ```{r}
@@ -231,13 +237,9 @@ p2k <-makeDists(preddata[, c("x.pos", "y.pos")], kg, knotmat = FALSE)$dataDist
 
 
 
-## Default: Gaussian Radial Basis
-
-This uses a Gaussian radial basis implemented using `LRF.g()`.  It is the default and does not need to be specified. 
-
 ```{r}
 # make parameter set for running salsa2D
-salsa2dlist<-list(fitnessMeasure = 'QBIC', 
+salsa2dlist<-list(fitnessMeasure = 'AICtweedie', 
                   knotgrid = na.omit(kg),
                   startKnots=10, 
                   minKnots=2, 
@@ -267,41 +269,16 @@ ggplot() +
   scale_fill_distiller(palette = "Spectral",name="Animal Counts")
 ```
 
-## Exponential Basis
-
-This uses an exponential radial basis implemented using `LRF.e()`.  It is more peaked at the knot than the gaussian and for this reason I have used a larger number of start knots. 
-
 ```{r}
-# make parameter set for running salsa2D
-salsa2dlist<-list(fitnessMeasure = 'QBIC', 
-                  knotgrid = na.omit(kg),
-                  startKnots=10, ##
-                  minKnots=2, 
-                  maxKnots=20, 
-                  gap=0)
-```
-
-```{r}
-salsa2dOutput.exp<-runSALSA2D(initialModel,
-                          salsa2dlist, 
-                          d2k=distMats$dataDist,
-                          k2k=distMats$knotDist,
-                          basis = "exponential", ##
-                          suppress.printout = TRUE)
-
-```
-
-```{r}
-preddata$preds.e <- predict(object = salsa2dOutput.exp$bestModel, 
-                            newdata = preddata, g2k = p2k)
-
-ggplot() +
-  geom_tile(data=preddata, aes(x.pos, y.pos, fill=preds.e,
-                               height=sqrt(area), width=sqrt(area))) + 
-  xlab("Easting (km)") + ylab("Northing (km)") + coord_equal() +
-  theme_bw() + ggtitle("Exponential Basis") +
-  scale_fill_distiller(palette = "Spectral",name="Animal Counts")
-
+cutpts<-unique(quantile(fitted(salsa2dOutput$bestModel), prob=seq(0,1, by=0.05)))
+mycuts<-cut(fitted(salsa2dOutput$bestModel), breaks= cutpts)
+meanfits<-tapply(fitted(salsa2dOutput$bestModel), mycuts, mean)
+varresid<-tapply(residuals(salsa2dOutput$bestModel, type='response'), mycuts, var)
+  
+plot(meanfits, varresid, xlab='Fitted Values', ylab='V(residuals)')
+abline(0,1)
+lines(meanfits, meanfits*summary(salsa2dOutput$bestModel)$dispersion, col='red')
+lines(meanfits, (meanfits^profout2$xi.max)*summary(salsa2dOutput$bestModel)$dispersion, col='blue')
 ```
 
 ## Raw data for reference
