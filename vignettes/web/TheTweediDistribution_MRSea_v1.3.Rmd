@@ -11,22 +11,22 @@ knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='#>',
                       collapse=TRUE, dev='png')
 ```
 
-This document shows how to fit a model using the tweedie distribution.
+This document shows how to fit a `gamMRSea` model using the Tweedie distribution.
 
 # The Tweedie distribution
 
-The variance of the tweedie distribution is parameterrised by the mean $\mu$ and the dispersion parameter $\phi$:
+The variance of the Tweedie distribution is parameterised by the mean $\mu$ and the dispersion parameter $\phi$:
 
-$$Var(y) = V(\mu)\phi = \mu^\alpha\phi$$
+$$Var(y) = V(\mu)\phi = \mu^\xi\phi$$
 
-The following distributions can be achieved by specifiying the following values for $\alpha$ 
+The following distributions can be achieved by specifying the following values for $\xi$ 
 
-- Gaussian ($\alpha = 0$)
-- Poission ($\alpha = 1$)
-- Gamma ($\alpha = 2$)
-- Inverse Gaussian ($\alpha = 3$)
+- Gaussian ($\xi = 0$)
+- Poisson ($\xi = 1$)
+- Gamma ($\xi = 2$)
+- Inverse Gaussian ($\xi = 3$)
 
-For zero inflated data, i.e. the response distribution has mass at zero (i.e., it has exact zeros) but is otherwise continuous on the positive real numbers, the values of $\alpha$ between 1 and 2 are particularly useful to us. 
+For zero inflated data, i.e. the response distribution has mass at zero (i.e., it has exact zeros) but is otherwise continuous on the positive real numbers, the values of $\xi$ between 1 and 2 are particularly useful to us. 
 
 ## An example of fitting the tweedie distribution in `R`
 
@@ -36,16 +36,16 @@ glm(y ~ x, data=data,
     family=tweedie(var.power = 1.1, link.power=0))
 ```
 
-In this example, $\alpha = 1.1$ and the model can be described as:
+In this example, $\xi = 1.1$ and the model can be described as:
 
-$$y_i \sim Tw(\mu_{i}, \phi, \alpha)$$
+$$y_i \sim Tw(\mu_{i}, \phi, \xi)$$
 
 where $$log(\mu_i) = \beta_0 + \beta_1x_i$$
 
 
 and $$ Var(y_i) = \mu_i^{1.1} \phi$$
 
-`var.power` specifies the value for $\alpha$ and `link.power = 0` indicates a log link is used.
+`var.power` specifies the value for $\xi$ and `link.power = 0` indicates a log link is used.
 
 For example, `tweedie(var.power=1, link.power=0)` is equivalent to `quasipoisson(link="log")`. Note: it is not equivalent to `poisson(link="log")` as the dispersion is not set equal to 1.
 
@@ -67,27 +67,35 @@ library(ggplot2)
 data(ns.data.re)
 ```
 
+Two additional libraries are required for model fitting and selection. `statmod` provides the model family `tweedie()` and the `tweedie` package contains an appropriate AIC.
+
 ```{r}
 library(statmod)
 library(tweedie)
 ```
 
-Fit a Tweedie model with $\alpha = 1$ and a log link function.
+Fit a Tweedie model with $\xi = 1$ and a log link function.
+
 ```{r}
 fit_tw<- glm(birds ~ 1, family=tweedie(var.power=1, link.power = 0),data=ns.data.re)
 summary(fit_tw)
 ```
 
 Fit the equivalent model using the quasipoisson distribution.
+
 ```{r}
 fit_qp<- glm(birds ~ 1, family=quasipoisson(link="log"),data=ns.data.re)
 summary(fit_qp)
 ```
 
+Note that the two model outputs are identical. In reality though we need to find out what value of $\xi$ is best for our data.  For this we can use the `tweedie.profile` function from the `tweedie` library. 
+
+Note: this function can take a long time to run. 
+
 ```{r}
 profout <- tweedie.profile(birds ~ 1, 
                            data=ns.data.re,
-                           xi.vec = seq(1.01, 1.99, by=0.05))
+                           xi.vec = seq(1.01, 1.99, by=0.05), do.plot=TRUE)
 ```
 
 ```{r}
@@ -97,12 +105,26 @@ profout2 <- tweedie.profile(birds ~ MonthOfYear + x.pos + y.pos + Year,
 ```
 
 ```{r}
-varlist=c('MonthOfYear')
+profout$xi.max
+profout2$xi.max
 ```
+
+## Fitting a `gamMRSea` model
+
+Lets fit a model to the data using one smooth variable; month of the year.
+
+```{r}
+varlist=c('x.pos')
+ns.data.re$response <- ns.data.re$birds
+```
+
+Set up the initial model with the Tweedie distribution parameterised with the log link function (`link.power=0`) and the variance power ($\xi$) equal to our output from the profiling (`var.power = `).
 
 ```{r}
 initialModel<- glm(response ~ 1, family=tweedie(var.power=profout2$xi.max, link.power = 0),data=ns.data.re)
 ```
+
+Remember to specify a Tweedie specific fitness measure of either `AICtweedie` or `BICtweedie`.
 
 ```{r}
 # set some input information for SALSA
@@ -132,6 +154,7 @@ summary(salsa1dOutput$bestModel)
 
 ```{r}
 AICtweedie(salsa1dOutput$bestModel)
+cv.gamMRSea(ns.data.re, salsa1dOutput$bestModel, K = 10)$delta[2]
 ```
 
 
@@ -139,6 +162,37 @@ AICtweedie(salsa1dOutput$bestModel)
 runPartialPlots(salsa1dOutput$bestModel, data=ns.data.re, 
                 varlist.in = varlist, showKnots = TRUE)
 ```
+```{r}
+cutpts<-unique(quantile(fitted(salsa1dOutput$bestModel), prob=seq(0,1, by=0.05)))
+mycuts<-cut(fitted(salsa1dOutput$bestModel), breaks= cutpts)
+meanfits<-tapply(fitted(salsa1dOutput$bestModel), mycuts, mean)
+varresid<-tapply(residuals(salsa1dOutput$bestModel, type='response'), mycuts, var)
+  
+plot(meanfits, varresid, xlab='Fitted Values', ylab='V(residuals)')
+abline(0,1)
+lines(meanfits, meanfits*summary(salsa1dOutput$bestModel)$dispersion, col='red')
+lines(meanfits, (meanfits^profout2$xi.max)*summary(salsa1dOutput$bestModel)$dispersion, col='blue')
+```
+```{r, eval=FALSE, echo=FALSE}
+# ** dont run in rmd file. use to check functions ***
+
+# check functions working
+runACF(block = paste0(ns.data.re$GridCode, ns.data.re$MonthOfYear), model = salsa1dOutput$bestModel,
+       suppress.printout=TRUE)
+
+simData<-generateNoise(n=500, 
+                       response=fitted(salsa1dOutput$bestModel), 
+                       family='tweedie', 
+                       xi = profout2$xi.max, 
+                       phi = summary(salsa1dOutput$bestModel)$dispersion)
+empdist<-getEmpDistribution(500, simData, salsa1dOutput$bestModel, data=ns.data.re,dots=FALSE)
+
+runsTest(residuals(salsa1dOutput$bestModel, type='pearson'), emp.distribution=empdist)
+
+runDiagnostics(salsa1dOutput$bestModel)
+```
+
+
 
 
 # Two dimensional Smoothing
