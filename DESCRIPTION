@@ -49,7 +49,8 @@ Suggests:
     splancs,
     raster,
     gdistance,
-    RColorBrewer
+    RColorBrewer,
+    tidyr
 License: GPL-3
 LazyData: true
 Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker

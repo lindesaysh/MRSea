@@ -179,7 +179,7 @@ summary(salsa1dOutput$bestModel)
 
 ```{r eval=TRUE}
 # How many knots were chosen for depth?
-salsa1dOutput$splineParams[[2]]$knots
+salsa1dOutput$bestModel$splineParams[[2]]$knots
 # ~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
@@ -472,14 +472,7 @@ plotCumRes(model = finalmod, varlist = 'depth')
 Not a function in MRSea but an essential component to model assessment is the mean variance relationship. In the plot below, the dots are the observed mean and variance for several bins of the fitted data.  The red line is the assumed mean-variance relationship.
 
 ```{r}
-cutpts<-unique(quantile(fitted(finalmod), prob=seq(0,1, by=0.05)))
-mycuts<-cut(fitted(finalmod), breaks= cutpts)
-meanfits<-tapply(fitted(finalmod), mycuts, mean)
-varresid<-tapply(residuals(finalmod, type='response'), mycuts, var)
-  
-plot(meanfits, varresid, xlab='Fitted Values', ylab='V(residuals)')
-abline(0,1)
-lines(meanfits, meanfits*summary(finalmod)$dispersion, col='red')
+plotMeanVar(finalmod)
 ```
 
 
