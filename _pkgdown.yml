@@ -19,6 +19,8 @@ navbar:
         href: articles/web/FittingDifferentSplines_MRSea_v1.3.html
       - text: Interactions for 2D smooths
         href: articles/web/Interactions_salsa2d_MRSea_v1.3.html
+      - text: Using the Tweedie Distribution
+        href: articles/web/TheTweedieDistribution_MRSea_v1.3.Rmd
       - text: Publications
         href: articles/web/Publications.html
       - text: ---
