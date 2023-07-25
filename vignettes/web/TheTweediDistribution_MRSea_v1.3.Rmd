@@ -67,6 +67,7 @@ library(ggplot2)
 data(ns.data.re)
 ```
 
+
 Two additional libraries are required for model fitting and selection. `statmod` provides the model family `tweedie()` and the `tweedie` package contains an appropriate AIC.
 
 ```{r}
@@ -162,17 +163,11 @@ cv.gamMRSea(ns.data.re, salsa1dOutput$bestModel, K = 10)$delta[2]
 runPartialPlots(salsa1dOutput$bestModel, data=ns.data.re, 
                 varlist.in = varlist, showKnots = TRUE)
 ```
+
 ```{r}
-cutpts<-unique(quantile(fitted(salsa1dOutput$bestModel), prob=seq(0,1, by=0.05)))
-mycuts<-cut(fitted(salsa1dOutput$bestModel), breaks= cutpts)
-meanfits<-tapply(fitted(salsa1dOutput$bestModel), mycuts, mean)
-varresid<-tapply(residuals(salsa1dOutput$bestModel, type='response'), mycuts, var)
-  
-plot(meanfits, varresid, xlab='Fitted Values', ylab='V(residuals)')
-abline(0,1)
-lines(meanfits, meanfits*summary(salsa1dOutput$bestModel)$dispersion, col='red')
-lines(meanfits, (meanfits^profout2$xi.max)*summary(salsa1dOutput$bestModel)$dispersion, col='blue')
+plotMeanVar(salsa1dOutput$bestModel)
 ```
+
 ```{r, eval=FALSE, echo=FALSE}
 # ** dont run in rmd file. use to check functions ***
 
@@ -270,18 +265,10 @@ ggplot() +
 ```
 
 ```{r}
-cutpts<-unique(quantile(fitted(salsa2dOutput$bestModel), prob=seq(0,1, by=0.05)))
-mycuts<-cut(fitted(salsa2dOutput$bestModel), breaks= cutpts)
-meanfits<-tapply(fitted(salsa2dOutput$bestModel), mycuts, mean)
-varresid<-tapply(residuals(salsa2dOutput$bestModel, type='response'), mycuts, var)
-  
-plot(meanfits, varresid, xlab='Fitted Values', ylab='V(residuals)')
-abline(0,1)
-lines(meanfits, meanfits*summary(salsa2dOutput$bestModel)$dispersion, col='red')
-lines(meanfits, (meanfits^profout2$xi.max)*summary(salsa2dOutput$bestModel)$dispersion, col='blue')
+plotMeanVar(salsa2dOutput$bestModel)
 ```
 
-## Raw data for reference
+# Raw data for reference
 
 ```{r}
 ggplot() +
