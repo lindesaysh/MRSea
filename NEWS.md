@@ -2,12 +2,18 @@
 
 
 ## Notes
-* SALSA1D:
+* SALSA1D: 
+
+  - Tweedie distribution and associated information criterion added (`AICtweedie` and `BICtweedie`)
   
 * SALSA2D:
 
+  - Tweedie distribution and associated information criterion added (`AICtweedie` and `BICtweedie`)
+
 * Other:
 
+  - Mean variance plot function added. This allows the user to assess the suitability of the mean-variance distributional assumption for a number of distributions (Gaussian, Poisson, Quasi-Poisson, Gamma and Tweedie)
+  - Added vignette for using the Tweedie distribution in gamMRSea models
   
 ## Bug Fixes
 
@@ -17,7 +23,7 @@
 
 * Other:
 
-  - convert data to data frame (not tibble) in `create.bootstrap.data` and `plotCumRes` functions
+  - ensure data is a `data.frame` (not `tibble`) in `create.bootstrap.data` and `plotCumRes` functions
 
 
 # MRSea 1.3.3
