@@ -50,7 +50,10 @@ Suggests:
     raster,
     gdistance,
     RColorBrewer,
-    tidyr
+    tidyr,
+    tweedie,
+    statmod,
+    boot
 License: GPL-3
 LazyData: true
 Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
