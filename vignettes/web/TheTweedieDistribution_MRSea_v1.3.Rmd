@@ -205,7 +205,7 @@ baselinedata <- filter(nysted.analysisdata, impact == 1, season == 1)
 ```
 
 ```{r}
-profout <- tweedie.profile(response ~ year + impact + x.pos + y.pos + depth, 
+profout <- tweedie.profile(response ~ x.pos + y.pos + depth, 
                            data=baselinedata,
                            xi.vec = seq(1.01, 1.99, by=0.05), do.plot=TRUE)
 ```
