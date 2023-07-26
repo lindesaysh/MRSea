@@ -31,7 +31,7 @@ for(i in 1:n.sim){
 
   splineParams = model$splineParams
   data$response=simData[,i]
-  sim_glm<- update(model, response ~ ., data=data)
+  sim_glm<- update(model, response ~ ., data=data, splineParams=splineParams)
   runs<-runsTest(residuals(sim_glm, type='pearson'))
   runsstatH0[i]<-runs$statistic
   # if(imp.beta.coverage){

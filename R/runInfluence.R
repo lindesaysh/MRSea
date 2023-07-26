@@ -105,10 +105,10 @@ runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
       if(is.factor(newpanel)){
         newpanel<-droplevels(newpanel)
       }
-      newMod<-update(newMod, .~. ,data=newData, panels=newpanel)
+      newMod<-update(newMod, .~. ,data=newData, panels=newpanel, splineParams = splineParams)
       newmod.det<-det(summary(newMod)$cov.robust)
     }else{
-      newMod<-update(newMod, .~. ,data=newData)
+      newMod<-update(newMod, .~. ,data=newData, splineParams = splineParams)
       newmod.det<-det(summary(newMod)$cov.scaled)
     }
     

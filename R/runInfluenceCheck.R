@@ -49,7 +49,7 @@ timeInfluenceCheck<-function (model, id) {
     }
     
     options(warn = -1)
-    newMod <- update(model, . ~ ., data = newData)
+    newMod <- update(model, . ~ ., data = newData, splineParams = model$splineParams)
     if("panels" %in% names(newMod)){
       newMod$panels<-newMod$panels[-rowsToDel]
     }
