@@ -12,6 +12,8 @@ getRadiiChoices(numberofradii = 10, distMatrix, basis, rvin = NULL)
 \item{distMatrix}{Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.}
 
 \item{basis}{character stating whether a 'gaussian' or 'exponential' basis is being used.}
+
+\item{rvin}{Two parameter vector stating the minimum and maximum range of r for a gaussian basis.}
 }
 \value{
 This function returns a vector containing a sequence of range parameters.
@@ -33,7 +35,7 @@ data(knotgrid.ns)
 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
 
 # choose sequence of radii
-r_seq<-getRadiiChoices(8, distMats$dataDist)
+r_seq<-getRadiiChoices(8, distMats$dataDist, basis="gaussian")
 
 }
 \references{

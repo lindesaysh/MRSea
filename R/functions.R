@@ -52,11 +52,11 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
   
   if(basis=='exponential'){
     numberofradii = numberofradii+2
-      # establish smallest observation-knot distance
-      rmin<- sqrt(max(distMatrix, na.rm=TRUE)/21)
-      rmax<- sqrt(max(distMatrix, na.rm=TRUE)/3e-7)
-      r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
-      return(r_seq)
+    # establish smallest observation-knot distance
+    rmin<- sqrt(max(distMatrix, na.rm=TRUE)/21)
+    rmax<- sqrt(max(distMatrix, na.rm=TRUE)/3e-7)
+    r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
+    return(r_seq)
   }
 }
 
@@ -89,57 +89,59 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
 #' # choose sequence of radii
 #' r_seq<-getRadiiChoices.vario(8, xydata = rad.dat[,c("x.pos", "y.pos")], response = log(rad.dat$birds +1 ), basis="gaussian")
 #' 
+#' r_seq
 #' attr(r_seq, "vg.fit")
 #' @export
 #' 
 
 
 getRadiiChoices.vario<-function(numberofradii=10, xydata, response, 
-                                basis, alpha = 0, model = "sph", 
+                                basis, alpha = 0, vgmmodel = "Sph", 
                                 showplots = FALSE, ...){
   
   data <- data.frame(xydata, response)
   names(data) <- c("x", "y", "response")
   
-  if(basis=='gaussian'){
-    sp::coordinates(data) = ~x + y
+  sp::coordinates(data) = ~x + y
+  suppressWarnings({
     vg <- gstat::variogram(response ~ 1, data, alpha= alpha, ...)
-    fit.vg <- try(gstat::fit.variogram(vg, model=gstat::vgm(model)), silent = TRUE)
-    
+    fit.vg <- try(gstat::fit.variogram(vg, model=gstat::vgm(vgmmodel)), silent = TRUE)
+  
     if(class(fit.vg)[1]=="try-error"){
-      fit.vg <- gstat::fit.variogram(vg, model=gstat::vgm(model), fit.method = 6)
+    fit.vg <- gstat::fit.variogram(vg, model=gstat::vgm(vgmmodel), fit.method = 6)
     }
-    #print(fit.vg)
-    if(showplots == TRUE){
-      par(mfrow=c(1,2))
-      print(plot(vg))
-      print(plot(fit.vg, cutoff=max(vg$dist)))
-    }
-    best.s <- fit.vg$range[2]
-    vg.gap <- vg$dist[2] - vg$dist[1]
-    nr <- floor(numberofradii/2)
-    l <- seq(best.s - (vg.gap * nr), best.s, length=nr)
-    
-    if(min(l)<0){
-      l <- seq(min(abs(l)), best.s, length=nr)
-    }
-    
-    u <- seq(best.s, best.s + (vg.gap * nr), length=nr)
-    s_seq <- unique(c(l, u))
-    r_seq <- 1/((sqrt(2) * s_seq))
-    attr(r_seq, "vg.fit") <- fit.vg
-    
-    return(r_seq)  
+  })
+  #print(fit.vg)
+  if(showplots == TRUE){
+    par(mfrow=c(1,2))
+    print(plot(vg))
+    print(plot(fit.vg, cutoff=max(vg$dist)))
+  }
+  best.s <- fit.vg$range[2]
+  vg.gap <- vg$dist[2] - vg$dist[1]
+  nr <- floor(numberofradii/2)
+  l <- seq(best.s - (vg.gap * nr), best.s, length=nr)
+  
+  if(min(l)<0){
+    l <- seq(min(abs(l)), best.s, length=nr)
   }
   
-  # if(basis=='exponential'){
-  #   numberofradii = numberofradii+2
-  #   # establish smallest observation-knot distance
-  #   rmin<- sqrt(max(distMatrix, na.rm=TRUE)/21)
-  #   rmax<- sqrt(max(distMatrix, na.rm=TRUE)/3e-7)
-  #   r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
-  #   return(r_seq)
-  # }
+  u <- seq(best.s, best.s + (vg.gap * nr), length=nr)
+  s_seq <- unique(c(l, u))
+  
+  
+  if(basis=='gaussian'){
+    
+    r_seq <- 1/((sqrt(2) * s_seq))
+    attr(r_seq, "vg.fit") <- fit.vg
+  }
+  
+  if(basis=='exponential'){
+    r_seq <- sqrt(s_seq)
+    attr(r_seq, "vg.fit") <- fit.vg
+  }
+  
+  return(r_seq) 
 }
 
 
@@ -208,32 +210,32 @@ checkfactorlevelcounts<-function(factorlist, data, response){
 
 makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', plot.transition=FALSE, grid.dim = c(100, 100)){
   
- if(is.null(polys)){
-   # Euclidean
-  if(length(which(is.na(knotcoords[,1])))>0) stop('remove NAs from knotcoords')
-  
-  d2k<- matrix(0, ncol=dim((knotcoords))[1], nrow=length(datacoords[,1]))
-  for(i in 1:dim(knotcoords)[1]){
-    d2k[,i]<- sqrt((datacoords[,1]-knotcoords[i,1])**2 + (datacoords[,2]-knotcoords[i,2])**2)
-  }
-  
-  if(knotmat==T){
-    #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
-    knotDist = as.matrix(dist(na.omit(knotcoords), method = "euclidean", diag = TRUE, upper=TRUE))
-    return(list(dataDist=d2k, knotDist = knotDist))
-  }else{
-    return(list(dataDist=d2k))
-  }
-} # end euclidean
+  if(is.null(polys)){
+    # Euclidean
+    if(length(which(is.na(knotcoords[,1])))>0) stop('remove NAs from knotcoords')
+    
+    d2k<- matrix(0, ncol=dim((knotcoords))[1], nrow=length(datacoords[,1]))
+    for(i in 1:dim(knotcoords)[1]){
+      d2k[,i]<- sqrt((datacoords[,1]-knotcoords[i,1])**2 + (datacoords[,2]-knotcoords[i,2])**2)
+    }
+    
+    if(knotmat==T){
+      #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
+      knotDist = as.matrix(dist(na.omit(knotcoords), method = "euclidean", diag = TRUE, upper=TRUE))
+      return(list(dataDist=d2k, knotDist = knotDist))
+    }else{
+      return(list(dataDist=d2k))
+    }
+  } # end euclidean
   
   # Geodesic
   if(!is.null(polys)){
     
     Nx=seq(min(c(datacoords[,1], knotcoords[,1])), max(c(datacoords[,1], knotcoords[,1])), length=grid.dim[1])
     Ny=seq(min(c(datacoords[,2], knotcoords[,2])), max(c(datacoords[,2], knotcoords[,2])), length=grid.dim[2])
-  
+    
     xygrid<-expand.grid(x=Nx, y=Ny)
-  
+    
     if(type=='B'){
       if(!is.null(names(datacoords))){
         knotcoords<-data.frame(knotcoords)
@@ -256,13 +258,13 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
       geodistsoutput<-getGeoDist(xygrid=xygrid, polys=polys, datalocations=datacoords, plot.transition=plot.transition)
       # select out knot columnns to get d2k
       d2k<-geodistsoutput$distance[,attr(knotcoords, 'points.selected')]
-    if(knotmat==T){
-      #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
-      knotDist = geodistsoutput$distance[attr(knotcoords, 'points.selected'),attr(knotcoords, 'points.selected')] 
-      return(list(dataDist=d2k, knotDist = knotDist))
-    }else{
-      return(list(dataDist=d2k))
-    }
+      if(knotmat==T){
+        #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
+        knotDist = geodistsoutput$distance[attr(knotcoords, 'points.selected'),attr(knotcoords, 'points.selected')] 
+        return(list(dataDist=d2k, knotDist = knotDist))
+      }else{
+        return(list(dataDist=d2k))
+      }
     } # end model
   } # end geodesic
 }
