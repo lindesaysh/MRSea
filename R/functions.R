@@ -3,6 +3,7 @@
 #' @param numberofradii The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.
 #' @param distMatrix  Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.
 #' @param basis character stating whether a 'gaussian' or 'exponential' basis is being used. 
+#' @param rvin Two parameter vector stating the minimum and maximum range of r for a gaussian basis. 
 #' 
 #' @details
 #' The range parameter determines the range of the influence of each knot.  Small numbers indicate local influence and large ones, global influence.  
@@ -25,57 +26,11 @@
 #' distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
 #'
 #' # choose sequence of radii
-#' r_seq<-getRadiiChoices(8, distMats$dataDist)
+#' r_seq<-getRadiiChoices(8, distMats$dataDist, basis="gaussian")
 #' 
 #' @export
 #' 
-# getRadiiChoices<-function(numberofradii=8, distMatrix){
-#   numberofradii = numberofradii+2
-#   # establish smallest observation-knot distance
-#   rmin<- sqrt(max(distMatrix)/21)
-#   rmax<- sqrt(max(distMatrix)/3e-7)
-#   r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
-#   return(r_seq)
-# }
 
-# getRadiiChoices<-function(numberofradii=10, distMatrix){
-#   #mindist<-mean(apply(distMatrix, 2, min))
-#   #maxdist<-mean(apply(distMatrix, 2, max))
-#   #r_seq=1/(seq((mindist), (maxdist),length=numberofradii+1))
-#   mindist<-mean(apply(distMatrix, 2, min))
-#   maxdist<-mean(apply(distMatrix, 2, max))
-#   r_seq=exp(seq(log(1/mindist)*1.5, log(1/maxdist),length=10))
-#   return(r_seq[-1])
-# }
-
-# getRadiiChoices<-function(numberofradii=10, distMatrix){
-#   
-#   mindist<-mean(apply(distMatrix, 2, min))
-#   maxdist<-mean(apply(distMatrix, 2, max))
-#   r_seq=exp(seq(log(1/mindist), log(1/maxdist)*1.5,length=20))
-#   
-#   aRsel<- sample(1:ncol(distMatrix), 5)
-#   r_min=r_max=vector(length = length(aRsel))
-#   for(a in 1:5){
-#     b<-LocalRadialFunction(radiusIndices = c(1:length(r_seq)),dists = distMatrix, radii = r_seq, aR = rep(aRsel[a], length=length(r_seq)))
-#     means<-apply(b, 2, mean)
-#     r_min[a]<-r_seq[(which(means>0.01)[1])]
-#     r_max[a]<-r_seq[(which(means>0.90)[1])]
-#     
-#   }
-#   r_min<-mean(r_min)
-#   r_max<-mean(r_max)
-#   r_seq=exp(seq(log(r_min), log(r_max),length=numberofradii))
-#   #b<-LocalRadialFunction(radiusIndices = c(1:length(r_seq)),dists = distMatrix, radii = r_seq, aR = rep(aRsel[a], length=length(r_seq)))
-# #   summary(b)
-# #   par(mfrow=c(2,2))
-# #   for(i in 1:(length(r_seq))){
-# #     print(i)
-# #     quilt.plot(data$x.pos, data$y.pos, b[,i], asp=1, zlim=c(0,1))
-# #   }
-#   
-#   return(r_seq)
-# }
 
 getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
   
@@ -104,6 +59,93 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
       return(r_seq)
   }
 }
+
+
+#-----------------------------------------------------------------------------
+#' Function for obtaining a sequence of range parameters for the CReSS smoother
+#' 
+#' @param numberofradii The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.
+#' @param xydata Data frame containing columns for x and y coordinates. x is assumed to be the first of the two columns
+#' @param response vector of response values for use in `gstat::variogram`.  These values should be approximately normally distributed.
+#' @param basis character stating whether a 'gaussian' or 'exponential' basis is being used. 
+#' @param alpha numeric parameter for the `gstat::variogram` function giving the direction in plane(x,y)
+#' @param showplots (`default = FALSE`). If `TRUE` the output of `gstat::variogram` and `gstat::fit.variogram` are shown.
+#' @param ... Other parameters for the `gstat::variogram` function. 
+#' 
+#' 
+#' @details
+#' The range parameter determines the range of the influence of each knot.  Small numbers indicate local influence and large ones, global influence.
+#' 
+#' @return
+#' This function returns a vector containing a sequence of range parameters.  If an even number of radii is requested, this is reduced by one to give an odd length sequence where the middle number was the best range parameter from the variogram. 
+#' The outputs of the variogram model can be found in the attributes of the returned object under `vg.fit`.
+#' 
+#' @examples
+#' 
+#' # load data
+#' data(ns.data.re)
+#' rad.dat <- dplyr::filter(ns.data.re, impact==0, Year==9, MonthOfYear == 3)
+#' 
+#' # choose sequence of radii
+#' r_seq<-getRadiiChoices.vario(8, xydata = rad.dat[,c("x.pos", "y.pos")], response = log(rad.dat$birds +1 ), basis="gaussian")
+#' 
+#' attr(r_seq, "vg.fit")
+#' @export
+#' 
+
+
+getRadiiChoices.vario<-function(numberofradii=10, xydata, response, 
+                                basis, alpha = 0, model = "sph", 
+                                showplots = FALSE, ...){
+  
+  data <- data.frame(xydata, response)
+  names(data) <- c("x", "y", "response")
+  
+  if(basis=='gaussian'){
+    sp::coordinates(data) = ~x + y
+    vg <- gstat::variogram(response ~ 1, data, alpha= alpha, ...)
+    fit.vg <- try(gstat::fit.variogram(vg, model=gstat::vgm(model)), silent = TRUE)
+    
+    if(class(fit.vg)[1]=="try-error"){
+      fit.vg <- gstat::fit.variogram(vg, model=gstat::vgm(model), fit.method = 6)
+    }
+    #print(fit.vg)
+    if(showplots == TRUE){
+      par(mfrow=c(1,2))
+      print(plot(vg))
+      print(plot(fit.vg, cutoff=max(vg$dist)))
+    }
+    best.s <- fit.vg$range[2]
+    vg.gap <- vg$dist[2] - vg$dist[1]
+    nr <- floor(numberofradii/2)
+    l <- seq(best.s - (vg.gap * nr), best.s, length=nr)
+    
+    if(min(l)<0){
+      l <- seq(min(abs(l)), best.s, length=nr)
+    }
+    
+    u <- seq(best.s, best.s + (vg.gap * nr), length=nr)
+    s_seq <- unique(c(l, u))
+    r_seq <- 1/((sqrt(2) * s_seq))
+    attr(r_seq, "vg.fit") <- fit.vg
+    
+    return(r_seq)  
+  }
+  
+  # if(basis=='exponential'){
+  #   numberofradii = numberofradii+2
+  #   # establish smallest observation-knot distance
+  #   rmin<- sqrt(max(distMatrix, na.rm=TRUE)/21)
+  #   rmax<- sqrt(max(distMatrix, na.rm=TRUE)/3e-7)
+  #   r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
+  #   return(r_seq)
+  # }
+}
+
+
+
+
+
 
 
 #-----------------------------------------------------------------------------
