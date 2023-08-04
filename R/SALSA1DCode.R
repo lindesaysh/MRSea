@@ -157,7 +157,7 @@ nearestknot = as.vector(apply(test, 1, which.min))
       improveDrop <- 0
     ###################################exchange step#############################
       output <- exchange.step(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,measures,
-                                 out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp, cv.opts, splineParams=splineParams)
+                                 out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm , initDisp, cv.opts, splineParams=splineParams, nearestknot)
 
       point <- output$point
       knotPoint <- output$knotPoint
@@ -270,7 +270,7 @@ print("initialisation complete...")
 
 "exchange.step" <- function(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,
                                measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, cv.opts,
-                            splineParams){
+                            splineParams, nearestknot){
 
   
   if (isS4(baseModel)){
@@ -286,7 +286,7 @@ print("initialisation complete...")
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    output <- locate.max.res(point,position,gap,response,explanatory, bd, winHalfWidth,out.lm,knotPoint,aR,wts, knotSites, spl, nearestknot)
+    output <- locate.max.res(point,position,gap,response,explanatory, bd, winHalfWidth,out.lm,knotPoint,aR,wts, knotSites, spl, nearestknot, splineParams=splineParams)
     index <- output$index
     #if (length(index)>1) browser()
     if (length(index)>0) {
@@ -329,7 +329,7 @@ print("initialisation complete...")
 
 ###################################################################################################################
 
-"locate.max.res" <- function(point,position,gap,response,explanatory, bd,winHalfWidth,out.lm,knotPoint,aR,wts,knotSites, spl, nearestknot){
+"locate.max.res" <- function(point,position,gap,response,explanatory, bd,winHalfWidth,out.lm,knotPoint,aR,wts,knotSites, spl, nearestknot, splineParams){
   
   print("Locating maximum residual......")
   
