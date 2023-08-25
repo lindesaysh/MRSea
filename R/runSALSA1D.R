@@ -446,7 +446,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   #  for(i in 2:(length(varlist)+1)){
   #if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
   # outTerms[[counter]]<-paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(",varlist[varID[(i-1)]-1], "=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])), data=",substitute(datain),", fit=F)$X[,-1]))", sep="")  
-  outModel<-eval(parse(text=paste("update(outModel, ~ ., data=", substitute(datain),")", sep="")))
+  outModel<-eval(parse(text=paste("update(outModel, ~ ., data=", substitute(datain),", splineParams=splineParams)", sep="")))
   #    counter<-counter+1
   #   }
   class(outModel)<-c('gamMRSea', class(outModel))

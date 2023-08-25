@@ -306,7 +306,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   baseModel$interactionterm<-interactionTerm
 
    eval(parse(text=paste(substitute(dataname),"<-data", sep="" )))
-  baseModel<-eval(parse(text=paste("update(baseModel, .~., data=", substitute(dataname),")", sep="")))
+  baseModel<-eval(parse(text=paste("update(baseModel, .~., data=", substitute(dataname),", splineParams = splineParams)", sep="")))
 
   attributes(baseModel$formula)$.Environment<-globalenv()
   #save.image(paste("salsa2D_k", splineParams[[1]]$startKnots, ".RData", sep=''))
