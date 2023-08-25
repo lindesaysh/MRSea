@@ -46,6 +46,7 @@ In addition to the functions required to run the models (which we shall go throu
 
   - `runACF` (to assess residual correlation), 
   - `runsTest` (to assess residual correlation)
+  - `plotMeanVar` (to assess the mean-variance relationship)
   - `runDiagnostics` (plots of observed vs fitted and fitted vs scaled Pearsons residuals), 
   - `timeInfluenceCheck`/`runInfluence` (assessing the influence of data on precision and predictions), 
   - `plotCumRes` (plots of cumulative residuals)
