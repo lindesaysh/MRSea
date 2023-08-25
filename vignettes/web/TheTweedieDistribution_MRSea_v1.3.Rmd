@@ -15,7 +15,7 @@ This document shows how to fit a `gamMRSea` model using the Tweedie distribution
 
 # The Tweedie distribution
 
-The variance of the Tweedie distribution is parameterised by the mean $\mu$ and the dispersion parameter $\phi$:
+The variance of the Tweedie distribution is parametrised by the mean $\mu$ and the dispersion parameter $\phi$:
 
 $$Var(y) = V(\mu)\phi = \mu^\xi\phi$$
 
