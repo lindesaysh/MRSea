@@ -30,3 +30,9 @@ navbar:
       - text: More advanced Usage
       - text: Geodesic smoothing
         href: articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html
+      - text: Using the Tweedie distribution
+        href: articles/web/TheTweedieDistribution_MRSea_v1.3.html
+      - text: Basis radii selection
+        href: articles/web/UserRadiiChoice_MRSea_v1.3.html
+      - text: test
+        href: articles/web/quartotestpage.html
