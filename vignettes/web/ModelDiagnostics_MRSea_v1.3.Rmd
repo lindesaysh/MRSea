@@ -3,25 +3,23 @@ title: "Diagnostics"
 author: "Lindesay Scott-Hayward"
 date: "2023-07-28"
 output: html_document
+bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
 Before making any decisions based on our model, we need to be happy that model assumptions are met. In this case, we need to ensure that:
 
-* The covariates in the model are not too similar to each other (i.e. we want to avoid "collinearity").
-* The covariate relationships are well described as linear on the link scale.
-* The model's residuals are independent.
-* The mean-variance relationship is appropriate (i.e. variance is proportional to the mean for the quasi-Poisson case).
+-   The covariates in the model are not too similar to each other (i.e. we want to avoid "collinearity").
+-   The covariate relationships are well described as linear on the link scale.
+-   The model's residuals are independent.
+-   The mean-variance relationship is appropriate (i.e. variance is proportional to the mean for the quasi-Poisson case).
 
 ## Collinearity {#collinearity}
 
-For a reliable model, we need to ensure we don't include variables which are too similar i.e. **collinear**.
-Let's plot the relationship between all pair-wise covariates for the windfarm dataset.
-
+For a reliable model, we need to ensure we don't include variables which are too similar i.e. **collinear**. Let's plot the relationship between all pair-wise covariates for the windfarm dataset.
 
 ```{r}
 library(MRSea)
@@ -34,7 +32,6 @@ data("nysted.predictdata")
 preddata <- filter(nysted.predictdata, impact==0, season==1)
 ```
 
-
 ```{r pairs-plot, fig.cap="Pairwise scatterplots for the covariates of interest.", fig.width=6, fig.height=6}
 covariates <- c("x.pos", "y.pos", "depth")
 pairs(subset(wfdata, select=covariates), 
@@ -45,14 +42,14 @@ For example, we can see that `depth` and `y.pos` are linearly related. It is dif
 
 Let's define the characteristics of **collinearity**:
 
-* It is a measure of the similarity between covariates. It occurs when one or more of the explanatory variables can be written as a (near) linear combination of the other explanatory variables.
+-   It is a measure of the similarity between covariates. It occurs when one or more of the explanatory variables can be written as a (near) linear combination of the other explanatory variables.
 
-* It relates only to near linearity in the explanatory variables; the response variable is *not* considered.
+-   It relates only to near linearity in the explanatory variables; the response variable is *not* considered.
 
-* It is a problem because it amounts to trying to fit a plane to points which lie along a line. 
+-   It is a problem because it amounts to trying to fit a plane to points which lie along a line.
 
-    + This  results in a very "wobbly" plane since any plane supported by a line fits the data about as well as any other plane. 
-    + In statistical terms, this translates into (some of) the parameters defining the plane being highly uncertain (and thus having high variance).
+    -   This results in a very "wobbly" plane since any plane supported by a line fits the data about as well as any other plane.
+    -   In statistical terms, this translates into (some of) the parameters defining the plane being highly uncertain (and thus having high variance).
 
 Let's create some fictitious data to highlight the problem (we will stick to a simple linear Gaussian model for illustration purposes). Let's start by assuming that our two covariates $x_1$ and $x_2$ are independent.
 
@@ -149,8 +146,7 @@ for (i in seq(length(rhos)))
 rgl::rglwidget(height=750, width=750)
 ```
 
-As the correlation coefficient between $x_1$ and $x_2$ increases, so do the standard errors of the regression coefficients.
-Up until $\rho=1$, when $x_1$ and $x_2$ are colinear i.e. their data points lie on a single line in the $x_1/x_2$ space, and the model fails to fit due to singularities. 
+As the correlation coefficient between $x_1$ and $x_2$ increases, so do the standard errors of the regression coefficients. Up until $\rho=1$, when $x_1$ and $x_2$ are colinear i.e. their data points lie on a single line in the $x_1/x_2$ space, and the model fails to fit due to singularities.
 
 This is due to the fact that in a collinear situation the points can be well predicted by **any** plane running through their major axis (along the line). It is just the slope perpendicular to the major axis (which is a function of the $\beta$'s) that can't be well predicted. This is unsurprising since the points barely extend in the direction perpendicular to the line, and thus contain little information on the slope of the plane in this direction.
 
@@ -158,20 +154,19 @@ Collinearity is not an inference issue if predictions are all that is required. 
 
 ### Detecting collinearity
 
-Collinearity can be diagnosed by plotting the covariates against each other, but it can be automated 
-by employing numerical measures (e.g. VIFs). This is particularly useful when dealing with a large number of covariates.
+Collinearity can be diagnosed by plotting the covariates against each other, but it can be automated by employing numerical measures (e.g. VIFs). This is particularly useful when dealing with a large number of covariates.
 
 Variance Inflation Factors (VIFs) are a useful measure of collinearity. They return one value per explanatory variable and are based on the $R^2$ you would get when regressing each explanatory variable on the others.
 
-* The VIF for the $j$th explanatory variable is $\mbox{VIF}_j=\frac{1}{(1-R^2_j)}$, where $R^2_j$ is the squared multiple correlation coefficient (coefficient of determination) of the $j^\text{th}$ variable with the other variables. 
-* The closer $R^2_j$ is to 1, the higher the collinearity and the VIF. 
+-   The VIF for the $j$th explanatory variable is $\mbox{VIF}_j=\frac{1}{(1-R^2_j)}$, where $R^2_j$ is the squared multiple correlation coefficient (coefficient of determination) of the $j^\text{th}$ variable with the other variables.
+-   The closer $R^2_j$ is to 1, the higher the collinearity and the VIF.
 
 If any of the covariates have more than one regression coefficient associated with them (e.g. `Phase`), then generalised variance-inflation factors (GVIFs) are calculated [@FoxMonette1992]. This generalises the notion of variance inflation by considering the relative size of the joint confidence region/ellipse (the generalisation of the confidence interval for multiple coefficients) for the coefficients associated with a related set of regressors. The resulting measure is called a generalised variance inflation factor (GVIF). If there are $p$ regressors in a term, then GVIF$^{1/(2p)}$ is a one-dimensional expression of the decrease in precision of estimation due to collinearity.
 
 Let's apply it to one of the previous quasi-Poisson model that was fitted in Section \@ref(poisson-glm-results).
 
 ```{r}
-simpleModel <- glm(response ~ x.pos + y.pos + depth + offset(log(area)), family="quasipoisson", data=wfdata)
+simpleModel <- glm(response ~ x.pos + y.pos + depth + offset(log(area)), family="quasipoisson", data=nysted.analysisdata)
 ```
 
 ```{r}
@@ -179,7 +174,7 @@ simpleModel <- glm(response ~ x.pos + y.pos + depth + offset(log(area)), family=
 car::vif(simpleModel)
 ```
 
-The VIFs suggest that there are perhaps some collinearity issues. The numerical outputs of the VIF indicate that the confidence intervals for the `y.pos` parameter are approximately $\sqrt{5.3)}$ $=$ `r round(sqrt(5.3), 1)` times wider than they would be without `depth` in the model. This is by no means a bad case of collinearity and inline with what we've observed in Figure \@ref(fig:pairs-plot).
+The VIFs suggest that there are perhaps some collinearity issues. The numerical outputs of the VIF indicate that the confidence intervals for the `y.pos` parameter are approximately $\sqrt{5.2}$ $=$ `r round(sqrt(5.3), 1)` times wider than they would be without `depth` in the model. This is by no means a bad case of collinearity and inline with what we've observed in Figure \@ref(fig:pairs-plot).
 
 In contrast, let's assume that `depth` was measured using two techniques, [sonar](https://en.wikipedia.org/wiki/Echo_sounding) and [LiDAR](https://geo-matching.com/content/bathymetric-lidar-sensors-and-uavs). We would expect both measurements to be highly correlated and that could cause some fitting issues. Let's see what happens:
 
@@ -202,22 +197,19 @@ car::vif(glmFitColinear)
 
 Including `DepthSonar` and `DepthLiDAR` results in a GVIF of `r round(car::vif(glmFitColinear)["DepthSonar", "GVIF^(1/(2*Df))"], digits=2)`, confirming this collinearity problem and the associated issues with model stability.
 
-
 ### Dealing with collinearity
 
-What do you do when you have collinearity present?  The two commonest options are to centre covariates or to omit either of the troublesome covariates from the model completely. In many cases, centering the covariate doesn't help and dealing with collinearity necessarily involves some model selection^[One can also use multivariate statistical techniques, such as principal component analysis (PCA), to project the covariates into a new feature space where they are uncorrelated.].  You can fit models with either one of the variables and use some kind of criterion (e.g. AIC or cross-validation) to choose the better of the two models.  
+What do you do when you have collinearity present? The two commonest options are to centre covariates or to omit either of the troublesome covariates from the model completely. In many cases, centering the covariate doesn't help and dealing with collinearity necessarily involves some model selection[^1]. You can fit models with either one of the variables and use some kind of criterion (e.g. AIC or cross-validation) to choose the better of the two models.
 
-
+[^1]: One can also use multivariate statistical techniques, such as principal component analysis (PCA), to project the covariates into a new feature space where they are uncorrelated.
 
 ## Nonlinearity on the link scale
 
-So far, we've assumed that the relationships between the covariates and the response on the link scale are linear. If this is  unreasonable, model predictions (and any associated confidence intervals) can be poor.
+So far, we've assumed that the relationships between the covariates and the response on the link scale are linear. If this is unreasonable, model predictions (and any associated confidence intervals) can be poor.
 
-We can examine this linearity (on the link scale) assumption by plotting the Pearson residuals against
-each of our continuous covariates. The Pearson residuals are the "raw" residuals (response residuals) divided by the square root of the variance function $v(\cdot)$. So for the Poisson model $\hat{\epsilon_i}^{\text{pearson}}=\frac{y_i-\hat{y_i}}{\sqrt{\hat{y_i}}}$ 
+We can examine this linearity (on the link scale) assumption by plotting the Pearson residuals against each of our continuous covariates. The Pearson residuals are the "raw" residuals (response residuals) divided by the square root of the variance function $v(\cdot)$. So for the Poisson model $\hat{\epsilon_i}^{\text{pearson}}=\frac{y_i-\hat{y_i}}{\sqrt{\hat{y_i}}}$
 
-Recall, if the relationship is not well described by the model, the Pearson residuals will exhibit a systematic pattern.
-Let's simulate such a scenario.
+Recall, if the relationship is not well described by the model, the Pearson residuals will exhibit a systematic pattern. Let's simulate such a scenario.
 
 ```{r}
 set.seed(1863) # for reproducibility
@@ -226,7 +218,7 @@ df <- NULL
 df$x <- runif(N, -3, 3) # covariate
 
 # The "real" y is generated by x^2 rather than x
-df$y <- 2*x^2 + rnorm(N) 
+df$y <- 2*df$x^2 + rnorm(N) 
 
 # Fit model
 mdl <- lm(y ~ x, data=df)
@@ -240,37 +232,31 @@ plot(df$x, residuals(mdl, type="pearson"),
 abline(h=0, lty=2, col="lightgrey", lwd=4)
 ```
 
-There is an obvious systematic pattern that tells us that our linear predictor for the mean is not doing a good job at describing the observed data.
-Let's include $x^2$ as another covariate in the model and see what happens.
+There is an obvious systematic pattern that tells us that our linear predictor for the mean is not doing a good job at describing the observed data. Let's include $x^2$ as another covariate in the model and see what happens.
 
 ```{r}
-df$xsq <- x^2 # "new" covariate x-squared
-mdl <- glm(y ~ x + xsq, data=df)
-summary(mdl)
+df$xsq <- df$x^2 # "new" covariate x-squared
+mdl2 <- glm(y ~ x + xsq, data=df)
+summary(mdl2)
 ```
- 
+
 ```{r pearson-resid-fake-data-xsq, fig.cap="Pearson residuals vs a fictitious covariate $x$ when `mdl <- lm(y ~ x + xsq)` and $y$ was simulated using $x^2$."}
 # Plot Pearson's residuals vs covariate
-plot(x, residuals(mdl, type="pearson"),
+plot(df$x, residuals(mdl2, type="pearson"),
      ylab="Pearson residuals", xlab="Covariate (x)", pch=19)
 abline(h=0, lty=2, col="lightgrey", lwd=4)
 ```
 
-Now there is no structure in the Pearson residuals. They are all scattered evenly around zero, suggesting that our model's
-assumptions are met and we have a good fit.
+Now there is no structure in the Pearson residuals. They are all scattered evenly around zero, suggesting that our model's assumptions are met and we have a good fit.
 
-To aid visual inspection, a quadratic term can be fitted for each predictor (e.g. $\text{Depth}^2$) in the regression model directly  as a test for nonlinearity. This provides a $z$/$t$-test statistic and associated $p$-value for each quadratic term in the model, as a formal test for nonlinearity (Tukey's test for non-additivity). While this test will not be appropriate for all types of departures from linearity, small $p$-values for this test indicate nonlinearities on the link scale. 
+To aid visual inspection, a quadratic term can be fitted for each predictor (e.g. $\text{Depth}^2$) in the regression model directly as a test for nonlinearity. This provides a $z$/$t$-test statistic and associated $p$-value for each quadratic term in the model, as a formal test for nonlinearity (Tukey's test for non-additivity). While this test will not be appropriate for all types of departures from linearity, small $p$-values for this test indicate nonlinearities on the link scale.
 
-Moreover, these residual plots can be augmented with a data-driven curve. The details of these smooth curves will be covered in later, but can be thought of as a kind of running average, where a window is moved across the covariate range the average of the values inside each window is found. These average values are then joined across windows (in clever ways) to make a fitted curve. These fitted curves are known as **non-parametric** models because they rely exclusively on the data rather than some pre-specified parametric form for the systematic model component.
-
-The handy [`residualPlots`](https://www.rdocumentation.org/packages/car/versions/3.0-6/topics/residualPlots) function in the `car` package lets us do all of the above; plotting the Pearson residuals against all other covariates, compute a curvature test for each of the plots by adding a quadratic term and testing the quadratic to be zero (Tukey's test for non-additivity)
-and overlays a smooth curve for the residuals.
+Moreover, these residual plots can be augmented with a data-driven curve. The handy [`residualPlots`](https://www.rdocumentation.org/packages/car/versions/3.0-6/topics/residualPlots) function in the `car` package lets us do all of the above; plotting the Pearson residuals against all other covariates, compute a curvature test for each of the plots by adding a quadratic term and testing the quadratic to be zero (Tukey's test for non-additivity) and overlays a smooth curve for the residuals.
 
 ```{r resid-glmFitOD3, fig.cap="Residual plots for the `glmFitOD3` model. Red line is the fitted quadratic and the blue line is the fitted smooth curve.", fig.width=7, fig.height=7}
 library(car)
-residualPlots(glmFitOD3,
+residualPlots(simpleModel,
               type="pearson",
-              terms=~.-Phase,
               quadratic=TRUE,
               smooth=list(smoother=gamLine, col="#377eb8"),
               fitted=FALSE,
@@ -281,40 +267,44 @@ residualPlots(glmFitOD3,
               ylim=c(-5, 5))
 ```
 
-Both quadratic and smoother-based curves were fitted to the residual plots for `glmFitOD3` (recall that this model was `Count ~ XPos*Phase + YPos*Phase + Depth + DistCoast`). In this case, there appear to be some nonlinearities on the link scale as curvature is apparent in all model covariates and the test statistic for the coefficients associated with the quadratic term ($x^2_j$) for each covariate are all extremely large and the associated $p$-values are small and significant.
+This plot shows what we have already seen, that there are some nonlinearities on the link scale indicated by the u-shaped curve.
 
-We are going to update the model to permit (data-driven) smooth functions on the link scale for all covariates using Generalised Additive Models (GAMs) later on. 
+Both quadratic and smoother-based curves were fitted to the residual plots for `simpleModel` (recall that this model was `NHAT ~ x.pos + y.pos + depth`). In this case, there appear to be some nonlinearities on the link scale as curvature is apparent in all model covariates and the test statistic for the coefficients associated with the quadratic term ($\chi^2_j$) for each covariate are all extremely large and the associated $p$-values are small and significant.
+
+<!-- We are going to update the model to permit (data-driven) smooth functions on the link scale for all covariates using Generalised Additive Models (GAMs) later on.  -->
 
 ## Autocorrelation
 
-So far, we've assumed that the model errors are independent (i.e. that our observations are independent). If the model does not capture the patterns in the response data, then some of this pattern will remain in the model residuals and present itself as positive/negative auto-correlation.
-
-For instance, we've already seen in previous exploratory work (Figure \@ref(fig:nysted-random-transects)) that animals along transects are often clustered together and counts observed close together in time are more similar than counts distant in time/space.
+So far, we've assumed that the model errors are independent (i.e. that our observations are independent). If the model does not capture the patterns in the response data, then some of this pattern will remain in the model residuals and present itself as positive/negative residual auto-correlation.
 
 Let's focus on the first 200 observations of the Nysted dataset.
 
 ```{r nysted-200-data-points, fig.cap="Response data along the transects for the first 200 observations of the Nysted dataset."}
+
 ggplot() +
-    geom_point(aes(x=XPos, y=YPos, colour=TransectID), 
-               data=df[1:200, ]) +
-    geom_point(aes(x=XPos, y=YPos, size=log(Count/Area)), 
+    geom_point(aes(x=x.pos, y=y.pos, colour=transect.id), 
+               data=nysted.analysisdata[1:200, ]) +
+    geom_point(aes(x.pos, y=y.pos, size=log(NHAT/area)), 
                colour='black', 
-               data=subset(df[1:200, ], Count>0))
+               data=subset(nysted.analysisdata[1:200, ], NHAT>0))
 ```
 
-To some extent, model covariates will be able to explain the similarity in these counts along transects (Figure \@ref(fig:observed-fitted-200)).
-However, much of this pattern tends to remain unexplained by the model and is found in the model residuals (Figure \@ref(fig:residuals-200)). 
+To some extent, model covariates will be able to explain the similarity in these counts along transects. However, much of this pattern tends to remain unexplained by the model and is found in the model residuals (Figure \@ref(fig:residuals-200)).
 
 ```{r}
-mdlSummary <- data.frame(Observed=glmFitOD3$model$Count, 
-                         Fitted=predict(glmFitOD3, 
-                                        type="response"),
-                         Residuals=residuals(glmFitOD3, 
-                                             type="pearson"),
-                         Index=seq(length(glmFitOD3$model$Count)))
+simpleModel <- glm(response ~ x.pos + y.pos + depth + offset(log(area)), family="quasipoisson", data=nysted.analysisdata)
 ```
 
-```{r observed-fitted-200, fig.cap="Observed bird counts (blue line) and model (`glmFitOD3`) fitted values (green line) for the first 200 observations."}
+```{r}
+mdlSummary <- data.frame(Observed=simpleModel$model$response, 
+                         Fitted=predict(simpleModel, 
+                                        type="response"),
+                         Residuals=residuals(simpleModel, 
+                                             type="pearson"),
+                         Index=seq(length(simpleModel$model$response)))
+```
+
+```{r observed-fitted-200, fig.cap="Observed bird counts (blue line) and model (`simpleModel`) fitted values (green line) for the first 200 observations."}
 ggplot(mdlSummary[1:200, ]) +
     geom_line(aes(x=Index, y=Fitted, col="Fitted"), lwd=1) +
     geom_line(aes(x=Index, y=Observed, col="Observed"), lwd=1) +
@@ -324,44 +314,43 @@ ggplot(mdlSummary[1:200, ]) +
     ylab("Bird counts")
 ```
 
-```{r residuals-200, fig.cap="Pearson residuals for the first 200 observations for model `glmFitOD3`."}
-ggplot(mdlSummary[1:200, ]) +
+```{r residuals-200, fig.cap="Pearson residuals for the first 200 observations for model `simpleModel`."}
+ggplot(mdlSummary[100:200, ]) +
     geom_line(aes(x=Index, y=Residuals, col="Residuals"), lwd=1) +
     scale_color_manual(values=c('Residuals'="#e41a1c")) +
     labs(color="")  +
     ylab("Bird counts")
 ```
 
-We can visualise this problem by an autocorrelation function plot, which 
-depicts the estimated correlation between the residuals and the
-lag $k$ residuals (see [acf](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/acf) in R). 
+We can visualise this problem by an autocorrelation function plot, which depicts the estimated correlation between the residuals and the lag $k$ residuals (see [acf](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/acf) in R).
 
-```{r acf-glmFitOD3, fig.cap="Autocorrelation plot for the residuals of `glmFitOD3`.", fig.width=5, fig.height=5}
-acf(residuals(glmFitOD3, type="pearson"), main="glmFitOD3")
+```{r acf-glmFitOD3, fig.cap="Autocorrelation plot for the residuals of `simpleModel`.", fig.width=5, fig.height=5}
+acf(residuals(simpleModel, type="pearson"), main="simpleModel")
 ```
-For lags up to about $k=4$ the residuals remain correlated. For uncorrelated residuals we expect acf=1 
-at lag=0, and acf=0 otherwise.
+
+For lags up to about $k=7$ the residuals remain correlated. For uncorrelated residuals we expect acf=1 at lag=0, and acf=0 otherwise.
 
 ### Diagnosing autocorrelation using the runs test
 
-Non-independence in model residuals can be diagnosed using the Wald-Wolfowitz runs test [@WaldWolfowitz1943]:
+Non-independence in model residuals can be diagnosed using the Wald-Wolfowitz runs test [@wald1943]:
 
-* This test assigns a "sign" to each residual: positive residuals are labelled +1's and negative residuals are labelled -1's.
-* The number of uninterrupted strings ("runs") of positive and negative residuals when looked at in sequence (e.g. time order) is then calculated.
-* Too few (long) runs provide evidence of positive correlation, while too many (short) runs provide evidence of negative correlation.
+-   This test assigns a "sign" to each residual: positive residuals are labelled +1's and negative residuals are labelled -1's.
+-   The number of uninterrupted strings ("runs") of positive and negative residuals when looked at in sequence (e.g. time order) is then calculated.
+-   Too few (long) runs provide evidence of positive correlation, while too many (short) runs provide evidence of negative correlation.
 
 ```{r}
 # Assign sign
 mdlSummary$Sign <- ifelse(mdlSummary$Residuals>0, 1, -1)
 ```
 
-```{r sign-glmFitOD3, fig.cap="The sign of model (`glmFitOD3`) residuals for the first 200 observations."}
+```{r sign-glmFitOD3, fig.cap="The sign of model (`simpleModel`) residuals for the first 200 observations."}
 ggplot(mdlSummary[1:200, ]) +
     geom_line(aes(x=Index, y=Sign, col="Sign"), lwd=1) +
     scale_color_manual(values=c('Sign'="black")) +
     labs(color="")  +
     ylab("Sign of the residuals")
 ```
+
 ```{r sign-independent, fig.cap="The sign of the residuals, if residuals were independent."}
 set.seed(1345) # for reproducibility
 dummyDta <- data.frame(Sign=ifelse(rnorm(200)>0, 1, -1),
@@ -375,34 +364,38 @@ ggplot(dummyDta) +
 
 The runs test compares the observed number of runs ($T$) with what's expected under independence ($\text{E}[T]$) and adjusted for the variance ($\text{var}[T]$) to give a test statistic $W_z$ which has a standard normal distribution ($\mathcal{N}(0,1)$).
 
+$$
 \begin{align*}
 \text{E}[T]&=\frac{2n_pn_n}{n_p+n_n}+1\\
 \text{var}[T]&=\frac{2n_pn_n(2n_pn_n-n_p-n_n)}{(n_p+n_n)^2(n_p+n_n-1)}\\
 W_Z&=\frac{T-\text{E}[T]}{\sqrt{\text{var}[T]}} \sim \mathcal{N}(0,1)
 \end{align*}
+$$
 
 Where:
 
-* $n_p$ is the number of positive residuals.
-* $n_n$ is the number of negative residuals.
+-   $n_p$ is the number of positive residuals.
+-   $n_n$ is the number of negative residuals.
 
-Values more extreme than $\pm 2$ are considered compelling evidence against independence and consistent with positive ($W_Z< -2$) or negative correlation ($W_Z> 2$). 
+Values more extreme than $\pm 2$ are considered compelling evidence against independence and consistent with positive ($W_Z< -2$) or negative correlation ($W_Z> 2$).
 
 The [`runs.test`](https://www.rdocumentation.org/packages/lawstat/versions/3.3/topics/runs.test) function can be found in the `lawstat` package in R.
 
 Note that this test is based on the *order* of model residuals and thus has many uses, it can be used to check for:
 
-* Time dependence (by calculating runs based on residuals in time order).
-* Poorly specified covariate relationships (by calculating runs based on *ordered* covariate value).
+-   Time dependence (by calculating runs based on residuals in time order).
+-   Poorly specified covariate relationships (by calculating runs based on *ordered* covariate value).
 
 Let's simulate two models in order to show the runs test in action.
 
-* Model A: The linear predictor is just a function of a single covariate $x$ ($i$ is the observation index).
+-   Model A: The linear predictor is just a function of a single covariate $x$ ($i$ is the observation index).
 
+$$
 \begin{align*}
 y^{(A)}_i & \sim \text{Poisson}(\mu^{(A)}_i)\\
 \log \mu^{(A)}_i & = \beta_0 + \beta_1x_i
 \end{align*}
+$$
 
 ```{r}
 set.seed(1345) # for reproducibility
@@ -419,14 +412,14 @@ muA <- exp(etaA)
 yA <- rpois(NSample, muA)
 ```
 
-* Model B: The linear predictor is a function of a measured covariate $x$ and a sine wave/function 
-to mimic factors that exist in the environment that affect bird numbers but that we cannot directly observe.
-The $\beta$'s are assumed the same in both models.
+-   Model B: The linear predictor is a function of a measured covariate $x$ and a sine wave/function to mimic factors that exist in the environment that affect bird numbers but that we cannot directly observe. The $\beta$'s are assumed the same in both models.
 
+$$
 \begin{align*}
 y^{(B)}_i & \sim \text{Poisson}(\mu^{(B)}_i)\\
 \log \mu^{(B)}_i & = \beta_0 + \beta_1x_i + 2\sin{i}
 \end{align*}
+$$
 
 ```{r}
 set.seed(1345) # for reproducibility
@@ -468,6 +461,7 @@ plot(residuals(fitB, type="pearson")[1:50],
      type="l", ylab="Pearson residuals", col="#377eb8",
      main="Correlated residuals (Model B)")
 ```
+
 ```{r, echo=FALSE}
 par(mfrow=c(1, 1))
 ```
@@ -486,8 +480,7 @@ runs.test(residuals(fitB, type="pearson"))
 
 ### Positive correlation affects model selection
 
-Positive correlation in model residuals can lead us to conclude that irrelevant variables are important. To illustrate this, let's now
-add a covariate which is unrelated to the response and entirely made of randomly generated noise ($x_{\text{noise}}$). 
+Positive correlation in model residuals can lead us to conclude that irrelevant variables are important. To illustrate this, let's now add a covariate which is unrelated to the response and entirely made of randomly generated noise ($x_{\text{noise}}$).
 
 ```{r}
 set.seed(17395) # for reproducibility
@@ -508,8 +501,7 @@ summary(fitBNoise)
 Anova(fitBNoise)
 ```
 
-We can now see that $x_{\text{noise}}$ was found to be significantly related to $y^{(B)}$ but not to $y^{(A)}$. This is 
-problematic, as $x_{\text{noise}}$ offers no predictive capacity whatsoever, yet it would've been retained in model B.
+We can now see that $x_{\text{noise}}$ was found to be significantly related to $y^{(B)}$ but not to $y^{(A)}$. This is problematic, as $x_{\text{noise}}$ offers no predictive capacity whatsoever, yet it would've been retained in model B.
 
 To ensure this result was not an anomaly, let's repeat this process 5000 times to examine the long-run behaviour.
 
@@ -555,28 +547,24 @@ for (i in seq(NRepeat))
 }
 ```
 
-* **Model A** 
-    + $x_{\text{noise}}$ was falsely identified as statistically significant just `r round((keepNoiseA/NRepeat)*100, 2)`% of the time 
-    (in line with the expected false positive rate of 5%).
-    + The runs test indicated the residuals were non-independent for `r round((runsTestA/NRepeat)*100, 2)`% of the simulated sets using the 5% level to determine statistical significance (and we do expect this to be around 5%).
+-   **Model A**
+    -   $x_{\text{noise}}$ was falsely identified as statistically significant just `r round((keepNoiseA/NRepeat)*100, 2)`% of the time (in line with the expected false positive rate of 5%).
+    -   The runs test indicated the residuals were non-independent for `r round((runsTestA/NRepeat)*100, 2)`% of the simulated sets using the 5% level to determine statistical significance (and we do expect this to be around 5%).
+-   **Model B**:
+    -   $x_{\text{noise}}$ was falsely identified as statistically significant `r round((keepNoiseB/NRepeat)*100, 2)`% of the time!
+    -   The runs test suggested the residuals were positively correlated `r round((runsTestB/NRepeat)*100, 2)`% of the time, using the 5% level to determine statistical significance.
 
-* **Model B**:
-    + $x_{\text{noise}}$ was falsely identified as statistically significant `r round((keepNoiseB/NRepeat)*100, 2)`% of the time!
-    + The runs test suggested the residuals were positively correlated `r round((runsTestB/NRepeat)*100, 2)`% of the time, using the 5% level to determine statistical significance.
-
-Let's see if positive residual correlation is also apparent in our Nysted model `glmFitOD3`:
+Let's see if positive residual correlation is also apparent in our basic Nysted model `simpleModel`:
 
 ```{r}
-runs.test(residuals(glmFitOD3, type="pearson"))
+runs.test(residuals(simpleModel, type="pearson"))
 ```
 
-We can update this model to incorporate the autocorrelation in model residuals using Generalised Estimating Equations (GEEs)  which will be introduced later.
+
 
 ## Mean-variance relationship
 
-We can assess the mean-variance relationship by looking at the fitted values versus 
-the residuals. To ease visual inspection we "bin" the fitted data and compute the 
-variance of the residuals for each "bin".
+We can assess the mean-variance relationship by looking at the fitted values versus the residuals. To ease visual inspection we "bin" the fitted data and compute the variance of the residuals for each "bin".
 
 Let's simulate some Poisson data to show this.
 
@@ -598,106 +586,39 @@ y <- rpois(NSample, muA)
 mdl <- glm(y ~ x, family=poisson)
 ```
 
-We can look at the "raw" residuals ($\hat{\epsilon_i}^{\text{raw}}=y_i-\hat{y_i}$),
-in which case, if the model assumptions are met, 
-we should observe the assumed mean-variance relationship. So for the Poisson model 
-we should see the variance increasing with the mean (Poisson model assumes that the variance is equal to the mean).
+We can look at the "raw" residuals ($\hat{\epsilon_i}^{\text{raw}}=y_i-\hat{y_i}$), in which case, if the model assumptions are met, we should observe the assumed mean-variance relationship. So for the Poisson model we should see the variance increasing with the mean (Poisson model assumes that the variance is equal to the mean).
 
 ```{r mean-var-raw-fake-data, fig.cap="Mean-variance relationship for a Poisson simulated dataset using the raw residuals.", fig.width=8, fig.height=4}
-par(mfrow=c(1, 2))
+# Plot 1 - Fitted values vs raw residuals
+p.raw <- ggplot() + 
+  geom_point(aes(x=fitted(mdl), y=residuals(mdl, type="response"))) +
+  ylab("Raw residuals") + theme_bw()
+
+
+# Plot 2 - Mean binned fitted values vs var of raw residuals
+p.meanvar <- plotMeanVar(mdl, print=FALSE)
+
+ggpubr::ggarrange(p.raw, p.meanvar, ncol=2)
+```
+
+
+Let's inspect the mean-variance relationship for the `simpleModel`
+
+```{r mean-var-glmFitOD3, fig.cap="Mean-variance relationship for the `simpleModel` model using the Pearson residuals.", fig.width=8, fig.height=4}
 
 # Plot 1 - Fitted values vs raw residuals
-plot(fitted(mdl), residuals(mdl, type="response"), 
-     pch=19, cex=0.5, ylab="Raw residuals")
+p.raw <- ggplot() + 
+  geom_point(aes(x=fitted(simpleModel), y=residuals(simpleModel, type="pearson"))) +
+  ylab("Pearsons residuals") + theme_bw()
+
 
 # Plot 2 - Mean binned fitted values vs var of raw residuals
-# "Bin" the x-axis
-xbin <- cut(x=fitted(mdl), 
-            breaks=quantile(fitted(mdl), 
-                            probs=c(seq(0, 1, length=20))))
-# Compute mean of xbin
-xmean <- tapply(fitted(mdl), xbin, mean) 
-# Compute var of residuals within xbin
-resvar <- tapply(residuals(mdl, type="response"), xbin, var)
-# Plot
-plot(xmean, resvar, xlab="Mean fitted values", 
-     ylab="Variance of raw residuals", pch=19)
-abline(a=0, b=1, col='grey', lty=2, lwd=3)
+p.meanvar <- plotMeanVar(simpleModel, print=FALSE)
+
+ggpubr::ggarrange(p.raw, p.meanvar, ncol=2)
 ```
 
-For real-world data, inspecting the "raw" residuals can be difficult. Instead, we can use the Pearson residuals,
-which are standardised residuals, so they have approximately constant variance (for Poisson model $\hat{\epsilon_i}^{\text{pearson}}=\frac{y_i-\hat{y_i}}{\sqrt{\hat{y_i}}}$). 
-Thus, in this case if the model assumptions are met, we should 
-observe a constant relationship between the mean and the variance (same as for ordinary linear regression models).
-
-```{r mean-var-pearson-fake-data, fig.cap="Mean-variance relationship for a Poisson simulated dataset using the Pearson residuals.", fig.width=8, fig.height=4}
-par(mfrow=c(1, 2))
-
-# Plot 1 - Fitted values vs Pearson residuals
-plot(fitted(mdl), residuals(mdl, type="pearson"), 
-     pch=19, cex=0.5, ylab="Pearson residuals")
-
-# Plot 2 - Mean binned fitted values vs var of Pearson residuals
-# "Bin" the x-axis
-xbin <- cut(x=fitted(mdl), 
-            breaks=quantile(fitted(mdl), 
-                            probs=c(seq(0, 1, length=20))))
-# Compute mean of xbin
-xmean <- tapply(fitted(mdl), xbin, mean) 
-# Compute var of residuals within xbin
-resvar <- tapply(residuals(mdl, type="pearson"), xbin, var)
-# Plot
-plot(xmean, resvar, xlab="Mean fitted values", 
-     ylab="Variance of Pearson residuals", pch=19)
-abline(h=mean(resvar), col='grey', lty=2, lwd=3)
-```
-
-Let's inspect the mean-variance relationship for the `glmFitOD3`
-
-```{r mean-var-glmFitOD3, fig.cap="Mean-variance relationship for the `glmFitOD3` model using the Pearson residuals.", fig.width=8, fig.height=4}
-par(mfrow=c(1, 2))
-
-mdl <- glmFitOD3
-
-# Plot 1 - Fitted values vs Pearson residuals
-plot(fitted(mdl), residuals(mdl, type="pearson"), 
-     pch=19, cex=0.5, ylab="Pearson residuals")
-
-# Plot 2 - Mean binned fitted values vs var of raw residuals
-# "Bin" the x-axis
-xbin <- cut(x=fitted(mdl), 
-            breaks=quantile(fitted(mdl), 
-                            probs=c(seq(0, 1, length=100))))
-# Compute mean of xbin
-xmean <- tapply(fitted(mdl), xbin, mean) 
-# Compute var of residuals within xbin
-resvar <- tapply(residuals(mdl, type="pearson"), xbin, var)
-# Plot
-plot(xmean, resvar, xlab="Mean fitted values", 
-     ylab="Variance of Pearson residuals", pch=19)
-```
-
-There still seem to be a strong mean-variance relationship when looking at the Pearson residuals.
-This suggests that at least some of our modelling assumptions aren't met, and that we may 
-have to adjust our model specification to account for a different mean-variance relationship.
-
-```{r, echo=FALSE}
-par(mfrow=c(1, 1))
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+There still seem to be a strong mean-variance relationship when looking at the Pearson residuals. This suggests that at least some of our modelling assumptions aren't met, and that we may have to adjust our model specification to account for a different mean-variance relationship. For example, we are underestimaiting the variance of the largest fitted values. 
 
 
 ```{r message=FALSE, warning=FALSE}
@@ -706,53 +627,32 @@ library(MRSea)
 library(ggplot2)
 ```
 
+# Diagnostics specifically for `gamMRSea` models
 
+## Autocorrelation check
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### Autocorrelation check
-
-Are the residuals correlated? Make a suitable blocking structure, within which residuals are expected to be correlated but between which they are independent.  Use `runACF` to assess the blocking structure.  In this case we have data collected by transect. We would expect there to be some level of correlation along transect so we use this for a blocking structure. 
+Are the residuals correlated? Make a suitable blocking structure, within which residuals are expected to be correlated but between which they are independent. Use `runACF` to assess the blocking structure. In this case we have data collected by transect. We would expect there to be some level of correlation along transect so we use this for a blocking structure.
 
 Autocorrelation function plot:
 
-- each grey line is the correlation within a given transect
-- the red line is the mean of these correlations across all transects and is simlilar to what you would see from running the usual `acf()` command.
+-   each grey line is the correlation within a given transect
+-   the red line is the mean of these correlations across all transects and is simlilar to what you would see from running the usual `acf()` command.
 
 ```{r}
 runACF(block = wfdata$transect.id, model = simpleModel,
        suppress.printout=TRUE)
 ```
-In this case there is evidence that some transects show very high correlation 
 
+In this case there is evidence that some transects show very high correlation
 
 The runs test:
 
-- Non-independence in model residuals can be diagnosed using the Wald-Wolfowitz runs test (Wald and Wolfowitz 1943):
-- This test assigns a “sign” to each residual: positive residuals are labelled +1’s and negative residuals are labelled -1’s.
-- The number of uninterrupted strings (“runs”) of positive and negative residuals when looked at in sequence (e.g. time order) is then calculated.
-- Too few (long) runs provide evidence of positive correlation, while too many (short) runs provide evidence of negative correlation.
+-   Non-independence in model residuals can be diagnosed using the Wald-Wolfowitz runs test :
+-   This test assigns a "sign" to each residual: positive residuals are labelled +1's and negative residuals are labelled -1's.
+-   The number of uninterrupted strings ("runs") of positive and negative residuals when looked at in sequence (e.g. time order) is then calculated.
+-   Too few (long) runs provide evidence of positive correlation, while too many (short) runs provide evidence of negative correlation.
 
-
-Here we also do a runs test to assess for correlation in the model residuals.  Since our data are over-dispersed, we should use the empirical distribution for assessment:
+Here we also do a runs test to assess for correlation in the model residuals. Since our data are over-dispersed, we should use the empirical distribution for assessment:
 
 Empirical runs test calculation:
 
@@ -773,19 +673,20 @@ runsTest(residuals(simpleModel, type='pearson'), emp.distribution=empdist)
 This function creates observed vs fitted and fitted vs scaled pearsons residual plots.
 
 ```{r, eval=TRUE, fig.width=9, fig.height=6}
-runDiagnostics(finalmod)
+runDiagnostics(simpleModel)
 ```
 
 ### Influence diagnostics
 
-These functions assess the influence of different blocks on the data. 
+These functions assess the influence of different blocks on the data.
 
 ```{r eval=TRUE}
-timeInfluenceCheck(finalmod, id = wfdata$blockid)
+timeInfluenceCheck(model = simpleModel, 
+                   id = nysted.analysisdata$transect.id)
 ```
 
 ```{r, eval=TRUE, fig.width=9, fig.height=6}
-inflpoints<-runInfluence(finalmod, id = wfdata$blockid)
+inflpoints<-runInfluence(simpleModel, id = wfdata$blockid)
 ```
 
 ### Cumulative residual plots
@@ -793,13 +694,13 @@ inflpoints<-runInfluence(finalmod, id = wfdata$blockid)
 Cumulative residual plots are returned for residuals ordered by each covariate in `varlist`, predicted value and index of observations (temporally). The blue dots are the residuals and the black line is the line of cumulative residual. On the covariate plots (those in `varlist`) the grey line indicates what we would expect from a well fitted covariate. i.e. one that is fitted with excessive knots.
 
 ```{r,eval=TRUE, fig.width=9, fig.height=7}
-plotCumRes(model = finalmod, varlist = 'depth')
+plotCumRes(model = simpleModel, varlist = 'depth')
 ```
 
-### Mean-variance check
+<!-- ### Mean-variance check -->
 
-Not a function in MRSea but an essential component to model assessment is the mean variance relationship. In the plot below, the dots are the observed mean and variance for several bins of the fitted data.  The red line is the assumed mean-variance relationship.
+<!-- Not a function in MRSea but an essential component to model assessment is the mean variance relationship. In the plot below, the dots are the observed mean and variance for several bins of the fitted data. The red line is the assumed mean-variance relationship. -->
 
-```{r}
-plotMeanVar(finalmod)
-```
+<!-- ```{r} -->
+<!-- plotMeanVar(finalmod) -->
+<!-- ``` -->
