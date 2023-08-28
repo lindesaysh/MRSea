@@ -85,8 +85,8 @@ distMats <- makeDists(cbind(wfdata$x.pos, wfdata$y.pos), knotgrid)
 
   - a fit statistic
   - min, max and start knots.
-  -   gap
-  -   In addition we can (optionally) add a parameter `r_seq` which is a sequence of range/radii values determining the influence of each basis function. This is the $r$ parameter in the basis function.
+  - gap
+  - In addition we can (optionally) add a parameter `r_seq` which is a sequence of range/radii values determining the influence of each basis function. This is the $r$ parameter in the basis function.
 
 The model initialises with the central value of this $r$ sequence. If `r_seq` is not specified then the model will choose the range parameters using the existing `getRadiiChoices()` function. Using this function with 10 choices selected and specifying it in `salsa2dlist` is the equivalent of not specifying it at all and letting `runSALSA2D` calculate them.
 
