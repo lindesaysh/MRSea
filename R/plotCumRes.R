@@ -71,7 +71,7 @@ plotCumRes<- function(model, varlist, label='', save=FALSE){
       term<-labels(terms(model))[grep(namesOfx[c], labels(terms(model)))]
       #newterm<- paste('bs(', namesOfx[c], ', knots= c(newknots)', sep='')
       newterm<- paste('bs(', namesOfx[c], ', knots= c(', paste(newknots, sep=" ", collapse=','), '))', sep='')
-      eval(parse(text=paste('covarModelUpdate<-update(model, .~. -',term, ' +', newterm,', splineParams=model$splineParams)', sep='')))
+      eval(parse(text=paste('covarModelUpdate<-update(model, .~. -',term, ' +', newterm,')', sep='')))
       xmatrix_test<- cbind(dat[,coefpos], fitted(covarModelUpdate), ord=1:length(fitted(covarModelUpdate)))
     }
     
