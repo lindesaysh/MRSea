@@ -5,6 +5,7 @@
 #' @param cut.prob.by Numerical input to state the increment for the sequence of cut probabilities. 
 #' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory. See \code{label} to change directory.
 #' @param label Character string indicating an label to be added to the plot when using \code{save = TRUE}. Can also include a pathway to a directory of choice.
+#' @param print Logical stating whether or not to print the plot. If FALSE then the plot object is returned. 
 #' 
 #' @return
 #' A plot showing the observed mean and variance (cutting the fitted values into bins and finding the mean fitted value and the variance for each bin) and the assumed relationship under various distributions depending on the model fitted (lines on the plot). 
@@ -21,16 +22,19 @@
 #' @export
 #'
 
-plotMeanVar<-function(model, cut.prob.by = 0.05, save=FALSE, label = NULL){
+plotMeanVar<-function(model, cut.bins = 20, save=FALSE, label = NULL, print=TRUE){
   
-  cutpts<-unique(quantile(fitted(model), prob=seq(0,1, by=cut.prob.by)))
+  cutpts<-unique(quantile(fitted(model), prob=seq(0,1, length=cut.bins)))
   mycuts<-cut(fitted(model), breaks= cutpts)
   meanfits<-tapply(fitted(model), mycuts, mean)
   varresid<-tapply(residuals(model, type='response'), mycuts, var)
 
-  
+  if(length(which(is.na(meanfits)))>0){
+    stop("Error in number of bins, try reducing using cut.bins=.  The default is 20.")
+  }
+     
   p <- ggplot() +
-    geom_point(aes(meanfits, varresid)) +
+    geom_point(aes(meanfits, varresid), size=2) +
     xlab('Fitted Values (Mean)') +  ylab('V(residuals)') +
     theme_bw() +
     theme(panel.grid.major=element_blank(), 
@@ -49,10 +53,11 @@ plotMeanVar<-function(model, cut.prob.by = 0.05, save=FALSE, label = NULL){
       )  
     
   p <- p + 
-      geom_line(data=pdat, aes(x=mu, y=V.p), linewidth=1) +
-      scale_colour_manual(values=c("darkgrey"),
-                          breaks=c("V.p"),
-                          labels=c("Poisson"))
+     geom_line(data=pdat, aes(x=mu, y=V.p), linewidth=1, linetype=2, colour="darkgrey") #+
+      # scale_colour_manual("Distritubion",
+      #                     values=c("darkgrey"),
+      #                     breaks = c("V.p"),
+      #                     labels=c("Poisson"))
   }
   
   
@@ -69,11 +74,14 @@ plotMeanVar<-function(model, cut.prob.by = 0.05, save=FALSE, label = NULL){
                                 values_to = "EstVariance")
     
     p <- p + 
-      geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution), linewidth=1) +
-      scale_colour_manual(values=c("darkgrey", "firebrick3"),
-                          breaks=c("V.p", "V.qp"),
-                          labels=c("Poisson", "QuasiPoisson"))
-  }
+      geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution, linetype=Distribution), linewidth=1) +
+      scale_colour_manual("Distribution", 
+                          values=c("darkgrey", "firebrick3"),
+                          labels=c("Poisson", "QuasiPoisson")) +
+      scale_linetype_manual("Distribution", 
+                            values = c(2,1),
+                            labels=c("Poisson", "QuasiPoisson"))
+    }
   
   if(model$family[[1]] == "Tweedie"){
     pdat <- tibble(mu = seq(min(meanfits), max(meanfits), length=100)) %>% 
@@ -90,10 +98,13 @@ plotMeanVar<-function(model, cut.prob.by = 0.05, save=FALSE, label = NULL){
                                 values_to = "EstVariance")
     
     p <- p + 
-      geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution), linewidth=1) +
-      scale_colour_manual(values=c("darkgrey", "firebrick3", "deepskyblue2"),
-                          breaks=c("V.p", "V.qp", "V.tw"),
-                          labels=c("Poisson", "QuasiPoisson", "Tweedie"))
+      geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution, linetype=Distribution), linewidth=1) +
+      scale_colour_manual("Distribution",
+                          values=c("darkgrey", "firebrick3", "deepskyblue2"),
+                          labels=c("Poisson", "QuasiPoisson", "Tweedie"))+
+      scale_linetype_manual("Distribution", 
+                            values = c(2,1,3),
+                            labels=c("Poisson", "QuasiPoisson", "Tweedie"))
   }
   
   if(model$family[[1]] == "Gamma"){
@@ -109,10 +120,13 @@ plotMeanVar<-function(model, cut.prob.by = 0.05, save=FALSE, label = NULL){
                                 values_to = "EstVariance")
     
     p <- p + 
-      geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution), linewidth=1) +
-      scale_colour_manual(values=c("darkgrey", "firebrick3"),
-                          breaks=c("V.p", "V.g"),
-                          labels=c("Poisson", "Gamma"))
+      geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution, linetype=Distribution), linewidth=1) +
+      scale_colour_manual("Distribution",
+                          values=c("darkgrey", "firebrick3"),
+                          labels=c("Poisson", "Gamma")) +
+      scale_linetype_manual("Distribution", 
+                            values = c(2,1),
+                            labels=c("Poisson", "Gamma"))
   }
   
   if(model$family[[1]] == "gaussian"){
@@ -128,10 +142,13 @@ plotMeanVar<-function(model, cut.prob.by = 0.05, save=FALSE, label = NULL){
                                 values_to = "EstVariance")
     
     p <- p + 
-      geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution), linewidth=1) +
-      scale_colour_manual(values=c("darkgrey", "firebrick3"),
-                          breaks=c("V.p", "V.g"),
-                          labels=c("Poisson", "Gaussian"))
+      geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution, linetype=Distribution), linewidth=1) +
+      scale_colour_manual("Distribution",
+                          values=c("darkgrey", "firebrick3"),
+                          labels=c("Poisson", "Gaussian")) +
+      scale_linetype_manual("Distribution", 
+                            values = c(2,1),
+                            labels=c("Poisson", "Gaussian"))
   }
   
   # if(model$family[[1]] == "binomial"){
@@ -149,7 +166,10 @@ plotMeanVar<-function(model, cut.prob.by = 0.05, save=FALSE, label = NULL){
   # }
   
   if(save==T){ggsave(paste0(label, "MeanVarplot.png"), a, height=6, width=8)
+  }
+  if(print==FALSE){
+    return(p)
   }else{
-    plot(p)
+    print(p)
   }
 }
