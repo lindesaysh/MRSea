@@ -191,7 +191,7 @@ salsa2dOutput.vario <- salsa2dOutput.vario$bestModel
 
 
 
-## Assessment of outputs
+# Assessment of outputs
 
 ```{r}
 # radius indices
@@ -212,7 +212,7 @@ The variogram method
 - chose one more knot and similar indexes (smaller radii than the equivalent index from the default method)
 - has a lower, and therefore better, CV score than the default. 
 
-### Predictions
+## Predictions
 
 ```{r }
 preddist<-makeDists(cbind(preddata$x.pos, preddata$y.pos),
@@ -385,7 +385,7 @@ ggpubr::ggarrange(c, d, common.legend = TRUE, ncol = 1, legend = "right")
 <!--   ggtitle("Vario r") -->
 <!-- ``` -->
 
-## Links between the range from the variogram and the range parameter in the RBF's:
+# Links between the range from the variogram and the range parameter in the RBF's:
 
 1)  The Gaussian RBF is defined in [@scott-hayward2022] as:
 
@@ -425,4 +425,4 @@ In the models fitted here, the range parameter was found to be `r round(attribut
 #   coord_equal()
 ```
 
-## References
+# References
