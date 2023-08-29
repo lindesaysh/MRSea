@@ -1,5 +1,5 @@
 ---
-title: "Diagnostics"
+title: "Model Diagnostics"
 author: "Lindesay Scott-Hayward"
 date: "2023-07-28"
 output: html_document
@@ -7,7 +7,7 @@ bibliography: references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, comment="")
 ```
 
 Before making any decisions based on our model, we need to be happy that model assumptions are met. In this case, we need to ensure that:
@@ -24,6 +24,7 @@ For a reliable model, we need to ensure we don't include variables which are too
 ```{r}
 library(MRSea)
 library(dplyr)
+library(ggplot2)
 # load the data
 data("nysted.analysisdata")
 wfdata <- filter(nysted.analysisdata, impact==0, season==1)
@@ -38,7 +39,7 @@ pairs(subset(wfdata, select=covariates),
       upper.panel=NULL, pch=19, cex=0.3)
 ```
 
-For example, we can see that `depth` and `y.pos` are linearly related. It is dificult to know if this will casues cause modelling issues, as their correlation isn't very high. We will look at a statistic to help with decision later. `x.pos` on the other hand doesn't seem to be correlated to any of the other covariates.
+For example, we can see that `depth` and `y.pos` are linearly related. It is difficult to know if this will causes cause modelling issues, as their correlation isn't very high. We will look at a statistic to help with decision later. `x.pos` on the other hand doesn't seem to be correlated to any of the other covariates.
 
 Let's define the characteristics of **collinearity**:
 
@@ -68,15 +69,21 @@ summary(mdl)
 coefs <- coef(mdl) # extract coef to plot fitted plane
 ```
 
-```{r collinearity-fake-data, rgl=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="latex", TRUE, FALSE), eval=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="latex", TRUE, FALSE), fig.cap="Linear fit on fictitious data with independent covariates."}
-# using rgl a plotting package
-rgl::plot3d(x1, x2, y)
-rgl::planes3d(a=coefs["x1"], b=coefs["x2"], c=-1, 
-         d=coefs["(Intercept)"], col='#d9d9d9', alpha=0.3)
-rgl::view3d(0, -45)
-```
+<!-- ```{r collinearity-fake-data, rgl=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="latex", TRUE, FALSE), eval=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="latex", TRUE, FALSE), fig.cap="Linear fit on fictitious data with independent covariates."} -->
 
-```{r, eval=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="html", TRUE, FALSE), echo=FALSE, fig.cap="Linear fit on fictitious data with independent covariates."}
+<!-- # using rgl a plotting package -->
+
+<!-- rgl::plot3d(x1, x2, y) -->
+
+<!-- rgl::planes3d(a=coefs["x1"], b=coefs["x2"], c=-1,  -->
+
+<!--          d=coefs["(Intercept)"], col='#d9d9d9', alpha=0.3) -->
+
+<!-- rgl::view3d(0, -45) -->
+
+<!-- ``` -->
+
+```{r, eval= TRUE, echo=FALSE, fig.cap="Linear fit on fictitious data with independent covariates."}
 rgl::plot3d(x1, x2, y)
 rgl::planes3d(a=coefs["x1"], b=coefs["x2"], c=-1, 
          d=coefs["(Intercept)"], col='#d9d9d9', alpha=0.3)
@@ -107,25 +114,41 @@ for (i in seq(length(rhos)))
 }
 ```
 
-```{r collinearity-fake-data-corr, rgl=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="latex", TRUE, FALSE), eval=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="latex", TRUE, FALSE), fig.cap="Linear fit on fictitious data with covariates of varying levels of correlation.", fig.width=8, fig.height=8}
-# Display result of each model 
-# and plot hyperplane and data points
-rgl::mfrow3d(nr=2, nc=2)
-for (i in seq(length(rhos)))
-{
-    m <- mdl[[i]]
-    print(summary(m))
-    coefs <- coef(m)
-    rgl::plot3d(m$model$x1, m$model$x2, m$model$y,
-           xlab="x1", ylab="x2", zlab="y",
-           main=paste0("rho=", rhos[i]))
-    rgl::planes3d(a=coefs["x1"], b=coefs["x2"], c=-1, 
-             d=coefs["(Intercept)"], col='#d9d9d9', alpha=0.3)
-    rgl::view3d(0, -45)
-}
-```
+<!-- ```{r collinearity-fake-data-corr, rgl=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="latex", TRUE, FALSE), eval=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="latex", TRUE, FALSE), fig.cap="Linear fit on fictitious data with covariates of varying levels of correlation.", fig.width=8, fig.height=8} -->
 
-```{r, eval=ifelse(opts_knit$get("rmarkdown.pandoc.to")=="html", TRUE, FALSE), echo=FALSE, fig.cap="Linear fit on fictitious data with covariates of varying levels of correlation.", fig.width=8, fig.height=8}
+<!-- # Display result of each model  -->
+
+<!-- # and plot hyperplane and data points -->
+
+<!-- rgl::mfrow3d(nr=2, nc=2) -->
+
+<!-- for (i in seq(length(rhos))) -->
+
+<!-- { -->
+
+<!--     m <- mdl[[i]] -->
+
+<!--     print(summary(m)) -->
+
+<!--     coefs <- coef(m) -->
+
+<!--     rgl::plot3d(m$model$x1, m$model$x2, m$model$y, -->
+
+<!--            xlab="x1", ylab="x2", zlab="y", -->
+
+<!--            main=paste0("rho=", rhos[i])) -->
+
+<!--     rgl::planes3d(a=coefs["x1"], b=coefs["x2"], c=-1,  -->
+
+<!--              d=coefs["(Intercept)"], col='#d9d9d9', alpha=0.3) -->
+
+<!--     rgl::view3d(0, -45) -->
+
+<!-- } -->
+
+<!-- ``` -->
+
+```{r, eval= TRUE, echo=FALSE, fig.cap="Linear fit on fictitious data with covariates of varying levels of correlation.", fig.width=8, fig.height=8}
 # Display result of each model 
 # and plot hyperplane and data points
 rgl::open3d()
@@ -161,9 +184,7 @@ Variance Inflation Factors (VIFs) are a useful measure of collinearity. They ret
 -   The VIF for the $j$th explanatory variable is $\mbox{VIF}_j=\frac{1}{(1-R^2_j)}$, where $R^2_j$ is the squared multiple correlation coefficient (coefficient of determination) of the $j^\text{th}$ variable with the other variables.
 -   The closer $R^2_j$ is to 1, the higher the collinearity and the VIF.
 
-If any of the covariates have more than one regression coefficient associated with them (e.g. `Phase`), then generalised variance-inflation factors (GVIFs) are calculated [@FoxMonette1992]. This generalises the notion of variance inflation by considering the relative size of the joint confidence region/ellipse (the generalisation of the confidence interval for multiple coefficients) for the coefficients associated with a related set of regressors. The resulting measure is called a generalised variance inflation factor (GVIF). If there are $p$ regressors in a term, then GVIF$^{1/(2p)}$ is a one-dimensional expression of the decrease in precision of estimation due to collinearity.
-
-Let's apply it to one of the previous quasi-Poisson model that was fitted in Section \@ref(poisson-glm-results).
+If any of the covariates have more than one regression coefficient associated with them (e.g. `Phase`), then generalised variance-inflation factors (GVIFs) are calculated [@fox1992]. This generalises the notion of variance inflation by considering the relative size of the joint confidence region/ellipse (the generalisation of the confidence interval for multiple coefficients) for the coefficients associated with a related set of regressors. The resulting measure is called a generalised variance inflation factor (GVIF). If there are $p$ regressors in a term, then GVIF$^{1/(2p)}$ is a one-dimensional expression of the decrease in precision of estimation due to collinearity.
 
 ```{r}
 simpleModel <- glm(response ~ x.pos + y.pos + depth + offset(log(area)), family="quasipoisson", data=nysted.analysisdata)
@@ -174,7 +195,7 @@ simpleModel <- glm(response ~ x.pos + y.pos + depth + offset(log(area)), family=
 car::vif(simpleModel)
 ```
 
-The VIFs suggest that there are perhaps some collinearity issues. The numerical outputs of the VIF indicate that the confidence intervals for the `y.pos` parameter are approximately $\sqrt{5.2}$ $=$ `r round(sqrt(5.3), 1)` times wider than they would be without `depth` in the model. This is by no means a bad case of collinearity and inline with what we've observed in Figure \@ref(fig:pairs-plot).
+The VIFs suggest that there are perhaps some collinearity issues. The numerical outputs of the VIF indicate that the confidence intervals for the `y.pos` parameter are approximately $\sqrt{5.2}$ $=$ `r round(sqrt(5.3), 1)` times wider than they would be without `depth` in the model. This is by no means a bad case of collinearity and inline with what we've observed in the figure above.
 
 In contrast, let's assume that `depth` was measured using two techniques, [sonar](https://en.wikipedia.org/wiki/Echo_sounding) and [LiDAR](https://geo-matching.com/content/bathymetric-lidar-sensors-and-uavs). We would expect both measurements to be highly correlated and that could cause some fitting issues. Let's see what happens:
 
@@ -195,7 +216,7 @@ summary(glmFitColinear)
 car::vif(glmFitColinear)
 ```
 
-Including `DepthSonar` and `DepthLiDAR` results in a GVIF of `r round(car::vif(glmFitColinear)["DepthSonar", "GVIF^(1/(2*Df))"], digits=2)`, confirming this collinearity problem and the associated issues with model stability.
+Including `DepthSonar` and `DepthLiDAR` results in a GVIF of `r round(car::vif(glmFitColinear)["DepthSonar"], digits=2)`, confirming this collinearity problem and the associated issues with model stability.
 
 ### Dealing with collinearity
 
@@ -289,7 +310,7 @@ ggplot() +
                data=subset(nysted.analysisdata[1:200, ], NHAT>0))
 ```
 
-To some extent, model covariates will be able to explain the similarity in these counts along transects. However, much of this pattern tends to remain unexplained by the model and is found in the model residuals (Figure \@ref(fig:residuals-200)).
+To some extent, model covariates will be able to explain the similarity in these counts along transects. However, much of this pattern tends to remain unexplained by the model and is found in the model residuals.
 
 ```{r}
 simpleModel <- glm(response ~ x.pos + y.pos + depth + offset(log(area)), family="quasipoisson", data=nysted.analysisdata)
@@ -560,8 +581,6 @@ Let's see if positive residual correlation is also apparent in our basic Nysted 
 runs.test(residuals(simpleModel, type="pearson"))
 ```
 
-
-
 ## Mean-variance relationship
 
 We can assess the mean-variance relationship by looking at the fitted values versus the residuals. To ease visual inspection we "bin" the fitted data and compute the variance of the residuals for each "bin".
@@ -601,7 +620,6 @@ p.meanvar <- plotMeanVar(mdl, print=FALSE)
 ggpubr::ggarrange(p.raw, p.meanvar, ncol=2)
 ```
 
-
 Let's inspect the mean-variance relationship for the `simpleModel`
 
 ```{r mean-var-glmFitOD3, fig.cap="Mean-variance relationship for the `simpleModel` model using the Pearson residuals.", fig.width=8, fig.height=4}
@@ -618,8 +636,9 @@ p.meanvar <- plotMeanVar(simpleModel, print=FALSE)
 ggpubr::ggarrange(p.raw, p.meanvar, ncol=2)
 ```
 
-There still seem to be a strong mean-variance relationship when looking at the Pearson residuals. This suggests that at least some of our modelling assumptions aren't met, and that we may have to adjust our model specification to account for a different mean-variance relationship. For example, we are underestimaiting the variance of the largest fitted values. 
+There still seem to be a strong mean-variance relationship when looking at the Pearson residuals. This suggests that at least some of our modelling assumptions aren't met, and that we may have to adjust our model specification to account for a different mean-variance relationship. For example, we are underestimating the variance of the largest fitted values.
 
+# Diagnostics using the `MRSea` package
 
 ```{r message=FALSE, warning=FALSE}
 library(dplyr)
@@ -627,80 +646,182 @@ library(MRSea)
 library(ggplot2)
 ```
 
-# Diagnostics specifically for `gamMRSea` models
-
 ## Autocorrelation check
 
 Are the residuals correlated? Make a suitable blocking structure, within which residuals are expected to be correlated but between which they are independent. Use `runACF` to assess the blocking structure. In this case we have data collected by transect. We would expect there to be some level of correlation along transect so we use this for a blocking structure.
 
 Autocorrelation function plot:
 
+-   the function uses Pearsons residuals
 -   each grey line is the correlation within a given transect
--   the red line is the mean of these correlations across all transects and is simlilar to what you would see from running the usual `acf()` command.
+-   the red line is the mean of these correlations across all transects and is similar to what you would see from running the usual `acf()` command.
 
 ```{r}
-runACF(block = wfdata$transect.id, model = simpleModel,
+runACF(block = nysted.analysisdata$transect.id, model = simpleModel,
        suppress.printout=TRUE)
 ```
 
-In this case there is evidence that some transects show very high correlation
+```{r}
+a <- acf(residuals(simpleModel, type="pearson"))
+a[1]
+plot(a)
+```
 
-The runs test:
+In this case there is evidence that some transects show very high correlation. Along with a plot, we can also do a statistical test to assess for independence: the runs test.
 
--   Non-independence in model residuals can be diagnosed using the Wald-Wolfowitz runs test :
--   This test assigns a "sign" to each residual: positive residuals are labelled +1's and negative residuals are labelled -1's.
--   The number of uninterrupted strings ("runs") of positive and negative residuals when looked at in sequence (e.g. time order) is then calculated.
--   Too few (long) runs provide evidence of positive correlation, while too many (short) runs provide evidence of negative correlation.
-
-Here we also do a runs test to assess for correlation in the model residuals. Since our data are over-dispersed, we should use the empirical distribution for assessment:
+Details of the standard runs test are given above. Under the null hypothesis of independence, the test statistic is distributed N(0,1). However, when the data/residuals are highly over dispersed the standard runs test can be misleading - it fails to reject H$_0$ when the residuals are correlated. For this reason, we have developed an empirical runs test where we simulate the test statistic distribution under independence and use this to obtain an empirical $p$-value for the test statistic for our data.
 
 Empirical runs test calculation:
 
-```{r, eval=FALSE}
+1)  Generate some data that is independent but with the similar distributional characteristics as your response data.
+
+```{r}
 simData<-generateNoise(n=500, 
                        response=fitted(simpleModel), 
                        family='poisson', 
                        d=summary(simpleModel)$dispersion)
-empdist<-getEmpDistribution(500, simData, simpleModel, data=wfdata, dots=FALSE, plot = TRUE)
 ```
 
-```{r eval=FALSE}
+2)  Get the empirical distribution of runs test statistics
+
+```{r}
+empdist<-getEmpDistribution(500, simData, simpleModel, data=nysted.analysisdata, dots=FALSE, plot = TRUE)
+```
+
+3)  Evaluate the runs test $p$-value using the empirical distribution found above.
+
+```{r}
 runsTest(residuals(simpleModel, type='pearson'), emp.distribution=empdist)
 ```
 
-### `runDiagnostics`
+## Additional Diagnostic Plots
 
-This function creates observed vs fitted and fitted vs scaled pearsons residual plots.
+The `runDiagnostics`function creates two diagnostic plots:
+
+-   observed vs fitted and
+-   fitted vs scaled Pearsons residual plots.
+
+### Observed vs Fitted plot
+
+Two metrics, a marginal R$^2_m$ and the concordance correlation coefficient, are printed in the title of the plot to help assess model fit.
+
+-   $$R^2_m = 1 - \frac{\sum{(y_i - \hat{y_i})^2}}{\sum{(y_i - \bar{y})^2}}$$
+
+-   $$CC = \frac{2\sum{(y_i - \bar{y})(\hat{y_i} - \bar{y})}}{\sum{(y_i - \bar{y})^2}+\sum{(\hat{y_i} - \bar{y})^2}}$$
+
+Where $y_i$ is the $i$th response value, $\hat{y_i}$ is the $i$th fitted value and $\bar{y}$ is the mean of the fitted values.
 
 ```{r, eval=TRUE, fig.width=9, fig.height=6}
-runDiagnostics(simpleModel)
+runDiagnostics(simpleModel, plotting = "f")
 ```
 
-### Influence diagnostics
+In this case, the simple model does not have a very good fit to the data as both the concordance correlation and the r squared values are low.
 
-These functions assess the influence of different blocks on the data.
+### Scaled Pearsons Residuals
+
+These residuals should show little to no relationship with the fitted values from the model. The red line is a locally weighted least squares regression line of all of the residuals which can be used as a guide to assess this relationship.
+
+The scaled Pearsons residuals are residuals where the expected relationship given the distribution is taken account of including any extra dispersion estimated via the dispersion parameter. We would expect to see no pattern and even variance.
+
+In this case, the residuals do not show any pattern (the red line is near horizontal). To assess the variance of the residuals, the mean-variance plot discussed earlier is useful here.
+
+```{r, eval=TRUE, fig.width=9, fig.height=6}
+runDiagnostics(simpleModel, plotting = "r")
+```
+
+```{r}
+plotMeanVar(simpleModel)
+```
+
+## Influence diagnostics
+
+If the data has some structure to it, e.g. in the form of blocks or transects, you can asses the influence each of these blocks has on the precision of parameter estimates (the standard errors associated with each coefficient) and sensitivity of model predictions. We use two statistics; COVRATIO and PRESS to assess these.
+
+### COVRATIO
+
+This statistic signals the change in the precision of the parameter estimates when each block is omitted. - Values greater than 1 signal removing the block inflates parameter standard errors - Values less than 1 signal standard errors are smaller when that block is excluded
+
+The influential points are those that lie outside the 95% quantile of COVRATIO statistics
+
+### PRESS
+
+Quantifies the sensitivity of model predictions to removing each block.
+
+-   Relatively large values signal the model is sensitive to these subjects.
+-   Model coefficients are re-estimated when each block is omitted (one-by one) and the sum of the squared differences between the response data and the predicted values (when that subject is removed) are found.
+
+This statistic is the sum of the squared PRESS residuals in a deletion set (block ID). The PRESS residuals are the difference between the observed value and the predicted mean, where the predicted value is obtained without the observations in question.
+
+$$\widehat{\epsilon_{pr, i}} = y_i - X_i^-\hat{\beta}$$ $$PRESS = \sum\widehat{\epsilon_{pr, i}}$$
+
+The influential points are those that lie above the 95% quantile of PRESS statistics.
+
+### Calculating the statistics
+
+First create the blocking structure. Here I have chosen this to be the unique transect id for each season and impact phase.
+
+```{r}
+nysted.analysisdata$blockid <- paste0(nysted.analysisdata$impact,
+                                      nysted.analysisdata$season,
+                                      nysted.analysisdata$transect.id)
+```
 
 ```{r eval=TRUE}
 timeInfluenceCheck(model = simpleModel, 
-                   id = nysted.analysisdata$transect.id)
+                   id = nysted.analysisdata$blockid)
 ```
 
 ```{r, eval=TRUE, fig.width=9, fig.height=6}
-inflpoints<-runInfluence(simpleModel, id = wfdata$blockid)
+inflpoints<-runInfluence(simpleModel, id = nysted.analysisdata$blockid)
 ```
 
-### Cumulative residual plots
+If model predictions or measures of precision appear particularly sensitive to omitted blocks, first have a look at those blocks and see if there are any obvious issues with that block. Additionally you could examine model conclusions based on models with and without the potentially problematic blocks.
 
-Cumulative residual plots are returned for residuals ordered by each covariate in `varlist`, predicted value and index of observations (temporally). The blue dots are the residuals and the black line is the line of cumulative residual. On the covariate plots (those in `varlist`) the grey line indicates what we would expect from a well fitted covariate. i.e. one that is fitted with excessive knots.
+In practice, influential blocks are often those with a lot of observations and thus influence the parameter estimates quite highly. In this instance, the influence is perfectly normal and to be expected.
+
+## Cumulative residual plots
+
+Cumulative residuals can be used to assess systematic over- or under- prediction, i.e. the functional form of covariates, and can be used to assess the adequacy of regression models [@lin2002].
+
+On each plot the blue dots are the residuals and the black line is the line of cumulative residual. On the covariate plots (those specified in `varlist`) the grey line indicates what we would expect from a well/over fitted covariate. i.e. one that is fitted with excessive knots.
+
+Let's look at an example where depth is fitted as a linear term and then as a simple smooth term (B-spline with one knot at the mean).
+
+```{r}
+# depth linear
+fit.lin <- glm(formula = response ~ depth + offset(log(area)), 
+    family = "quasipoisson", data = nysted.analysisdata)
+# depth smooth
+fit.sm <- glm(formula = response ~ splines::bs(depth, knots = mean(nysted.analysisdata$depth)) + offset(log(area)), 
+    family = "quasipoisson", data = nysted.analysisdata)
+```
+
+```{r, fig.cap="Cumulative residual plots for residuals ordered by depth as a smooth term (right) and when depth is fitted as a linear term (left). The blue points are the residual values, the black line represents the cumulative residuals. The grey line in the background is what we would expect the cumulative residuals to be if depth was modelled with more flexibility."}
+# cum res of both
+plotCumRes(model = fit.lin, varlist = 'depth', variableonly = TRUE)
+plotCumRes(model = fit.sm, varlist = 'depth', variableonly = TRUE)
+```
+
+When depth is modelled linearly, the plot shows systematic and severe over and then under prediction. As a smooth term, the black and grey lines are more similar and shows that depth is modelled more appropriately.
+
+By default (`variableonly = FALSE`), cumulative residual plots are also returned for residuals ordered predicted value and index of observations (temporally).
 
 ```{r,eval=TRUE, fig.width=9, fig.height=7}
-plotCumRes(model = simpleModel, varlist = 'depth')
+plotCumRes(model = simpleModel, varlist="depth")
 ```
+
+-   as we've shown, depth as a linear term is inappropriate with systematic over and under prediction.
+-   Systematic over prediction at predicted counts less than one and systematic under prediction at predicted counts \> 1
+-   Evidence of systematic under and over prediction for the full data timeline. Like the runs profiles described earlier, we would expect to see more switching between positive and negative (under and over prediction).
 
 <!-- ### Mean-variance check -->
 
 <!-- Not a function in MRSea but an essential component to model assessment is the mean variance relationship. In the plot below, the dots are the observed mean and variance for several bins of the fitted data. The red line is the assumed mean-variance relationship. -->
 
 <!-- ```{r} -->
+
 <!-- plotMeanVar(finalmod) -->
+
 <!-- ``` -->
+
+# References
