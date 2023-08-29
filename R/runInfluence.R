@@ -97,7 +97,7 @@ runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
     newMod<-model
     if ("splineParams" %in% names(model)) {
       newMod$splineParams[[1]]$dist<- newMod$splineParams[[1]]$dist[-rowsToDel,]
-      splineParams<<-model$splineParams
+      splineParams = model$splineParams
     }
     
     if(class(model)[1]=='gamMRSea'){
@@ -108,7 +108,7 @@ runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
       newMod<-update(newMod, .~. ,data=newData, panels=newpanel, splineParams = splineParams)
       newmod.det<-det(summary(newMod)$cov.robust)
     }else{
-      newMod<-update(newMod, .~. ,data=newData, splineParams = splineParams)
+      newMod<-update(newMod, .~. ,data=newData)
       newmod.det<-det(summary(newMod)$cov.scaled)
     }
     
