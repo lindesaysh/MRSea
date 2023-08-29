@@ -24,7 +24,7 @@
 #'
 
 runDiagnostics<-function(model, plotting='b', save=FALSE, label = NULL){
-  print("Assessing predictive power")
+  #print("Assessing predictive power")
   
   response<-model$y
   
@@ -55,7 +55,7 @@ runDiagnostics<-function(model, plotting='b', save=FALSE, label = NULL){
   df<-data.frame(fits=fitted(model), res=scaledRes, smx=lowess(fitted(model), scaledRes)$x, smy=lowess(fitted(model), scaledRes)$y, response=response )
   
   if(plotting=='b' | plotting=='f'){
-    a<- ggplot(df) + geom_point(aes(response, fits), alpha=0.15, size=3) + geom_abline(intercept=0, slope=1) + labs(x='Observed Values', y='Fitted Values', title=paste("Concordence correlation: ", round(rc,4), "\nMarginal R-squared value: ", round(r2,4), sep=""))
+    a<- ggplot(df) + geom_point(aes(response, fits), alpha=0.15, size=3) + geom_abline(intercept=0, slope=1) + labs(x='Observed Values', y='Fitted Values', title=paste("Concordance correlation: ", round(rc,4), "\nMarginal R-squared value: ", round(r2,4), sep=""))
     
     a<-a + theme_bw() + theme(panel.grid.major=element_blank(), axis.text.x=element_text(size=15), axis.text.y=element_text(size=15), axis.title.x=element_text(size=15), axis.title.y=element_text(size=15), plot.title=element_text(size=15))
     
