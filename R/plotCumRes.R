@@ -27,13 +27,17 @@
 #' 
 #' @export
 #' 
-plotCumRes<- function(model, varlist, label='', save=FALSE){
+plotCumRes<- function(model, varlist=NULL, label='', save=FALSE, variableonly = FALSE){
   
   require(splines)
   
   print("Calculating cumulative residuals")
   
-  namesOfx<- c(varlist, c("Predicted", "Index"))
+  if(is.null(varlist)){
+    namesOfx<- c(c("Predicted", "Index"))  
+  }else{
+    namesOfx<- c(varlist, c("Predicted", "Index"))
+  }
   
   if(class(model)[1]=='geeglm' | class(model)[1]=='glm'){
     dat<- data.frame(model$data)
@@ -49,47 +53,54 @@ plotCumRes<- function(model, varlist, label='', save=FALSE){
   
   # find which data columns refer to the used variables
   coefpos<-c()
-  for(c in 1:(length(namesOfx)-2)){
-    coefpos<- c(coefpos, grep(namesOfx[c], names(dat)))
+  for(z in 1:(length(namesOfx)-2)){
+    coefpos<- c(coefpos, grep(namesOfx[z], names(dat)))
   }
   
   # make matrix (n x number covar + fitted + orderdata)
   xmatrix<- cbind(dat[,coefpos], fitted(model), ord=1:length(fitted(model)))
   
   attributes(model$formula)$.Environment<-environment()
-  
-  for(c in 1:length(namesOfx)){
+
+  if(variableonly == FALSE){
+    plotvar <- namesOfx
+  }else{
+    plotvar <- varlist
+  }
     
-    if(c < (length(namesOfx)-1)){
-      covardat<- dat[model$y>0, coefpos[c]]
+    
+  for(z in 1:length(plotvar)){
+    
+    if(z < (length(namesOfx)-1)){
+      covardat<- dat[model$y>0, coefpos[z]]
       newknots<-as.vector(quantile(covardat, seq(0.05, 0.95, length=7)))
       newknots<-unique(newknots)
       #dists<-d2k
       
       # removal term
       #term<-attributes(terms(model))$term.labels[grep(namesOfx[i], attributes(terms(model))$term.labels)]
-      term<-labels(terms(model))[grep(namesOfx[c], labels(terms(model)))]
+      term<-labels(terms(model))[grep(namesOfx[z], labels(terms(model)))]
       #newterm<- paste('bs(', namesOfx[c], ', knots= c(newknots)', sep='')
-      newterm<- paste('bs(', namesOfx[c], ', knots= c(', paste(newknots, sep=" ", collapse=','), '))', sep='')
+      newterm<- paste('bs(', namesOfx[z], ', knots= c(', paste(newknots, sep=" ", collapse=','), '))', sep='')
       eval(parse(text=paste('covarModelUpdate<-update(model, .~. -',term, ' +', newterm,')', sep='')))
       xmatrix_test<- cbind(dat[,coefpos], fitted(covarModelUpdate), ord=1:length(fitted(covarModelUpdate)))
     }
     
     type='response'
     
-    maxy<- max(residuals(model),cumsum(residuals(model, type=type)[order(xmatrix[,c])]))
-    miny<- min(residuals(model),cumsum(residuals(model, type=type)[order(xmatrix[,c])]))
+    maxy<- max(residuals(model),cumsum(residuals(model, type=type)[order(xmatrix[,z])]))
+    miny<- min(residuals(model),cumsum(residuals(model, type=type)[order(xmatrix[,z])]))
     
     # make plot
-    if(save==T){png(paste("CumRes_", namesOfx[c],label, ".png", sep=''), height=600, width=700)}
+    if(save==T){png(paste("CumRes_", namesOfx[z],label, ".png", sep=''), height=600, width=700)}
     else{devAskNewPage(ask=TRUE)}
-    plot(xmatrix[,c][order(xmatrix[,c])],residuals(model, type=type)[order(xmatrix[,c])], ylim=c(miny,maxy), xlab=namesOfx[c], ylab="Response   residuals", pch='.',cex=0.1, main="Cumulative Residuals", cex.lab=1.3, cex.axis=1.3)
+    plot(xmatrix[,z][order(xmatrix[,z])],residuals(model, type=type)[order(xmatrix[,z])], ylim=c(miny,maxy), xlab=namesOfx[z], ylab="Response   residuals", pch='.',cex=0.1, main="Cumulative Residuals", cex.lab=1.3, cex.axis=1.3)
     
-    if(c < (length(namesOfx)-1)){
-      lines(xmatrix_test[,c][order(xmatrix_test[,c])],cumsum(residuals(covarModelUpdate, type=type)[order(xmatrix_test[,c])]), lwd=2, col='grey')  
+    if(z < (length(namesOfx)-1)){
+      lines(xmatrix_test[,z][order(xmatrix_test[,z])],cumsum(residuals(covarModelUpdate, type=type)[order(xmatrix_test[,z])]), lwd=2, col='grey')  
     }
-    points(xmatrix[,c][order(xmatrix[,c])],residuals(model, type=type)[order(xmatrix[,c])], pch=20, col='turquoise4', cex=0.5)
-    lines(xmatrix[,c][order(xmatrix[,c])],cumsum(residuals(model, type=type)[order(xmatrix[,c])]), lwd=2)
+    points(xmatrix[,z][order(xmatrix[,z])],residuals(model, type=type)[order(xmatrix[,z])], pch=20, col='turquoise4', cex=0.5)
+    lines(xmatrix[,z][order(xmatrix[,z])],cumsum(residuals(model, type=type)[order(xmatrix[,z])]), lwd=2)
     abline(h=0)
     if(save==T){dev.off()}else{devAskNewPage(ask=FALSE)}
   }
