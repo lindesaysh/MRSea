@@ -13,16 +13,27 @@ knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE,
 
 # Introduction
 
-The `MRSea` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to other studies as well. 
+`MRSea` stands for Marine Renewables Strategic Environmental Assessment. and the package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to any studies where you wish to fit uni or bivariate smooths. 
+
+The package enables the fitting of spatially adaptive regression splines using two Spatially Adaptive Local Smoothing Algorithms (SALSA): 
+
+- Generalised additive model framework using exponential family distributions (e.g. Gaussian, Poisson, Binomial, Gamma) and the Tweedie distribution. 
+- Univariate smoothing using B-splines, Natural cubic splines or cyclic cubic splines
+- Bivariate smoothing using Gaussian or exponential radial basis functions
+- Euclidean or geodesic distance metric for similarity between 2D points (distance component of the radial basis functions)
+- Direct estimation of robust standard errors in the case of residual correlation
+- Additionally there are development versions for point process and multinomial responses
+
+For additional information regarding the methods see the [Publications Page](http://lindesaysh.github.io/MRSea/articles/web/Publications.html)
 
 
-This vignette gives an updated example of the code for version 1.3.  For additional information regarding methods, see @Mac2013 and @ScottH2013a.  The user should be familiar with generalised linear models and their assumptions and model selection. The `MRSea` package primarily allows spatially adaptive model selection for both one and two dimensional covariates using the functions `runSALSA1D` and `runSALSA2D`, which implement the methods of @Walker2010, @ScottH2013 and @ScottH2022. 
+The main modelling functions are `runSALSA1D` and `runSALSA2D`, which implement the methods for univariate and then bivariate smoothing and these produce models of the class `gamMRSea`.
 
-The major update to this package (from version 0 to version 1) is that a class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object information regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given).
+<!-- The major update to this package (from version 0 to version 1) is that a class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object information regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given). -->
 
 Other functions include diagnostics (to assess residual correlation: `runACF`, smooth relationships: `runPartialPlots` and model selection (ANOVA) for robust standard errors: `anova.gamMRSea`) and inference (`do.bootstrap.cress`). 
 
 
 ![alt text](images/MRSea_workflow.png)
-Example of the modelling process using MRSea.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst MRSea functions are in red.  
+Example of the modelling process using `MRSea`.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst `MRSea` functions are in red.  
 
