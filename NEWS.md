@@ -1,4 +1,4 @@
-# MRSea 1.3.3.001
+# MRSea 1.4
 
 
 ## Notes
@@ -10,10 +10,20 @@
 
   - Tweedie distribution and associated information criterion added (`AICtweedie` and `BICtweedie`)
 
-* Other:
+* Vignettes:
+
+  - Added a vignette for using the Tweedie distribution in gamMRSea models
+  - Added a vignette for model diagnostics with general modelling information and MRSea specific functions
+  - Added a vignette for user specification of the range of radii choices using a variogram
+  - Added a vignette for a brief introduction to distance sampling using the `mrds` package
+  - Added an introduction to MRSea vignette.
+  - The case study vignette has been removed for updating and will return soon. 
+  
+  
+* Other: 
 
   - Mean variance plot function added. This allows the user to assess the suitability of the mean-variance distributional assumption for a number of distributions (Gaussian, Poisson, Quasi-Poisson, Gamma and Tweedie)
-  - Added vignette for using the Tweedie distribution in gamMRSea models
+  - Minor edits to all diagnostic functions (ACF, influence measures, diagnostic plots, cumulative residuals)
   
 ## Bug Fixes
 
@@ -24,6 +34,7 @@
 * Other:
 
   - ensure data is a `data.frame` (not `tibble`) in `create.bootstrap.data` and `plotCumRes` functions
+  - minor bug fixes to diagnostic functions when no spline parameter object present in model
 
 
 # MRSea 1.3.3

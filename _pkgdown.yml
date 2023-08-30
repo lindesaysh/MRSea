@@ -9,6 +9,8 @@ navbar:
     articles:
       text: Articles
       menu:
+      - text: Introduction to the package
+        href: articles/web/IntroductiontoMRSea.html
       - text: Basic examples
       - text: One-dimensional smooths
         href: articles/GettingStarted_1Dsmoothing.html
@@ -16,23 +18,23 @@ navbar:
         href: articles/GettingStarted_2Dsmoothing.html
       - text: ---  
       - text: Using Different Splines
-        href: articles/web/FittingDifferentSplines_MRSea_v1.3.html
+        href: articles/web/FittingDifferentSplines_MRSea.html
       - text: Interactions for 2D smooths
-        href: articles/web/Interactions_salsa2d_MRSea_v1.3.html
+        href: articles/web/Interactions_salsa2d_MRSea.html
+      - text: Model Diagnostics
+        href: articles/web/ModelDiagnostics_MRSea.html
       - text: Using the Tweedie Distribution
-        href: articles/web/TheTweedieDistribution_MRSea_v1.3.html
+        href: articles/web/TheTweedieDistribution_MRSea.html
       - text: Publications
         href: articles/web/Publications.html
       - text: ---
+      - text: Brief Intro to Distance Sampling
+        href: articles/web/DistanceSampling.html
       - text: Renewables Case Study
-        href: articles/web/RenewablesCaseStudy_MRSea_v1.3.html
+        href: articles/web/RenewablesCaseStudy_MRSea.html
       - text: ---
       - text: More advanced Usage
       - text: Geodesic smoothing
-        href: articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html
-      - text: Using the Tweedie distribution
-        href: articles/web/TheTweedieDistribution_MRSea_v1.3.html
+        href: articles/web/Geodesic_2dsmoothing_MRSea.html
       - text: Basis radii selection
-        href: articles/web/UserRadiiChoice_MRSea_v1.3.html
-      - text: test
-        href: articles/web/quartotestpage.html
+        href: articles/web/UserRadiiChoice_MRSea.html
