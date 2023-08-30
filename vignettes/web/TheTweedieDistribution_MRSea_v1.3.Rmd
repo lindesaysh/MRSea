@@ -230,8 +230,6 @@ preddata <- filter(nysted.predictdata, impact == 0, season == 1)
 p2k <-makeDists(preddata[, c("x.pos", "y.pos")], kg, knotmat = FALSE)$dataDist
 ```
 
-
-
 ```{r}
 # make parameter set for running salsa2D
 salsa2dlist<-list(fitnessMeasure = 'AICtweedie', 
