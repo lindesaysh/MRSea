@@ -1,0 +1,68 @@
+Package: MRSea
+Type: Package
+Title: Spatially adaptive regression splines using SALSA
+Description: Examines animal survey data for signs of changes in animal
+    abundance and distribution following marine renewables development. The
+    functions of this package can be used to analyse many types of data including
+    segmented line transect data and nearshore vantage point data. 
+    The package fits Generalised Additive Models (GAMs) to one and two dimensional splines/bases
+    utilising a spatially adaptive framework for knot number and location. In one dimension, B-splines, 
+    cyclic cubics and natural cubics are available and in two dimensions, the radial bases can be Gaussian or
+    exponential and use Euclidean or Geodesic (or other user specified) distances. Non-parametric
+    bootstrapping is available to estimate uncertainty and if residual correlation is present, robust standard
+    errors maybe used (given a panel structure). Several model assessment
+    tools are also available. 
+Version: 1.4
+Date: 2023-30-08
+Authors@R: c(
+    person("Lindesay", "Scott-Hayward", email = "lass@st-and.ac.uk",
+            role = c("aut", "cre", "cph"),
+            comment = c("Lindesay Scott-Hayward wrote the original main code and continues to develop and maintain code")),
+    person("Cameron" ,"Walker", email = "cameron.walker@auckland.ac.nz",
+            role = c("aut", "cph"),
+            comment = c("Cameron Walker wrote the original SALSA functions")),
+    person("Monique", "Mackenzie", role = c("aut", "cph"),
+            comment = c("Monique Mackenzie wrote SALSA code and provides testing, bugfixes and new ideas")),
+    person("Cornelia", "Oedekoven", role = c("ctb"),
+            comment = c("Cornelia Oedekoven wrote code for distance sampling"))
+            )
+BugReports: https://github.com/lindesaysh/MRSea/issues
+Depends:
+    R (>= 3.5.0)
+Imports:
+    calibrate (>= 1.7.2),
+    car (>= 2.0-20),
+    Matrix (>= 1.1-4),
+    mgcv (>= 1.8-0),
+    mvtnorm (>= 1.0-0),
+    splines (>= 3.1.1),
+    fields,
+    dplyr,
+    methods,
+    ggplot2
+Suggests:
+    MuMIn,
+    mrds,
+    knitr,
+    rmarkdown,
+    knitcitations,
+    splancs,
+    raster,
+    gdistance,
+    RColorBrewer,
+    tidyr,
+    tweedie,
+    statmod,
+    boot
+License: GPL-3
+LazyData: true
+Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
+    (2020). "MRSea package: Statistical Modelling of bird and
+    cetacean distributions in offshore renewables development areas".
+    University of St. Andrews
+URL: http://creem2.st-and.ac.uk/software.aspx,
+    http://lindesaysh.github.io/MRSea/
+RoxygenNote: 7.2.3
+Encoding: UTF-8
+VignetteBuilder: knitr
+BuildVignettes: true

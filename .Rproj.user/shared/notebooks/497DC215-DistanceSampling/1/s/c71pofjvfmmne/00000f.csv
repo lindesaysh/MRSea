@@ -1,0 +1,3 @@
+"0","result.season <- ddf(dsmodel=~mcds(key=""hn"", formula=~season),"
+"0","              data = dis.data, method=""ds"", "
+"0","              meta.data=list(width=250))"

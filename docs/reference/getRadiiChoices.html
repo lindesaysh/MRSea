@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">MRSea</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,18 +24,24 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/web/IntroductiontoMRSea.html">Introduction to the package</a>
     <h6 class="dropdown-header" data-toc-skip>Basic examples</h6>
     <a class="dropdown-item" href="../articles/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
     <a class="dropdown-item" href="../articles/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea_v1.3.html">Using Different Splines</a>
-    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea_v1.3.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea.html">Using Different Splines</a>
+    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/ModelDiagnostics_MRSea.html">Model Diagnostics</a>
+    <a class="dropdown-item" href="../articles/web/TheTweedieDistribution_MRSea.html">Using the Tweedie Distribution</a>
     <a class="dropdown-item" href="../articles/web/Publications.html">Publications</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea_v1.3.html">Renewables Case Study</a>
+    <a class="dropdown-item" href="../articles/web/DistanceSampling.html">Brief Intro to Distance Sampling</a>
+    <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea.html">Renewables Case Study</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>More advanced Usage</h6>
-    <a class="dropdown-item" href="../articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../articles/web/Geodesic_2dsmoothing_MRSea.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../articles/web/UserRadiiChoice_MRSea.html">Basis radii selection</a>
+    <a class="dropdown-item" href="../articles/web/quartotestpage.html">test</a>
   </div>
 </li>
 <li class="nav-item">
@@ -84,6 +90,10 @@
 <dt>basis</dt>
 <dd><p>character stating whether a 'gaussian' or 'exponential' basis is being used.</p></dd>
 
+
+<dt>rvin</dt>
+<dd><p>Two parameter vector stating the minimum and maximum range of r for a gaussian basis.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -113,8 +123,7 @@ DOI: 10.1080/10618600.2012.762920</p>
 <span class="r-in"><span><span class="va">distMats</span><span class="op">&lt;-</span><span class="fu"><a href="makeDists.html">makeDists</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">ns.data.re</span><span class="op">$</span><span class="va">x.pos</span>, <span class="va">ns.data.re</span><span class="op">$</span><span class="va">y.pos</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">knotgrid.ns</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># choose sequence of radii</span></span></span>
-<span class="r-in"><span><span class="va">r_seq</span><span class="op">&lt;-</span><span class="fu">getRadiiChoices</span><span class="op">(</span><span class="fl">8</span>, <span class="va">distMats</span><span class="op">$</span><span class="va">dataDist</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in getRadiiChoices(8, distMats$dataDist):</span> argument "basis" is missing, with no default</span>
+<span class="r-in"><span><span class="va">r_seq</span><span class="op">&lt;-</span><span class="fu">getRadiiChoices</span><span class="op">(</span><span class="fl">8</span>, <span class="va">distMats</span><span class="op">$</span><span class="va">dataDist</span>, basis<span class="op">=</span><span class="st">"gaussian"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

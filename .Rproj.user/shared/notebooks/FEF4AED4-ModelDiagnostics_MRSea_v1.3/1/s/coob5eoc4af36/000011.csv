@@ -1,0 +1,288 @@
+"0","timeInfluenceCheck(model = simpleModel, "
+"0","                   id = nysted.analysisdata$transect.id)"
+"1","debugging in: "
+"1","timeInfluenceCheck(model = simpleModel, id = nysted.analysisdata$transect.id)
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#20: "
+"1","{
+"
+"1","    attributes(model$formula)$.Environment <- environment()
+"
+"1","    response <- model$y
+"
+"1","    if (class(model)[1] == ""geeglm"" | class(model)[1] == ""gamMRSea"" | 
+"
+"1","        class(model)[1] == ""glm"") {
+"
+"1","        dat <- model$data
+"
+"1","    }
+"
+"1","    if (class(model)[1] == ""gam"") {
+"
+"1","        dat <- model$model
+"
+"1","    }
+"
+"1","    idUse <- sample(unique(id), 10)
+"
+"1","    if (length(which(search() == ""package:mgcv"")) > 0) {
+"
+"1","        detach(""package:mgcv"")
+"
+"1","    }
+"
+"1","    suppressMessages({
+"
+"1","        library(mgcv, quietly = TRUE)
+"
+"1","    })
+"
+"1","    inflStore <- matrix(0, nrow = length(unique(id)), ncol = (length(coef(model)) + 
+"
+"1","        2))
+"
+"1","    timeForOne <- system.time(for (i in unique(idUse)) {
+"
+"1","        rowsToDel <- which(id == i)
+"
+"1","        pos <- which(i == unique(id))
+"
+"1","        newData <- dat[-rowsToDel, ]
+"
+"1","        nb <- as.matrix(model.matrix(model)[c(1), ])
+"
+"1","        nc <- as.matrix(inflStore[pos, 1:length(coef(model))])
+"
+"1","        if (length(pos == 1)) {
+"
+"1","            presPred <- t(nb) %*% nc
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            presPred <- nb %*% nc
+"
+"1","        }
+"
+"1","        inflStore[pos, ncol(inflStore)] <- sum((response[rowsToDel] - 
+"
+"1","            c(family(model)$linkinv(presPred)))^2)
+"
+"1","        if (class(model)[1] == ""gamMRSea"") {
+"
+"1","            model.det <- det(summary(model)$cov.robust)
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            model.det <- det(summary(model)$cov.scaled)
+"
+"1","        }
+"
+"1","        newMod <- model
+"
+"1","        if (""splineParams"" %in% names(model)) {
+"
+"1","            newMod$splineParams[[1]]$dist <- newMod$splineParams[[1]]$dist[-rowsToDel, 
+"
+"1","                ]
+"
+"1","            splineParams = model$splineParams
+"
+"1","        }
+"
+"1","        if (class(model)[1] == ""gamMRSea"") {
+"
+"1","            newpanel <- id[-rowsToDel]
+"
+"1","            if (is.factor(newpanel)) {
+"
+"1","                newpanel <- droplevels(newpanel)
+"
+"1","            }
+"
+"1","            newMod <- update(newMod, . ~ ., data = newData, panels = newpanel, 
+"
+"1","                splineParams = splineParams)
+"
+"1","            newmod.det <- det(summary(newMod)$cov.robust)
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            newMod <- update(newMod, . ~ ., data = newData)
+"
+"1","            newmod.det <- det(summary(newMod)$cov.scaled)
+"
+"1","        }
+"
+"1","        inflStore[pos, (1:length(coef(newMod)))] <- newMod$coefficients
+"
+"1","        inflStore[pos, (ncol(inflStore) - 1)] <- newmod.det/model.det
+"
+"1","    })
+"
+"1","    print(paste(""Calculating the influence measures will take approximately "", 
+"
+"1","        round((timeForOne[3]/10) * length(unique(id))/60), "" minutes"", 
+"
+"1","        sep = """"))
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#21: "
+"1","attributes(model$formula)$.Environment <- environment()
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#22: "
+"1","response <- model$y
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#23: "
+"1","if (class(model)[1] == ""geeglm"" | class(model)[1] == ""gamMRSea"" | 
+"
+"1","    class(model)[1] == ""glm"") {
+"
+"1","    dat <- model$data
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#25: "
+"1","dat <- model$data
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#27: "
+"1","if (class(model)[1] == ""gam"") {
+"
+"1","    dat <- model$model
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#30: "
+"1","idUse <- sample(unique(id), 10)
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#31: "
+"1","if (length(which(search() == ""package:mgcv"")) > 0) {
+"
+"1","    detach(""package:mgcv"")
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#32: "
+"1","detach(""package:mgcv"")
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#34: "
+"1","suppressMessages({
+"
+"1","    library(mgcv, quietly = TRUE)
+"
+"1","})
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#35: "
+"1","library(mgcv, quietly = TRUE)
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#38: "
+"1","inflStore <- matrix(0, nrow = length(unique(id)), ncol = (length(coef(model)) + 
+"
+"1","    2))
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#39: "
+"1","timeForOne <- system.time(for (i in unique(idUse)) {
+"
+"1","    rowsToDel <- which(id == i)
+"
+"1","    pos <- which(i == unique(id))
+"
+"1","    newData <- dat[-rowsToDel, ]
+"
+"1","    nb <- as.matrix(model.matrix(model)[c(1), ])
+"
+"1","    nc <- as.matrix(inflStore[pos, 1:length(coef(model))])
+"
+"1","    if (length(pos == 1)) {
+"
+"1","        presPred <- t(nb) %*% nc
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        presPred <- nb %*% nc
+"
+"1","    }
+"
+"1","    inflStore[pos, ncol(inflStore)] <- sum((response[rowsToDel] - 
+"
+"1","        c(family(model)$linkinv(presPred)))^2)
+"
+"1","    if (class(model)[1] == ""gamMRSea"") {
+"
+"1","        model.det <- det(summary(model)$cov.robust)
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        model.det <- det(summary(model)$cov.scaled)
+"
+"1","    }
+"
+"1","    newMod <- model
+"
+"1","    if (""splineParams"" %in% names(model)) {
+"
+"1","        newMod$splineParams[[1]]$dist <- newMod$splineParams[[1]]$dist[-rowsToDel, 
+"
+"1","            ]
+"
+"1","        splineParams = model$splineParams
+"
+"1","    }
+"
+"1","    if (class(model)[1] == ""gamMRSea"") {
+"
+"1","        newpanel <- id[-rowsToDel]
+"
+"1","        if (is.factor(newpanel)) {
+"
+"1","            newpanel <- droplevels(newpanel)
+"
+"1","        }
+"
+"1","        newMod <- update(newMod, . ~ ., data = newData, panels = newpanel, 
+"
+"1","            splineParams = splineParams)
+"
+"1","        newmod.det <- det(summary(newMod)$cov.robust)
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        newMod <- update(newMod, . ~ ., data = newData)
+"
+"1","        newmod.det <- det(summary(newMod)$cov.scaled)
+"
+"1","    }
+"
+"1","    inflStore[pos, (1:length(coef(newMod)))] <- newMod$coefficients
+"
+"1","    inflStore[pos, (ncol(inflStore) - 1)] <- newmod.det/model.det
+"
+"1","})
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#41: "
+"1","rowsToDel <- which(id == i)
+"
+"0","c"
+"1","debug at ~/GitHub/MRSea/R/runInfluenceCheck.R#87: "
+"1","print(paste(""Calculating the influence measures will take approximately "", 
+"
+"1","    round((timeForOne[3]/10) * length(unique(id))/60), "" minutes"", 
+"
+"1","    sep = """"))
+"
+"0","timeforone"
+"2","Error: object 'timeforone' not found
+"

@@ -1,0 +1,3 @@
+"0","preds.vario.sk<-predict(newdata = preddata,"
+"0","               g2k = preddist,"
+"0","               object = salsa2dOutput.vario.sk$bestModel)"

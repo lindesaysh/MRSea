@@ -1,0 +1,6 @@
+"0","set.seed(154)"
+"0","cv.gamMRSea(wfdata, salsa2dOutput.vario.chooser$bestModel, K=10)$delta[2]"
+"1","[1]"
+"1"," 9.973319"
+"1","
+"

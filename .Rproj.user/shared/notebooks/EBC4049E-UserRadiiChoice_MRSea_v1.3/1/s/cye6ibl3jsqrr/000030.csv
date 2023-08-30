@@ -1,0 +1,7 @@
+"0",""
+"0","ggplot(preddata) + "
+"0","  geom_tile(aes(x=x.pos, y=y.pos, fill=preds.vario, height=sqrt(area), width=sqrt(area))) +"
+"0","  scale_fill_distiller(palette = ""Spectral"",name=""No. Birds"") +"
+"0","  xlab(""Easting (km)"") + ylab(""Northing (km)"") + theme_bw() +"
+"0","  coord_equal()+"
+"0","  geom_point(data=data.frame(knotgrid[salsa2dOutput.vario$bestModel$splineParams[[1]]$knotPos,]), aes(X1, X2))"

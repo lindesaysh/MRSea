@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">MRSea</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,18 +41,24 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/web/IntroductiontoMRSea.html">Introduction to the package</a>
     <h6 class="dropdown-header" data-toc-skip>Basic examples</h6>
     <a class="dropdown-item" href="../articles/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
     <a class="dropdown-item" href="../articles/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea_v1.3.html">Using Different Splines</a>
-    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea_v1.3.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea.html">Using Different Splines</a>
+    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/ModelDiagnostics_MRSea.html">Model Diagnostics</a>
+    <a class="dropdown-item" href="../articles/web/TheTweedieDistribution_MRSea.html">Using the Tweedie Distribution</a>
     <a class="dropdown-item" href="../articles/web/Publications.html">Publications</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea_v1.3.html">Renewables Case Study</a>
+    <a class="dropdown-item" href="../articles/web/DistanceSampling.html">Brief Intro to Distance Sampling</a>
+    <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea.html">Renewables Case Study</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>More advanced Usage</h6>
-    <a class="dropdown-item" href="../articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../articles/web/Geodesic_2dsmoothing_MRSea.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../articles/web/UserRadiiChoice_MRSea.html">Basis radii selection</a>
+    <a class="dropdown-item" href="../articles/web/quartotestpage.html">test</a>
   </div>
 </li>
 <li class="nav-item">
@@ -86,7 +92,7 @@
                         <h4 data-toc-skip class="author">LAS
 Scott-Hayward</h4>
             
-            <h4 data-toc-skip class="date">2023-01-30</h4>
+            <h4 data-toc-skip class="date">2023-08-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lindesaysh/MRSea/blob/HEAD/vignettes/GettingStarted_2Dsmoothing.Rmd" class="external-link"><code>vignettes/GettingStarted_2Dsmoothing.Rmd</code></a></small>
       <div class="d-none name"><code>GettingStarted_2Dsmoothing.Rmd</code></div>
@@ -143,6 +149,9 @@ standard errors) and</li>
 <code>runACF</code> (to assess residual correlation),</li>
 <li>
 <code>runsTest</code> (to assess residual correlation)</li>
+<li>
+<code>plotMeanVar</code> (to assess the mean-variance
+relationship)</li>
 <li>
 <code>runDiagnostics</code> (plots of observed vs fitted and fitted
 vs scaled Pearsons residuals),</li>
@@ -407,17 +416,21 @@ vignette</a>.</p>
 </h2>
 <p>For information on:</p>
 <ol style="list-style-type: decimal">
-<li><a href="https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea_v1.3" class="external-link">Other
+<li><a href="https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea" class="external-link">Other
 types of 2D spline</a></li>
+<li><a href="https://lindesaysh.github.io/MRSea/article/ModelDiagnostics_MRSea" class="external-link">Model
+Diagnostics</a></li>
+<li><a href="https://lindesaysh.github.io/MRSea/article/DistanceSampling" class="external-link">Distance
+Sampling</a></li>
 <li>Distance sampling, simple interactions, <code>gamMRSea</code> model
 diagnostics, inference via bootstrapping and using robust standard
-errors to deal with residual correlation see the <a href="https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3" class="external-link">Full
+errors to deal with residual correlation see the <a href="https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea" class="external-link">Full
 Case Study</a>.</li>
-<li>More complex <a href="https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea_v1.3" class="external-link">interactions</a>.</li>
+<li>More complex <a href="https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea" class="external-link">interactions</a>.</li>
 <li>Using non Euclidean distances to measure the similarity between
 points. For example, using geodesic distances to represent “as the fish
 swims” rather than “as the crow flies”. This takes into account
-distances around exclusion areas such as coastlines or lakes. See <a href="(https://lindesaysh.github.io/MRSea/article/Geodesic_2dsmoothing_MRSea_v1.3)" class="external-link">here</a>
+distances around exclusion areas such as coastlines or lakes. See <a href="(https://lindesaysh.github.io/MRSea/article/Geodesic_2dsmoothing_MRSea)" class="external-link">here</a>
 </li>
 </ol>
 </div>

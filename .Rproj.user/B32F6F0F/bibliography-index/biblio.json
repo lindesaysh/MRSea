@@ -1,0 +1,177 @@
+{
+    "sources": [
+        {
+            "DOI": "10.1007/s13253-015-0209-2",
+            "URL": "http://dx.doi.org/10.1007/s13253-015-0209-2",
+            "author": [
+                {
+                    "family": "Scott-Hayward",
+                    "given": "L. A. S."
+                },
+                {
+                    "family": "Mackenzie",
+                    "given": "Monique L."
+                },
+                {
+                    "family": "Ashe",
+                    "given": "Erin"
+                },
+                {
+                    "family": "Williams",
+                    "given": "Rob"
+                }
+            ],
+            "container-title": "Journal of Agricultural, Biological, and Environmental Statistics",
+            "id": "scott-hayward2015",
+            "issue": "3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2015,
+                        6,
+                        9
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "305-322",
+            "title": "Modelling Killer Whale Feeding Behaviour Using a Spatially Adaptive Complex Region Spatial Smoother (CReSS) and Generalised Estimating Equations (GEEs)",
+            "type": "article-journal",
+            "volume": "20"
+        },
+        {
+            "DOI": "10.48550/ARXIV.2202.07977",
+            "URL": "https://arxiv.org/abs/2202.07977",
+            "author": [
+                {
+                    "family": "Scott-Hayward",
+                    "given": "L. A. S."
+                },
+                {
+                    "family": "Mackenzie",
+                    "given": "M. L."
+                },
+                {
+                    "family": "Walker",
+                    "given": "C. G."
+                },
+                {
+                    "family": "Shatumbu",
+                    "given": "G."
+                },
+                {
+                    "family": "Kilian",
+                    "given": "W."
+                },
+                {
+                    "dropping-particle": "du",
+                    "family": "Preez",
+                    "given": "P."
+                }
+            ],
+            "id": "scott-hayward2022",
+            "issued": {
+                "date-parts": [
+                    [
+                        2022
+                    ]
+                ]
+            },
+            "title": "Automated surface feature selection using SALSA2D: An illustration using elephant mortality data in etosha national park",
+            "title-short": "Automated surface feature selection using SALSA2D",
+            "type": "article-journal"
+        },
+        {
+            "DOI": "10.1016/j.cageo.2004.03.012",
+            "URL": "http://dx.doi.org/10.1016/j.cageo.2004.03.012",
+            "author": [
+                {
+                    "family": "Pebesma",
+                    "given": "Edzer J"
+                }
+            ],
+            "container-title": "Computers & Geosciences",
+            "id": "pebesma2004",
+            "issue": "7",
+            "issued": {
+                "date-parts": [
+                    [
+                        2004,
+                        8
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "683-691",
+            "title": "Multivariable geostatistics in S: the gstat package",
+            "title-short": "Multivariable geostatistics in S",
+            "type": "article-journal",
+            "volume": "30"
+        },
+        {
+            "DOI": "10.1214/aoms/1177731358",
+            "URL": "http://dx.doi.org/10.1214/aoms/1177731358",
+            "author": [
+                {
+                    "family": "Wald",
+                    "given": "A."
+                },
+                {
+                    "family": "Wolfowitz",
+                    "given": "J."
+                }
+            ],
+            "container-title": "The Annals of Mathematical Statistics",
+            "id": "wald1943",
+            "issue": "4",
+            "issued": {
+                "date-parts": [
+                    [
+                        1943,
+                        12
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "378-388",
+            "title": "An Exact Test for Randomness in the Non-Parametric Case Based on Serial Correlation",
+            "type": "article-journal",
+            "volume": "14"
+        },
+        {
+            "DOI": "10.1111/j.0006-341x.2002.00001.x",
+            "URL": "http://dx.doi.org/10.1111/j.0006-341X.2002.00001.x",
+            "author": [
+                {
+                    "family": "Lin",
+                    "given": "D. Y."
+                },
+                {
+                    "family": "Wei",
+                    "given": "L. J."
+                },
+                {
+                    "family": "Ying",
+                    "given": "Z."
+                }
+            ],
+            "container-title": "Biometrics",
+            "id": "lin2002",
+            "issue": "1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2002,
+                        3
+                    ]
+                ]
+            },
+            "language": "en",
+            "page": "1-12",
+            "title": "Model-Checking Techniques Based on Cumulative Residuals",
+            "type": "article-journal",
+            "volume": "58"
+        }
+    ],
+    "project_biblios": []
+}

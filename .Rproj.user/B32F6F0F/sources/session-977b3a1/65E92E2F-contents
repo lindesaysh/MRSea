@@ -1,0 +1,453 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~ DISTANCE ANALYSIS DIVERS ~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Danish Energy Island Surveys (1st 6)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# contract for Aarhus University Feb 2023
+# Lindesay Scott-Hayward
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ load analysis data and correct ~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+setwd('C:\\Users\\lass\\University of St Andrews\\MLM_LSHjointwork - Documents\\research\\Aarhus - Ib\\DanishEnergyIsland\\')
+setwd('C:\\Users\\lindesay\\University of St Andrews\\MLM_LSHjointwork - Documents\\research\\Aarhus - Ib\\DanishEnergyIsland\\')
+require(MRSea)
+require(ggplot2)
+require(lubridate)
+require(sp)
+require(dplyr)
+
+# # seasons
+# # find day of the year for the cutoffs
+# # Moulting(15 June to 15 Sept), Autumn (15 setp to 15 Nov), Wintering (15 nov till 1 march) and spring (1 march to 15 june)
+# seasons <- data.frame(season = c('Moulting', 'Autumn', 'Wintering', 'Spring'),
+#                       start = c(yday(as.Date("2010-06-15")), yday(as.Date("2010-09-15")), 
+#                                 yday(as.Date("2010-11-15")), yday(as.Date("2010-03-1"))),
+#                       end = c(yday(as.Date("2010-09-14")), yday(as.Date("2010-11-14")),
+#                               yday(as.Date("2010-02-28")), yday(as.Date("2010-06-14"))))
+# # note...ignoring leap year situations so days will be one day later after feb
+
+obsdata<-readxl::read_xlsx("Data/Gannet_Obs.xlsx", sheet = 1)
+# remove any NA distanc bands
+obsdata <- filter(obsdata, !is.na(DISTBAND))
+
+segdata <- readxl::read_xlsx("Data/Segm.xlsx", sheet = 1)
+segdata <- segdata %>%
+  mutate(x.pos = POINT_X/1000,
+         y.pos = POINT_Y/1000)
+
+obsdata <- left_join(segdata, obsdata, "SegNO")
+
+obsdata <- obsdata %>% 
+  mutate(date = as.Date(obsdata$TIME, format = "%Y-%m-%d %H:%M:%S"),
+         datetime = as.POSIXct(TIME, format = "%Y-%m-%d %H:%M:%S"),
+         year = year(date),
+         month = month(date),
+         yearmonth = paste0(year, month)#,
+         # season = case_when(between(yday(date), seasons[1,2], seasons[1,3]) ~ seasons[1,1],
+         #                    between(yday(date), seasons[2,2], seasons[2,3]) ~ seasons[2,1],
+         #                    yday(date) >= seasons[3,2] ~ seasons[3,1],
+         #                    yday(date) <= seasons[3,3] ~ seasons[3,1],
+         #                    between(yday(date), seasons[4,2], seasons[4,3]) ~ seasons[4,1])
+         )
+
+#table(obsdata$season, useNA = "always")
+
+obsdata$COUNT<- ifelse(is.na(obsdata$COUNT), 0, obsdata$COUNT)
+sum(obsdata$COUNT)
+length(which(obsdata$COUNT > 0))
+
+preddata<-read.csv(file="Data/predgrid.csv")
+
+# behaviour
+# (0) ?
+# (1) sitting
+# (2) diving
+# (3) flushing
+# (4) flying
+
+
+# (1) check sea states
+table(obsdata$SS[!is.na(obsdata$DISTBAND)], useNA = "always")
+# remove sea state 4 by making distband = NA
+obsdata$DISTBAND[which(obsdata$SS == 4)] <- NA
+obsdata$COUNT[which(obsdata$SS == 4)] <- 0
+
+# (2) check behaviours
+table(obsdata$Behaviour, useNA = "always")
+table(obsdata$DISTBAND, obsdata$Behaviour, useNA = "always")
+# group behaviours to two groups, 0,1,2 and 3,4
+obsdata$beh <- ifelse(obsdata$Behaviour %in% c(0,1,2), "S", "F")
+obsdata$beh <- ifelse(is.na(obsdata$DISTBAND), NA, obsdata$beh)
+
+
+# (3) check sun values
+table(obsdata$SUN[!is.na(obsdata$DISTBAND)], useNA = "always")
+# no sun values so dont include
+# segdata$SUN<- ifelse(segdata$SUN==0, 1, segdata$SUN)
+
+# (4) make segment length in segdata (in km)
+obsdata$length<-obsdata$LENGTH/1000
+
+# (5) check coverage column
+table(obsdata$Coverage)
+obsdata$Coverage <- ifelse(obsdata$Coverage == 0, 2, obsdata$Coverage)
+
+# (6)  distance bands
+table(obsdata$DISTBAND, useNA = "always")
+# odd character in distband
+obsdata$DISTBAND[which(obsdata$DISTBAND=="")] <- NA
+
+# distances are the approx mid point of bands
+distbands<-data.frame(distance = c(60, 259, 677, 1206),
+                      DISTBAND = c(100, 200, 700, 1000))
+distbreaks<-c(0, 119, 388, 956, 1456) # and 1456 for band D
+
+
+# add distances to obs data
+obsdata<-left_join(obsdata, distbands)
+
+# # (7) check season
+# table(obsdata$season, useNA = "always")
+
+table(obsdata$DISTBAND)
+hist(na.omit(obsdata$distance), breaks=distbreaks)
+
+# # merge first two bands due to flushing
+# obsdata$DISTBAND[which(obsdata$DISTBAND=="D")] <- "A"
+# distbands<-data.frame(distance = c(81, 298, 716),
+#                       DISTBAND = c("A", "B", "C"))
+# distbreaks<-c(0, 163, 432, 1000)
+
+# add distances to obs data
+# obsdata<-left_join(obsdata, distbands)
+# 
+# table(obsdata$DISTBAND)
+# hist(na.omit(obsdata$distance), breaks=distbreaks)
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ species specific pre-processing ~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+require(fields)
+require(rgdal)
+
+#species<-'guille-razor'
+#species<-'gannet'
+#species<-'kittiwake'
+#species <- "divers"
+
+species <- "gannet"
+
+outfile<- paste('Results/', species, '/', species, "-", sep='')
+#sink(file=paste(outfile, 'log-detec.log', sep=''))
+
+# if(species=='divers'){
+#   speciesname<-'Divers'
+#   obsdata_sp <- filter(obsdata, SPECIES %in% c(1,2,3))
+#   # merge observation data into segment data
+#   # one row for every segment, additional rows if >1 sighting/species per segment
+#   analysisdata<-merge(segdata, obsdata_sp, by = "SegNO", all.x=TRUE)
+#   analysisdata<-arrange(analysisdata, date)
+# }
+
+analysisdata <- arrange(obsdata, Id)
+
+require(ggplot2)
+ggplot(analysisdata,aes(x=x.pos , y=y.pos)) +
+  geom_point(size=1) + 
+  geom_point(data=filter(analysisdata, COUNT>0), aes(size=COUNT), colour='red') +
+  facet_wrap(~date)
+
+
+speciesdata<-analysisdata
+speciesdata$size<- speciesdata$COUNT
+
+# create distbegin/distend columns
+speciesdata$distbegin<-NA
+speciesdata$distend<-NA
+speciesdata<-MRSea::which.bin(speciesdata,cutpoints=distbreaks)
+
+# create object column (increasing numbers ignoring NAs)
+speciesdata$object<-NA
+speciesdata$object[-c(which(is.na(speciesdata$distance)))]<- 1:(nrow(analysisdata)-length(which(is.na(speciesdata$distance))))
+
+speciesdata <- speciesdata %>% rename(segment.id = SegNO)
+
+# check for enough data for each observer
+table(speciesdata$Observer)
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ DISTANCE SEA STATE ANALYSIS ~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+require(mrds)
+
+spdata<-speciesdata[!is.na(speciesdata$SS),]
+spdata$size.rescale<-spdata$size/sd(spdata$size, na.rm=T)
+
+#spdata<-select(spdata, size, distance, distbegin, distend, size.rescale, object, length)
+
+table(spdata$distance)
+table(spdata$distance, spdata$SS)
+table(spdata$SS[!is.na(spdata$distance)])
+
+# hn
+result <- ddf(dsmodel=~mcds(key='hn', formula=~1), 
+              data=spdata, 
+              method='ds', 
+              meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+print(summary(result))
+plot(result, ylim=c(0,1))
+
+# hr
+result_hr <- ddf(dsmodel=~mcds(key='hr', formula=~1), 
+              data=spdata, 
+              method='ds', 
+              meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+print(summary(result_hr))
+plot(result_hr)
+
+# cluster size
+result_size_hn <- ddf(dsmodel=~mcds(key='hn', formula=~1+ size.rescale), 
+                   data=spdata, 
+                   method='ds', 
+                   meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+
+#print(summary(result_size))
+result_size <- ddf(dsmodel=~mcds(key='hr', formula=~1+ size.rescale), 
+                   data=spdata, 
+                   method='ds', 
+                   meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+
+# sea state (# hr gives error)
+result_ss_hn <- ddf(dsmodel=~mcds(key='hn', formula=~1 + as.factor(SS)), data=spdata, method='ds', meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+#print(summary(result_ss_hn))
+
+result_ss_hr <- ddf(dsmodel=~mcds(key='hr', formula=~1 + as.factor(SS)), data=spdata, method='ds', meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+#print(summary(result_ss_hr))
+
+# behaviour (# hr gives error)
+result_beh <- ddf(dsmodel=~mcds(key='hn', formula=~1 + as.factor(beh)), data=spdata, method='ds', meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+
+result_beh_hr <- ddf(dsmodel=~mcds(key='hr', formula=~1 + as.factor(beh)), data=spdata, method='ds', meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+#print(summary(result_beh))
+
+# observer 
+result_obs <- ddf(dsmodel=~mcds(key='hn', formula=~1 + as.factor(Observer)), data=spdata, method='ds', meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+
+result_obs_hr <- ddf(dsmodel=~mcds(key='hr', formula=~1 + as.factor(Observer)), data=spdata, method='ds', meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+#print(summary(result_beh))
+
+# Sun 
+result_sun <- ddf(dsmodel=~mcds(key='hn', formula=~1 + as.factor(SUN)), data=spdata, method='ds', meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+
+result_sun_hr <- ddf(dsmodel=~mcds(key='hr', formula=~1 + as.factor(SUN)), data=spdata, method='ds', meta.data=list(width=max(distbreaks), binned=T, breaks=distbreaks))
+#print(summary(result_beh))
+
+BIC(result)
+BIC(result_hr)
+BIC(result_size)
+BIC(result_size_hn)
+BIC(result_ss_hn)
+BIC(result_ss_hr)
+BIC(result_obs)
+BIC(result_obs_hr)
+BIC(result_beh)
+BIC(result_beh_hr)
+BIC(result_sun)
+BIC(result_sun_hr)
+
+
+# best : result_hr
+#dfid <- 3
+# next best is with no covar. 
+
+crits<-c(BIC(result),
+         BIC(result_hr),
+         BIC(result_size_hn),
+         BIC(result_size),
+         BIC(result_ss_hn),
+         BIC(result_ss_hr),
+         BIC(result_obs),
+         BIC(result_obs_hr),
+         BIC(result_beh),
+         BIC(result_beh_hr),
+         BIC(result_sun),
+         BIC(result_sun_hr)
+         )
+dfid<- which (crits==min(crits))
+dfid
+
+if(dfid==1){bestdf<-result}
+if(dfid==2){bestdf<-result_hr}
+if(dfid==3){bestdf<-result_size_hn}
+if(dfid==4){bestdf<-result_size}
+if(dfid==5){bestdf<-result_ss_hn}
+if(dfid==6){bestdf<-result_ss_hr}
+if(dfid==7){bestdf<-result_obs}
+if(dfid==8){bestdf<-result_obs_hr}
+if(dfid==9){bestdf<-result_beh}
+if(dfid==10){bestdf<-result_beh_hr}
+if(dfid==11){bestdf<-result_sun}
+if(dfid==12){bestdf<-result_sun_hr}
+# if(dfid==9){bestdf<-result_obs_beh_size_sun}
+# if(dfid==10){bestdf<-result_obs_beh_size_sun_ss}
+
+
+print(summary(bestdf))
+fit.test<- ddf.gof(bestdf)
+cat(paste('BOAT: chisq=', round(fit.test$chisquare$chi1$chisq, 4), ', p=', fit.test$chisquare$chi1$p, ', df=', fit.test$chisquare$chi1$df, sep=''))
+
+
+if(dfid==1 | dfid==2){
+  png(filename=paste(outfile, 'detfunc.png', sep=''), height=600, width=600)
+  plot(bestdf, showpoints=F, breaks=distbreaks, ylim=c(0,1))
+  dev.off()
+}
+
+# if(dfid == 3 | dfid == 7){
+#   png(filename=paste(outfile, 'detfunc_ss.png', sep=''), height=800, width=600)
+#   par(mfrow=c(3,2))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=SS==0, main='0', ylim=c(0,1))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=SS==1, main='1', ylim=c(0,1))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=SS==2, main='2', ylim=c(0,1))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=SS==2.5, main='2.5', ylim=c(0,1))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=SS==3, main='3', ylim=c(0,1))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=SS==4, main='4', ylim=c(0,1))
+#   dev.off()
+# }
+# 
+# if(dfid==4 | dfid==6 | dfid==7 | dfid==8){
+#   png(filename=paste(outfile, 'detfunc_season.png', sep=''), height=700, width=1000)
+#   par(mfrow=c(1,3))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=season=="Autumn", main='Autumn', ylim=c(0,1))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=season=="Wintering", main='Wintering', ylim=c(0,1))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=season=="Spring", main='Spring', ylim=c(0,1))
+#   dev.off()
+# }
+# 
+# if(dfid==5 | dfid==8){
+#   png(filename=paste(outfile, 'detfunc_beh.png', sep=''), height=600, width=800)
+#   par(mfrow=c(1,2))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=behaviour=="S", main='S', ylim=c(0,1))
+#   plot(bestdf, showpoints=F, breaks=distbreaks, subset=behaviour=="F", main='F', ylim=c(0,1))
+#   dev.off()
+# }
+# 
+if(dfid==3 | dfid==4){
+  png(filename=paste(outfile, 'detfunc_size.png', sep=''), height=600, width=800)
+  par(mfrow=c(1,2))
+  plotsizes <- quantile(spdata$size.rescale[spdata$size.rescale>0], probs=c(0.1, 0.9))
+  plot(bestdf, showpoints=F, breaks=distbreaks, subset=size.rescale==plotsizes[1], main='Small Group', ylim=c(0,1))
+  plot(bestdf, showpoints=F, breaks=distbreaks, subset=size.rescale==plotsizes[2], main='Large Group', ylim=c(0,1))
+  dev.off()
+}
+
+disdata<- spdata
+disdata$area<-NA
+disdata$NHAT<-NA
+disdata<-create.NHAT(speciesdata, bestdf)
+
+# update area column to account for times when coverage = 1
+disdata$area <- disdata$length * disdata$Coverage * bestdf$meta.data$width/1000
+
+
+# turn NAs back to zeros
+# rows for band E, species of interest
+# and for rows without the species of interest
+disdata$NHAT[is.na(disdata$NHAT)]<- 0
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ CREATE NHAT DATA ~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# create count data by merging the segmentids
+# remove columns with NAs in them (affects merge)
+# these are hour, minutes and dir_as
+
+colid<-which(!is.na(match(names(disdata), c("Sex", "COUNT", "Age", "Behaviour", "DISTBAND", "SEAT", "SUN", "SPECIES", "Observer", "OBSID", "beh", "SS", "SurveyType", "SurveyID.y", "TNO", "Time", "English", "EURING"))))
+
+disdata<-disdata[, -colid]
+countdata<-create.count.data(dis.data=data.frame(disdata))
+
+require(fields)
+quilt.plot(spdata$x.pos, spdata$y.pos, spdata$COUNT, asp=1, nrow=50, ncol=50)
+quilt.plot(countdata$x.pos, countdata$y.pos, countdata$NHAT, asp=1, nrow=50, ncol=50)
+
+
+ggplot(analysisdata,aes(x=x.pos, y=y.pos)) +
+  geom_point(size=1) + 
+  geom_point(data=filter(analysisdata, COUNT>0), aes(size=COUNT), colour='red') +
+  facet_wrap(~SurveyID.x)
+
+
+ggplot(countdata,aes(x=x.pos, y=y.pos)) +
+  geom_point(size=1) + 
+  geom_point(data=filter(countdata, NHAT>0), aes(size=NHAT), colour='red') +
+  facet_wrap(~SurveyID.x)
+
+# 
+# plot(countdata$x.pos, countdata$y.pos, pch=20, cex=countdata$NHAT/25, asp=1)
+# 
+# plot(speciesdata$x.pos, speciesdata$y.pos, pch=20, cex=speciesdata$size/25, asp=1)
+
+#plotbreaks<-getggplotbreaks(countdata$NHAT, countdata$area)
+plotbreaks<-waiver()
+
+
+# require(rgdal)
+# studyarea <- readOGR(dsn='Data/shapefiles', layer="EE_Study_AR_OnlyLand_Cleaned")
+# #studyarea_km <- sp::spTransform(studyarea, CRS("+units=km"))
+
+# countdata$x.pos<- countdata$X_COORD/1000
+# countdata$y.pos<- countdata$Y_COORD/1000
+
+#countdata$Region.Label<-factor(countdata$Region.Label, levels=unique(countdata$Region.Label))
+
+p <- ggplot()
+p<- p + geom_point(data=filter(countdata, NHAT==0), aes(x = x.pos, y = y.pos),shape=16, colour='thistle', alpha=0.1, size=1) + 
+  geom_point(data=filter(countdata, NHAT>0), aes(x = x.pos, y = y.pos, size = NHAT), alpha=0.45, colour='red') + 
+  scale_size_area(breaks=plotbreaks) + theme_bw() + 
+  theme(panel.grid.major = element_blank(),  axis.text.x = element_text(size = 15), axis.text.y = element_text(size = 15),  axis.title.x = element_blank(), axis.title.y = element_blank(), legend.title=element_blank()) + 
+  xlab("Easting") + ylab("Northing") + coord_equal()
+
+p <- p + facet_wrap(~date, nrow = 2)
+
+#p <- p+ geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black')
+
+png(filename=paste(outfile, 'countdata.png', sep=''), height=900, width=800)
+print(p)
+dev.off()
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~ SAVE OUTPUTS ~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+saveRDS(countdata, file=paste(outfile, "NHATS.rds", sep=''))
+
+print(head(countdata))
+print(summary(countdata))
+
+
+res.table<- data.frame(Species = species, 
+                       speciescode = species, 
+                       `Group Size` = ifelse(dfid %in% c(3, 4), 'yes', 'no'),
+                       `Sea State` = ifelse(dfid %in% c(5, 6), 'yes', 'no'),
+                       Observer = ifelse(dfid %in% c(7, 8), 'yes', 'no'), 
+                       Behaviour = ifelse(dfid %in% c(9, 10), 'yes', 'no'),
+                       Sun = ifelse(dfid %in% c(11, 12), 'yes', 'no'),
+                       p = round(summary(bestdf)$average.p, 2),    
+                       cv = round(summary(bestdf)$average.p.se/summary(bestdf)$average.p, 2))  
+
+write.table(res.table, file='Results/detec-table.txt', append=TRUE, col.names=FALSE, row.names=FALSE, na='-')
+# save workspace
+save.image(file=paste(outfile,'detfuncWkspc.RData', sep=''), compress='bzip2')
+# save ddf object and disdata - ddfoutput
+save(bestdf, file=paste(outfile,'dfoutput.RData', sep=''), compress='bzip2')
+
+#sink()
+
+
+

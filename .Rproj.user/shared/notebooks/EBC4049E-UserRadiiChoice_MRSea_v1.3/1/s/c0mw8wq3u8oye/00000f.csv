@@ -1,0 +1,8 @@
+"0","salsa2dlist$r_seq <- rs"
+"0",""
+"0","salsa2dOutput.vario <-runSALSA2D(model = initialModel,"
+"0","                          salsa2dlist = salsa2dlist,"
+"0","                          d2k=distMats$dataDist,"
+"0","                          k2k=distMats$knotDist,"
+"0","                          suppress.printout = TRUE)"
+"0",""

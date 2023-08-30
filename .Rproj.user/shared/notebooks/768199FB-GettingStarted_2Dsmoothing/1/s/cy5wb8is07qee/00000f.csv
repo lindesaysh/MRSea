@@ -1,0 +1,30 @@
+"0","set.seed(123)"
+"0","knotgrid<- getKnotgrid(coordData = cbind(wfdata$x.pos, wfdata$y.pos),"
+"0","                       numKnots = 300,"
+"0","                       plot = TRUE)"
+"2","Loading required package: fields
+"
+"2","Loading required package: spam
+"
+"2","Spam version 2.9-1 (2022-08-07) is loaded.
+Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+and overview of this package.
+Help for individual functions is also obtained by adding the
+suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+"
+"2","
+Attaching package: ‘spam’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    backsolve, forwardsolve
+
+"
+"2","Loading required package: viridis
+"
+"2","Loading required package: viridisLite
+"
+"2","
+Try help(fields) to get started.
+"

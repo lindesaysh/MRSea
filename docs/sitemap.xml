@@ -13,19 +13,55 @@
     <loc>http://lindesaysh.github.io/MRSea/articles/index.html</loc>
   </url>
   <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/DistanceSampling.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/FittingDifferentSplines_MRSea.html</loc>
+  </url>
+  <url>
     <loc>http://lindesaysh.github.io/MRSea/articles/web/FittingDifferentSplines_MRSea_v1.3.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/Geodesic_2dsmoothing_MRSea.html</loc>
   </url>
   <url>
     <loc>http://lindesaysh.github.io/MRSea/articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html</loc>
   </url>
   <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/Interactions_salsa2d_MRSea.html</loc>
+  </url>
+  <url>
     <loc>http://lindesaysh.github.io/MRSea/articles/web/Interactions_salsa2d_MRSea_v1.3.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/IntroductiontoMRSea.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/ModelDiagnostics_MRSea.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/ModelDiagnostics_MRSea_v1.3.html</loc>
   </url>
   <url>
     <loc>http://lindesaysh.github.io/MRSea/articles/web/Publications.html</loc>
   </url>
   <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/RenewablesCaseStudy_MRSea.html</loc>
+  </url>
+  <url>
     <loc>http://lindesaysh.github.io/MRSea/articles/web/RenewablesCaseStudy_MRSea_v1.3.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/TheTweedieDistribution_MRSea.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/TheTweedieDistribution_MRSea_v1.3.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/UserRadiiChoice_MRSea.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/articles/web/UserRadiiChoice_MRSea_v1.3.html</loc>
   </url>
   <url>
     <loc>http://lindesaysh.github.io/MRSea/articles/website_examples.html</loc>
@@ -130,6 +166,9 @@
     <loc>http://lindesaysh.github.io/MRSea/reference/getRadiiChoices.html</loc>
   </url>
   <url>
+    <loc>http://lindesaysh.github.io/MRSea/reference/getRadiiChoices.vario.html</loc>
+  </url>
+  <url>
     <loc>http://lindesaysh.github.io/MRSea/reference/improve.step_2d.html</loc>
   </url>
   <url>
@@ -200,6 +239,9 @@
   </url>
   <url>
     <loc>http://lindesaysh.github.io/MRSea/reference/plotCumRes.html</loc>
+  </url>
+  <url>
+    <loc>http://lindesaysh.github.io/MRSea/reference/plotMeanVar.html</loc>
   </url>
   <url>
     <loc>http://lindesaysh.github.io/MRSea/reference/plotRunsProfile.html</loc>

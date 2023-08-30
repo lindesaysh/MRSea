@@ -1,0 +1,7 @@
+"0","runACF(block = count.data$blockid, model = salsa2dOutput$bestModel,"
+"0","       suppress.printout=TRUE)"
+"2","Warning: no non-missing arguments to max; returning -Inf"
+"2","Warning: NAs introduced by coercion to integer range"
+"2","Error in matrix(NA, length(unique(block)), max(blocktab)) : 
+  invalid 'ncol' value (too large or NA)
+"

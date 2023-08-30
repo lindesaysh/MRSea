@@ -1,0 +1,8 @@
+"0","# make parameter set for running salsa2d"
+"0","salsa2dlist<-list(fitnessMeasure = 'QBIC',"
+"0","                  knotgrid = knotgrid,"
+"0","                  startKnots = 10,"
+"0","                  minKnots = 4,"
+"0","                  maxKnots = 15,"
+"0","                  gap = 0,"
+"0","                  r_seq = rs) ##"

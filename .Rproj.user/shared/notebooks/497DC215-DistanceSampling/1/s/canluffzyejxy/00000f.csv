@@ -1,0 +1,8 @@
+"0","# load workpace"
+"0","#load(file='mrseavignetteworkspace.RData')"
+"0","require(mrds)"
+"0","require(MRSea)"
+"0","require(ggplot2)"
+"0","require(RColorBrewer)"
+"0","require(splines)"
+"0","require(fields)"

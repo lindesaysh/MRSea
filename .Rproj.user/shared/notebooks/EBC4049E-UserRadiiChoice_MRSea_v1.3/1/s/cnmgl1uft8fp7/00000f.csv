@@ -1,0 +1,4 @@
+"0","boots.vario <- do.bootstrap.cress.robust(salsa2dOutput.vario$bestModel, preddata, g2k=preddist, B = 500, cat.message = FALSE)"
+"0",""
+"0","cis.vario <- makeBootCIs(boots.vario)"
+"0",""

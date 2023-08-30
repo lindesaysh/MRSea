@@ -1,0 +1,4 @@
+"0","initialModel <- glm(response ~ 1 + offset(log(area)), family = ""quasipoisson"", "
+"0","                    data = wfdata)"
+"2","Error in is.data.frame(data) : object 'wfdata' not found
+"

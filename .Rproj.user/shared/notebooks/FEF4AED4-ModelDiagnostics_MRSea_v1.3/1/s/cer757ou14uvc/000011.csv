@@ -1,0 +1,12 @@
+"0","library(rgl) # 3D plotting package"
+"2","Warning: package ‘rgl’ was built under R version 4.2.3"
+"2","Registered S3 methods overwritten by 'htmltools':
+  method               from         
+  print.html           tools:rstudio
+  print.shiny.tag      tools:rstudio
+  print.shiny.tag.list tools:rstudio
+"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"

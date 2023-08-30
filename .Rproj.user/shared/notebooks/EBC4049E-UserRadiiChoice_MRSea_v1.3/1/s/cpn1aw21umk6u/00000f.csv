@@ -1,0 +1,1 @@
+"0","sk <- round(max(distMats$dataDist)/attr(rs, ""vg.fit"")$range[2])"

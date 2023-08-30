@@ -1,0 +1,1 @@
+"0","distMats <- makeDists(cbind(wfdata$x.pos, wfdata$y.pos), knotgrid)"

@@ -1,0 +1,5 @@
+"0","# we will use the dataset with a known re-distribution of animals
+data(dis.data.re, package = `MRSea`)
+"
+"2","Error in data(dis.data.re, package = MRSea) : object 'MRSea' not found
+"

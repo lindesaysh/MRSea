@@ -1,0 +1,428 @@
+---
+title: "User specified range parameters"
+author: "Lindesay Scott-Hayward"
+date: "`r Sys.Date()`"
+output: html_document
+bibliography: references.bib
+---
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, 
+                      eval=TRUE, cache=FALSE,
+                      comment = '#>', collapse=TRUE, dev='png')
+```
+
+# Introduction
+
+This vignette describes how the user may specify their own choices or choices driven by a variogram for the range parameter. This may be necessary on occasions where the data is very patchy.
+
+::: callout-important
+Note that this page shows an example of the use of the variogram method for choosing a sequence of $r$ parameters. No effort has been made to model this data in the best way possible. 
+:::
+
+# Fitting a model
+
+The data we shall use for this example is from a Danish offshore windfarm and is part of the `MRSea` package. The data are counts of birds collected along transects over a number of surveys and years. In this first example, we will use all of the data together and assess if there is a relationship between number of birds and sea depth.
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(MRSea)
+library(ggplot2)
+```
+
+```{r}
+# load the data
+data("nysted.analysisdata")
+wfdata <- filter(nysted.analysisdata, impact==0, season==1)
+# load the prediction grid
+data("nysted.predictdata")
+preddata <- filter(nysted.predictdata, impact==0, season==1)
+```
+
+```{r}
+ggplot(preddata) + geom_tile(aes(x=x.pos, y=y.pos, fill=truth.re, height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() +
+  ggtitle("The true surface")
+```
+
+```{r message=FALSE, warning=FALSE}
+ggplot(wfdata) + geom_tile(aes(x=x.pos, y=y.pos, fill=response, height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() +
+  ggtitle("Simulated Data")
+```
+
+## Fitting a 2D smooth
+
+Set up the initial model with the offset term (if required) and specify the parameters required. Here we add an offset to be the size of the segment associated with the bird counts. In reality, our bird counts are over a particular area so we have counts per unit area. The initial model contains the offset information, and specifies the family of model.
+
+```{r message=FALSE}
+initialModel <- glm(response ~ 1 + offset(log(area)), 
+                    family = "quasipoisson", 
+                    data = wfdata)
+```
+
+### Set up for the 2D smooth:
+
+1)  Create the knot grid. Here we select 300 space-filled locations from our data.
+
+```{r knotgrid, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, fig.cap="Plot showing the candidate knot locations in red and the raw data locations in black."}
+set.seed(123)
+knotgrid<- getKnotgrid(coordData = cbind(wfdata$x.pos, wfdata$y.pos),
+                       numKnots = 300,
+                       plot = FALSE)
+```
+
+2)  Calculate the distances between the knot points and all data points and also the distances between all the knots.
+
+```{r}
+distMats <- makeDists(cbind(wfdata$x.pos, wfdata$y.pos), knotgrid)
+```
+
+3)  Next we specify some additional parameters needed to run the SALSA2D algorithm:
+
+  - a fit statistic
+  - min, max and start knots.
+  - gap
+  - In addition we can (optionally) add a parameter `r_seq` which is a sequence of range/radii values determining the influence of each basis function. This is the $r$ parameter in the basis function.
+
+The model initialises with the central value of this $r$ sequence. If `r_seq` is not specified then the model will choose the range parameters using the existing `getRadiiChoices()` function. Using this function with 10 choices selected and specifying it in `salsa2dlist` is the equivalent of not specifying it at all and letting `runSALSA2D` calculate them.
+
+```{r }
+(rs.orig <- getRadiiChoices(numberofradii = 10, distMatrix = distMats$dataDist, basis = "gaussian"))
+```
+
+```{r eval=FALSE}
+# make parameter set for running salsa2d
+salsa2dlist<-list(fitnessMeasure = 'QBIC',
+                  knotgrid = knotgrid,
+                  startKnots = 10,
+                  minKnots = 4,
+                  maxKnots = 15,
+                  gap = 0,
+                  r_seq = rs.orig) ##
+```
+
+### Alternatively using a variogram to choose radii
+
+1)  Fit a variogram to the location and response data using the `gstat` package for `R` [@pebesma2004].
+2)  Use a spherical model to find the range parameter (the distance where response values are considered no longer correlated)
+3)  Use this as the central value for the sequence (the value the `gamMRSea` model will initialise on)
+4)  Create a sequence of values to allow for more local and more global bases. This is based on the lags chosen by the function `gstat::variogram`.
+
+```{r}
+rs <- getRadiiChoices.vario(numberofradii = 10,
+                            xydata = wfdata[, c("x.pos", "y.pos")],
+                            response = log(wfdata$NHAT + 1), 
+                            basis = "gaussian")
+rs
+```
+
+The sequence of $r$'s in the `rs` object also contains a table as part of the attributes.  This shows the variogram model fit and the range parameter used as the central point of the sequence. In this case, the range parameter is `r round(attributes(rs)$vg.fit[2,3],2)` which suggests on average, the spatial correlation decays after approximately `r round(attributes(rs)$vg.fit[2,3])`km.
+
+**Visualising the bases:**
+
+To have a look at the two methods (the default vs the variogram) we can look at how the min, max and middle bases of the sequence appear.  Note that the variogram method will always have an odd length sequence owing to the sequence being based on the middle value. 
+
+```{r}
+par(mfrow=c(3,2))
+b1 <-LRF.g(radiusIndices = 1, dists = distMats$dataDist, radii = rs, aR =  149)
+fields::quilt.plot(wfdata$x.pos, wfdata$y.pos, b1, zlim=c(0,1), main="r1 variogram")
+b1.orig <-LRF.g(radiusIndices = 1, dists = distMats$dataDist, radii = rs.orig, aR =  149)
+fields::quilt.plot(wfdata$x.pos, wfdata$y.pos, b1.orig, zlim=c(0,1), main="r1 original")
+
+b5 <-LRF.g(radiusIndices = 5, dists = distMats$dataDist, radii = rs, aR =  149)
+fields::quilt.plot(wfdata$x.pos, wfdata$y.pos, b5, zlim=c(0,1), main="r5 variogram")
+b5.orig <-LRF.g(radiusIndices = 5, dists = distMats$dataDist, radii = rs.orig, aR =  149)
+fields::quilt.plot(wfdata$x.pos, wfdata$y.pos, b5.orig, zlim=c(0,1), main="r5 original")
+
+b9 <-LRF.g(radiusIndices = 9, dists = distMats$dataDist, radii = rs, aR =  149)
+fields::quilt.plot(wfdata$x.pos, wfdata$y.pos, b9, zlim=c(0,1), main="r9 variogram")
+b10.orig <-LRF.g(radiusIndices = 10, dists = distMats$dataDist, radii = rs.orig, aR =  149)
+fields::quilt.plot(wfdata$x.pos, wfdata$y.pos, b10.orig, zlim=c(0,1), main="r10 original")
+```
+
+There is not a huge difference with the original here but the variogram method suggests slightly smaller bases in general.  
+
+
+::: callout-important
+Note that if the variogram method selects a small range compared with the size of the distances available in your surface then the model may support many more knots.  In this case you might consider starting with a larger number. 
+:::
+
+### Fitting the models:
+
+Let's have a look at the modelling differences. First the original parametrisation.
+
+```{r}
+# make parameter set for running salsa2d
+salsa2dlist<-list(fitnessMeasure = 'QBIC',
+                  knotgrid = knotgrid,
+                  startKnots = 10,
+                  minKnots = 4,
+                  maxKnots = 15,
+                  gap = 0,
+                  r_seq = rs.orig) ##
+```
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+salsa2dOutput.origr <- runSALSA2D(model = initialModel,
+                          salsa2dlist = salsa2dlist,
+                          d2k=distMats$dataDist,
+                          k2k=distMats$knotDist,
+                          suppress.printout = TRUE)
+salsa2dOutput.origr <- salsa2dOutput.origr$bestModel
+```
+
+- Change out the $r$ sequence for the variogram method.
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+salsa2dlist$r_seq <- rs
+
+salsa2dOutput.vario <-runSALSA2D(model = initialModel,
+                          salsa2dlist = salsa2dlist,
+                          d2k=distMats$dataDist,
+                          k2k=distMats$knotDist,
+                          suppress.printout = TRUE)
+
+salsa2dOutput.vario <- salsa2dOutput.vario$bestModel
+```
+
+
+
+# Assessment of outputs
+
+```{r}
+# radius indices
+salsa2dOutput.origr$splineParams[[1]]$radiusIndices
+salsa2dOutput.vario$splineParams[[1]]$radiusIndices
+```
+
+```{r}
+# CV scores
+set.seed(154)
+cv.gamMRSea(wfdata, salsa2dOutput.origr, K=10)$delta[2]
+set.seed(154)
+cv.gamMRSea(wfdata, salsa2dOutput.vario, K=10)$delta[2]
+```
+
+The variogram method
+
+- chose one more knot and similar indexes (smaller radii than the equivalent index from the default method)
+- has a lower, and therefore better, CV score than the default. 
+
+## Predictions
+
+```{r }
+preddist<-makeDists(cbind(preddata$x.pos, preddata$y.pos),
+                 knotgrid, knotmat=FALSE)$dataDist
+
+# make predictions on response scale
+preds.orig<-predict(newdata = preddata,
+               g2k = preddist,
+               object = salsa2dOutput.origr)
+
+preds.vario<-predict(newdata = preddata,
+               g2k = preddist,
+               object = salsa2dOutput.vario)
+```
+
+- Predictions from both models. The following plots show the model predictions and the locations of each of the knots.  
+
+```{r message=FALSE, warning=FALSE}
+a <- ggplot(preddata) + 
+  geom_tile(aes(x=x.pos, y=y.pos, fill=preds.orig, height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() +
+  coord_equal() +
+  geom_point(data=data.frame(knotgrid[salsa2dOutput.origr$splineParams[[1]]$knotPos,]), aes(X1, X2))+
+  ggtitle("Default r")
+
+b <- ggplot(preddata) + 
+  geom_tile(aes(x=x.pos, y=y.pos, fill=preds.vario, height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() +
+  coord_equal()+
+  geom_point(data=data.frame(knotgrid[salsa2dOutput.vario$splineParams[[1]]$knotPos,]), aes(X1, X2)) +
+  ggtitle("Variogram based r")
+
+ggpubr::ggarrange(a,b, common.legend = TRUE, ncol = 1, legend = "right")
+```
+
+<!-- - Comparison to the true surface. -->
+
+```{r message=FALSE, warning=FALSE, echo=FALSE, eval=FALSE}
+c <- ggplot(preddata) + 
+  geom_tile(aes(x=x.pos, y=y.pos, fill=(preds.orig - truth.re), height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() +
+  coord_equal() +
+  ggtitle("Default r")
+
+d <- ggplot(preddata) + 
+  geom_tile(aes(x=x.pos, y=y.pos, fill=(preds.vario-truth.re), height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() +
+  coord_equal() +
+  ggtitle("Variogram based r")
+
+ggpubr::ggarrange(c, d, common.legend = TRUE, ncol = 1, legend = "right")
+```
+
+
+
+<!-- - Mean Variance relationship -->
+
+<!-- ```{r fig.keep=FALSE} -->
+<!-- p1 <- plotMeanVar(salsa2dOutput.origr,) + ggtitle("Default r") -->
+<!-- p2 <- plotMeanVar(salsa2dOutput.vario) + ggtitle("Variogram based r") -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- ggpubr::ggarrange(p1, p2, ncol=2, common.legend = TRUE) -->
+<!-- ``` -->
+
+<!-- The mean variance relationships are similar for the two methods but slightly steeper and  -->
+
+<!-- ```{r} -->
+<!-- boots.orig <- do.bootstrap.cress.robust(salsa2dOutput.origr, preddata, g2k=preddist, B = 500, cat.message = FALSE) -->
+
+<!-- cis.orig <- makeBootCIs(boots.orig) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- boots.vario <- do.bootstrap.cress.robust(salsa2dOutput.vario, preddata, g2k=preddist, B = 500, cat.message = FALSE) -->
+
+<!-- cis.vario <- makeBootCIs(boots.vario) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- apply(cis.orig, 2, sum) -->
+<!-- apply(cis.vario, 2, sum) -->
+<!-- ``` -->
+
+<!-- ```{r message=FALSE, warning=FALSE} -->
+<!-- preddata %>%  -->
+<!--   mutate(preds = preds.orig,  -->
+<!--          lowerci = cis.orig[,1],  -->
+<!--          upperci=cis.orig[,2]) %>% -->
+<!--   tidyr::pivot_longer(cols = c(preds, lowerci, upperci), names_to = "type", values_to = "EstCount") %>% -->
+<!--   ggplot() +  -->
+<!--   geom_tile(aes(x=x.pos, y=y.pos, fill=EstCount, height=sqrt(area), width=sqrt(area))) + -->
+<!--   scale_fill_distiller(palette = "Spectral",name="No. Birds") + -->
+<!--   xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() + -->
+<!--   coord_equal() + facet_wrap(~type) +  -->
+<!--   ggtitle("Original r") -->
+<!-- ``` -->
+
+<!-- ```{r message=FALSE, warning=FALSE} -->
+<!-- preddata %>%  -->
+<!--   mutate(preds = preds.vario,  -->
+<!--          lowerci = cis.vario[,1],  -->
+<!--          upperci=cis.vario[,2]) %>% -->
+<!--   tidyr::pivot_longer(cols = c(preds, lowerci, upperci), names_to = "type", values_to = "EstCount") %>% -->
+<!--   ggplot() +  -->
+<!--   geom_tile(aes(x=x.pos, y=y.pos, fill=EstCount, height=sqrt(area), width=sqrt(area))) + -->
+<!--   scale_fill_distiller(palette = "Spectral",name="No. Birds") + -->
+<!--   xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() + -->
+<!--   coord_equal() + facet_wrap(~type) +  -->
+<!--   ggtitle("Variogram r") -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- salsa2dOutput.vario.chooser <-runSALSA2D(model = initialModel, -->
+<!--                           salsa2dlist = salsa2dlist, -->
+<!--                           d2k=distMats$dataDist, -->
+<!--                           k2k=distMats$knotDist, -->
+<!--                           suppress.printout = TRUE, -->
+<!--                           chooserad = TRUE) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- set.seed(154) -->
+<!-- cv.gamMRSea(wfdata, salsa2dOutput.vario.chooser$bestModel, K=10)$delta[2] -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- preds.vario.cr<-predict(newdata = preddata, -->
+<!--                g2k = preddist, -->
+<!--                object = salsa2dOutput.vario.chooser$bestModel) -->
+<!-- ggplot(preddata) + -->
+<!--   geom_tile(aes(x=x.pos, y=y.pos, fill=preds.vario.cr, height=sqrt(area), width=sqrt(area))) + -->
+<!--   scale_fill_distiller(palette = "Spectral",name="No. Birds") + -->
+<!--   xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() + -->
+<!--   coord_equal()+ -->
+<!--   geom_point(data=data.frame(knotgrid[salsa2dOutput.vario.chooser$bestModel$splineParams[[1]]$knotPos,]), aes(X1, X2)) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- boots.vario.cr <- do.bootstrap.cress.robust(salsa2dOutput.vario.chooser$bestModel, preddata, g2k=preddist, B = 500, cat.message = FALSE) -->
+
+<!-- cis.vario.cr <- makeBootCIs(boots.vario.cr) -->
+
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- apply(cis.orig, 2, sum) -->
+<!-- apply(cis.vario, 2, sum) -->
+<!-- apply(cis.vario.cr, 2, sum) -->
+<!-- ``` -->
+
+<!-- ```{r message=FALSE, warning=FALSE} -->
+<!-- preddata %>%  -->
+<!--   mutate(preds = preds.vario.cr,  -->
+<!--          lowerci = cis.vario.cr[,1],  -->
+<!--          upperci=cis.vario.cr[,2]) %>% -->
+<!--   tidyr::pivot_longer(cols = c(preds, lowerci, upperci), names_to = "type", values_to = "EstCount") %>% -->
+<!--   ggplot() +  -->
+<!--   geom_tile(aes(x=x.pos, y=y.pos, fill=EstCount, height=sqrt(area), width=sqrt(area))) + -->
+<!--   scale_fill_distiller(palette = "Spectral",name="No. Birds") + -->
+<!--   xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() + -->
+<!--   coord_equal() + facet_wrap(~type) +  -->
+<!--   ggtitle("Vario r") -->
+<!-- ``` -->
+
+# Links between the range from the variogram and the range parameter in the RBF's:
+
+1)  The Gaussian RBF is defined in [@scott-hayward2022] as:
+
+$$e^{-(d*r)^2}$$
+
+but may equally be presented as: $$e^{-(d⁄(2\sigma^2))}$$ In this latter equation, σ represents the range parameter and so the link to the $r$ parameter is: $r= \sqrt{2}\sigma$
+
+2)  The exponential RBF is defined in [@scott-hayward2015] as: $$e^{(d⁄r^2)}$$ It may also be presented as $$e^{(d⁄V)}$$
+
+In this case, $V$ represents the range parameter and so the link to the $r$ parameter is $r=\sqrt{V}$
+
+In the models fitted here, the range parameter was found to be `r round(attributes(rs)$vg.fit[2,3])` indicating that on average there ceased to be spatial correlation after approximately `r round(attributes(rs)$vg.fit[2,3])` km.
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='hide', eval=FALSE}
+# 
+# sk <- round(max(distMats$dataDist)/attr(rs, "vg.fit")$range[2])
+# 
+# salsa2dlist$startKnots <- sk
+# 
+# salsa2dOutput.vario.sk <-runSALSA2D(model = initialModel,
+#                           salsa2dlist = salsa2dlist,
+#                           d2k=distMats$dataDist,
+#                           k2k=distMats$knotDist,
+#                           suppress.printout = TRUE)
+# 
+# set.seed(154)
+# cv.gamMRSea(wfdata, salsa2dOutput.vario.sk$bestModel, K=10)$delta[2]
+# 
+# preds.vario.sk<-predict(newdata = preddata,
+#                g2k = preddist,
+#                object = salsa2dOutput.vario.sk$bestModel)
+# ggplot(preddata) + 
+#   geom_tile(aes(x=x.pos, y=y.pos, fill=preds.vario.sk, height=sqrt(area), width=sqrt(area))) +
+#   scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+#   xlab("Easting (km)") + ylab("Northing (km)") + theme_bw() +
+#   coord_equal()
+```
+
+# References

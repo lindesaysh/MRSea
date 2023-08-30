@@ -1,0 +1,471 @@
+"0","inflpoints<-runInfluence(simpleModel, id = nysted.analysisdata$blockid)"
+"1","debugging in: "
+"1","runInfluence(simpleModel, id = nysted.analysisdata$blockid)
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#36: "
+"1","{
+"
+"1","    attributes(model$formula)$.Environment <- environment()
+"
+"1","    response <- model$y
+"
+"1","    if (class(model)[1] == ""geeglm"") {
+"
+"1","        dat <- model$data
+"
+"1","    }
+"
+"1","    if (class(model)[1] == ""gam"") {
+"
+"1","        dat <- model$model
+"
+"1","    }
+"
+"1","    if (class(model)[1] == ""gamMRSea"" | class(model)[1] == ""glm"") {
+"
+"1","        dat <- model$data
+"
+"1","    }
+"
+"1","    if (is.null(id)) {
+"
+"1","        id <- model$panels
+"
+"1","        if (is.null(id)) {
+"
+"1","            id <- 1:nrow(dat)
+"
+"1","        }
+"
+"1","    }
+"
+"1","    if (""splineParams"" %in% names(model)) {
+"
+"1","        orig.dist <- model$splineParams[[1]]$dist
+"
+"1","    }
+"
+"1","    print(""Calculating COVRATIO and PRESS Statistics"")
+"
+"1","    inflStore <- matrix(0, nrow = length(unique(id)), ncol = (length(coef(model)) + 
+"
+"1","        2))
+"
+"1","    counter <- 1
+"
+"1","    for (i in unique(id)) {
+"
+"1","        if (dots == TRUE) {
+"
+"1","            if ((counter/100)%%1 == 0) {
+"
+"1","                cat(counter, ""\n"")
+"
+"1","            }
+"
+"1","            else {
+"
+"1","                cat(""."")
+"
+"1","            }
+"
+"1","        }
+"
+"1","        rowsToDel <- which(id == i)
+"
+"1","        pos <- which(i == unique(id))
+"
+"1","        newData <- dat[-rowsToDel, ]
+"
+"1","        nb <- as.matrix(model.matrix(model)[c(1), ])
+"
+"1","        nc <- as.matrix(inflStore[pos, 1:length(coef(model))])
+"
+"1","        if (length(pos == 1)) {
+"
+"1","            presPred <- t(nb) %*% nc
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            presPred <- nb %*% nc
+"
+"1","        }
+"
+"1","        inflStore[pos, ncol(inflStore)] <- sum((response[rowsToDel] - 
+"
+"1","            c(family(model)$linkinv(presPred)))^2)
+"
+"1","        if (class(model)[1] == ""gamMRSea"") {
+"
+"1","            model.det <- det(summary(model)$cov.robust)
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            model.det <- det(summary(model)$cov.scaled)
+"
+"1","        }
+"
+"1","        newMod <- model
+"
+"1","        if (""splineParams"" %in% names(model)) {
+"
+"1","            newMod$splineParams[[1]]$dist <- newMod$splineParams[[1]]$dist[-rowsToDel, 
+"
+"1","                ]
+"
+"1","            splineParams = model$splineParams
+"
+"1","        }
+"
+"1","        if (class(model)[1] == ""gamMRSea"") {
+"
+"1","            newpanel <- id[-rowsToDel]
+"
+"1","            if (is.factor(newpanel)) {
+"
+"1","                newpanel <- droplevels(newpanel)
+"
+"1","            }
+"
+"1","            newMod <- update(newMod, . ~ ., data = newData, panels = newpanel, 
+"
+"1","                splineParams = splineParams)
+"
+"1","            newmod.det <- det(summary(newMod)$cov.robust)
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            newMod <- update(newMod, . ~ ., data = newData)
+"
+"1","            newmod.det <- det(summary(newMod)$cov.scaled)
+"
+"1","        }
+"
+"1","        inflStore[pos, (1:length(coef(newMod)))] <- newMod$coefficients
+"
+"1","        inflStore[pos, (ncol(inflStore) - 1)] <- newmod.det/model.det
+"
+"1","        counter <- counter + 1
+"
+"1","    }
+"
+"1","    numericblock <- as.numeric(unique(id))
+"
+"1","    if (save == T) {
+"
+"1","        png(""InfluenceMeasures_covratio.png"", height = 600, width = 600)
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        devAskNewPage(ask = TRUE)
+"
+"1","    }
+"
+"1","    a <- inflStore[, (ncol(inflStore) - 1)]
+"
+"1","    quant <- quantile(a, probs = c(0.025, 0.975))
+"
+"1","    outblocka <- which(a < quant[1] | a > quant[2])
+"
+"1","    plot(numericblock, inflStore[, (ncol(inflStore) - 1)], pch = 20, 
+"
+"1","        xlab = ""Omitted Block"", ylab = ""COVRATIO Statistic"", 
+"
+"1","        cex.lab = 1.3, cex.axis = 1.3, xaxt = ""n"")
+"
+"1","    axis(1, at = numericblock, labels = unique(id), las = 0)
+"
+"1","    abline(h = 1)
+"
+"1","    abline(h = quant[1], col = ""grey"", lty = 2)
+"
+"1","    abline(h = quant[2], col = ""grey"", lty = 2)
+"
+"1","    textxy(X = numericblock[outblocka], Y = a[outblocka], labs = unique(id)[outblocka], 
+"
+"1","        cex = 0.8)
+"
+"1","    if (save == T) {
+"
+"1","        dev.off()
+"
+"1","    }
+"
+"1","    b <- inflStore[, (ncol(inflStore))]
+"
+"1","    quant <- quantile(b, probs = c(0.95))
+"
+"1","    outblockb <- which(b > quant)
+"
+"1","    if (save == T) {
+"
+"1","        png(""InfluenceMeasures_press.png"", height = 600, width = 600)
+"
+"1","    }
+"
+"1","    plot(numericblock, inflStore[, ncol(inflStore)], pch = 20, 
+"
+"1","        xlab = ""Omitted Block"", ylab = ""PRESS Statistic"", cex.lab = 1.3, 
+"
+"1","        cex.axis = 1.3, xaxt = ""n"")
+"
+"1","    axis(1, at = numericblock, labels = unique(id), las = 0)
+"
+"1","    abline(h = quant, col = ""grey"", lty = 2)
+"
+"1","    textxy(X = numericblock[outblockb], Y = b[outblockb], unique(id)[outblockb], 
+"
+"1","        cex = 0.8)
+"
+"1","    if (save == T) {
+"
+"1","        dev.off()
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        devAskNewPage(ask = FALSE)
+"
+"1","    }
+"
+"1","    if (length(which(b == ""Inf"")) > 0) {
+"
+"1","        cat(paste(""Warning: no block labels for PRESS plot as"", 
+"
+"1","            length(which(b == ""Inf"")), "" blocks have PRESS=Inf:\n\n "", 
+"
+"1","            list(which(b == ""Inf""))))
+"
+"1","        outblockb <- which(b == ""Inf"")
+"
+"1","    }
+"
+"1","    influenceData <- data.frame(blocks = unique(id), num.block = numericblock, 
+"
+"1","        covratio = inflStore[, (ncol(inflStore) - 1)], press = inflStore[, 
+"
+"1","            ncol(inflStore)])
+"
+"1","    influencePoints <- list(covratio = outblocka, press = outblockb)
+"
+"1","    return(list(influenceData = influenceData, influencePoints = influencePoints))
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#38: "
+"1","attributes(model$formula)$.Environment <- environment()
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#39: "
+"1","response <- model$y
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#41: "
+"1","if (class(model)[1] == ""geeglm"") {
+"
+"1","    dat <- model$data
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#45: "
+"1","if (class(model)[1] == ""gam"") {
+"
+"1","    dat <- model$model
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#49: "
+"1","if (class(model)[1] == ""gamMRSea"" | class(model)[1] == ""glm"") {
+"
+"1","    dat <- model$data
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#50: "
+"1","dat <- model$data
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#53: "
+"1","if (is.null(id)) {
+"
+"1","    id <- model$panels
+"
+"1","    if (is.null(id)) {
+"
+"1","        id <- 1:nrow(dat)
+"
+"1","    }
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#54: "
+"1","id <- model$panels
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#55: "
+"1","if (is.null(id)) {
+"
+"1","    id <- 1:nrow(dat)
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#56: "
+"1","id <- 1:nrow(dat)
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#61: "
+"1","if (""splineParams"" %in% names(model)) {
+"
+"1","    orig.dist <- model$splineParams[[1]]$dist
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#64: "
+"1","print(""Calculating COVRATIO and PRESS Statistics"")
+"
+"1","[1]"
+"1"," ""Calculating COVRATIO and PRESS Statistics"""
+"1","
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#69: "
+"1","inflStore <- matrix(0, nrow = length(unique(id)), ncol = (length(coef(model)) + 
+"
+"1","    2))
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#70: "
+"1","counter <- 1
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#71: "
+"1","for (i in unique(id)) {
+"
+"1","    if (dots == TRUE) {
+"
+"1","        if ((counter/100)%%1 == 0) {
+"
+"1","            cat(counter, ""\n"")
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            cat(""."")
+"
+"1","        }
+"
+"1","    }
+"
+"1","    rowsToDel <- which(id == i)
+"
+"1","    pos <- which(i == unique(id))
+"
+"1","    newData <- dat[-rowsToDel, ]
+"
+"1","    nb <- as.matrix(model.matrix(model)[c(1), ])
+"
+"1","    nc <- as.matrix(inflStore[pos, 1:length(coef(model))])
+"
+"1","    if (length(pos == 1)) {
+"
+"1","        presPred <- t(nb) %*% nc
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        presPred <- nb %*% nc
+"
+"1","    }
+"
+"1","    inflStore[pos, ncol(inflStore)] <- sum((response[rowsToDel] - 
+"
+"1","        c(family(model)$linkinv(presPred)))^2)
+"
+"1","    if (class(model)[1] == ""gamMRSea"") {
+"
+"1","        model.det <- det(summary(model)$cov.robust)
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        model.det <- det(summary(model)$cov.scaled)
+"
+"1","    }
+"
+"1","    newMod <- model
+"
+"1","    if (""splineParams"" %in% names(model)) {
+"
+"1","        newMod$splineParams[[1]]$dist <- newMod$splineParams[[1]]$dist[-rowsToDel, 
+"
+"1","            ]
+"
+"1","        splineParams = model$splineParams
+"
+"1","    }
+"
+"1","    if (class(model)[1] == ""gamMRSea"") {
+"
+"1","        newpanel <- id[-rowsToDel]
+"
+"1","        if (is.factor(newpanel)) {
+"
+"1","            newpanel <- droplevels(newpanel)
+"
+"1","        }
+"
+"1","        newMod <- update(newMod, . ~ ., data = newData, panels = newpanel, 
+"
+"1","            splineParams = splineParams)
+"
+"1","        newmod.det <- det(summary(newMod)$cov.robust)
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        newMod <- update(newMod, . ~ ., data = newData)
+"
+"1","        newmod.det <- det(summary(newMod)$cov.scaled)
+"
+"1","    }
+"
+"1","    inflStore[pos, (1:length(coef(newMod)))] <- newMod$coefficients
+"
+"1","    inflStore[pos, (ncol(inflStore) - 1)] <- newmod.det/model.det
+"
+"1","    counter <- counter + 1
+"
+"1","}
+"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#72: "
+"1","if (dots == TRUE) {
+"
+"1","    if ((counter/100)%%1 == 0) {
+"
+"1","        cat(counter, ""\n"")
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        cat(""."")
+"
+"1","    }
+"
+"1","}
+"
+"0","c"
+"1","debug at ~/GitHub/MRSea/R/runInfluence.R#122: "
+"1","numericblock <- as.numeric(unique(id))
+"
+"0","length(unique(id))"
+"1","[1]"
+"1"," 9232"
+"1","
+"
+"0","Q"

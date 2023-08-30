@@ -1,0 +1,71 @@
+
+dists <- as.matrix(dist(cbind(wfdata$x.pos, wfdata$y.pos)))
+dist.inv <- 1/dists
+diag(dist.inv) <- 0   # replace the diagonal values with zero
+
+# Computes Moran's I autocorrelation coefficient of x giving a matrix of weights (here based on distance) 
+
+wfdata$logbirds <- log(wfdata$response + 0.000001)
+
+ape::Moran.I(wfdata$logbirds, dist.inv)    
+
+
+
+BF_malaria_data_geo<-as.geodata(wfdata[,c("x.pos","y.pos","response")])
+Vario<-variog(BF_malaria_data_geo,max.dist=7.53,uvec=seq(0.4121237,7.1595572,l=10))
+par(mfrow=c(2,1))
+plot(Vario)
+plot(pgi.cor)
+
+
+library(sp)
+# no trend:
+coordinates(wfdata) = ~x.pos+y.pos
+gstat::variogram(log(response + 0.0000001)~1, wfdata)
+
+data("ns.data.re")
+myd <- dplyr::filter(ns.data.re, Year==9, MonthOfYear==3)
+mynsdat <- dplyr::filter(ns.data.re, Year==9, MonthOfYear==3)
+sp::coordinates(mynsdat) = ~x.pos+y.pos
+vg <- gstat::variogram(log(birds + 0.0000001)~1, mynsdat)
+vg
+plot(vg)
+best.s <- vg$dist[which(vg$gamma == max(vg$gamma))]
+
+# try best.s at next dist
+best.s <- vg$dist[1]
+
+plot(mydat$x.pos, mydat$y.pos)
+points(mydat$x.pos[300], mydat$y.pos[300], pch=20, col="red")
+
+b <-LRF.g(radiusIndices = 1, dists = dists, radii = 1/((sqrt(2) * best.s)), aR =  300)
+g <- gfunc(dists[,300], best.s)
+quilt.plot(mynsdat$x.pos, mynsdat$y.pos, b)
+quilt.plot(mynsdat$x.pos, mynsdat$y.pos, g)
+
+getRadiiChoices(10, dists, "gaussian")
+
+
+
+g$dist[which(vg$gamma == max(vg$gamma))]
+
+# try best.s at next dist
+best.s <- vg$dist[8]
+
+plot(mynsdat$x.pos, mynsdat$y.pos)
+points(mynsdat$x.pos[300], mynsdat$y.pos[300], pch=20, col="red")
+dists.ns <- as.matrix(dist(cbind(mynsdat$x.pos, mynsdat$y.pos)))
+
+
+
+
+
+
+
+
+rad.dat <- dplyr::filter(ns.data.re, impact==0, Year==9, MonthOfYear == 3)
+
+dists<-makeDists(cbind(rad.dat$x.pos, rad.dat$y.pos), cbind(rad.dat$x.pos, rad.dat$y.pos))$dataDist
+r_seq<-getRadiiChoices.vario(8, rad.dat, basis="gaussian")
+b <-LRF.g(radiusIndices = 8, dists = dists, radii = r_seq, aR =  300)
+fields::quilt.plot(rad.dat$x.pos, rad.dat$y.pos, b)

@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../../index.html">MRSea</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,18 +41,24 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../../articles/web/IntroductiontoMRSea.html">Introduction to the package</a>
     <h6 class="dropdown-header" data-toc-skip>Basic examples</h6>
     <a class="dropdown-item" href="../../articles/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
     <a class="dropdown-item" href="../../articles/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../../articles/web/FittingDifferentSplines_MRSea_v1.3.html">Using Different Splines</a>
-    <a class="dropdown-item" href="../../articles/web/Interactions_salsa2d_MRSea_v1.3.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../../articles/web/FittingDifferentSplines_MRSea.html">Using Different Splines</a>
+    <a class="dropdown-item" href="../../articles/web/Interactions_salsa2d_MRSea.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../../articles/web/ModelDiagnostics_MRSea.html">Model Diagnostics</a>
+    <a class="dropdown-item" href="../../articles/web/TheTweedieDistribution_MRSea.html">Using the Tweedie Distribution</a>
     <a class="dropdown-item" href="../../articles/web/Publications.html">Publications</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../../articles/web/RenewablesCaseStudy_MRSea_v1.3.html">Renewables Case Study</a>
+    <a class="dropdown-item" href="../../articles/web/DistanceSampling.html">Brief Intro to Distance Sampling</a>
+    <a class="dropdown-item" href="../../articles/web/RenewablesCaseStudy_MRSea.html">Renewables Case Study</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>More advanced Usage</h6>
-    <a class="dropdown-item" href="../../articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../../articles/web/Geodesic_2dsmoothing_MRSea.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../../articles/web/UserRadiiChoice_MRSea.html">Basis radii selection</a>
+    <a class="dropdown-item" href="../../articles/web/quartotestpage.html">test</a>
   </div>
 </li>
 <li class="nav-item">
@@ -84,7 +90,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Publications</h1>
             
-            <h4 data-toc-skip class="date">2023-01-30</h4>
+            <h4 data-toc-skip class="date">2023-08-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lindesaysh/MRSea/blob/HEAD/vignettes/web/Publications.Rmd" class="external-link"><code>vignettes/web/Publications.Rmd</code></a></small>
       <div class="d-none name"><code>Publications.Rmd</code></div>
@@ -99,8 +105,8 @@
 <h4 id="mrsea-package">MRSea package:<a class="anchor" aria-label="anchor" href="#mrsea-package"></a>
 </h4>
 <ul>
-<li>Scott-Hayward L, Walker C, Mackenzie M (2021). “Vignette for the
-MRSea Package v1.3: Statistical Modelling of bird and cetacean
+<li>Scott-Hayward L.A.S., Walker C.G., Mackenzie M.L. (2021). “Vignette
+for the MRSea Package v1.3: Statistical Modelling of bird and cetacean
 distributions in offshore renewable development areas.” University of
 St. Andrews. Centre for Research into Ecological and Environmental
 Modelling.</li>
@@ -110,11 +116,11 @@ Modelling.</li>
 <h4 id="original-contractpackage-documentation-2013">Original Contract/Package documentation (2013)<a class="anchor" aria-label="anchor" href="#original-contractpackage-documentation-2013"></a>
 </h4>
 <ul>
-<li><p>Scott-Hayward L, Oedekoven C, Mackenzie M, Walker C, Rexstad E
-(2013). “User Guide for the MRSea Package: Statistical Modelling of bird
-and cetacean distributions in offshore renewables development areas.”
-University of St. Andrews. Contract with Marine Scotland: SB9
-(CR/2012/05)</p></li>
+<li><p>Scott-Hayward L.A.S., Oedekoven C., Mackenzie M.L., Walker C.G.,
+Rexstad E. (2013). “User Guide for the MRSea Package: Statistical
+Modelling of bird and cetacean distributions in offshore renewables
+development areas.” University of St. Andrews. Contract with Marine
+Scotland: SB9 (CR/2012/05)</p></li>
 <li><p>Mackenzie, M.L, Scott-Hayward, L.A.S., Oedekoven, C.S., Skov, H.,
 Humphreys, E., and Rexstad E. (2013). Statistical Modelling of Seabird
 and Cetacean data: Guidance Document. University of St. Andrews contract
@@ -130,14 +136,14 @@ Scotland Science Report 04/14</a></p></li>
 <h4 id="d-cress-basis">2D CReSS basis:<a class="anchor" aria-label="anchor" href="#d-cress-basis"></a>
 </h4>
 <ul>
-<li><p>Scott-Hayward LAS, Mackenzie ML, Walker CG, Donovan C, Ashe E
-(2014). “Complex Region Spatial Smoother CReSS.” Journal of
+<li><p>Scott-Hayward L.A.S., Mackenzie M.L., Walker C.G., Donovan C.,
+Ashe E. (2014). “Complex Region Spatial Smoother CReSS.” Journal of
 Computational and Graphical Statistics, 23(2), 340-360. <a href="https://www.jstor.org/stable/43305732#metadata_info_tab_contents" class="external-link">Online
 here</a></p></li>
-<li><p>Scott-Hayward, LAS, Mackenzie, ML, Ashe, E and R. Williams.
+<li><p>Scott-Hayward, L.A.S., Mackenzie, M.L., Ashe, E. and R. Williams.
 Modelling Killer Whale feeding behaviour using a spatially adaptive
 Complex Region Spatial Smoother (CReSS) and Generalised Estimating
-Equations (GEEs). JABES (Accepted). <a href="https://link.springer.com/article/10.1007/s13253-015-0209-2" class="external-link">DOI:
+Equations (GEEs). JABES (2015). <a href="https://link.springer.com/article/10.1007/s13253-015-0209-2" class="external-link">DOI:
 10.1007/s13253-015-0209-2</a></p></li>
 </ul>
 </div>
@@ -145,9 +151,9 @@ Equations (GEEs). JABES (Accepted). <a href="https://link.springer.com/article/1
 <h4 id="salsa-1d-algorithm">SALSA 1D Algorithm:<a class="anchor" aria-label="anchor" href="#salsa-1d-algorithm"></a>
 </h4>
 <ul>
-<li>Walker CG, Mackenzie ML, Donovan C, O’Sullivan M (2010). “SALSA - A
-Spatially Adaptive Local Smoothing Algorithm.” Journal of Statistical
-Computation and Simulation, 81(2), 179-191. <a href="https://www.tandfonline.com/doi/full/10.1080/00949650903229041" class="external-link">Online
+<li>Walker C.G., Mackenzie M.L., Donovan C., O’Sullivan M. (2010).
+“SALSA - A Spatially Adaptive Local Smoothing Algorithm.” Journal of
+Statistical Computation and Simulation, 81(2), 179-191. <a href="https://www.tandfonline.com/doi/full/10.1080/00949650903229041" class="external-link">Online
 here</a>
 </li>
 </ul>
@@ -157,10 +163,10 @@ here</a>
 </h4>
 <ul>
 <li><p>Scott-Hayward, L.A.S., Mackenzie, M.L., Walker, C.G., Shatumbu,
-G., Kilian, J.W., du Preez, P., 2022. Automated surface feature
+G., Kilian, J.W., du Preez, P., 2023. Automated surface feature
 selection using SALSA2D; An illustration using elephant mortality data
-in Etosha National Park. <a href="https://arxiv.org/abs/2202.07977" class="external-link">https://doi.org/10.48550/arXiv.2202.07977</a></p></li>
-<li><p>Scott-Hayward, LAS. (2013) PhD Thesis: Novel Applications for
+in Etosha National Park. <a href="https://arxiv.org/pdf/2202.07977.pdf" class="external-link">https://doi.org/10.48550/arXiv.2202.07977</a></p></li>
+<li><p>Scott-Hayward, L.A.S. (2013) PhD Thesis: Novel Applications for
 Species Distribution Mapping Including Spatial Models in Complex
 Regions. Chapter 5: Spatially Adaptive Models for Complex Topographies.
 <a href="https://core.ac.uk/download/pdf/19767108.pdf" class="external-link">Online

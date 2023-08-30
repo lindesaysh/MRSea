@@ -1,0 +1,3 @@
+"0","# Plot Pearson's residuals vs covariate"
+"0","plot(x, residuals(mdl, type=""pearson""),"
+"0","     ylab=""Pearson residuals"", xlab=""Covariate (x)"", pch=19)"

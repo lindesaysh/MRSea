@@ -1,0 +1,4 @@
+"0","runsTest(residuals(salsa2dOutput$bestModel, type='pearson'),emp.distribution=empdist)"
+"2","Error in residuals(salsa2dOutput$bestModel, type = ""pearson"") : 
+  object 'salsa2dOutput' not found
+"

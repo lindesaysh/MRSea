@@ -1,0 +1,3 @@
+"0","covariates <- c(""x.pos"", ""y.pos"", ""depth"")"
+"0","pairs(subset(wfdata, select=covariates), "
+"0","      upper.panel=NULL, pch=19, cex=0.3)"

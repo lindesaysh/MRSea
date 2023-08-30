@@ -1,0 +1,2 @@
+"0","b5.orig <-LRF.g(radiusIndices = 5, dists = distMats$dataDist, radii = rs.orig, aR =  149)"
+"0","fields::quilt.plot(wfdata$x.pos, wfdata$y.pos, b5.orig, zlim=c(0,1), main=""r5 original"")"

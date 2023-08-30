@@ -1,0 +1,4 @@
+"0","boots.orig <- do.bootstrap.cress.robust(salsa2dOutput.origr$bestModel, preddata, g2k=preddist, B = 500, cat.message = FALSE)"
+"0",""
+"0","cis.orig <- makeBootCIs(boots.orig)"
+"0",""

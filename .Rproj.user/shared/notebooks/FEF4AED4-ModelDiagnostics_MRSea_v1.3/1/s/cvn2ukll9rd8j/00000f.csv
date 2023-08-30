@@ -1,0 +1,2 @@
+"0","# Plot 2 - Mean binned fitted values vs var of raw residuals"
+"0","p.meanvar <- plotMeanVar(mdl)"

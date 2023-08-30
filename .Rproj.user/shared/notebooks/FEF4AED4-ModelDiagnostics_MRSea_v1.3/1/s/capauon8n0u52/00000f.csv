@@ -1,0 +1,5 @@
+"0","set.seed(2020) # for reproducibility"
+"0","N <- 250 # no. of data points"
+"0","x1 <- rnorm(N) # covariate 1"
+"0","x2 <- rnorm(N) # covariate 2"
+"0","y <- 2*x1 - x2 + rnorm(N) # measured y"

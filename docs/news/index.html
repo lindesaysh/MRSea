@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">MRSea</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,18 +24,24 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/web/IntroductiontoMRSea.html">Introduction to the package</a>
     <h6 class="dropdown-header" data-toc-skip>Basic examples</h6>
     <a class="dropdown-item" href="../articles/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
     <a class="dropdown-item" href="../articles/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea_v1.3.html">Using Different Splines</a>
-    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea_v1.3.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea.html">Using Different Splines</a>
+    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/ModelDiagnostics_MRSea.html">Model Diagnostics</a>
+    <a class="dropdown-item" href="../articles/web/TheTweedieDistribution_MRSea.html">Using the Tweedie Distribution</a>
     <a class="dropdown-item" href="../articles/web/Publications.html">Publications</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea_v1.3.html">Renewables Case Study</a>
+    <a class="dropdown-item" href="../articles/web/DistanceSampling.html">Brief Intro to Distance Sampling</a>
+    <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea.html">Renewables Case Study</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>More advanced Usage</h6>
-    <a class="dropdown-item" href="../articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../articles/web/Geodesic_2dsmoothing_MRSea.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../articles/web/UserRadiiChoice_MRSea.html">Basis radii selection</a>
+    <a class="dropdown-item" href="../articles/web/quartotestpage.html">test</a>
   </div>
 </li>
 <li class="active nav-item">
@@ -61,6 +67,44 @@
       <small>Source: <a href="https://github.com/lindesaysh/MRSea/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.4" id="mrsea-14">MRSea 1.4<a class="anchor" aria-label="anchor" href="#mrsea-14"></a></h2>
+<div class="section level3">
+<h3 id="notes-1-4">Notes<a class="anchor" aria-label="anchor" href="#notes-1-4"></a></h3>
+<ul><li>
+<p>SALSA1D:</p>
+<ul><li>Tweedie distribution and associated information criterion added (<code>AICtweedie</code> and <code>BICtweedie</code>)</li>
+</ul></li>
+<li>
+<p>SALSA2D:</p>
+<ul><li>Tweedie distribution and associated information criterion added (<code>AICtweedie</code> and <code>BICtweedie</code>)</li>
+</ul></li>
+<li>
+<p>Vignettes:</p>
+<ul><li>Added a vignette for using the Tweedie distribution in gamMRSea models</li>
+<li>Added a vignette for model diagnostics with general modelling information and MRSea specific functions</li>
+<li>Added a vignette for user specification of the range of radii choices using a variogram</li>
+<li>Added a vignette for a brief introduction to distance sampling using the <code>mrds</code> package</li>
+<li>Added an introduction to MRSea vignette.</li>
+<li>The case study vignette has been removed for updating and will return soon.</li>
+</ul></li>
+<li>
+<p>Other:</p>
+<ul><li>Mean variance plot function added. This allows the user to assess the suitability of the mean-variance distributional assumption for a number of distributions (Gaussian, Poisson, Quasi-Poisson, Gamma and Tweedie)</li>
+<li>Minor edits to all diagnostic functions (ACF, influence measures, diagnostic plots, cumulative residuals)</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-1-4">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-1-4"></a></h3>
+<ul><li><p>SALSA 1D:</p></li>
+<li><p>SALSA 2D:</p></li>
+<li>
+<p>Other:</p>
+<ul><li>ensure data is a <code>data.frame</code> (not <code>tibble</code>) in <code>create.bootstrap.data</code> and <code>plotCumRes</code> functions</li>
+<li>minor bug fixes to diagnostic functions when no spline parameter object present in model</li>
+</ul></li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.3.3" id="mrsea-133">MRSea 1.3.3<a class="anchor" aria-label="anchor" href="#mrsea-133"></a></h2>
 <div class="section level3">

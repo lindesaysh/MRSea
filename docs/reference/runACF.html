@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">MRSea</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,18 +24,24 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/web/IntroductiontoMRSea.html">Introduction to the package</a>
     <h6 class="dropdown-header" data-toc-skip>Basic examples</h6>
     <a class="dropdown-item" href="../articles/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
     <a class="dropdown-item" href="../articles/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea_v1.3.html">Using Different Splines</a>
-    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea_v1.3.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/FittingDifferentSplines_MRSea.html">Using Different Splines</a>
+    <a class="dropdown-item" href="../articles/web/Interactions_salsa2d_MRSea.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="../articles/web/ModelDiagnostics_MRSea.html">Model Diagnostics</a>
+    <a class="dropdown-item" href="../articles/web/TheTweedieDistribution_MRSea.html">Using the Tweedie Distribution</a>
     <a class="dropdown-item" href="../articles/web/Publications.html">Publications</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea_v1.3.html">Renewables Case Study</a>
+    <a class="dropdown-item" href="../articles/web/DistanceSampling.html">Brief Intro to Distance Sampling</a>
+    <a class="dropdown-item" href="../articles/web/RenewablesCaseStudy_MRSea.html">Renewables Case Study</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>More advanced Usage</h6>
-    <a class="dropdown-item" href="../articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../articles/web/Geodesic_2dsmoothing_MRSea.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="../articles/web/UserRadiiChoice_MRSea.html">Basis radii selection</a>
+    <a class="dropdown-item" href="../articles/web/quartotestpage.html">test</a>
   </div>
 </li>
 <li class="nav-item">
@@ -73,8 +79,9 @@
 <span>  <span class="va">model</span>,</span>
 <span>  store <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  save <span class="op">=</span> <span class="cn">F</span>,</span>
-<span>  suppress.printout <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  maxlag <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  suppress.printout <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  maxlag <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  printplot <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -97,7 +104,7 @@
 
 
 <dt>suppress.printout</dt>
-<dd><p>(<code>default=FALSE</code>. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.</p></dd>
+<dd><p>(<code>default=TRUE</code>. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.</p></dd>
 
 
 <dt>maxlag</dt>
@@ -131,7 +138,29 @@
 <span class="r-in"><span><span class="va">ns.data.re</span><span class="op">$</span><span class="va">blockid</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">ns.data.re</span><span class="op">$</span><span class="va">blockid</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">runACF</span><span class="op">(</span><span class="va">ns.data.re</span><span class="op">$</span><span class="va">blockid</span>, <span class="va">model</span>, suppress.printout<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="runACF-1.png" alt="" width="700" height="433"></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: 'dplyr'</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:igraph':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     as_data_frame, groups, union</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:raster':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, select, union</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from 'package:MRSea':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     contains</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:stats':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from 'package:base':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ggplot():</span> could not find function "ggplot"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># storing the output and then plotting</span></span></span>
+<span class="r-in"><span><span class="va">acfoutput</span> <span class="op">&lt;-</span> <span class="fu">runACF</span><span class="op">(</span><span class="va">ns.data.re</span><span class="op">$</span><span class="va">blockid</span>, <span class="va">model</span>, suppress.printout<span class="op">=</span><span class="cn">TRUE</span>, store<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="plotacf.html">plotacf</a></span><span class="op">(</span><span class="va">acfoutput</span><span class="op">$</span><span class="va">acfmat</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in ggplot():</span> could not find function "ggplot"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -46,7 +46,7 @@
     
     <a class="navbar-brand me-2" href="index.html">MRSea</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.4</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,18 +61,24 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/web/IntroductiontoMRSea.html">Introduction to the package</a>
     <h6 class="dropdown-header" data-toc-skip>Basic examples</h6>
     <a class="dropdown-item" href="articles/GettingStarted_1Dsmoothing.html">One-dimensional smooths</a>
     <a class="dropdown-item" href="articles/GettingStarted_2Dsmoothing.html">Two-dimensional smooths</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="articles/web/FittingDifferentSplines_MRSea_v1.3.html">Using Different Splines</a>
-    <a class="dropdown-item" href="articles/web/Interactions_salsa2d_MRSea_v1.3.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="articles/web/FittingDifferentSplines_MRSea.html">Using Different Splines</a>
+    <a class="dropdown-item" href="articles/web/Interactions_salsa2d_MRSea.html">Interactions for 2D smooths</a>
+    <a class="dropdown-item" href="articles/web/ModelDiagnostics_MRSea.html">Model Diagnostics</a>
+    <a class="dropdown-item" href="articles/web/TheTweedieDistribution_MRSea.html">Using the Tweedie Distribution</a>
     <a class="dropdown-item" href="articles/web/Publications.html">Publications</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="articles/web/RenewablesCaseStudy_MRSea_v1.3.html">Renewables Case Study</a>
+    <a class="dropdown-item" href="articles/web/DistanceSampling.html">Brief Intro to Distance Sampling</a>
+    <a class="dropdown-item" href="articles/web/RenewablesCaseStudy_MRSea.html">Renewables Case Study</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>More advanced Usage</h6>
-    <a class="dropdown-item" href="articles/web/Geodesic_2dsmoothing_MRSea_v1.3.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="articles/web/Geodesic_2dsmoothing_MRSea.html">Geodesic smoothing</a>
+    <a class="dropdown-item" href="articles/web/UserRadiiChoice_MRSea.html">Basis radii selection</a>
+    <a class="dropdown-item" href="articles/web/quartotestpage.html">test</a>
   </div>
 </li>
 <li class="nav-item">
@@ -100,8 +106,8 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="mrsea">MRSea<a class="anchor" aria-label="anchor" href="#mrsea"></a>
 </h1></div>
-<p>The latest version is <strong>1.3.3</strong> (27/01/2023)</p>
-<p>The latest development version is <strong>1.3.3.001</strong> (09/02/2023)</p>
+<p>The latest version is <strong>1.4</strong> (30/08/2023)</p>
+<p>The latest development version is <strong>1.4.1</strong> (30/08/2023)</p>
 <p>The <a href="https://lindesaysh.github.io/MRSea" class="external-link">MRSea</a> packages allows the fitting of <strong>spatially adaptive regression splines using SALSA</strong>.</p>
 <p>It was developed to examine animal survey data for signs of changes in animal abundance and distribution following marine renewables development. However the methods are suitable for a wide range of applications.</p>
 <p>The functions of this package can be used to analyse segmented line transect (alongside the <code>mrds</code> package) or digital aerial data. The package includes functions for fitting spatially adaptive one and 2D smoothers using SALSA and CReSS. Euclidean or Geodesic distances can be used to underpin the smoothed 2D surface and a choice of Gaussian or exponential radial basis functions are available. Non-parametric bootstrapping is available to estimate uncertainty. Several model assessment tools are also available. For models with residual correlation, direct estimation of robust standard errors, given a panel structure, is available.</p>
