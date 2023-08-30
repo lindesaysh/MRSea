@@ -337,9 +337,11 @@ By specifying `anova` it is using the `anova.gamMRSea` function (as the class of
 
 For information on:
 
-1. [Other types of 1D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea_v1.3)
+1. [Other types of 1D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea)
 2. [Two dimensional smoothing](https://lindesaysh.github.io/MRSea/article/GettingStarted_2Dsmoothing)
-3. [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3) including information on distance sampling, `gamMRSea` model diagnostics and using robust standard errors to deal with residual correlation. 
+3. [Model Diagnostics](https://lindesaysh.github.io/MRSea/article/ModelDiagnostics_MRSea)
+4. [Distance Sampling](https://lindesaysh.github.io/MRSea/article/DistanceSampling)
+5. [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea) including information on distance sampling, `gamMRSea` model diagnostics and using robust standard errors to deal with residual correlation. 
 
 
 # References
