@@ -37,3 +37,11 @@ Other functions include diagnostics (to assess residual correlation: `runACF`, s
 ![alt text](images/MRSea_workflow.png)
 Example of the modelling process using `MRSea`.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst `MRSea` functions are in red.  
 
+# Examples and tutorials on the MRSea Website
+
+For information on using the package see [here](https://lindesaysh.github.io/MRSea/articles/website_examples.html) for a list of examples and tutorials.
+
+```{r echo=FALSE}
+knitr::include_url("https://lindesaysh.github.io/MRSea/articles/website_examples.html")
+```
+
