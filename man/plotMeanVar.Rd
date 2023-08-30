@@ -4,16 +4,18 @@
 \alias{plotMeanVar}
 \title{Functions to create a Mean-Variance plot for checking the distribution assumptions of the mean and the variance.  Distributions available are Gaussian, Poisson, QuasiPoisson, Gamma and Tweedie.}
 \usage{
-plotMeanVar(model, cut.prob.by = 0.05, save = FALSE, label = NULL)
+plotMeanVar(model, cut.bins = 20, save = FALSE, label = NULL, print = TRUE)
 }
 \arguments{
 \item{model}{Fitted model object (glm or gam)}
 
-\item{cut.prob.by}{Numerical input to state the increment for the sequence of cut probabilities.}
-
 \item{save}{(\code{default=FALSE}). Logical stating whether plot should be saved into working directory. See \code{label} to change directory.}
 
 \item{label}{Character string indicating an label to be added to the plot when using \code{save = TRUE}. Can also include a pathway to a directory of choice.}
+
+\item{print}{Logical stating whether or not to print the plot. If FALSE then the plot object is returned.}
+
+\item{cut.prob.by}{Numerical input to state the increment for the sequence of cut probabilities.}
 }
 \value{
 A plot showing the observed mean and variance (cutting the fitted values into bins and finding the mean fitted value and the variance for each bin) and the assumed relationship under various distributions depending on the model fitted (lines on the plot).
