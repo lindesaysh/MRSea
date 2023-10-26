@@ -1,3 +1,32 @@
+
+# MRSea 1.4.1
+
+
+## Notes
+* SALSA1D: 
+
+  
+* SALSA2D:
+
+
+* Vignettes:
+  
+  
+* Other: 
+
+  
+## Bug Fixes
+
+* SALSA 1D:
+
+* SALSA 2D:
+
+  - The dispersion parameter estimate using `getDisperson` function was incorrectly specified as 1.  This affected the dropping of "bad" knots in the initialise step resulting in more knots being dropped than should have been. This did not affect knots being subsequently added in the exchange step. The correct calculation is now included in the `getDispersion` function.
+
+* Other:
+
+
+
 # MRSea 1.4
 
 
