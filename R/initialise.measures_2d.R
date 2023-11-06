@@ -78,7 +78,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     }else{
       numNeeded = nrow(initialKnots)
       knots2<-rbind(initialKnots, knotgrid)
-      posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
+      #posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
+      # find the nearest knots to the initial locations and remove duplicates
+      kd <- as.matrix(dist(knots2))[(nrow(initialKnots) +1) : nrow(knots2), 1:nrow(initialKnots)]
+      posKnots <- unique(as.vector(apply(kd,2 ,function(x) which(x == min(x)))))
     }
     
   } # end of ifelse statement related to initialise  = T/F
