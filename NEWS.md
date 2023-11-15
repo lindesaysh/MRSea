@@ -26,6 +26,7 @@
 
 * Other:
 
+  - When using the tweedie distribution, the power parameter is not stored in the model call and so issues arise when using a stored model object where this parameter is no longer available.  The parameter is stored within the model but updates have been made to `runSALSA1D` and `runSALSA2D` to ensure that the variance power and variance link are specified as numbers in the model call. 
 
 
 # MRSea 1.4

@@ -123,6 +123,16 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   # check for response variable
   if(is.null(data$response)) stop('data does not contain response column')
 
+  if(family == "tweedie"){
+    p <- get("p", environment(model$family$variance))
+    link.power <- get("link.power", environment(model$family$variance))
+    if(p == 0) stop("Tweedie power parameter set to 0, please use Gaussian distribution instead")
+    if(p == 1) stop("Tweedie power parameter set to 1, please use Quasi-Poisson distribution instead")
+    if(p == 2) stop("Tweedie power parameter set to 2, please use Gamma distribution instead")
+    # edit model call to include the number for p
+    tex = paste("update(model, . ~ . , family = tweedie(var.power=", p, ", link.power = ", link.power,"))")
+    model = eval(parse(text = tex))
+  }
 
   # check for duplicates in knotgrid
   if(length(which(duplicated(salsa2dlist$knotgrid)==T))>0) stop ('knotgrid has duplicated locations in it. Please remove.')

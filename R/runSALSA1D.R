@@ -142,9 +142,14 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   }
   
    if(family == "tweedie"){
-     if(get("p", environment(initialModel$family$variance)) == 0) stop("power parameter set to 0, please use Gaussian distribution instead")
-     if(get("p", environment(initialModel$family$variance)) == 1) stop("power parameter set to 1, please use Quasi-Poisson distribution instead")
-     if( get("p", environment(initialModel$family$variance))== 2) stop("power parameter set to 2, please use Gamma distribution instead")
+     p <- get("p", environment(initialModel$family$variance))
+     link.power <- get("link.power", environment(initialModel$family$variance))
+     if(p == 0) stop("Tweedie power parameter set to 0, please use Gaussian distribution instead")
+     if(p == 1) stop("Tweedie power parameter set to 1, please use Quasi-Poisson distribution instead")
+     if(p == 2) stop("Tweedie power parameter set to 2, please use Gamma distribution instead")
+     # edit model call to include the number for p
+     tex = paste("update(initialModel, . ~ . , family = tweedie(var.power=", p, ", link.power = ", link.power,"))")
+     initialModel = eval(parse(text = tex))
    }
   # 
   
