@@ -57,7 +57,12 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
     if(is.null(modelobject$cvfolds)){
       s <- boot:::sample0(rep(1L:K, f), n)  
     }else{
-      s<-modelobject$cvfolds
+      if(length(table(modelobject$cvfolds)) == K){
+        s<-modelobject$cvfolds
+      }else{
+        s<-getCVids(data, K, block=modelobject$panels, seed = 79125)
+        warning("K in CV call is not the same as K used for cvfolds stored in model object. New folds have been created using seed = 79125")
+      }
     }  
   }
   
