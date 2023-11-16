@@ -131,9 +131,6 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   }
   if(sum(abs(dim(data)-dim(datain)))>0) stop('Data dimensions do not match the data in initialModel')
   
-  attributes(initialModel$formula)$.Environment<-environment()
-
-  
   if(fam=='other'){
     if(is.null(data$response)) stop('data does not contain response column')  
   }else{
@@ -141,7 +138,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(is.null(data$failures)) stop('data does not contain failures column')
   }
   
-   if(family == "tweedie"){
+   if(initialModel$family$family == "Tweedie"){
      p <- get("p", environment(initialModel$family$variance))
      link.power <- get("link.power", environment(initialModel$family$variance))
      if(p == 0) stop("Tweedie power parameter set to 0, please use Gaussian distribution instead")
@@ -151,7 +148,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
      tex = paste("update(initialModel, . ~ . , family = tweedie(var.power=", p, ", link.power = ", link.power,"))")
      initialModel = eval(parse(text = tex))
    }
-  # 
+  
+  attributes(initialModel$formula)$.Environment<-environment()
   
   # check parameters in salsa1dlist are same length as varlist
   if(length(varlist)!=length(salsa1dlist$minKnots_1d)) stop('salsa1dlist$minKnots_1d not same length as varlist')

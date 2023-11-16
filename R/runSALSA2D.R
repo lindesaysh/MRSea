@@ -116,14 +116,12 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     cat("\n Model data converted from tibble to data frame\n")
   }
   
-  attributes(model$formula)$.Environment<-environment()
-
   if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(model, gamMRSea=TRUE)}
 
   # check for response variable
   if(is.null(data$response)) stop('data does not contain response column')
 
-  if(family == "tweedie"){
+  if(model$family$family == "Tweedie"){
     p <- get("p", environment(model$family$variance))
     link.power <- get("link.power", environment(model$family$variance))
     if(p == 0) stop("Tweedie power parameter set to 0, please use Gaussian distribution instead")
@@ -134,6 +132,8 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     model = eval(parse(text = tex))
   }
 
+  attributes(model$formula)$.Environment<-environment()
+  
   # check for duplicates in knotgrid
   if(length(which(duplicated(salsa2dlist$knotgrid)==T))>0) stop ('knotgrid has duplicated locations in it. Please remove.')
 
