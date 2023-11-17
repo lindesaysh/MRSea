@@ -143,8 +143,7 @@
     #   set.seed(cv.opts$cv.gamMRSea.seed)
     #   fitStat<-cv.glm(data2,tempCVFit, K=cv.opts$K, cost=cv.opts$cost)$delta[2] 
     # }else{
-      set.seed(cv.opts$cv.gamMRSea.seed)
-      fitStat<-cv.gamMRSea(data,out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
+      fitStat<-cv.gamMRSea(data,out.lm, K=cv.opts$K, cost=cv.opts$cost, s.eed = cv.opts$cv.gamMRSea.seed)$delta[2]
     #}
   }
   

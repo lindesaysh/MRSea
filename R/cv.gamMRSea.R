@@ -7,6 +7,7 @@
 #' @param cost A function of two vector arguments specifying the cost function for the cross-validation. The first argument to cost should correspond to the observed responses and the second argument should correspond to the predicted or fitted responses from the generalized linear model. cost must return a non-negative scalar value. The default is the average squared error function.
 #' @param K The number of groups into which the data should be split to estimate the cross-validation prediction error. The value of K must be such that all groups are of approximately equal size. If the supplied value of K does not satisfy this criterion then it will be set to the closest integer which does and a warning is generated specifying the value of K used. The default is to set K equal to the number of observations in data which gives the usual leave-one-out cross-validation.
 #' @param replicate (\code{default=FALSE}).  When using the replicate function, and panels are specified in the model object, \code{replicate=TRUE} will change the seed and select new panel based folds for each iteration.
+#' @param s.eed (\code{default = NULL}). If \code{NULL} then a seed is randomly generated and stored in the attributes of the output.  If specified, the value for \code{s.eed} is used and also stored in the attributes of the output. 
 #' 
 #' @details For more information please see the \link[boot]{cv.glm} function in the boot library
 #' 
@@ -25,12 +26,28 @@
 #'
 
 cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yhat)^2), 
-          K = n, replicate=FALSE) 
+          K = n, replicate=FALSE, s.eed=NULL) 
 {
+  
+  if(!is.null(modelobject$panels)){
+    if(length(unique(modelobject$panels)) < K){
+      stop("Not enough unique panels to make K folds. Please reduce K and try again")
+    }
+  }
+    
+  
   call <- match.call()
-  if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) 
-    runif(1)
+  # if (!exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)) 
+  #   s.eed<-sample(1:100000, size = 1)
+  #   set.seed(s.eed)
+  # seed <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+  # 
+  if(is.null(s.eed)){
+    s.eed<-sample(1:100000, size = 1)
+  }
+  set.seed(s.eed)
   seed <- get(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+  
   n <- nrow(data)
   if ((K > n) || (K <= 1)) 
     stop("'K' outside allowable range")
@@ -50,7 +67,7 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
         s <- boot:::sample0(rep(1L:K, f), n)  
       }else{
         # not indep
-        s.eed<-sample(1:100000, size = 1)
+        #s.eed<-sample(1:100000, size = 1)
         s<-getCVids(data, K, block=modelobject$panels, seed = s.eed)  
       }
   }else{
@@ -60,8 +77,9 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
       if(length(table(modelobject$cvfolds)) == K){
         s<-modelobject$cvfolds
       }else{
-        s<-getCVids(data, K, block=modelobject$panels, seed = 79125)
-        warning("K in CV call is not the same as K used for cvfolds stored in model object. New folds have been created using seed = 79125")
+        #s.eed<-sample(1:100000, size = 1)
+        s<-getCVids(data, K, block=modelobject$panels, seed = s.eed)
+        warning("K in CV call is not the same as K used for cvfolds stored in model object. \n New folds have been created using s.eed parameter (see attributes of output) \n Note: the model object folds have not been changed")
       }
     }  
   }
@@ -111,9 +129,18 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
     cost.0 <- cost.0 - p.alpha * cost(glm.y, predict(object=d.glm, 
                                                      newdata=data, g2k=g2k, type = "response"))
   }
-  list(call = call, K = K, delta = as.numeric(c(CV, CV + cost.0)), 
-       seed = seed)
+  
+  output <- list(call = call, 
+                 K = K,
+                 delta = as.numeric(c(CV, CV + cost.0)))
+  
+  attr(output, "s.eed") <- s.eed
+  attr(output, "seed") <- seed
+  
+  return(output)
 }
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 cv.gamMRSea.mn<-function (data, modelobject, cost = function(y, yhat) mean((y - yhat)^2), K = n, replicate=FALSE) {
   call <- match.call()

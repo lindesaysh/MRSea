@@ -184,8 +184,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }
   
   if(fitnessMeasure=="cv.gamMRSea"){
-      set.seed(cv.opts$cv.gamMRSea.seed)
-      fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
+      fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost, s.eed = cv.opts$cv.gamMRSea.seed)$delta[2]
   }
   
   if(fitnessMeasure=="AICtweedie"){

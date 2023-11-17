@@ -247,9 +247,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   }
   
   if(removal==TRUE){
-    set.seed(seed.in)
+    #set.seed(seed.in)
     basecoef<-length(coef(baseModel))
-    cv_initial <- cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+    cv_initial <- cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2]
   }else{
     cv_initial=NULL
   }
@@ -318,9 +318,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     baseModel <- eval(parse(text=paste("update(baseModel, .~. -", term, ")", sep="")))
     
     if(removal==TRUE){
-      set.seed(seed.in)
+      #set.seed(seed.in)
       base_wo_coeff<-length(coef(baseModel))
-      cv_without<-cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
+      cv_without<-cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2] 
       fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat  
     }
     
@@ -355,8 +355,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(removal=='TRUE'){
     cat('Fitting Linear Model...')
     tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
-    set.seed(seed.in)
-    cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+    #set.seed(seed.in)
+    cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2]
     
     cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))
     
