@@ -111,7 +111,7 @@ plotMeanVar<-function(model, cut.bins = 20, save=FALSE, label = NULL, print=TRUE
     pdat <- tibble(mu = seq(min(meanfits), max(meanfits), length=100)) %>% 
       mutate(
         V.p = mu, 
-        V.g = mu * 2 * summary(model)$dispersion
+        V.g = model$family$variance(mu) * summary(model)$dispersion
       )  
     
     pdat <- tidyr::pivot_longer(pdat, 

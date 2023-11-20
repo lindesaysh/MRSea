@@ -12,8 +12,8 @@ Description: Examines animal survey data for signs of changes in animal
     bootstrapping is available to estimate uncertainty and if residual correlation is present, robust standard
     errors maybe used (given a panel structure). Several model assessment
     tools are also available. 
-Version: 1.4.1
-Date: 2023-15-11
+Version: 1.4.2
+Date: 2023-20-11
 Authors@R: c(
     person("Lindesay", "Scott-Hayward", email = "lass@st-and.ac.uk",
             role = c("aut", "cre", "cph"),
