@@ -34,6 +34,8 @@
 
 getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
   
+  if(is.null(distMatrix)) stop("**** No distance matrix provided.****")
+  
   distMatrix[which(is.infinite(distMatrix), arr.ind = T)]<-NA
   
   if(basis=='gaussian'){
@@ -47,6 +49,7 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
       rval_min <- rvin[2]
     }
     r_seq<- exp(seq(log(rval_min), log(rval_max), length=numberofradii))
+    attr(r_seq, "Method") <- "Original"
     return(r_seq)  
   }
   
@@ -56,6 +59,7 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
     rmin<- sqrt(max(distMatrix, na.rm=TRUE)/21)
     rmax<- sqrt(max(distMatrix, na.rm=TRUE)/3e-7)
     r_seq <- exp(seq(log(rmin), log(rmax), length=numberofradii))[-c(1,numberofradii)]
+    attr(r_seq, "Method") <- "Original"
     return(r_seq)
   }
 }
@@ -70,6 +74,7 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
 #' @param basis character stating whether a 'gaussian' or 'exponential' basis is being used. 
 #' @param alpha numeric parameter for the `gstat::variogram` function giving the direction in plane(x,y)
 #' @param showplots (`default = FALSE`). If `TRUE` the output of `gstat::variogram` and `gstat::fit.variogram` are shown.
+#' @param distMatrix Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}. This is used as a check to ensure the estimated range parameter does not exceed the maximum distance on the surface.  If it does, then the original \code{\link{getRadiiChoices}} function is used and the `distMatrix` parameter is a requirement for this. 
 #' @param ... Other parameters for the `gstat::variogram` function. 
 #' 
 #' 
@@ -85,9 +90,17 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
 #' # load data
 #' data(ns.data.re)
 #' rad.dat <- dplyr::filter(ns.data.re, impact==0, Year==9, MonthOfYear == 3)
+#' # load knot grid data
+#' data(knotgrid.ns)
 #' 
+#' # make distance matrices for datatoknots and knottoknots
+#' distMats<-makeDists(cbind(rad.dat$x.pos, rad.dat$y.pos), na.omit(knotgrid.ns))
+
 #' # choose sequence of radii
-#' r_seq<-getRadiiChoices.vario(8, xydata = rad.dat[,c("x.pos", "y.pos")], response = log(rad.dat$birds +1 ), basis="gaussian")
+#' r_seq<-getRadiiChoices.vario(8, xydata = rad.dat[,c("x.pos", "y.pos")], 
+#'                              response = log(rad.dat$birds +1 ), 
+#'                              basis = "gaussian", 
+#'                              distMatrix = distMats$dataDist)
 #' 
 #' r_seq
 #' attr(r_seq, "vg.fit")
@@ -97,7 +110,9 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
 
 getRadiiChoices.vario<-function(numberofradii=10, xydata, response, 
                                 basis, alpha = 0, vgmmodel = "Sph", 
-                                showplots = FALSE, ...){
+                                showplots = FALSE, distMatrix = NULL, ...){
+  
+  if(is.null(distMatrix)) stop("**** No distance matrix provided.****")
   
   data <- data.frame(xydata, response)
   names(data) <- c("x", "y", "response")
@@ -118,27 +133,41 @@ getRadiiChoices.vario<-function(numberofradii=10, xydata, response,
     print(plot(fit.vg, cutoff=max(vg$dist)))
   }
   best.s <- fit.vg$range[2]
-  vg.gap <- vg$dist[2] - vg$dist[1]
-  nr <- floor(numberofradii/2)
-  l <- seq(best.s - (vg.gap * nr), best.s, length=nr)
   
-  if(min(l)<0){
-    l <- seq(min(abs(l)), best.s, length=nr)
-  }
-  
-  u <- seq(best.s, best.s + (vg.gap * nr), length=nr)
-  s_seq <- unique(c(l, u))
-  
-  
-  if(basis=='gaussian'){
+  distMatrix[which(is.infinite(distMatrix), arr.ind = T)]<-NA
+  if(max(distMatrix)>best.s){
+    vg.gap <- vg$dist[2] - vg$dist[1]
+    nr <- floor(numberofradii/2)
+    l <- seq(best.s - (vg.gap * nr), best.s, length=nr)
     
-    r_seq <- 1/((sqrt(2) * s_seq))
-    attr(r_seq, "vg.fit") <- fit.vg
-  }
-  
-  if(basis=='exponential'){
-    r_seq <- sqrt(s_seq)
-    attr(r_seq, "vg.fit") <- fit.vg
+    if(min(l)<0){
+      l <- seq(min(abs(l)), best.s, length=nr)
+    }
+    
+    u <- seq(best.s, best.s + (vg.gap * nr), length=nr)
+    s_seq <- unique(c(l, u))
+    
+    
+    if(basis=='gaussian'){
+      
+      r_seq <- 1/((sqrt(2) * s_seq))
+      attr(r_seq, "Method") <- "Variogram"
+      attr(r_seq, "vg.fit") <- fit.vg
+    }
+    
+    if(basis=='exponential'){
+      r_seq <- sqrt(s_seq)
+      attr(r_seq, "Method") <- "Variogram"
+      attr(r_seq, "vg.fit") <- fit.vg
+    }
+  }else{
+    r_seq <- getRadiiChoices(numberofradii, distMatrix, basis=basis)
+    attr(r_seq, "vg.fit") <- paste0("Range (", 
+                                    round(best.s, 2), 
+                                    ") is greater than maximum distance in d2k (",
+                                    round(max(d2k), 3), 
+                                    ") so r_seq created by getRadiiChoices()"
+    )
   }
   
   return(r_seq) 

@@ -116,7 +116,8 @@ salsa2dlist<-list(fitnessMeasure = 'QBIC',
 rs <- getRadiiChoices.vario(numberofradii = 10,
                             xydata = wfdata[, c("x.pos", "y.pos")],
                             response = log(wfdata$NHAT + 1), 
-                            basis = "gaussian")
+                            basis = "gaussian",
+                            distMatrix = distMats$dataDist)
 rs
 ```
 

@@ -12,6 +12,7 @@ getRadiiChoices.vario(
   alpha = 0,
   vgmmodel = "Sph",
   showplots = FALSE,
+  distMatrix = NULL,
   ...
 )
 }
@@ -27,6 +28,8 @@ getRadiiChoices.vario(
 \item{alpha}{numeric parameter for the `gstat::variogram` function giving the direction in plane(x,y)}
 
 \item{showplots}{(`default = FALSE`). If `TRUE` the output of `gstat::variogram` and `gstat::fit.variogram` are shown.}
+
+\item{distMatrix}{Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}. This is used as a check to ensure the estimated range parameter does not exceed the maximum distance on the surface.  If it does, then the original \code{\link{getRadiiChoices}} function is used and the `distMatrix` parameter is a requirement for this.}
 
 \item{...}{Other parameters for the `gstat::variogram` function.}
 }
@@ -45,9 +48,16 @@ The range parameter determines the range of the influence of each knot.  Small n
 # load data
 data(ns.data.re)
 rad.dat <- dplyr::filter(ns.data.re, impact==0, Year==9, MonthOfYear == 3)
+# load knot grid data
+data(knotgrid.ns)
 
+# make distance matrices for datatoknots and knottoknots
+distMats<-makeDists(cbind(rad.dat$x.pos, rad.dat$y.pos), na.omit(knotgrid.ns))
 # choose sequence of radii
-r_seq<-getRadiiChoices.vario(8, xydata = rad.dat[,c("x.pos", "y.pos")], response = log(rad.dat$birds +1 ), basis="gaussian")
+r_seq<-getRadiiChoices.vario(8, xydata = rad.dat[,c("x.pos", "y.pos")], 
+                             response = log(rad.dat$birds +1 ), 
+                             basis = "gaussian", 
+                             distMatrix = distMats$dataDist)
 
 r_seq
 attr(r_seq, "vg.fit")
