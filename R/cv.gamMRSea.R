@@ -130,9 +130,15 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
                                                      newdata=data, g2k=g2k, type = "response"))
   }
   
+  CV0 <- CV + cost.0
+  
+  if(CV0 < 0) {CV0 <- Inf}
+  
+  delta <- as.numeric(c(CV, CV0))
+  
   output <- list(call = call, 
                  K = K,
-                 delta = as.numeric(c(CV, CV + cost.0)))
+                 delta = delta)
   
   attr(output, "s.eed") <- s.eed
   attr(output, "seed") <- seed
