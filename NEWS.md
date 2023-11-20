@@ -30,6 +30,7 @@
 
   - When using the tweedie distribution, the power parameter is not stored in the model call and so issues arise when using a stored model object where this parameter is no longer available.  The parameter is stored within the model but updates have been made to `runSALSA1D` and `runSALSA2D` to ensure that the variance power and variance link are specified as numbers in the model call. 
   - The CV score was unchanged when changing K.  This occurred owing to the folds stored within the model object.  If `K` specified in `cv.gamMRSea` is different to that in the model object new folds are now created with a warning message.  The folds in the model object remain unchanged. Note that there is now an error message if the number of folds specified exceeds the number of unique panels. 
+  - bug in the variance calculation for the gamma distribution in the `plotMeanVar` function. 
   
 
 
