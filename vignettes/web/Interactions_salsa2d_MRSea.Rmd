@@ -176,8 +176,7 @@ mymodel$splineParams[[1]]$knotPos
 ```
 
 ```{r, eval=TRUE}
-set.seed(1)
-cv.gamMRSea(mydata, mymodel, K=10)$delta[1]
+cv.gamMRSea(mydata, mymodel, K=10, s.eed = 1)$delta[1]
 ```
 
 ## Making predictions
@@ -303,8 +302,7 @@ ggplot(myknots) +
 
 
 ```{r eval=TRUE}
-set.seed(1)
-cv.gamMRSea(mydata, mymodel_sk, K=10)$delta[1]
+cv.gamMRSea(mydata, mymodel_sk, K=10, s.eed=1)$delta[1]
 ```
 
 This model is better than the earlier one which used a space-filled selection of all knots for starting locations.  However, bear in mind that both models are using a simplistic number of start knots and could be improved. 

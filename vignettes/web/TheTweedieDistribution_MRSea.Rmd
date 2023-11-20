@@ -155,7 +155,7 @@ summary(salsa1dOutput$bestModel)
 
 ```{r}
 AICtweedie(salsa1dOutput$bestModel)
-cv.gamMRSea(ns.data.re, salsa1dOutput$bestModel, K = 10)$delta[2]
+cv.gamMRSea(ns.data.re, salsa1dOutput$bestModel, K = 10, s.eed=1)$delta[2]
 ```
 
 

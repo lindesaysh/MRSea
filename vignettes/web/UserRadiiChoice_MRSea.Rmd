@@ -201,10 +201,8 @@ salsa2dOutput.vario$splineParams[[1]]$radiusIndices
 
 ```{r}
 # CV scores
-set.seed(154)
-cv.gamMRSea(wfdata, salsa2dOutput.origr, K=10)$delta[2]
-set.seed(154)
-cv.gamMRSea(wfdata, salsa2dOutput.vario, K=10)$delta[2]
+cv.gamMRSea(wfdata, salsa2dOutput.origr, K=10, s.eed=154)$delta[2]
+cv.gamMRSea(wfdata, salsa2dOutput.vario, K=10, s.eed=154)$delta[2]
 ```
 
 The variogram method
