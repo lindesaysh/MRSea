@@ -12,7 +12,7 @@
 #' Two plots one each for COVRATIO and PRESS statistics, giving the influence of each block on precision of the parameter estimates and the sensitivity of model predictions.
 #' List object:
 #' \item{influenceData}{List of \code{blocks}, COVRATIO statistics and PRESS statistics used for making the plot of PRESS and COVRATIO statistics.}
-#' \item{influencePoints}{Row id of blocks in \code{influenceData} that lie outside the 95\% quantile of COVRATIO statistics and above the 95\% quantile of PRESS statistics.}
+#' \item{influencePoints}{Row id of blocks in \code{influenceData} that lie outside the 95% quantile of COVRATIO statistics and above the 95% quantile of PRESS statistics.}
 #' 
 #' @examples 
 #' # load data
