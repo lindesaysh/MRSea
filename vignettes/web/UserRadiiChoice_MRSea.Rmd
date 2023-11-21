@@ -91,7 +91,10 @@ distMats <- makeDists(cbind(wfdata$x.pos, wfdata$y.pos), knotgrid)
 The model initialises with the central value of this $r$ sequence. If `r_seq` is not specified then the model will choose the range parameters using the existing `getRadiiChoices()` function. Using this function with 10 choices selected and specifying it in `salsa2dlist` is the equivalent of not specifying it at all and letting `runSALSA2D` calculate them.
 
 ```{r }
-(rs.orig <- getRadiiChoices(numberofradii = 10, distMatrix = distMats$dataDist, basis = "gaussian"))
+(rs.orig <- getRadiiSequence(method = "original",
+                             numberofradii = 10, 
+                             distMatrix = distMats$dataDist, 
+                             basis = "gaussian"))
 ```
 
 ```{r eval=FALSE}
@@ -113,11 +116,12 @@ salsa2dlist<-list(fitnessMeasure = 'QBIC',
 4)  Create a sequence of values to allow for more local and more global bases. This is based on the lags chosen by the function `gstat::variogram`.
 
 ```{r}
-rs <- getRadiiChoices.vario(numberofradii = 10,
-                            xydata = wfdata[, c("x.pos", "y.pos")],
-                            response = log(wfdata$NHAT + 1), 
-                            basis = "gaussian",
-                            distMatrix = distMats$dataDist)
+rs <- getRadiiSequence(method = "variogram",
+                      numberofradii = 10,
+                      xydata = wfdata[, c("x.pos", "y.pos")],
+                      response = log(wfdata$NHAT + 1), 
+                      basis = "gaussian",
+                      distMatrix = distMats$dataDist)
 rs
 ```
 
