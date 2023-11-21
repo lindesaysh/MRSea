@@ -1,5 +1,9 @@
 #' Function for obtaining a sequence of range parameters for the CReSS smoother
 #' 
+#' @description
+#' `r lifecycle::badge("superseded")`
+#' `getRadiiChoices()` has been superseded in favour of `getRadiiSequence()`
+#' 
 #' @param numberofradii The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.
 #' @param distMatrix  Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.
 #' @param basis character stating whether a 'gaussian' or 'exponential' basis is being used. 
@@ -34,6 +38,7 @@
 
 getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
   
+  
   if(is.null(distMatrix)) stop("**** No distance matrix provided.****")
   
   distMatrix[which(is.infinite(distMatrix), arr.ind = T)]<-NA
@@ -67,6 +72,10 @@ getRadiiChoices<-function(numberofradii=10, distMatrix, basis, rvin=NULL){
 
 #-----------------------------------------------------------------------------
 #' Function for obtaining a sequence of range parameters for the CReSS smoother
+#' 
+#' @description
+#' `r lifecycle::badge("superseded")`
+#' `getRadiiChoices.vario()` has been superseded in favour of `getRadiiSequence()`
 #' 
 #' @param numberofradii The number of range parameters for SALSA to use when fitting the CReSS smooth.  The default is 8.  Remember, the more parameters the longer SALSA will take to find a suitable one for each knot location.
 #' @param xydata Data frame containing columns for x and y coordinates. x is assumed to be the first of the two columns
@@ -164,8 +173,8 @@ getRadiiChoices.vario<-function(numberofradii=10, xydata, response,
     r_seq <- getRadiiChoices(numberofradii, distMatrix, basis=basis)
     attr(r_seq, "vg.fit") <- paste0("Range (", 
                                     round(best.s, 2), 
-                                    ") is greater than maximum distance in d2k (",
-                                    round(max(d2k), 3), 
+                                    ") is greater than maximum distance in distMatrix (",
+                                    round(max(distMatrix), 3), 
                                     ") so r_seq created by getRadiiChoices()"
     )
   }
