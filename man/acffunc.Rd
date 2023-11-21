@@ -11,7 +11,7 @@ acffunc(block, model, suppress.printout = TRUE)
 
 \item{model}{Fitted model object (glm or gam)}
 
-\item{suppress.printout}{(Default: \code{TRUE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.}
+\item{suppress.printout}{(Default: \code{TRUE}. Logical stating whether to show a printout of block numbers to assess progress. \code{FALSE} will show printout.}
 }
 \description{
 calculate correlation for residuals by block

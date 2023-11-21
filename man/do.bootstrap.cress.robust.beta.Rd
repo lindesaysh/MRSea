@@ -45,8 +45,8 @@ This fuction performs a specified number of bootstrapping iterations using CReSS
 }
 \details{
 The following steps are performed for each iteration:
-
-- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
-
-- predictions are made to the prediction data using the resampled coefficients
+\itemize{
+\item coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
+\item predictions are made to the prediction data using the resampled coefficients
+}
 }

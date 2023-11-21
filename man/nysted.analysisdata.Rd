@@ -8,7 +8,7 @@
 A data frame with 9232 rows and 12 variables
 }
 \description{
-A simulated dataset containing the distance corrected `dis.data.re`. The variables are as follows:
+A simulated dataset containing the distance corrected \code{dis.data.re}. The variables are as follows:
 }
 \details{
 \itemize{
@@ -24,7 +24,7 @@ A simulated dataset containing the distance corrected `dis.data.re`. The variabl
 \item \code{depth} Depth in m
 \item \code{area} area of each segment in kmsq
 \item \code{NHAT} Bird counts in each segment
-\item \code{response} Same as for `NHAT` 
+\item \code{response} Same as for \code{NHAT}
 }
 }
 \keyword{datasets}

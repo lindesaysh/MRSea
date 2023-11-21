@@ -13,13 +13,13 @@ getCVids(data, folds, block = NULL, seed = NULL)
 
 \item{block}{column in data indicating the blocking structure for cross-validation (if \code{block} = NULL, individual observations will be used as blocks)}
 
-\item{seed}{integer number used to set the seed of the fold generation.  By default this is set to `NULL`.}
+\item{seed}{integer number used to set the seed of the fold generation.  By default this is set to \code{NULL}.}
 }
 \description{
 This function creates a string of integers which will be used for pointing to the right subsets of data for cross validation of regression objects
 }
 \details{
-The function returns a random sequence of 1:folds of the same length as observations in data. The seed used for generation is stored in the attributes (`s.eed`).
+The function returns a random sequence of 1:folds of the same length as observations in data. The seed used for generation is stored in the attributes (\code{s.eed}).
 }
 \examples{
 # load data

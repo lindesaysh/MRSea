@@ -8,7 +8,7 @@
 A data frame with 10951 rows and 12 variables
 }
 \description{
-A simulated dataset containing the observed perpendicular distances, the effort data and other variables of 
+A simulated dataset containing the observed perpendicular distances, the effort data and other variables of
 segmented line transect data. The variables are as follows:
 }
 \details{
@@ -23,7 +23,7 @@ segmented line transect data. The variables are as follows:
 \item \code{x.pos} spatial location in the horizontal axis in UTMs
 \item \code{y.pos} spatial location in the vertical axis in UTMs
 \item \code{depth} Depth in m
-\item \code{object} Id for detected object      
+\item \code{object} Id for detected object
 \item \code{distance} Perpendicular distance from the line
 }
 }

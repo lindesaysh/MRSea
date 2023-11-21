@@ -3,7 +3,7 @@
 \name{checkfactorlevelcounts}
 \alias{checkfactorlevelcounts}
 \title{Factor level response check
- 
+
 This function checks that there are some non-zero counts in each level of each factor variable for consideration in a model}
 \usage{
 checkfactorlevelcounts(factorlist, data, response)
@@ -17,7 +17,7 @@ checkfactorlevelcounts(factorlist, data, response)
 }
 \description{
 Factor level response check
- 
+
 This function checks that there are some non-zero counts in each level of each factor variable for consideration in a model
 }
 \examples{

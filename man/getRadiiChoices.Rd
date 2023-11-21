@@ -19,7 +19,8 @@ getRadiiChoices(numberofradii = 10, distMatrix, basis, rvin = NULL)
 This function returns a vector containing a sequence of range parameters.
 }
 \description{
-Function for obtaining a sequence of range parameters for the CReSS smoother
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+\code{getRadiiChoices()} has been superseded in favour of \code{getRadiiSequence()}
 }
 \details{
 The range parameter determines the range of the influence of each knot.  Small numbers indicate local influence and large ones, global influence.
@@ -39,6 +40,6 @@ r_seq<-getRadiiChoices(8, distMats$dataDist, basis="gaussian")
 
 }
 \references{
-Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. 
+Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013.
 DOI: 10.1080/10618600.2012.762920
 }

@@ -7,7 +7,7 @@
 LocalRadialFunction(radiusIndices, dists, radii, aR)
 }
 \arguments{
-\item{radiusIndices}{Vector of length startKnots identifying which radii (splineParams[[1]]$radii) will be used to initialise the model}
+\item{radiusIndices}{Vector of length startKnots identifying which radii (splineParams[\link{1}]$radii) will be used to initialise the model}
 
 \item{dists}{Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances.}
 

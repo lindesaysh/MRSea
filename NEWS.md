@@ -7,7 +7,7 @@
 
   
 * SALSA2D:
-
+  - the `getRadiiChoices` and `getRadiiChoices.vario` functions have been superseded and merged into one function: `getRadiiSequence()`.
 
 * Vignettes:
   
@@ -25,12 +25,13 @@
 
   - The dispersion parameter estimate using `getDisperson` function was incorrectly specified as 1.  This affected the dropping of "bad" knots in the initialise step resulting in more knots being dropped than should have been. This did not affect knots being subsequently added in the exchange step. The correct calculation is now included in the `getDispersion` function.
   - When using `initialise = FALSE` and specifying initial knot locations via `initialKnPos` code has been added to snap the initial locations to the nearest candidate knot locations in the knot grid. Previously it was assumed these initial locations were a subset of the candidate set. Now any locations may be used. 
+  
 
 * Other:
 
   - When using the tweedie distribution, the power parameter is not stored in the model call and so issues arise when using a stored model object where this parameter is no longer available.  The parameter is stored within the model but updates have been made to `runSALSA1D` and `runSALSA2D` to ensure that the variance power and variance link are specified as numbers in the model call. 
   - The CV score was unchanged when changing K.  This occurred owing to the folds stored within the model object.  If `K` specified in `cv.gamMRSea` is different to that in the model object new folds are now created with a warning message.  The folds in the model object remain unchanged. Note that there is now an error message if the number of folds specified exceeds the number of unique panels. 
-  - bug in the variance calculation for the gamma distribution in the `plotMeanVar` function. 
+  - bug in the variance calculation for the gamma distribution in the `plotMeanVar` function. Additionally, the legend mismatched the data.  
   
 
 

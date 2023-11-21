@@ -7,7 +7,7 @@ bibliography: newref.bib
 ---
 
 
-Apologies but this page is being updated. 
+Apologies, this page is being updated. 
 
 <!-- ------- -->
 

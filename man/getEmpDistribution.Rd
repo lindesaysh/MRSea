@@ -23,11 +23,11 @@ getEmpDistribution(
 
 \item{data}{data set used to fit the model.}
 
-\item{plot}{logical flag. If TRUE, a plot is made showing the 5\% critical values for the empirical distribution vs the N(0,1) distribution. Default is 'FALSE'}
+\item{plot}{logical flag. If TRUE, a plot is made showing the 5\% critical values for the empirical distribution vs the N(0,1) distribution. Default is \code{FALSE}}
 
-\item{returnDist}{logical flag.  Do you want the distribution of test statistics returned ('TRUE') or just the 5\% critical values ('FALSE')}
+\item{returnDist}{logical flag.  Do you want the distribution of test statistics returned (\code{TRUE}) or just the 5\% critical values (\code{FALSE})}
 
-\item{dots}{(Default: \code{TRUE}. Logical stating whether to show a printout of block numebers to assess progress. 'TRUE' will print dots into the workspace.}
+\item{dots}{(Default: \code{TRUE}. Logical stating whether to show a printout of block numbers to assess progress. \code{TRUE} will print dots into the workspace.}
 }
 \description{
 Function to generate the empirical distribution of the runs test statistic, given some data and a model.

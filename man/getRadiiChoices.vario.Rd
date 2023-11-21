@@ -21,24 +21,25 @@ getRadiiChoices.vario(
 
 \item{xydata}{Data frame containing columns for x and y coordinates. x is assumed to be the first of the two columns}
 
-\item{response}{vector of response values for use in `gstat::variogram`.  These values should be approximately normally distributed.}
+\item{response}{vector of response values for use in \code{gstat::variogram}.  These values should be approximately normally distributed.}
 
 \item{basis}{character stating whether a 'gaussian' or 'exponential' basis is being used.}
 
-\item{alpha}{numeric parameter for the `gstat::variogram` function giving the direction in plane(x,y)}
+\item{alpha}{numeric parameter for the \code{gstat::variogram} function giving the direction in plane(x,y)}
 
-\item{showplots}{(`default = FALSE`). If `TRUE` the output of `gstat::variogram` and `gstat::fit.variogram` are shown.}
+\item{showplots}{(\code{default = FALSE}). If \code{TRUE} the output of \code{gstat::variogram} and \code{gstat::fit.variogram} are shown.}
 
-\item{distMatrix}{Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}. This is used as a check to ensure the estimated range parameter does not exceed the maximum distance on the surface.  If it does, then the original \code{\link{getRadiiChoices}} function is used and the `distMatrix` parameter is a requirement for this.}
+\item{distMatrix}{Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}. This is used as a check to ensure the estimated range parameter does not exceed the maximum distance on the surface.  If it does, then the original \code{\link{getRadiiChoices}} function is used and the \code{distMatrix} parameter is a requirement for this.}
 
-\item{...}{Other parameters for the `gstat::variogram` function.}
+\item{...}{Other parameters for the \code{gstat::variogram} function.}
 }
 \value{
-This function returns a vector containing a sequence of range parameters.  If an even number of radii is requested, this is reduced by one to give an odd length sequence where the middle number was the best range parameter from the variogram. 
-The outputs of the variogram model can be found in the attributes of the returned object under `vg.fit`.
+This function returns a vector containing a sequence of range parameters.  If an even number of radii is requested, this is reduced by one to give an odd length sequence where the middle number was the best range parameter from the variogram.
+The outputs of the variogram model can be found in the attributes of the returned object under \code{vg.fit}.
 }
 \description{
-Function for obtaining a sequence of range parameters for the CReSS smoother
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+\code{getRadiiChoices.vario()} has been superseded in favour of \code{getRadiiSequence()}
 }
 \details{
 The range parameter determines the range of the influence of each knot.  Small numbers indicate local influence and large ones, global influence.
