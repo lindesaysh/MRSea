@@ -117,16 +117,17 @@ plotMeanVar<-function(model, cut.bins = 20, save=FALSE, label = NULL, print=TRUE
     pdat <- tidyr::pivot_longer(pdat, 
                                 cols = V.p:V.g, 
                                 names_to = "Distribution", 
-                                values_to = "EstVariance")
+                                values_to = "EstVariance") %>%
+      arrange(Distribution)
     
     p <- p + 
       geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution, linetype=Distribution), linewidth=1) +
       scale_colour_manual("Distribution",
-                          values=c("darkgrey", "firebrick3"),
-                          labels=c("Poisson", "Gamma")) +
+                          values=c("firebrick3","darkgrey"),
+                          labels=c("Gamma", "Poisson")) +
       scale_linetype_manual("Distribution", 
-                            values = c(2,1),
-                            labels=c("Poisson", "Gamma"))
+                            values = c(1,2),
+                            labels=c("Gamma", "Poisson"))
   }
   
   if(model$family[[1]] == "gaussian"){
