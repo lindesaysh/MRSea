@@ -43,7 +43,7 @@ return.reg.spline.fit(
 
 \item{winHalfWidth}{Half-width of window used to calculate region with biggest average residual magnitude}
 
-\item{fitnessMeasure}{(default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QICb (Quasi-Likelihood Information Criterion with log(n) penalty)}
+\item{fitnessMeasure}{(default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QBIC (Quasi-Likelihood Information Criterion with log(n) penalty), k-fold cross-validation (\code{cv.gamMRSea}), AICtweedie, BICtweedie.}
 
 \item{maxIterations}{exchange/improve heuristic will terminate after \code{maxIterations} if still running}
 
