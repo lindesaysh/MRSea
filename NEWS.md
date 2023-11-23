@@ -25,6 +25,7 @@
 
   - The dispersion parameter estimate using `getDisperson` function was incorrectly specified as 1.  This affected the dropping of "bad" knots in the initialise step resulting in more knots being dropped than should have been. This did not affect knots being subsequently added in the exchange step. The correct calculation is now included in the `getDispersion` function.
   - When using `initialise = FALSE` and specifying initial knot locations via `initialKnPos` code has been added to snap the initial locations to the nearest candidate knot locations in the knot grid. Previously it was assumed these initial locations were a subset of the candidate set. Now any locations may be used. 
+  - When using an odd number of radii and with `chooseradii = FALSE` there may sometimes have been a mismatch from the output of SALSA2D and the output given from `runSALSA2D`. 
   
 
 * Other:

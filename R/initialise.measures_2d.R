@@ -101,7 +101,12 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   # print(c('knots: ',knotPoint))
   aR <- knotPoint
   # print(c('actual knots: ',invInd[aR]))
-  radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
+  if(length(radii)>1){
+    radiusIndices <-rep((1:length(radii))[(length(radii)/2)],length(aR))  
+  }else{
+    radiusIndices <-rep(1,length(aR))
+  }
+  
   
   if (isS4(baseModel)) {
     baseModel@splineParams[[1]]$knotPos<-aR
