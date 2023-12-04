@@ -8,9 +8,9 @@
 summaryshortnames<-function(object, varshortnames){
   
 
-bob <- attr(object$coefficients, "names")
+#bob <- attr(object$coefficients, "names")
 
-factorlist<-names(which(attr(terms(object), 'dataClasses')=='factor'))
+#factorlist<-names(which(attr(terms(object), 'dataClasses')=='factor'))
 
 if(length(varshortnames)>0){
   bob2<-attr(terms(object), 'term.labels')
@@ -28,91 +28,55 @@ if(length(varshortnames)>0){
   }
 }
 
-# interaction terms id
-id_int <- grep(':', bob)
+#varshortnames <- fit.int$varshortnames
+b <- attributes(object$terms)$term.labels
+namingtable <- NULL
 
-# main effect id
-if(length(id_int)==0){
-  idmaineffect<-1:length(bob)
-}else{
-  idmaineffect <- (1:length(bob))[-id_int]  
-}
-
-
-# remove factors from shortnames
-finvid<-NULL
-if(length(factorlist)>0){
-  for(i in 1:length(factorlist)){
-    finvid<-c(finvid, grep(factorlist[i], varshortnames))
-  }
-  if(length(finvid)>0 & length(varshortnames)>0){
-    varshortnames<-varshortnames[-finvid]
-  }
-}
-
-# remove linear terms from shortnames
-
-if(length(varshortnames)>0){
-  for (i in 1:length(varshortnames)) {
-    idvar <- grep(varshortnames[i], bob)
-    idvarmain <- na.omit(match(idvar, idmaineffect))
-    if (length(idvarmain) > 1) {
-      for (j in 1:length(idvarmain)) {
-        bob[idvarmain][j] <- paste("s(", varshortnames[i], ")", j, sep = "")
+for(i in 1:length(b)){
+  newname <- b[i]
+  # does it have colon
+  intcheck <- strsplit(b[i], ":")[[1]]
+  if(length(intcheck)>1){
+    newname <- vector(length=length(intcheck))
+    for(d in 1:length(intcheck)){
+      if(length(grep("splineParams", intcheck[d]))>0){
+        nameid <- grep(varshortnames, intcheck[d])
+        newname[d] <- paste0("s(", varshortnames[nameid],")")
+      }else{
+        newname[d] <- intcheck[d]
       }
-    }else {bob[idvarmain] <- paste(varshortnames[i], sep = "")}
-  }
-}
-
-# general interaction terms
-
-if(length(id_int)>0){
-  if(length(varshortnames)>0){
-    for(v in 1:length(varshortnames)){
-      idvar<-grep(varshortnames[v], bob[id_int])
-      idvar_main<-grep(varshortnames[v], bob[idmaineffect])
-      if (length(idvar) > 1) {
-        counter<-1
-        for (j in 1:(length(idvar)/length(idvar_main))) {
-          for (i in 1:length(idvar_main)){
-            bob[id_int[idvar][counter]] <- paste(strsplit(bob[id_int[idvar][counter]], ':')[[1]][1], ":s(", varshortnames[v], ")", i, sep = "")
-            counter<-counter+1  
-          }
-        }
-      }
-      if(length(idvar)==1){bob[id_int[idvar]] <- paste(varshortnames[i], sep = "")}
-    }  
-  }
-}
-
-
-# local radial terms
-localid <- grep("LRF", bob)
-localint<-id_int[na.omit(match(localid, id_int))]
-if (length(localid > 1)) {
-  #intid <- grep(":", bob)
-  smoothid <- localid[which(is.na(match(localid, localint)))]
-  for (k in 1:length(smoothid)) {
-    bob[smoothid][k] <- paste("s(x.pos, y.pos)b", k,
-                              sep = "")
+    } # d loop 
+    nn <- cbind(intcheck, newname)
+  }else{
+    # is it in varshortnames
+    nameid <- grep(varshortnames, b[i])
+    if(length(nameid)>0){
+      newname <- paste0("s(", varshortnames[nameid], ")")
+    }else{
+      if(length(grep("LRF", b[i]))>0){
+        newname <- "s(x,y)"
+      }else{
+      newname <- b[i]
+    }}
+    
+    nn <- c(b[i], newname)
   }
   
-  # local radial interactions
+  namingtable <- rbind(namingtable, nn)
   
-  counter <- 1
-  for (k in 1:(length(localint)/length(smoothid))) {
-    for (i in 1:length(smoothid)) {
-      if(i==1){
-        nonlocalid<-c(2,1)[grep(pattern = 'LRF', strsplit(bob[localint[counter]], ":")[[1]])]
-      }
-    textin <- paste(strsplit(bob[localint[counter]], ':')[[1]][nonlocalid], ":s(x.pos, y.pos)b", i, sep = "")
-    #print(textin)
-       bob[localint[counter]] <- textin
-       counter <- counter + 1
-    }
-  }
 }
-attr(object$coefficients, "names") <- bob
+
+namingtable <- namingtable[!duplicated(namingtable),]
+
+coefnames <- attr(object$coefficients, "names")
+
+library(stringr)
+for(nam in 1:nrow(namingtable)){
+  coefnames <- str_replace(coefnames, fixed(namingtable[nam,1]), namingtable[nam,2])
+}
+
+
+attr(object$coefficients, "names") <- coefnames
 
 return(object)
 
