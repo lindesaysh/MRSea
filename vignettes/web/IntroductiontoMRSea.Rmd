@@ -45,3 +45,42 @@ For information on using the package see [here](https://lindesaysh.github.io/MRS
 knitr::include_url("https://lindesaysh.github.io/MRSea/articles/website_examples.html")
 ```
 
+
+# Translating from `glm` to `gamMRSea`
+
+## Making any `glm` model into an `gamMRSea` object
+
+This can be done using the `make.gamMRSea` function.  Here we use the `fullmodel` which is a `glm` model with `family='poisson'`
+
+```{r eval=TRUE}
+data("nysted.analysisdata")
+fit <- glm(response ~ season + depth, family="quasipoisson", data = nysted.analysisdata)
+```
+
+
+```{r}
+fullModel.gamMRSea <- make.gamMRSea(fit,
+                                    gamMRSea = TRUE)
+
+```
+
+```{r eval=TRUE}
+summary(fullModel.gamMRSea)
+```
+Note that there is an extra column for robust standard errors but that they are the same as the raw ones.  No panel structure has been specified and this is shown at the bottom of the output `Max Panel Size = 1`.
+
+## Adding a panel structure to a model
+
+Additionally, if you choose to fit the SALSA or GLM models without a panel structure, the `make.gamMRSea` function can be used to add a panel structure afterwards. Note that now in the summary output, the robust standard error column is different to the raw standard errors as they have been adjusted for any correlation seen in the panels.  The output shows that the maximum panel size is now 54 and there are 208 panels. 
+
+```{r, eval=TRUE}
+fit.robustse <- make.gamMRSea(fit,
+                              gamMRSea = TRUE,
+                              panelid = nysted.analysisdata$transect.id)
+```
+
+
+```{r}
+summary(fit.robustse)
+```
+
