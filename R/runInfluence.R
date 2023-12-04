@@ -97,7 +97,7 @@ runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
     newMod<-model
     if ("splineParams" %in% names(model)) {
       newMod$splineParams[[1]]$dist<- newMod$splineParams[[1]]$dist[-rowsToDel,]
-      splineParams = model$splineParams
+      splineParams = newMod$splineParams
     }
     
     if(class(model)[1]=='gamMRSea'){
@@ -118,8 +118,11 @@ runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
     counter<-counter+1
     
   }
-  
-  numericblock<-as.numeric(unique(id))
+  if(class(id) == "character"){
+    numericblock<-as.numeric(as.factor(unique(id)))
+  }else{
+    numericblock<-as.numeric(unique(id))
+  }
   
   if(save==T){png("InfluenceMeasures_covratio.png", height=600, width=600)}else{devAskNewPage(ask=TRUE)}
   a<-inflStore[,(ncol(inflStore)-1)]

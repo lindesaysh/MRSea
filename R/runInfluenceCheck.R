@@ -64,7 +64,7 @@ timeInfluenceCheck<-function (model, id) {
     newMod<-model
     if ("splineParams" %in% names(model)) {
       newMod$splineParams[[1]]$dist<- newMod$splineParams[[1]]$dist[-rowsToDel,]
-      splineParams = model$splineParams
+      splineParams = newMod$splineParams
     }
     
     if(class(model)[1]=='gamMRSea'){
