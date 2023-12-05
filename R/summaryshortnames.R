@@ -40,7 +40,7 @@ for(i in 1:length(b)){
     newname <- vector(length=length(intcheck))
     for(d in 1:length(intcheck)){
       if(length(grep("splineParams", intcheck[d]))>0){
-        nameid <- grep(varshortnames, intcheck[d])
+        nameid <- which(stringr::str_detect(intcheck[d], varshortnames, negate = FALSE)==TRUE)
         newname[d] <- paste0("s(", varshortnames[nameid],")")
       }else{
         newname[d] <- intcheck[d]
@@ -49,7 +49,7 @@ for(i in 1:length(b)){
     nn <- cbind(intcheck, newname)
   }else{
     # is it in varshortnames
-    nameid <- grep(varshortnames, b[i])
+    nameid <- which(stringr::str_detect(b[i], varshortnames, negate = FALSE)==TRUE)
     if(length(nameid)>0){
       newname <- paste0("s(", varshortnames[nameid], ")")
     }else{
@@ -70,9 +70,12 @@ namingtable <- namingtable[!duplicated(namingtable),]
 
 coefnames <- attr(object$coefficients, "names")
 
-library(stringr)
-for(nam in 1:nrow(namingtable)){
-  coefnames <- str_replace(coefnames, fixed(namingtable[nam,1]), namingtable[nam,2])
+if(is.null(nrow(namingtable))){
+  coefnames <- stringr::str_replace(coefnames, fixed(namingtable[1]), namingtable[2])
+}else{
+  for(nam in 1:nrow(namingtable)){
+    coefnames <- stringr::str_replace(coefnames, fixed(namingtable[nam,1]), namingtable[nam,2])
+  }
 }
 
 
