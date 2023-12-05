@@ -43,6 +43,9 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
   require(splines)
   require(Matrix)
   
+  # ensure runs ok if tibble provided
+  data <- data.frame(data)
+
  splineParams <- model$splineParams
   
   if(save==T){
