@@ -262,6 +262,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     }
     splineParams<<-splineParams
     dispersion_Model<-update(baseModel, .~.)
+    dispersion_Model$varshortnames <- varlist
     salsa1dlist$fitnessMeasure<-c(salsa1dlist$fitnessMeasure, summary(dispersion_Model)$dispersion)
     
     # return the splineParams object back to the original
@@ -311,7 +312,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     }else{
       response<-data$response  
     }
-    bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
+    bd <- splineParams[[varID[(i-1)]]]$bd   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
     gap <- (salsa1dlist$gaps[(i-1)])
     term<- terms1D[[(i-1)]]
     interactionTerm<-NULL  #(salsa1dlist$interactionTerm[(i-1)])
