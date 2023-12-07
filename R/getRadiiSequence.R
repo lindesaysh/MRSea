@@ -101,12 +101,12 @@ getRadiiSequence<-function(method=NULL, numberofradii=10,
     best.s <- fit.vg$range[2]
     
     
-    if(max(distMatrix)<best.s){
+    if(max(distMatrix, na.rm = TRUE)<best.s){
       method = "original"
       print(paste0("Range (", 
                    round(best.s, 2), 
                    ") is greater than maximum distance in distMatrix (",
-                   round(max(distMatrix), 3), 
+                   round(max(distMatrix, na.rm = TRUE), 3), 
                    ") so r_seq created using method = 'original'"
       ))
     }else{
