@@ -221,11 +221,14 @@ checkfactorlevelcounts<-function(factorlist, data, response){
 
 #-----------------------------------------------------------------------------
 #' Make Euclidean distance matrices for use in CReSS and SALSA model frameworks
+#'
+#' @description
+#' `r lifecycle::badge("experimental")`
+#'
+#' This function makes two Euclidean distance matrices.  One for the distances between all spatial observations and all spatial knot locations.  The other, if specified, is the distances between knot locations. It is experimental owing to the addition of the creation of infinity-block distance matrices. The original functionality is unchanged.
 #' 
-#' This function makes two Euclidean distance matrices.  One for the distances between all spatial observations and all spatial knot locations.  The other, if specified, is the distances between knot locations.
-#' 
-#' @param datacoords Coordinates of the data locations
-#' @param knotcoords Coordinates of the legal knot locations
+#' @param datacoords Coordinates of the data locations. If a design matrix interaction is required, add a third column containing the factor level. 
+#' @param knotcoords Coordinates of the legal knot locations. If a design matrix interaction is required, add a third column containing the factor level for each knot location.
 #' @param knotmat (\code{default=TRUE}). Should a matrix of knot-knot distances be created
 #' @param polys (\code{default=NULL}). If geodesic distances are to be calculated, provide a list of polygons defining exclusion areas. 
 #' @param type (\code{default='A'}).  One of 'A' or 'B'.  'A' is used when the \code{knotcoords} are a subset of \code{datacoords} AND the attributes of \code{knotcoords} give the index of points from \code{datacoords} (as happens if \code{getKnotgrid()} is used).  'B' is used for prediction (when \code{datacoords} is a prediction grid and so \code{knotcoords} is not a subset) or when the knotgrid was not generated using \code{getKnotgrid()}.
@@ -234,6 +237,8 @@ checkfactorlevelcounts<-function(factorlist, data, response){
 #' 
 #' @details
 #' The data-knot matrix is used in the CReSS basis and the knot-knot matrix is used in SALSA to determine where a nearest knot to `move' should be.
+#' 
+#' If three columns are provided for `datacoords` and `knotcoords` the matrix returned has infinity for distances between knots and data associated with differing factor levels. 
 #'  
 #' @examples
 #' # load data
@@ -243,10 +248,32 @@ checkfactorlevelcounts<-function(factorlist, data, response){
 #'  
 #' # make distance matrices for datatoknots and knottoknots
 #' distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
+#' 
+#' # ~~~~~~~~~~~~~~~~~~
+#' # Example with block-infinity distance matrix
+#' data(nysted.analysisdata)
+#' myknots <- selectFctrKnots(nysted.analysisdata[,c('x.pos', 'y.pos', 'impact')], nk=150)
+#' 
+#' dists <- makeDists(datacoords = nysted.analysisdata[,c('x.pos', 'y.pos', 'impact')], 
+#'                    knotcoords = myknots, 
+#'                    knotmat = TRUE)
 #' @export
 #' 
 
-makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', plot.transition=FALSE, grid.dim = c(100, 100)){
+makeDists<-function(datacoords, knotcoords, knotmat=TRUE, 
+                        polys=NULL, type='A', plot.transition=FALSE, grid.dim = c(100, 100)){
+  
+  stopifnot(ncol(knotcoords) == ncol(datacoords), (ncol(datacoords) | ncol(knotcoords)) < 4)
+  
+  if(ncol(knotcoords)==3){
+    knotcoords.factor = knotcoords[,3]
+    knotcoords = knotcoords[,1:2]
+    datacoords.factor = datacoords[,3]
+    datacoords = datacoords[, 1:2]
+    factorknots = TRUE
+  }else{
+    factorknots = FALSE
+  }
   
   if(is.null(polys)){
     # Euclidean
@@ -260,9 +287,6 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
     if(knotmat==T){
       #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
       knotDist = as.matrix(dist(na.omit(knotcoords), method = "euclidean", diag = TRUE, upper=TRUE))
-      return(list(dataDist=d2k, knotDist = knotDist))
-    }else{
-      return(list(dataDist=d2k))
     }
   } # end euclidean
   
@@ -285,10 +309,7 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
       d2k<-geodistsoutput$distance[(1:nrow(datacoords)),((nrow(datacoords)+1):nrow(datacoords2))]
       if(knotmat==T){
         #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
-        knotDist = geodistsoutput$distance[(nrow(datacoords)+1):nrow(datacoords2),(nrow(datacoords)+1):nrow(datacoords2)] 
-        return(list(dataDist=d2k, knotDist = knotDist))
-      }else{
-        return(list(dataDist=d2k))
+        knotDist = geodistsoutput$distance[(nrow(datacoords)+1):nrow(datacoords2),(nrow(datacoords)+1):nrow(datacoords2)]
       }
     } # end prediction
     if(type=='A'){
@@ -299,11 +320,145 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE, polys=NULL, type='A', 
       if(knotmat==T){
         #specify the knot-to-knot distances (this cannot have any NAs included); size k x k
         knotDist = geodistsoutput$distance[attr(knotcoords, 'points.selected'),attr(knotcoords, 'points.selected')] 
-        return(list(dataDist=d2k, knotDist = knotDist))
-      }else{
-        return(list(dataDist=d2k))
       }
     } # end model
   } # end geodesic
+  
+  if(factorknots){
+    kcontr <- model.matrix(~-1 + knotcoords.factor)
+    
+    if(knotmat == TRUE){
+      # make square (kxk)
+      kcontr.m <- kcontr %*% t(kcontr)
+      # make 0's into infs and make diagonals 0's
+      kcontr.inf <- ifelse(kcontr.m == 0, Inf, kcontr.m)
+      diag(kcontr.inf) <- 0
+      # change distance matrix
+      knotDist <- knotDist + kcontr.inf
+    }
+    
+    dcontr <- model.matrix(~-1 + datacoords.factor)
+    dkcontr <- dcontr %*% t(kcontr)
+    dkcontr.inf <- ifelse(dkcontr == 0, Inf, dkcontr)
+    #diag(dkcontr.inf) <- 0
+    
+    d2k <- d2k + dkcontr.inf
+    
+  }
+  
+  
+  if(knotmat==T){
+    return(list(dataDist=d2k, knotDist = knotDist))
+  }else{
+    return(list(dataDist=d2k))
+  }
+  
 }
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#-----------------------------------------------------------------------------
+#' Select candidate knots for multi-level factor interaction
+#' 
+#' @description
+#' `r lifecycle::badge("experimental")`
+#' 
+#' This function finds a number of starting knot locations for different factor levels and is used for creating an interaction term. 
+#' 
+#' @param data Coordinates of the data locations in columns 1 and 2 and the associated factor level in the third. 
+#' @param nk  The number of knots to be selected for each factor level.  This may be a single number (for all factor levels) or a vector of numbers to allow a different number of knots to be selected for each factor level.
+#' @param s.eed `default = 1`. Set the seed for the selection to ensure reproducibility. 
+#' 
+#' @details
+#' The function returns a data frame with three columns; x and y locations for candidate knots and associated factor level. 
+#' 
+#' @examples
+#' # load data
+#' data(nysted.analysisdata)
+#' 
+#' myknots <- selectFctrKnots(nysted.analysisdata[,c("x.pos", "y.pos", "impact")], 
+#'                            nk=150)
+#' 
+#' @export
+#' 
+
+selectFctrKnots <- function(data, nk, s.eed = 1){
+  
+  fctrs = unique(data[,3])
+  n.level = length(fctrs)
+  myknots = NULL
+  
+  if(length(nk)==1){
+    nk <- rep(nk, n.level)
+  }
+  
+  for(i in 1:n.level){
+    faclevel<-fctrs[i]
+    set.seed(s.eed)
+    tempkg<-getKnotgrid(coordData = data[data[,3] == faclevel, 1:2], 
+                        numKnots = nk[i], plot = FALSE)
+    myknots<-rbind(myknots, data.frame(tempkg, faclevel = faclevel))
+  }
+  
+  names(myknots) <- names(data)
+  row.names(myknots) <- NULL
+  
+  return(myknots)
+} 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#-----------------------------------------------------------------------------
+#' Select starting knots for multi-level factor interaction
+#' 
+#' @description
+#' `r lifecycle::badge("experimental")`
+#' 
+#' This function finds a number of starting knot locations for different factor levels and is used for creating an interaction term. 
+#' 
+#' @param knots Coordinates of the knot locations in columns 1 and 2 and the associated factor level in the third. 
+#' @param nk  The number of knots to be selected for each factor level.  This may be a single number (for all factor levels) or a vector of numbers to allow a different number of knots to be selected for each factor level.
+#' @param s.eed `default = 1`. Set the seed for the selection to ensure reproducibility. 
+#' 
+#' @details
+#' The function returns the row number of the `knots` parameter for the selected knots. 
+#'
+#' @examples
+#' 
+#'#' # load data
+#' data(nysted.analysisdata)
+#' 
+#' myknots <- selectFctrKnots(nysted.analysisdata[,c('x.pos', 'y.pos', 'impact')], 
+#'                            nk=150)
+#' startknotlocs <- selectFctrStartk(myknots, nk=5, s.eed = 4)
+#' 
+#' 
+#' @export
+#' 
+
+selectFctrStartk <- function(knots, nk, s.eed = 1){
+  
+  n.level = length(unique(knots[,3]))
+  startknotlocs = NULL
+  
+  if(length(nk)==1){
+    nk <- rep(nk, n.level)
+  }
+  
+  for(i in 1:n.level){
+    dat <- knots[knots[,3] == unique(knots[,3])[i], 1:2]
+    set.seed(s.eed)
+    ks <- as.numeric(rownames(getKnotgrid(dat, 
+                                          numKnots = nk[i], 
+                                          plot = FALSE)))
+    #ks <- ks + ((i-1)* nrow(dat))
+    startknotlocs <- c(startknotlocs, ks)
+  }
+  return(startknotlocs)
+} 
+
 
