@@ -71,10 +71,10 @@ namingtable <- namingtable[!duplicated(namingtable),]
 coefnames <- attr(object$coefficients, "names")
 
 if(is.null(nrow(namingtable))){
-  coefnames <- stringr::str_replace(coefnames, fixed(namingtable[1]), namingtable[2])
+  coefnames <- stringr::str_replace(coefnames, stringr::fixed(namingtable[1]), namingtable[2])
 }else{
   for(nam in 1:nrow(namingtable)){
-    coefnames <- stringr::str_replace(coefnames, fixed(namingtable[nam,1]), namingtable[nam,2])
+    coefnames <- stringr::str_replace(coefnames, stringr::fixed(namingtable[nam,1]), namingtable[nam,2])
   }
 }
 

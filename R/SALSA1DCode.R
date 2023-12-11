@@ -104,6 +104,8 @@ if (nrow(knotSites) > maxSites) {
    kSites <- sort(kSites)
   # LSH updated 19/2/15 so that the candidate knot locations may only be at data locations.
   #quantile(knotSites,probs=seq(0,1,length=maxSites),na.rm=TRUE,names=FALSE)
+}else{
+  kSites <- 1:nrow(knotSites)
 }
 
 knotSites <- knotSites[kSites, c("explanatory")]

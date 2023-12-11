@@ -132,7 +132,10 @@ cv.gamMRSea<-function (data, modelobject, cost = function(y, yhat) mean((y - yha
   
   CV0 <- CV + cost.0
   
-  if(CV0 < 0) {CV0 <- Inf}
+  if(exists("CV0")){
+    if(CV0 < 0){
+      CV0 <- Inf}
+  }
   
   delta <- as.numeric(c(CV, CV0))
   

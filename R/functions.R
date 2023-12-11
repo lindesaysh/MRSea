@@ -267,8 +267,10 @@ makeDists<-function(datacoords, knotcoords, knotmat=TRUE,
   
   if(ncol(knotcoords)==3){
     knotcoords.factor = knotcoords[,3]
+    if(!is.factor(knotcoords.factor)) knotcoords.factor <- as.factor(knotcoords.factor)
     knotcoords = knotcoords[,1:2]
     datacoords.factor = datacoords[,3]
+    if(!is.factor(datacoords.factor)) datacoords.factor <- as.factor(datacoords.factor)
     datacoords = datacoords[, 1:2]
     factorknots = TRUE
   }else{

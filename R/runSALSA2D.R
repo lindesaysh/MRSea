@@ -151,7 +151,10 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   #gridResp<-salsa2dlist$knotgrid[,1]
   
   if(is.null(salsa2dlist$r_seq)){
-    r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k, basis)
+    r_seq<-getRadiiSequence(method = "original", 
+                            numberofradii = 10, 
+                            distMatrix = d2k, 
+                            basis)
   }else{
     r_seq <- salsa2dlist$r_seq
   }
