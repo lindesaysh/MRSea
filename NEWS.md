@@ -1,21 +1,29 @@
 
-# MRSea 1.4.1
+# MRSea 1.5
 
 
 ## Notes
 * SALSA1D: 
 
+  - update function to allow the inclusion of a variable that is a `Date` class.
   
 * SALSA2D:
+  
   - the `getRadiiChoices` and `getRadiiChoices.vario` functions have been superseded and merged into one function: `getRadiiSequence()`.
+  - functions have been added to help create a factor based knot grid (`selectFctrKnots`) and get an associated infinity-block distance matrix (updates to the `makeDists` function).  There is also a function to select space-filled starting knots for each factor level (`selectFctrStartk`)
 
 * Vignettes:
+  
+  - Introduction to MRSea: added section on using `make.gamMRSea`
+  - Interactions: edited to use the new functions for factor based knots.
+  - Renewables Case Study: vignette re-instated and completely updated for all new functions. 
   
   
 * Other: 
 
   - The seed used for CV score calculation is appended as an attribute to the output of cv.gamMRSea. Additionally it is also an optional input parameter. 
   - The seed used for generating the CV folds (`getCVids`) is now appended as an attribute fo the returned vector of folds. 
+  - the method for shortening the coefficient names in the summary output has been updated to be more efficient and to work in more situations. 
   
 ## Bug Fixes
 
@@ -30,9 +38,10 @@
 
 * Other:
 
-  - When using the tweedie distribution, the power parameter is not stored in the model call and so issues arise when using a stored model object where this parameter is no longer available.  The parameter is stored within the model but updates have been made to `runSALSA1D` and `runSALSA2D` to ensure that the variance power and variance link are specified as numbers in the model call. 
+  - When using the Tweedie distribution, the power parameter is not stored in the model call and so issues arise when using a stored model object where this parameter is no longer available.  The parameter is stored within the model but updates have been made to `runSALSA1D` and `runSALSA2D` to ensure that the variance power and variance link are specified as numbers in the model call. 
   - The CV score was unchanged when changing K.  This occurred owing to the folds stored within the model object.  If `K` specified in `cv.gamMRSea` is different to that in the model object new folds are now created with a warning message.  The folds in the model object remain unchanged. Note that there is now an error message if the number of folds specified exceeds the number of unique panels. 
-  - bug in the variance calculation for the gamma distribution in the `plotMeanVar` function. Additionally, the legend mismatched the data.  
+  - bug in the variance calculation for the gamma distribution in the `plotMeanVar` function. Additionally, the legend mismatched the data.
+  - bug in the `runInfluence` and `timeInfluenceCheck`.  It worked fine for models without a 2D smooth but a specification error caused issues for models with one. Fixed and working as it should now. 
   
 
 

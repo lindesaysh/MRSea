@@ -3,9 +3,9 @@
 
 # MRSea
 
-The latest version is **1.4** (30/08/2023)
+The latest stable version is **1.5** (10/12/2023)
 
-The latest development version is  **1.4.1** (30/08/2023)
+The latest development version is on the Master branch.
 
 The [MRSea](https://lindesaysh.github.io/MRSea) packages allows the
 fitting of **spatially adaptive regression splines using SALSA**.
@@ -26,8 +26,8 @@ assessment tools are also available. For models with residual
 correlation, direct estimation of robust standard errors, given a panel
 structure, is available.
 
-Recent updates include the re-instatement of natural cubic splines and a
-package website with additional materials.
+Recent updates include the reinstatement of natural cubic splines, the Tweedie 
+distribution and a package website with additional materials.
 
 ## Installation
 
