@@ -63,7 +63,7 @@ data(knotgrid.ns)
 # make distance matrices for datatoknots and knottoknots
 distMats<-makeDists(cbind(rad.dat$x.pos, rad.dat$y.pos), na.omit(knotgrid.ns))
 # choose sequence of radii
-r_seq<-getRadiiSequence(method = "variogram".
+r_seq<-getRadiiSequence(method = "variogram",
                         numberofradii = 8, 
                         xydata = rad.dat[,c("x.pos", "y.pos")], 
                         response = log(rad.dat$birds +1 ), 
@@ -74,7 +74,7 @@ r_seq
 attr(r_seq, "vg.fit")
 attr(r_seq, "Method")
 
- r_seq<-getRadiiSequence(method = "original".
+ r_seq<-getRadiiSequence(method = "original",
                          numberofradii = 8, 
                          distMatrix = distMats$dataDist, 
                          basis="gaussian")

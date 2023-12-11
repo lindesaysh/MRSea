@@ -53,6 +53,7 @@ knitr::include_url("https://lindesaysh.github.io/MRSea/articles/website_examples
 This can be done using the `make.gamMRSea` function.  Here we use the `fullmodel` which is a `glm` model with `family='poisson'`
 
 ```{r eval=TRUE}
+library(MRSea)
 data("nysted.analysisdata")
 fit <- glm(response ~ season + depth, family="quasipoisson", data = nysted.analysisdata)
 ```

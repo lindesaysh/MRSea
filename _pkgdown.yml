@@ -25,6 +25,7 @@ navbar:
         href: articles/web/ModelDiagnostics_MRSea.html
       - text: Using the Tweedie Distribution
         href: articles/web/TheTweedieDistribution_MRSea.html
+      - text: ---  
       - text: Publications
         href: articles/web/Publications.html
       - text: ---

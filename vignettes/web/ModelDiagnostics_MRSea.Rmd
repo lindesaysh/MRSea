@@ -739,7 +739,10 @@ If the data has some structure to it, e.g. in the form of blocks or transects, y
 
 ### COVRATIO
 
-This statistic signals the change in the precision of the parameter estimates when each block is omitted. - Values greater than 1 signal removing the block inflates parameter standard errors - Values less than 1 signal standard errors are smaller when that block is excluded
+This statistic signals the change in the precision of the parameter estimates when each block is omitted. 
+
+- Values greater than 1 signal removing the block inflates parameter standard errors 
+- Values less than 1 signal standard errors are smaller when that block is excluded
 
 The influential points are those that lie outside the 95% quantile of COVRATIO statistics
 

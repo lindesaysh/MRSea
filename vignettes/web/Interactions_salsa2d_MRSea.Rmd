@@ -43,15 +43,9 @@ mydata$blockid <- paste(mydata$transect.id, mydata$season, mydata$impact,sep = "
 3. Create a grid of knots that will be used as possible knot locations.  Create one grid for before and one for after. As we have complete spatial overlap between the two `impact` levels, I have chosen the same number of candidate knot locations for each. 
 
 ```{r knotgridnotrun}
-nk=150 # number of knots per interaction level
-myknots<-NULL
-for(i in 1:length(unique(mydata$impact))){
-  faclevel<-unique(mydata$impact)[i]
-  tempkg<-getKnotgrid(coordData = cbind(mydata$x.pos[mydata$impact==faclevel],
-                                        mydata$y.pos[mydata$impact==faclevel]), 
-                      numKnots = nk, plot = FALSE)
-  myknots<-rbind(myknots, data.frame(tempkg, impact =paste(faclevel)))
-}
+myknots <- selectFctrKnots(mydata[, c("x.pos", "y.pos", "impact")], 
+                           nk=150,
+                           s.eed=543)
 ```
 
 ```{r eval=TRUE}
@@ -62,7 +56,7 @@ head(myknots)
 require(ggplot2)
 ggplot() +
   geom_point(data=mydata, aes(x.pos, y.pos)) +
-  geom_point(data=myknots, aes(X1, X2), colour='red') +
+  geom_point(data=myknots, aes(x.pos, y.pos), colour='red') +
   facet_wrap(~impact, nrow=2) +
   theme_bw() + xlab('Easting (Km)') + ylab('Northing (Km)') +
     coord_equal()
@@ -80,37 +74,11 @@ kg<-myknots[,1:2]
 
 ```{r}
 require(dplyr)
-dists<-makeDists(datacoords = mydata[,c('x.pos', 'y.pos')], knotcoords = kg, knotmat = TRUE)
+dists<-makeDists(datacoords = mydata[,c('x.pos', 'y.pos', 'impact')], 
+                 knotcoords = myknots, 
+                 knotmat = TRUE)
 d2k = dists$dataDist
 k2k = dists$knotDist
-
-n.level<-length(unique(myknots[,3]))
-nk.in.level<-data.frame(myknots %>% 
-                          mutate(id = row_number()) %>% 
-                          group_by(impact) %>% 
-                          summarise(beg=first(id), end=last(id)))
-k2k_temp<-matrix(Inf, nrow = nrow(k2k), ncol = ncol(k2k))
-for(i in 1:n.level){
-  kid<-nk.in.level[i,'beg']:nk.in.level[i,'end']
-  k2k_temp[kid,kid]<-k2k[kid, kid]
-}
-k2k<-k2k_temp
-
-n.level<-length(unique(myknots[,3]))
-nk.in.level<-data.frame(myknots %>% mutate(id = row_number()) %>% 
-                          group_by(impact) %>% 
-                          summarise(beg=first(id), end=last(id)))
-ncoords.in.level <- data.frame(mydata %>% 
-                                 mutate(id = row_number()) %>% 
-                                 group_by(impact) %>% summarise(beg=first(id), end=last(id)))
-d2k_temp<-matrix(Inf, nrow = nrow(d2k), ncol = ncol(d2k))
-for(i in 1:n.level){
-  kid<-nk.in.level[i,'beg']:nk.in.level[i,'end']
-  did<-ncoords.in.level[i,'beg']:ncoords.in.level[i,'end']
-  d2k_temp[did,kid]<-d2k[did, kid]
-}
-d2k<-d2k_temp
-
 ```
 
 ## Analysis
@@ -160,8 +128,8 @@ names(imp.labs) <- c("0", "1")
 
 # quick look to see what was chosen
 ggplot(myknots) +
-  geom_point(aes(x=X1, y=X2)) +
-  geom_point(aes(x=X1, y=X2, size=2), data=chosenknots, alpha=4/5, 
+  geom_point(aes(x=x.pos, y=y.pos)) +
+  geom_point(aes(x=x.pos, y=y.pos, size=2), data=chosenknots, alpha=4/5, 
              show.legend = FALSE, shape=5) +
   theme_bw() + xlab('Easting (Km)') + ylab('Northing (Km)') + 
   coord_equal() +
@@ -186,25 +154,11 @@ cv.gamMRSea(mydata, mymodel, K=10, s.eed = 1)$delta[1]
 ```{r }
 data("nysted.predictdata")
 datacoords<-nysted.predictdata[,c('x.pos', 'y.pos', 'impact')]
-dists<-makeDists(datacoords = datacoords[,1:2], knotcoords = kg, knotmat = FALSE)
-g2k = dists$dataDist
 
-n.level<-length(unique(myknots[,3]))
-nk.in.level<-data.frame(myknots %>% 
-                          mutate(id = row_number()) %>% 
-                          group_by(impact) %>% 
-                          summarise(beg=first(id), end=last(id)))
-ncoords.in.level <- data.frame(datacoords %>%
-                                 mutate(id = row_number()) %>% 
-                                 group_by(impact) %>% 
-                                 summarise(beg=first(id), end=last(id)))
-g2k_temp<-matrix(Inf, nrow = nrow(g2k), ncol = ncol(g2k))
-for(i in 1:n.level){
-  kid<-nk.in.level[i,'beg']:nk.in.level[i,'end']
-  gid<-ncoords.in.level[i,'beg']:ncoords.in.level[i,'end']
-  g2k_temp[gid,kid]<-g2k[gid, kid]
-}
-g2k<-g2k_temp
+dists<-makeDists(datacoords = datacoords, 
+                 knotcoords = myknots, 
+                 knotmat = FALSE)
+g2k = dists$dataDist
 ```
 
 ```{r}
@@ -225,7 +179,6 @@ ggplot() +
   scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
   theme_bw() +
   xlab('Easting (Km)') + ylab('Northing (Km)') +
-  #geom_polygon(data=nysted.coast, aes(x, y), fill='grey') +
   facet_wrap(~impact, ncol=1, labeller = labeller(impact = imp.labs))
 ```
 
@@ -239,7 +192,6 @@ ggplot() +
   scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
   theme_bw() +
   xlab('Easting (Km)') + ylab('Northing (Km)') +
-  #geom_polygon(data=nysted.coast, aes(x, y), fill='grey') +
   facet_wrap(~impact, ncol=1, labeller = labeller(impact = imp.labs))
 ```
 
@@ -248,11 +200,7 @@ ggplot() +
 In the above analysis, the SALSA algorithm will space-fill across all knot locations to initialise the first set of knots.  This could mean that in the initial step, one of the levels gets very few starting locations.  If you wish to have a more even set of starting locations, you can specify these locations.  Here I am specifying 5 locations from each level of the interaction.
 
 ```{r warning=FALSE, message = FALSE}
-startknotlocs<-c(
-    as.numeric(rownames(getKnotgrid(filter(myknots, impact == 0)[,1:2], 
-                                    numKnots = 5, plot = FALSE))),
-    as.numeric(rownames(getKnotgrid(filter(myknots, impact == 1)[,1:2],
-                                    numKnots = 5, plot = FALSE))) + 150)
+startknotlocs <- selectFctrStartk(myknots, 5, s.eed = 1)
 ```
 
 The set up of the model is a little different and I have included `##` below to indicate which lines have been changed/added.
@@ -290,10 +238,10 @@ count(chosenknots_sk, impact)
 ```{r eval=TRUE, fig.height=6, fig.width=8, fig.cap='Black dots are candidate knot locations, grey squares with crosses are initial knot locations and red diamonds are final knot locations.'}
 # quick look to see what was chosen
 ggplot(myknots) +
-  geom_point(aes(x=X1, y=X2)) +
-  geom_point(aes(x=X1, y=X2, size=2),data=chosenknots_sk, alpha=4/5, 
+  geom_point(aes(x=x.pos, y=y.pos)) +
+  geom_point(aes(x=x.pos, y=y.pos, size=2),data=chosenknots_sk, alpha=4/5, 
              show.legend = FALSE, shape=5, colour = 'firebrick') +
-  geom_point(aes(x=X1, y=X2, size=2), shape = 7, data=startingknots, 
+  geom_point(aes(x=x.pos, y=y.pos, size=2), shape = 7, data=startingknots, 
              colour = 'darkgrey', show.legend = FALSE) +
   theme_bw() + xlab('Easting (Km)') + ylab('Northing (Km)') + 
   coord_equal() +
@@ -325,7 +273,6 @@ ggplot() +
   scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
   theme_bw() +
   xlab('Easting (Km)') + ylab('Northing (Km)') +
-  #geom_polygon(data=nysted.coast, aes(x, y), fill='grey') +
   facet_wrap(~impact, ncol=1, labeller = labeller(impact = imp.labs))
 ```
 

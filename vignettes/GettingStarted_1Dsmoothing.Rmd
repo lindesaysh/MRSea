@@ -339,7 +339,6 @@ For information on:
 2. [Two dimensional smoothing](https://lindesaysh.github.io/MRSea/article/GettingStarted_2Dsmoothing)
 3. [Model Diagnostics](https://lindesaysh.github.io/MRSea/article/ModelDiagnostics_MRSea)
 4. [Distance Sampling](https://lindesaysh.github.io/MRSea/article/DistanceSampling)
-5. [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea) including information on distance sampling, `gamMRSea` model diagnostics and using robust standard errors to deal with residual correlation. 
-
+5. [Case Study for Marine Renewables](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea)
 
 # References
