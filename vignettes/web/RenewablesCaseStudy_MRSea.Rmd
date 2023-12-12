@@ -35,7 +35,7 @@ library(dplyr)
 count.data <- readRDS("data/nystedphaseA.rds")
 ```
 
-The data are visual aerial transect data from the Nysted windfarm area in Denmark. There are two years of data (2001 and 2002) with surveys undertaken in January, February and March. The response is counts of long tailed ducks that have been distance corrected. Each transect has been segmented into 500m pieces and the strip width is approximately 2km.
+The data are visual aerial transect data from the Nysted windfarm area in Denmark provided to the University of St Andrews by Aarhus University. There are two years of data (2001 and 2002) with surveys undertaken in January, February and March. The response is counts of long tailed ducks that have been distance corrected. Each transect has been segmented into 500m pieces and the strip width is approximately 2km.
 
 ```{r}
 ptheme <-  ggplot() + theme(legend.text=element_text(size=10),
