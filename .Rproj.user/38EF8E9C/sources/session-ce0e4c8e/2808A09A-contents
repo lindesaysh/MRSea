@@ -1,0 +1,1929 @@
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~ SPATIAL ANALYSIS ~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# contract for Aarhus University November 2023
+# Lindesay Scott-Hayward
+
+
+#' --------------------------------------------------------------
+# 1. select species ----------------------------------
+#' --------------------------------------------------------------
+
+
+#setwd('C:\\Users\\lass\\University of St Andrews\\MLM_LSHjointwork - Documents\\research\\Aarhus - Ib\\DanishEnergyIsland\\')
+#setwd('C:\\Users\\lindesay\\University of St Andrews\\MLM_LSHjointwork - Documents\\research\\Aarhus - Ib\\DanishEnergyIsland\\')
+
+species<-'Auks'
+
+outfile<- paste('Results/', species, '/', species, sep='')
+
+speciesname<-'Auks'
+
+require(devtools)
+load_all(path = 'C:/Users/lindesay/Documents/GitHub/MRSea/')
+#require(MRSea)
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+countdata <- readRDS(file=paste(outfile, "-NHATS.rds", sep=''))
+
+rm(data, speciesdata, disdata)
+gc()
+#
+require(lubridate)
+require(dplyr)
+require(tibble)
+library(statmod)
+library(tweedie)
+
+countdata <- arrange(countdata, date, Id)
+countdata$SurvDate <- factor(countdata$SurvDate, levels=unique(countdata$SurvDate))
+
+countdata$response <- countdata$NHAT
+
+# make sure data is ordered by survey so that interaction code works later
+# dont want to see any overlaps
+#plot(countdata$date, as.factor(countdata$SurvID))
+plot(1:nrow(countdata), as.factor(countdata$SurvDate), pch='.')
+
+
+require(RColorBrewer)
+
+# remove surveys with no/few detections
+
+filter(countdata, NHAT>0) %>% count(SurvDate)
+
+# one! observation on May survey
+
+# ** Model all three together - Not sure **
+
+#' --------------------------------------------------------------
+# 2. Pre Processing ----------------------------------
+#' --------------------------------------------------------------
+require(sf)
+studyarea <- st_read("Data/Shapefiles/", layer = "StudyAr")
+studyarea.coord <- data.frame(st_coordinates(studyarea))
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~  ~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#outfile<- paste('../results/', species, '/', species, '-', sep='')
+#sink(file=paste(outfile, 'log_spatial.log', sep=''))
+
+require(ggplot2)
+require(dplyr)
+
+spbreaks<-c(0, 1, 5, 25, 50, 100, 1000)
+plotbreaks<-waiver()
+
+# check data plot
+p<-ggplot(countdata) +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000)) +
+  geom_point(data=filter(countdata, NHAT==0), aes(x = x.pos, y = y.pos),shape=16, colour='thistle', alpha=0.8, size=1) + 
+  geom_point(data=filter(countdata, NHAT>0), aes(x = x.pos, y = y.pos, size = NHAT), alpha=0.45, colour='red') + 
+  scale_size_area(breaks=plotbreaks) + 
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(),  axis.text.x = element_text(size = 15), axis.text.y = element_text(size = 15), legend.title=element_blank()) + 
+  xlab("Easting") + ylab("Northing") + coord_equal() 
+
+png(filename=paste(outfile, '-spatialdata.png', sep=''), height=800, width=1000)
+print(p + facet_wrap(~date, ncol=3) )
+dev.off()
+
+png(filename=paste(outfile, '-spatialdatacombined.png', sep=''), height=800, width=1000)
+print(p)
+dev.off()
+
+png(filename=paste(outfile, '-spatialdatamonth.png', sep=''), height=600, width=1200)
+print(p + facet_wrap(~month, ncol=3))
+dev.off()
+
+#' --------------------------------------------------------------
+# 3. EIA  ----------------------------------
+#' --------------------------------------------------------------
+
+png(filename=paste(outfile, '-depth-vs-count.png', sep=''), height=600, width=1000)
+ggplot(countdata) + 
+  geom_point(aes(x=Depth, y=NHAT), alpha=1/5) + 
+  xlab('Depth (m)') + ylab('Estimated Counts') +
+  #facet_wrap(~ date) +
+  theme_bw()
+dev.off()
+
+png(filename=paste(outfile, '-dist2coast-vs-count.png', sep=''), height=600, width=1000)
+ggplot(countdata) + 
+  geom_point(aes(x=DC, y=NHAT), alpha=1/5) + 
+  xlab('Distance to Coast (km)') + ylab('Estimated Counts') +
+  #facet_wrap(~ date) + 
+  theme_bw()
+dev.off()
+
+png(filename=paste(outfile, '-salinity-vs-count.png', sep=''), height=600, width=1000)
+ggplot(countdata) + 
+  geom_point(aes(x=Salinity, y=NHAT), alpha=1/5) + 
+  xlab('Salinity') + ylab('Estimated Counts') +
+  #facet_wrap(~ date) + 
+  theme_bw()
+dev.off()
+
+
+png(filename=paste(outfile, '-sst-vs-count.png', sep=''), height=600, width=1000)
+ggplot(countdata) + 
+  geom_point(aes(x=surface_te, y=NHAT), alpha=1/5) + 
+  xlab('Sea Surface Temperature') + ylab('Estimated Counts') +
+  #facet_wrap(~ date) + 
+  theme_bw()
+dev.off()
+
+
+png(filename=paste(outfile, '-surveyID-vs-count.png', sep=''), height=600, width=600)
+plot(countdata$NHAT ~ as.factor(countdata$date), xlab='Survey ID', ylab='Estimated Counts')
+dev.off()
+
+group_by(countdata, yearmonth) %>% 
+  summarise(n=n(), 
+            meancount = mean(response), 
+            sdcount = sd(response))
+
+group_by(countdata, year) %>% 
+  summarise(n=n(), 
+            meancount = mean(response),
+            sdcount = sd(response))
+
+group_by(countdata, month) %>% 
+  summarise(n=n(), 
+            meancount = mean(response), 
+            sdcount = sd(response))
+
+group_by(countdata, date) %>% 
+  summarise(n=n(), 
+            meancount = mean(response), 
+            sdcount = sd(response))
+
+
+#' --------------------------------------------------------------
+# 4. Prediction Data ----------------------------------
+#' --------------------------------------------------------------
+
+require(splancs)
+# load prediction grids (500m grids)
+
+preddata.sf<-readRDS(file="Data/predgridsf.rds")
+preddata <- preddata.sf %>%
+  mutate(cellsize = sqrt(area)) %>% data.frame()
+# index = 1:n()) # not needed as Id variable exists
+
+## ~~~~ make survey polygons and put id in countdata and predgrid
+# plot(countdata$x.pos, countdata$y.pos)
+# points(countdata$x.pos[countdata$month == 5], countdata$y.pos[countdata$month == 5], col="red")
+# m4bnd <- locator()
+# m4bnd <- data.frame(m4bnd)
+# m4bnd <- rbind(m4bnd, m4bnd[1,])
+# write.csv(m4bnd, file="Data/month4boundary.csv", row.names=FALSE)
+
+m4bnd <- read.csv("Data/month4boundary.csv")
+# check
+ggplot(mapping = aes(x=x.pos, y=y.pos)) + 
+  geom_point(data = countdata, aes(colour=month)) + 
+  geom_point(data=preddata, size = 0.5, colour="grey", alpha=1/5) +
+  geom_path(data = m4bnd, aes(x, y))
+
+
+preddata <- preddata %>%
+  mutate(month = ifelse(inout(pts = preddata[,c('x.pos', 'y.pos')], poly = m4bnd), 4, 5))
+
+ggplot(mapping = aes(x=x.pos, y=y.pos)) + 
+  geom_point(data = countdata, aes(colour=month)) + 
+  geom_point(data=preddata, aes(colour=month), size = 0.5,  alpha=1/5) +
+  geom_path(data = m4bnd, aes(x, y))
+
+# # ~~~~~~~~~~~~~~~~~~~~~
+# # remove odd month 5 data in top right (NSN12)
+# # ~~~~~~~~~~~~~~~~~~~~~
+# 
+# countdata <- countdata %>%
+#   filter(LNO != "NSN12" | month != 5)
+# 
+# ggplot(mapping = aes(x=x.pos, y=y.pos)) + 
+#   geom_point(data = countdata, aes(colour=month)) + 
+#   geom_point(data=preddata, aes(colour=month), size = 0.5,  alpha=1/5) +
+#   geom_path(data = m4bnd, aes(x, y))
+
+#' --------------------------------------------------------------
+## Environmental Covar ----------------------------------
+#' --------------------------------------------------------------
+
+png(file=paste(outfile, '-Depth.png', sep=''), height=1000, width=1000)
+ggplot() +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000)) + 
+  geom_tile(data= preddata, aes(x=x.pos, y=y.pos, fill=Depth, height=cellsize, width=cellsize)) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  #geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+  scale_fill_distiller(palette = "Blues",name="Depth (m)") +
+  geom_point(data=countdata, aes(x=x.pos, y=y.pos), size=0.2, alpha=0.1) 
+dev.off()
+
+png(file=paste(outfile, '-Dist2coast.png', sep=''), height=1000, width=1000)
+ggplot() +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000)) + 
+  geom_tile(data= preddata, aes(x=x.pos, y=y.pos, fill=DC, height=cellsize, width=cellsize)) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  #geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+  scale_fill_distiller(palette = "Spectral",name="Distance to \ncoast (km)") +
+  geom_point(data=countdata, aes(x=x.pos, y=y.pos), size=0.2, alpha=0.1)
+dev.off()
+
+png(file=paste(outfile, '-Salinity.png', sep=''), height=1000, width=1000)
+ggplot() +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000)) + 
+  geom_tile(data= preddata, aes(x=x.pos, y=y.pos, fill=Salinity, height=cellsize, width=cellsize)) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  #geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+  scale_fill_distiller(palette = "Spectral",name="Salinity") +
+  geom_point(data=countdata, aes(x=x.pos, y=y.pos), size=0.2, alpha=0.1)
+dev.off()
+
+png(file=paste(outfile, '-SST.png', sep=''), height=1000, width=1000)
+ggplot() +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000)) + 
+  geom_tile(data= preddata, aes(x=x.pos, y=y.pos, fill=surface_te, height=cellsize, width=cellsize)) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  #geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+  scale_fill_distiller(palette = "Spectral",name="Sea Surface\nTemperature (C)") +
+  geom_point(data=countdata, aes(x=x.pos, y=y.pos), size=0.2, alpha=0.1)
+dev.off()
+
+#' --------------------------------------------------------------
+# 5. Survey loop  ----------------------------------
+#' --------------------------------------------------------------
+
+
+
+sink.reset <- function(){
+  for(i in seq_len(sink.number())){
+    sink(NULL)
+  }
+}
+
+# ~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+print(species)
+
+surveys<-unique(countdata$month)
+surveys <- c(surveys, "All")
+allpredgrids <- NULL
+
+# survey1dvar<-c(1, 1, 1, 1, 1, 1, 1, 1, 1)
+# counter=1
+#sink(file=sinkname, append=TRUE)				 
+
+for(s in surveys){
+  #s <- surveys[1]
+  
+  outfileS<- paste('Results/', species, '/', species, '-', s, '-', sep='')
+  
+  tm<-now()
+  tm<-gsub(":", ")", tm)
+  
+  sinkname <-paste0(outfileS, "spatial-log-", tm, ".txt") 
+  sink(file=sinkname)
+  
+  cat("\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+  cat(paste0("\n~~~~~~~~~ SURVEY " , s, " ~~~~~~~~~\n"))
+  cat("\n~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+  
+  print(species)
+  
+  if(s == "All"){
+    surveydata <- countdata  
+  }else{
+    surveydata <- filter(countdata, month==s)
+  }
+  
+  
+  # if(sum(surveydata$NHAT)<=5 | nrow(surveydata[surveydata$NHAT>0,])<=5){
+  #   cat("Too few observations in this survey:\n")
+  #   cat(paste0(nrow(surveydata[surveydata$NHAT>0,]), " observations and ", round(sum(surveydata$NHAT), digits = 2), " total birds"))
+  #   preddata <- mutate(preddata, SurveyID.x = s, preds = NA)
+  #   if(s %in% unique(allpredgrids$SurveyID.x)){
+  #     allpredgrids[which(as.character(allpredgrids$SurveyID.x) == s),] <- preddata
+  #   }else{
+  #     allpredgrids <- bind_rows(allpredgrids, preddata)
+  #   }
+  #   sink()
+  #   next
+  # }
+  
+  
+  # make blocking structure to run ACF
+  # transect number by survey
+  surveydata$blockid<-paste0(surveydata$LNO)
+  
+  
+  #' --------------------------------------------------------------
+  ## Tweedie Profiling  ----------------------------------
+  #' --------------------------------------------------------------
+  
+  
+  profout <- tweedie.profile(response ~ Depth + x.pos + y.pos, 
+                             data=surveydata,
+                             xi.vec = seq(1.01, 1.99, by=0.05), do.plot=TRUE)
+  
+  png(filename=paste(outfileS, 'tweedie_xi.png', sep=''), height=600, width=600)
+  plot(profout$x, profout$y, 
+       main=paste0("xi_max = ", round(profout$xi.max, 2)),
+       xlab = "Xi index", ylab = "L", type="b", pch=20)
+  abline(h=profout$L.max, lty=2)
+  abline(v=profout$xi.max, lty=2)
+  dev.off()
+  
+  initialModel <- eval(parse(text=paste("glm(response ~  1 + offset(log(area)),
+                     family=tweedie(var.power=", profout$xi.max, ", link.power = 0), 
+                     data=surveydata)")))
+  
+  
+  #initialModel <- glm(response ~  1 + offset(log(area)), 
+  #                    family='quasipoisson', data=surveydata)
+  
+  
+  print(summary(initialModel))
+  
+  #' --------------------------------------------------------------
+  # 1D SALSA  ----------------------------------
+  #' --------------------------------------------------------------
+  
+  
+  cat("\n~~~~~~~~~ SALSA 1D ~~~~~~~~~\n")
+  
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Depth
+  salsa1dlist<- list(fitnessMeasure='cv.gamMRSea',
+                     cv.opts=list(K=5,cv.gamMRSea.seed=123),
+                     #fitnessMeasure = 'QBIC',
+                     minKnots_1d=c(1),
+                     maxKnots_1d=c(3),
+                     startKnots_1d=c(1),
+                     degree=c(2),
+                     maxIterations=10,
+                     gaps=c(0))
+  
+  rm(salsa1doutput_depth)
+  sink.reset()
+  salsa1doutput_depth<- try(runSALSA1D(initialModel=initialModel,
+                                       salsa1dlist=salsa1dlist,
+                                       varlist=c('Depth'),
+                                       predictionData=preddata,
+                                       datain=surveydata,
+                                       panelid = surveydata$blockid,
+                                       removal=TRUE,
+                                       suppress.printout = TRUE), silent=TRUE)
+  
+  if(inherits(salsa1doutput_depth, "try-error")){
+    # if fitting issue try natural spline
+    salsa1dlist$splines = "ns"
+    
+    sink.reset()
+    rm(salsa1doutput_depth)
+    salsa1doutput_depth<- try(runSALSA1D(initialModel=initialModel,
+                                         salsa1dlist=salsa1dlist,
+                                         varlist=c('Depth'),
+                                         predictionData=preddata,
+                                         datain=surveydata,
+                                         panelid = surveydata$blockid,
+                                         removal=TRUE,
+                                         suppress.printout = TRUE), silent=TRUE)
+  }
+  
+  if(inherits(salsa1doutput_depth, "try-error")){
+    cv_1d_depth<- Inf
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+  }else{
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+    print(summary(salsa1doutput_depth$bestModel))
+    cv_1d_depth<-cv.gamMRSea(surveydata, salsa1doutput_depth$bestModel, K = 5, s.eed = 123)$delta[2]
+    # catch models which have crazy dispersion param
+    if(summary(salsa1doutput_depth$bestModel)$dispersion > 1000){cv_1d_depth <- Inf}
+    badseid1 <- which(abs(summary(salsa1doutput_depth$bestModel)$coefficients[,2])/ 
+                        abs(summary(salsa1doutput_depth$bestModel)$coefficients[,1])>0.8)
+    # catch models with ROBUST S.E's bigger than coeffs
+    badseid2 <- which(abs(summary(salsa1doutput_depth$bestModel)$coefficients[,3])/ 
+                        abs(summary(salsa1doutput_depth$bestModel)$coefficients[,1])>0.8)
+    if(length(badseid1)>0 | length(badseid2)>0 | NaN %in% summary(salsa1doutput_depth$bestModel)$coefficients[,3]){cv_1d_depth <- Inf}
+  }
+  
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Distance to coast
+  salsa1dlist<- list(fitnessMeasure='cv.gamMRSea',
+                     cv.opts=list(K=5,cv.gamMRSea.seed=123),
+                     #fitnessMeasure = 'QBIC',
+                     minKnots_1d=c(1),
+                     maxKnots_1d=c(3),
+                     startKnots_1d=c(1),
+                     degree=c(2),
+                     maxIterations=10,
+                     gaps=c(0))
+  
+  sink.reset()
+  rm(salsa1doutput_d2coast)
+  salsa1doutput_d2coast<- try(runSALSA1D(initialModel=initialModel,
+                                         salsa1dlist=salsa1dlist,
+                                         varlist=c('DC'),
+                                         predictionData=preddata,
+                                         datain=surveydata,
+                                         panelid = surveydata$blockid,
+                                         removal=TRUE,
+                                         suppress.printout = TRUE), silent=TRUE)
+  
+  if(inherits(salsa1doutput_d2coast, "try-error")){
+    # if fitting issue try natural spline
+    salsa1dlist$splines = "ns"
+    
+    sink.reset()
+    rm(salsa1doutput_d2coast)
+    salsa1doutput_d2coast<- try(runSALSA1D(initialModel=initialModel,
+                                           salsa1dlist=salsa1dlist,
+                                           varlist=c('DC'),
+                                           predictionData=preddata,
+                                           datain=surveydata,
+                                           panelid = surveydata$blockid,
+                                           removal=TRUE,
+                                           suppress.printout = TRUE), silent=TRUE)
+  }
+  
+  if(inherits(salsa1doutput_d2coast, "try-error")){
+    cv_1d_d2coast<- Inf
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+  }else{
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+    print(summary(salsa1doutput_d2coast$bestModel))
+    cv_1d_d2coast<-cv.gamMRSea(surveydata, salsa1doutput_d2coast$bestModel, K = 5, s.eed = 123)$delta[2]
+    # catch models with crazy dispersions
+    if(summary(salsa1doutput_d2coast$bestModel)$dispersion > 1000){cv_1d_d2coast <- Inf}
+    # catch models with RAW S.E's bigger than coeffs
+    badseid1 <- which(abs(summary(salsa1doutput_d2coast$bestModel)$coefficients[,2])/
+                        abs(summary(salsa1doutput_d2coast$bestModel)$coefficients[,1])>0.8)
+    # catch models with ROBUST S.E's bigger than coeffs
+    badseid2 <- which(abs(summary(salsa1doutput_d2coast$bestModel)$coefficients[,3])/
+                        abs(summary(salsa1doutput_d2coast$bestModel)$coefficients[,1])>0.8)
+    if(length(badseid1)>0 | length(badseid2)>0 | NaN %in% summary(salsa1doutput_d2coast$bestModel)$coefficients[,3]){cv_1d_d2coast <- Inf}
+  }
+  
+  
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # Salinity
+  salsa1dlist<- list(fitnessMeasure='cv.gamMRSea',
+                     cv.opts=list(K=5,cv.gamMRSea.seed=123),
+                     #fitnessMeasure = 'QBIC',
+                     minKnots_1d=c(1),
+                     maxKnots_1d=c(3),
+                     startKnots_1d=c(1),
+                     degree=c(2),
+                     maxIterations=10,
+                     gaps=c(0))
+  
+  rm(salsa1doutput_salinity)
+  sink.reset()
+  salsa1doutput_salinity<- try(runSALSA1D(initialModel=initialModel,
+                                          salsa1dlist=salsa1dlist,
+                                          varlist=c('Salinity'),
+                                          predictionData=preddata,
+                                          datain=surveydata,
+                                          panelid = surveydata$blockid,
+                                          removal=TRUE,
+                                          suppress.printout = TRUE), silent=TRUE)
+  
+  if(inherits(salsa1doutput_salinity, "try-error")){
+    # if fitting issue try natural spline
+    salsa1dlist$splines = "ns"
+    
+    sink.reset()
+    rm(salsa1doutput_salinity)
+    salsa1doutput_salinity<- try(runSALSA1D(initialModel=initialModel,
+                                            salsa1dlist=salsa1dlist,
+                                            varlist=c('Salinity'),
+                                            predictionData=preddata,
+                                            datain=surveydata,
+                                            panelid = surveydata$blockid,
+                                            removal=TRUE,
+                                            suppress.printout = TRUE), silent=TRUE)
+  }
+  
+  if(inherits(salsa1doutput_salinity, "try-error")){
+    cv_1d_salinity<- Inf
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+  }else{
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+    print(summary(salsa1doutput_salinity$bestModel))
+    cv_1d_salinity<-cv.gamMRSea(surveydata, salsa1doutput_salinity$bestModel, K = 5, s.eed = 123)$delta[2]
+    # catch models which have crazy dispersion param
+    if(summary(salsa1doutput_salinity$bestModel)$dispersion > 1000){cv_1d_salinity <- Inf}
+    badseid1 <- which(abs(summary(salsa1doutput_salinity$bestModel)$coefficients[,2])/ 
+                        abs(summary(salsa1doutput_salinity$bestModel)$coefficients[,1])>0.8)
+    # catch models with ROBUST S.E's bigger than coeffs
+    badseid2 <- which(abs(summary(salsa1doutput_salinity$bestModel)$coefficients[,3])/ 
+                        abs(summary(salsa1doutput_salinity$bestModel)$coefficients[,1])>0.8)
+    if(length(badseid1)>0 | length(badseid2)>0 | NaN %in% summary(salsa1doutput_salinity$bestModel)$coefficients[,3]){cv_1d_salinity <- Inf}
+  }
+  
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  # SST
+  salsa1dlist<- list(fitnessMeasure='cv.gamMRSea',
+                     cv.opts=list(K=5,cv.gamMRSea.seed=123),
+                     #fitnessMeasure = 'QBIC',
+                     minKnots_1d=c(1),
+                     maxKnots_1d=c(3),
+                     startKnots_1d=c(1),
+                     degree=c(2),
+                     maxIterations=10,
+                     gaps=c(0))
+  
+  rm(salsa1doutput_sst)
+  sink.reset()
+  salsa1doutput_sst<- try(runSALSA1D(initialModel=initialModel,
+                                     salsa1dlist=salsa1dlist,
+                                     varlist=c('surface_te'),
+                                     predictionData=preddata,
+                                     datain=surveydata,
+                                     panelid = surveydata$blockid,
+                                     removal=TRUE,
+                                     suppress.printout = TRUE), silent=TRUE)
+  
+  
+  if(inherits(salsa1doutput_sst, "try-error")){
+    # if fitting issue try natural spline
+    salsa1dlist$splines = "ns"
+    
+    sink.reset()
+    rm(salsa1doutput_sst)
+    salsa1doutput_sst <- try(runSALSA1D(initialModel=initialModel,
+                                        salsa1dlist=salsa1dlist,
+                                        varlist=c('surface_te'),
+                                        predictionData=preddata,
+                                        datain=surveydata,
+                                        panelid = surveydata$blockid,
+                                        removal=TRUE,
+                                        suppress.printout = TRUE), silent=TRUE)
+  }
+  
+  
+  if(inherits(salsa1doutput_sst, "try-error")){
+    cv_1d_sst<- Inf
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+  }else{
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+    print(summary(salsa1doutput_sst$bestModel))
+    cv_1d_sst<-cv.gamMRSea(surveydata, salsa1doutput_sst$bestModel, K = 5, s.eed = 123)$delta[2]
+    # catch models which have crazy dispersion param
+    if(summary(salsa1doutput_sst$bestModel)$dispersion > 1000){cv_1d_sst <- Inf}
+    badseid1 <- which(abs(summary(salsa1doutput_sst$bestModel)$coefficients[,2])/ 
+                        abs(summary(salsa1doutput_sst$bestModel)$coefficients[,1])>0.8)
+    # catch models with ROBUST S.E's bigger than coeffs
+    badseid2 <- which(abs(summary(salsa1doutput_sst$bestModel)$coefficients[,3])/ 
+                        abs(summary(salsa1doutput_sst$bestModel)$coefficients[,1])>0.8)
+    if(length(badseid1)>0 | length(badseid2)>0 | NaN %in% summary(salsa1doutput_sst$bestModel)$coefficients[,3]){cv_1d_sst <- Inf}
+  }
+  
+  
+  #' --------------------------------------------------------------
+  ## select 1D  ----------------------------------
+  #' --------------------------------------------------------------
+  
+  cv_1d_initial<-cv.gamMRSea(surveydata, initialModel, K = 5, s.eed = 123)$delta[2]
+  
+  cat(paste0("\ncv initial= ", cv_1d_initial, 
+             "\n cv_depth = ", cv_1d_depth, 
+             "\n cv dist coast = ", cv_1d_d2coast, 
+             "\n cv salinity = ", cv_1d_salinity,
+             "\n cv sst = ", cv_1d_sst,
+             "\n"))
+  
+  onedid<-which(c(cv_1d_initial, cv_1d_depth, cv_1d_d2coast, cv_1d_salinity, cv_1d_sst) == min(c(cv_1d_initial, cv_1d_depth, cv_1d_d2coast,cv_1d_salinity, cv_1d_sst)))[1]
+  
+  
+  #onedid = survey1dvar[counter]
+  #counter = counter + 1
+  
+  if(onedid==1) best1doutput<- make.gamMRSea(initialModel, panelid = surveydata$blockid, gamMRSea = TRUE)
+  
+  if(onedid==2) best1doutput<- salsa1doutput_depth$bestModel
+  if(onedid==3) best1doutput<- salsa1doutput_d2coast$bestModel
+  if(onedid==4) best1doutput<- salsa1doutput_salinity$bestModel
+  if(onedid==5) best1doutput<- salsa1doutput_sst$bestModel
+  
+  #if(onedid==4) best1doutput<- salsa1doutput_depthdist2coast$bestModel
+  # 
+  cat("\n # ~~~~~~~~~~ Best 1D model ~~~~~~~~~~~~~~#\n")
+  print(summary(best1doutput))
+  
+  # make some plots
+  #breaks= ticks= c(0,0.1,0.2,0.5,1,2,5,10,10^260)
+  breaks<-ticks<-c(0, 0.2, 0.4, 0.6, 0.8, 1, 100, 1000)
+  mypalette<-rev(brewer.pal(length (ticks)-1,"Spectral"))  #BrBG # PRGn #Spectral
+  fitspbreaks<-waiver()
+  
+  p <- ggplot(surveydata) + 
+    geom_tile(aes(x=x.pos,y=y.pos, fill=fitted(best1doutput), height=sqrt(area), width=sqrt(area))) + 
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(),  axis.text.x = element_text(size = 15), axis.text.y = element_text(size = 15),  axis.title.x = element_blank(), axis.title.y = element_blank(), legend.title=element_blank()) + 
+    labs(x = "Easting", y = "Northing") + coord_equal() +  
+    scale_fill_gradientn(colours=mypalette, values = breaks, space = "Lab", na.value = "grey50", guide = "colourbar")
+  
+  png(filename=paste(outfileS, 'best1dfits_gg.png', sep=''), height=600, width=600)
+  print(p)
+  dev.off()
+  
+  #' --------------------------------------------------------------
+  # SALSA2D  ----------------------------------
+  #' --------------------------------------------------------------
+  
+  
+  cat("\n~~~~~~~~~ SALSA 2D ~~~~~~~~~\n")
+  
+  # # ~~~~
+  set.seed(112233)
+  kg <- getKnotgrid(coordData = surveydata[, c("x.pos", "y.pos")], numKnots = 300, plot = TRUE)
+  dists<-makeDists(datacoords = surveydata[,c('x.pos', 'y.pos')], knotcoords = kg, knotmat = TRUE)
+  d2k = dists$dataDist
+  k2k = dists$knotDist
+  
+  sk=10
+
+  rs <- getRadiiSequence(method = "variogram",
+                         numberofradii = 10, 
+                         xydata = surveydata[, c("x.pos", "y.pos")],
+                         response =  log(surveydata$NHAT + 1), 
+                         basis="gaussian", 
+                         showplots=TRUE,
+                         distMatrix = d2k)
+  
+  cat("\n ~~~~~~ Radii Choices and Range estimation ~~~~~\n")
+  rs 
+  
+  # if(attributes(rs)$vg.fit[2,3] > max(k2k)){
+  #   rs <- getRadiiChoices(10, d2k, "gaussian")
+  # cat("\n ~~~~ Radii method changed as range too large ~~~~ \n")
+  # rs
+  # }
+  
+  
+  # sk=round(max(d2k)/attr(rs, "vg.fit")$range[2])
+  # 
+  if(nrow(surveydata[surveydata$NHAT>0,])<=10){sk <- 3}
+  
+  #if(s %in% c()){sk <- 5}
+  # 
+  
+  
+  initialise = FALSE
+  chooser = FALSE
+  
+  ### initialise knots from non zero data only
+  kgnonzero <- getKnotgrid(coordData = surveydata[surveydata$NHAT>0, c("x.pos", "y.pos")], numKnots = sk, plot = TRUE)
+  
+  salsa2dlist<- list(fitnessMeasure='cv.gamMRSea',
+                     cv.opts=list(K=5,cv.gamMRSea.seed=123),
+                     knotgrid = kg,
+                     startKnots = sk,
+                     minKnots=2, 
+                     maxKnots=100, 
+                     gap=0,
+                     r_seq = rs)
+  
+  sink.reset()
+  rm(salsa2dOutput)
+  
+  salsa2dOutput<- try(runSALSA2D(model=best1doutput, 
+                                 salsa2dlist, 
+                                 d2k=d2k, k2k=k2k,
+                                 basis='gaussian',
+                                 panels = surveydata$blockid,
+                                 suppress.printout = TRUE,
+                                 chooserad = chooser,
+                                 initialise = initialise,
+                                 initialKnots = kgnonzero, 
+                                 plot = TRUE), silent=TRUE)
+  
+  
+  
+  if(inherits(salsa2dOutput, "try-error")){
+    cv_2d<- Inf
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+  }else{
+    par(mfrow=c(1,2))
+    quilt.plot(surveydata$x.pos, surveydata$y.pos, surveydata$response)
+    quilt.plot(surveydata$x.pos, surveydata$y.pos, fitted(salsa2dOutput$bestModel))
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+    salsa2dOutput$fitStat
+    print(summary(salsa2dOutput$bestModel))
+    print(try(anova(salsa2dOutput$bestModel), silent=TRUE))
+    cv_2d<-cv.gamMRSea(surveydata, salsa2dOutput$bestModel, K = 5, s.eed = 123)$delta[2]
+    best1doutput$cvfolds <- salsa2dOutput$bestModel$cvfolds
+    cv_1d<-cv.gamMRSea(surveydata, best1doutput, K = 5, s.eed = 123)$delta[2]
+  }
+  
+  
+  
+  sink.reset()
+  rm(salsa2dOutput_2donly)
+  
+  salsa2dOutput_2donly<- try(runSALSA2D(model=initialModel, 
+                                        salsa2dlist, 
+                                        d2k=d2k, k2k=k2k,
+                                        basis='gaussian',
+                                        panels = surveydata$blockid,
+                                        suppress.printout = TRUE, 
+                                        chooserad = chooser, 
+                                        initialise = initialise,
+                                        initialKnots = kgnonzero,
+                                        plot=TRUE), silent=TRUE)
+  
+  
+  
+  if(inherits(salsa2dOutput_2donly, "try-error")){
+    cv_2donly<- Inf
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+  }else{
+    par(mfrow=c(1,2))
+    quilt.plot(surveydata$x.pos, surveydata$y.pos, surveydata$response)
+    quilt.plot(surveydata$x.pos, surveydata$y.pos, fitted(salsa2dOutput_2donly$bestModel))
+    sink.reset()
+    sink(file=sinkname, append=TRUE)
+    salsa2dOutput_2donly$fitStat
+    print(summary(salsa2dOutput_2donly$bestModel))
+    print(try(anova(salsa2dOutput_2donly$bestModel), silent=TRUE))
+    # ensure cv folds are the same for both 2d models
+    if(!inherits(salsa2dOutput, "try-error")){
+      salsa2dOutput_2donly$bestModel$cvfolds<- salsa2dOutput$bestModel$cvfolds
+    }
+    cv_2donly<-cv.gamMRSea(surveydata, salsa2dOutput_2donly$bestModel, K = 5, s.eed = 123)$delta[2]
+    # ensure cv folds are the same for best 1d model
+    best1doutput$cvfolds <- salsa2dOutput_2donly$bestModel$cvfolds
+    cv_1d<-cv.gamMRSea(surveydata, best1doutput, K = 5, s.eed = 123)$delta[2]
+  }
+  
+  
+  #' --------------------------------------------------------------
+  ## Select best model  ----------------------------------
+  #' --------------------------------------------------------------
+  
+  cat(paste0("\ncv 2d = ", cv_2d, 
+             "\ncv 2d only = ", cv_2donly, 
+             "\ncv 1d = ", cv_1d, 
+             '\n'))
+  
+  twodid<-which(c(cv_2d, cv_2donly, cv_1d)==min(c(cv_2d, cv_2donly, cv_1d)))
+  if(length(twodid)>1){
+    twodid <- twodid[1]
+  }
+  
+  if(twodid==1) best2doutput<- salsa2dOutput$bestModel
+  if(twodid==2) {
+    best2doutput<- salsa2dOutput_2donly$bestModel
+    best1doutput <- initialModel
+  }
+  if(twodid==3) best2doutput<- best1doutput
+  
+  
+  ## save table of CV scores
+  
+  cvtable <- tibble(Model = c("Initial Model", "Depth",
+                              "Distance to coast", "Salinity", 
+                              "Sea surface temperature", "Best 1D2D", 
+                              "2D Only"),
+                    `Number of parameters` = c(initialModel$rank, 
+                                               ifelse(inherits(salsa1doutput_depth, "try-error"), NaN, salsa1doutput_depth$bestModel$rank),
+                                               ifelse(inherits(salsa1doutput_d2coast, "try-error"), NaN, salsa1doutput_d2coast$bestModel$rank),
+                                               ifelse(inherits(salsa1doutput_salinity, "try-error"), NaN, salsa1doutput_salinity$bestModel$rank),
+                                               ifelse(inherits(salsa1doutput_sst, "try-error"), NaN, salsa1doutput_sst$bestModel$rank),
+                                               ifelse(inherits(salsa2dOutput, "try-error"), NaN, salsa2dOutput$bestModel$rank),
+                                               ifelse(inherits(salsa2dOutput_2donly, "try-error"), NaN, salsa2dOutput_2donly$bestModel$rank)),
+                    `Dispersion parameter` = c(summary(initialModel)$disp, 
+                                               ifelse(inherits(salsa1doutput_depth, "try-error"), NaN, summary(salsa1doutput_depth$bestModel)$disp),
+                                               ifelse(inherits(salsa1doutput_depth, "try-error"), NaN, summary(salsa1doutput_depth$bestModel)$disp),
+                                               ifelse(inherits(salsa1doutput_depth, "try-error"), NaN, summary(salsa1doutput_depth$bestModel)$disp),
+                                               ifelse(inherits(salsa1doutput_depth, "try-error"), NaN, summary(salsa1doutput_depth$bestModel)$disp),
+                                               ifelse(inherits(salsa2dOutput, "try-error"), NaN, summary(salsa2dOutput$bestModel)$disp),
+                                               ifelse(inherits(salsa2dOutput_2donly, "try-error"), NaN, summary(salsa2dOutput_2donly$bestModel)$disp)),
+                    `CV score` = c(cv_1d_initial, cv_1d_depth, 
+                                   cv_1d_d2coast, cv_1d_salinity, 
+                                   cv_1d_sst, cv_2d, cv_2donly))
+  
+  attr(cvtable, "Tweedie.param") <- profout$xi.max
+  
+  cvtable <- cvtable %>% arrange(`CV score`)
+  
+  saveRDS(cvtable, file=paste0(outfileS, "modeltable.rds"))
+  
+  
+  cat("\n # ~~~~~~~~~~ Best Overall model ~~~~~~~~~~~~~~#\n")
+  print(summary(best2doutput))
+  
+  saveRDS(best2doutput, file=paste0(outfileS, "bestmodel.rds"), compress='bzip2')	
+  
+  
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~
+  # ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  
+  # plot fitted 2d surface
+  p <- ggplot(surveydata) +
+    geom_point(aes(x = x.pos, y = y.pos, size = fitted(best2doutput)),shape=16, alpha=0.40) + 
+    scale_size_area() +
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(),  axis.text.x = element_text(size = 15), axis.text.y = element_text(size = 15),  legend.title=element_blank()) +
+    labs(x = "Easting",y = "Northing") + 
+    coord_equal()
+  
+  png(filename=paste(outfileS, 'best2dfits.png', sep=''), height=600, width=600)
+  print(p)
+  dev.off()   
+  
+  png(filename=paste(outfileS, 'best2dfits_quilt.png', sep=''), height=600, width=1000)
+  par(mfrow=c(1,2))
+  quilt.plot(surveydata$x.pos, surveydata$y.pos, surveydata$response, asp=1, main='Estimated Nhats')
+  #points(kg[best2doutput$splineParams[[1]]$knotPos,], pch='x', col="purple", cex=4)
+  quilt.plot(surveydata$x.pos, surveydata$y.pos, fitted(best2doutput), asp=1, main='1d/2d fitted model')
+  points(kg[best2doutput$splineParams[[1]]$knotPos,], pch='x', col="purple", cex=4)
+  dev.off()
+  
+  
+  p <- ggplot(surveydata) + 
+    geom_tile(aes(x=x.pos,y=y.pos, fill=log(NHAT+1), height=area/length, width=length)) + 
+    theme_bw() + 
+    theme(panel.grid.major = element_blank(),  axis.text.x = element_text(size = 15), axis.text.y = element_text(size = 15),  axis.title.x = element_blank(), axis.title.y = element_blank(), legend.title=element_blank()) + 
+    labs(x = "Easting", y = "Northing") + 
+    coord_equal() + 
+    scale_fill_gradientn(colours=mypalette, values = breaks,space = "Lab", na.value = "grey50", guide = "colourbar") #+
+  #geom_path(data=fortify(EI_owf), aes(x=long/1000, y=lat/1000, group=group), colour='black')
+  
+  png(filename=paste(outfileS, 'nhats_gg.png', sep=''), height=600, width=600)
+  print(p)
+  dev.off()
+  
+  p <- ggplot(surveydata) + 
+    geom_tile(aes(x=x.pos,y=y.pos, fill=fitted(best2doutput), height=area/length, width=length)) + 
+    theme_bw() + 
+    labs(x = "Easting", y = "Northing") + 
+    coord_equal() + 
+    scale_fill_gradientn(colours=mypalette, values = breaks,space = "Lab", na.value = "grey50", guide = "colourbar", name="Count") +
+    # geom_path(data=fortify(EI_owf), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+    theme(legend.text = element_text(size=10),
+          plot.title = element_text(size=14, face="bold"),
+          axis.text=element_text(size=12),
+          axis.title=element_text(size=12,face="bold"),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank()) +
+    ggtitle(paste0(speciesname, ": ", surveydata$year[1]))
+  
+  png(filename=paste(outfileS, 'best2dfits_gg.png', sep=''), height=600, width=600)
+  print(p)
+  dev.off()
+  
+  
+  # if 1d model is the best one:
+  png(filename=paste(outfileS, 'best1dfits_quilt.png', sep=''), height=600, width=1000)
+  par(mfrow=c(1,2))
+  quilt.plot(surveydata$x.pos, surveydata$y.pos, surveydata$response, asp=1, main='Estimated Nhats')
+  quilt.plot(surveydata$x.pos, surveydata$y.pos, fitted(best1doutput), asp=1, main='1d fitted model')
+  dev.off()
+  
+  
+  if(onedid!=1){
+    if(length(best1doutput$varshortnames)>0){
+      runPartialPlots(best1doutput, data = surveydata, 
+                      varlist.in=best1doutput$varshortnames, 
+                      type='link', 
+                      save = TRUE, label = paste(outfileS, 'partial', sep=''))  
+      runPartialPlots(best1doutput, data = surveydata, 
+                      varlist.in=best1doutput$varshortnames, 
+                      type='response', 
+                      save = TRUE, label = paste(outfileS, 'partial', sep=''))
+    }
+  }  
+  
+  #' --------------------------------------------------------------
+  ## Diagnostics  ----------------------------------
+  #' --------------------------------------------------------------
+  
+  par(mfrow=c(1,1))
+  
+  png(file=paste(outfileS, 'blockacf.png', sep=''), height=480, width=600)
+  runACF(surveydata$blockid, best2doutput, suppress.printout = TRUE)
+  dev.off()
+  
+  png(file=paste(outfileS, 'obsfits.png', sep=''), height=480, width=480)
+  plot(surveydata$response, fitted(best2doutput))
+  abline(0,1)
+  dev.off()
+  
+  p <- ggplot(surveydata) + 
+    geom_tile(aes(x=x.pos,y=y.pos, fill=residuals(best2doutput, type='pearson'), height=area/length, width=length)) + 
+    theme_bw() + theme(panel.grid.major = element_blank(),  axis.text.x = element_text(size = 15), axis.text.y = element_text(size = 15),  axis.title.x = element_blank(), axis.title.y = element_blank()) + 
+    labs(x = "Easting", y = "Northing") + 
+    coord_equal() + 
+    scale_fill_gradientn(colours=mypalette, values = breaks,space = "Lab", na.value = "grey50", guide = "colourbar", name = "Pearson \nResidual") +
+    #geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black')+
+    theme(legend.text = element_text(size=10),
+          plot.title = element_text(size=14, face="bold"),
+          axis.text=element_text(size=12),
+          axis.title=element_text(size=12,face="bold"),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank()) +
+    ggtitle(paste0(speciesname, ": ", surveydata$year[1]))
+  
+  png(filename=paste(outfileS, 'spatialresids.png', sep=''), height=600, width=600)
+  print(p)
+  dev.off()
+  
+  
+  png(file=paste(outfileS, 'fitsResids.png', sep=''), height=480, width=480)
+  par(mfrow=c(1,1))
+  plot(fitted(best2doutput), residuals(best2doutput, type='pearson'))
+  abline(h=0)
+  dev.off()
+  
+  
+  png(file=paste(outfileS, 'meanvar.png', sep=''), height=480, width=480)
+  plotMeanVar(best2doutput)
+  dev.off()
+  
+  
+  runDiagnostics(best2doutput, save = TRUE, label=outfileS)
+  
+  
+  sim <- generateNoise(n=100, 
+                       response = fitted(best2doutput), 
+                       family = "tweedie", phi=summary(best2doutput)$dispersion, xi=profout$xi.max)
+  
+  DHARMaRes = DHARMa::createDHARMa(simulatedResponse = sim, 
+                                   observedResponse = surveydata$response, 
+                                   fittedPredictedResponse = fitted(best2doutput), 
+                                   integerResponse = T)
+  
+  png(file=paste(outfileS, 'DHARMa_diagnostic.png', sep=''), height=480, width=800)
+  plot(DHARMaRes, quantreg = F)
+  dev.off()
+  
+  #' --------------------------------------------------------------
+  ## Predictions  ----------------------------------
+  #' --------------------------------------------------------------
+  
+  
+  p2k <- makeDists(datacoords = data.frame(preddata[,c('x.pos', 'y.pos')]), knotcoords = kg, knotmat = FALSE)$dataDist
+  #p2kmg <- makeDists(datacoords = data.frame(preddata_MG[,c('x.pos', 'y.pos')]), kg, knotmat = FALSE)$dataDist
+  
+  # ~~~~~~~~~~~~~~~~~~~~~~~~
+  # surveyarea_id<-chull(surveydata$x.pos, surveydata$y.pos)
+  # surveyarea_id<-c(surveyarea_id, surveyarea_id[1])
+  # surveypoly <- surveydata[surveyarea_id, c("x.pos", "y.pos")]
+  # preddata$surveycells <- ifelse(inout(preddata[,c('x.pos', 'y.pos')], surveypoly), 1, 0)
+  # 
+  # ~~~~~~~~~~~~~~~~~~~~~~~~
+  preddata$modelRef <- s
+  
+  preddata$preds <- as.numeric(predict(object=best2doutput, newdata = preddata, g2k = p2k, type = 'response'))
+  
+  radiiranges <- 1/(sqrt(2) * best2doutput$splineParams[[1]]$radii[best2doutput$splineParams[[1]]$radiusIndices])
+  
+  p <- ggplot() + geom_tile(data=preddata, aes(x=x.pos, y=y.pos, fill=preds, height=cellsize, width=cellsize)) + 
+    theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)') +
+    scale_fill_distiller(palette = "Spectral",name="Estimated Count") + 
+    #geom_path(data=fortify(EI_owf), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+    #geom_polygon(data=fortify(energyisland), aes(x=long/1000, y=lat/1000, group=group), colour='lightgreen', fill=NA, linewidth=1) +
+    #geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+    scale_size_area(name='Corrected Count', breaks=c(0.5, 1, 5, 10), labels=c('5', '10', '50', '100')) +
+    geom_point(data=filter(surveydata, response>0), aes(x.pos, y.pos, size=response/10), alpha=1/4, shape=1) + 
+    theme(legend.text = element_text(size=10),
+          plot.title = element_text(size=14, face="bold"),
+          axis.text=element_text(size=12),
+          axis.title=element_text(size=12,face="bold"),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank()) +
+    ggtitle(paste0(speciesname, ": ", surveydata$year[1])) +
+    geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000))
+  
+  png(file=paste(outfileS, 'spatial.png', sep=''), height=600, width=600)
+  try(print(p), silent=TRUE)
+  dev.off()
+  
+  
+  png(file=paste(outfileS, 'spatial_withradii.png', sep=''), height=600, width=600)
+  p <- p +  ggforce::geom_circle(data = kg[best2doutput$splineParams[[1]]$knotPos,], aes(x0 = x.pos, y0 = y.pos, r = radiiranges), colour="purple", alpha=1/2) +
+    geom_point(data = kg[best2doutput$splineParams[[1]]$knotPos,], aes(x = x.pos, y = y.pos), colour="purple", shape="x", cex=2)
+  try(print(p), silent=TRUE)
+  dev.off()
+  
+  # basis reference plot
+  kn = 250
+  p <- preddata %>%
+    mutate(rad2 = LRF.g(1, dists = p2k, radii = rs[2], aR = kn),
+           rad5 = LRF.g(1, dists = p2k, radii = rs[5], aR = kn),
+           rad9 = LRF.g(1, dists = p2k, radii = rs[9], aR = kn)) %>%
+    select(x.pos,y.pos, cellsize, rad2, rad5, rad9) %>%
+    tidyr::pivot_longer(cols = rad2:rad9, names_to = "Basis", values_to = "bval") %>%
+    ggplot() +
+    geom_tile(aes(x=x.pos, y=y.pos, fill=`bval`, height=cellsize, width=cellsize)) +
+    ggforce::geom_circle(data = data.frame(rbind(kg[kn,],kg[kn,],kg[kn,]), 
+                                           Basis = c("rad2", "rad5", "rad9"), 
+                                           rad = 1/(sqrt(2) * rs[c(2,5,9)])), 
+                         aes(x0 = x.pos, y0 = y.pos, r = rad), colour="purple", alpha=1/2) +
+    scale_fill_distiller(palette = "Spectral",name="Basis") +
+    facet_wrap(~Basis) + theme_bw() + coord_equal()
+  
+  
+  png(file=paste(outfileS, 'basisreference.png', sep=''), height=400, width=1000)
+  try(print(p), silent=TRUE)
+  dev.off()
+  
+  #' --------------------------------------------------------------
+  ## Uncertainty  ----------------------------------
+  #' --------------------------------------------------------------
+  
+  ### Bootstrap uncertainty:
+  
+  require(mvtnorm)
+  
+  #DStype = surveydata$DStype[1]
+  bootids<-c(1:500)
+  nsim=length(bootids)
+  bootpreds<-matrix(NA, ncol=nsim, nrow=nrow(preddata))
+  
+  for(i in 1:nsim){
+    if((i/50)%%1 == 0){cat(i, '\n')}else{cat('.')}
+    
+    b<-bootids[i]
+    
+    # read in nhat data
+    nhatbootdata<-read.csv(paste('Results/', species, '/bootstraps/nhatbootstrap_', b, '.csv', sep=''))
+    nhatbootdata$response<-round(nhatbootdata$NHAT)
+    
+    #nhatbootdata <- filter(nhatbootdata, SurveyID.x==s)
+    
+    if(is.null(best2doutput$splineParams)){
+      bootmodel<-update(best2doutput, .~., data=nhatbootdata)
+      bootmodel<-make.gamMRSea(bootmodel, panelid=nhatbootdata$unique.transect.label)
+    }else{
+      distMats <- makeDists(cbind(nhatbootdata$x.pos, nhatbootdata$y.pos), kg)
+      
+      d2k<-distMats$dataDist
+      k2k<-distMats$knotDist
+      
+      spupdate<-best2doutput$splineParams
+      spupdate[[1]]$knotDist<-k2k
+      spupdate[[1]]$dist<-d2k
+      
+      bootmodel<-update(best2doutput, .~., data=nhatbootdata, splineParams=spupdate)
+      bootmodel<-make.gamMRSea(bootmodel, panelid=nhatbootdata$unique.transect.label, splineParams = spupdate)
+    }
+    # 
+    est<- coefficients(bootmodel)
+    vbeta<-summary(bootmodel)$cov.robust
+    samplecoeff<-NULL
+    try(samplecoeff<- as.numeric(rmvnorm(1,est,vbeta, method='svd')), silent = TRUE)
+    if(is.null(samplecoeff)){
+      vbeta<-as.matrix(Matrix::nearPD(as.matrix(summary(bootmodel)$cov.robust))$mat)
+      samplecoeff<- as.numeric(rmvnorm(1,est,vbeta, method='svd'))
+    }
+    
+    
+    bootpreds[,i]<-predict.gamMRSea(object = bootmodel, newdata=preddata, g2k=p2k, type='response', coeff=samplecoeff)
+    
+    
+  }
+  
+  
+  cis<-makeBootCIs(bootpreds)
+  
+  boots<-bootpreds
+  rm(bootpreds)
+  
+  # 
+  ggplot() + 
+    geom_tile(data=preddata, aes(x=x.pos, y=y.pos, fill=cis[,1], height=cellsize, width=cellsize)) +
+    theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (lm)') +
+    scale_fill_distiller(palette = "Spectral",name="Counts") 
+  
+  ggplot() + 
+    geom_tile(data=preddata, aes(x=x.pos, y=y.pos, fill=cis[,2], height=cellsize, width=cellsize)) +
+    theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (lm)') +
+    scale_fill_distiller(palette = "Spectral",name="Counts")
+  
+  
+  testpredgrid <- preddata %>% 
+    mutate(year=countdata$year[1],
+           Lower2.5 = cis[,1], 
+           Upper97.5 = cis[,2], 
+           bootsd =  apply(boots, 1, sd),
+           bootmean = apply(boots, 1, mean),
+           bootmedian = apply(boots, 1, median),
+           cv = bootsd / bootmean,
+           data.frame(boots))
+  
+  png(file=paste(outfileS, 'spatial-cv.png', sep=''), height=600, width=600)
+  p <- ggplot() + 
+    geom_tile(data=testpredgrid, 
+              aes(x=x.pos, y=y.pos, fill=cv, height=cellsize, width=cellsize)) + 
+    theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)') +
+    scale_fill_gradient(name='Coefficient of\nVariation',low = 'white', high='red') + 
+    scale_size_area(name='Raw Count', 
+                    breaks=c(1, 5, 10, 50), 
+                    labels=c('10', '50', '100', '500')) +
+    geom_point(data=filter(surveydata, response==0), 
+               aes(x.pos, y.pos), colour="grey", size=0.1) + 
+    geom_point(data=filter(surveydata, response>0), 
+               aes(x.pos, y.pos, size=response), colour="black", shape=1) +
+    theme(legend.text=element_text(size=10),
+          plot.title = element_text(size=14, face="bold"),
+          axis.text=element_text(size=12),
+          axis.title=element_text(size=12,face="bold"),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank()) +
+    ggtitle(paste0(speciesname, ": ", surveydata$year[1])) +
+    geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000))
+  try(print(p), silent=TRUE)
+  dev.off()
+  
+  saveRDS(testpredgrid, file=paste0(outfileS, "predgrid.rds"))
+  
+  if(s %in% unique(allpredgrids$modelRef)){
+    allpredgrids[which(allpredgrids$modelRef == s),] <- testpredgrid
+  }else{
+    allpredgrids <- rbind(allpredgrids, testpredgrid)
+  }
+  
+  
+  #' --------------------------------------------------------------
+  ## Summaries ----------------------------------
+  #' --------------------------------------------------------------
+  
+  
+  cat("\n\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+  cat(" ~~~~~~ SUMMARIES ~~~~~~~~~~~~~\n")
+  cat(" ~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+  
+  
+  cat("\nTotal Segments:\n")
+  print(nrow(surveydata))
+  
+  cat("\n Total Segments with sightings:\n")
+  print(data.frame(filter(surveydata, response>0) %>% summarise(n=n(), totbirds=sum(response))))
+  
+  
+  surveyests <- testpredgrid %>%
+    #filter(surveycells == 1) %>%
+    summarise(count=sum(preds), 
+              count.lower=sum(Lower2.5),  
+              count.upper=sum(Upper97.5),
+              density = count/sum(area),
+              density.lower=count.lower/sum(area),  
+              density.upper=count.upper/sum(area))
+  
+  cat("\n Population estimates for survey\n")
+  print(data.frame(surveyests))
+  
+  cat("\n Compare with NHATS\n")
+  print(data.frame(Count = sum(surveydata$NHAT), Density = sum(surveydata$NHAT)/sum(surveydata$area)))
+  
+  # cat("\n Compare with fitted values \n")
+  # print(data.frame(Count = sum(fitted(best2doutput)), Density = sum(fitted(best2doutput))/sum(surveydata$area)))
+  
+  surveyests.m <- testpredgrid %>%
+    group_by(month) %>%
+    summarise(count=sum(preds), 
+              count.lower=sum(Lower2.5),  
+              count.upper=sum(Upper97.5),
+              density = count/sum(area),
+              density.lower=count.lower/sum(area),  
+              density.upper=count.upper/sum(area))
+  
+  cat("\n Population estimates for survey by month\n")
+  print(data.frame(surveyests.m))
+  
+  
+  rm(best1doutput)
+  rm(best2doutput)
+  sink()
+}
+
+
+sink.reset()
+
+saveRDS(allpredgrids, file=paste0(outfile, 'allsurvey_predictions.rds'))
+
+#' --------------------------------------------------------------
+# 6. OUTPUTS  ----------------------------------
+#' --------------------------------------------------------------
+
+allpredgrids <- readRDS(file=paste0(outfile, 'allsurvey_predictions.rds'))
+
+
+### Prediction plots
+allpredgrids$modelRef <- factor(allpredgrids$modelRef, levels=unique(allpredgrids$modelRef))
+#allpredgrids$date <- as.Date(allpredgrids$year, format="%Y%m%d")										
+
+allpredgrids$plotid <- paste0(allpredgrids$modelRef, allpredgrids$month)
+#filter(allpredgrids, plotid %in% c("All4", "All5", "44", "55"))
+
+plotcountdata <- select(countdata, x.pos, y.pos, response, month) 
+plotcountdata <- rbind(data.frame(plotcountdata, modelRef = plotcountdata$month), data.frame(plotcountdata, modelRef = "All"))
+plotcountdata$plotid <- paste0(plotcountdata$modelRef, plotcountdata$month)
+
+png(file=paste(outfile, 'spatial_allsurveys.png', sep=''), height=700, width=900)
+ggplot() + 
+  geom_tile(data= filter(allpredgrids, plotid %in% c("All4", "All5", "44", "55")),  
+            aes(x=x.pos, y=y.pos, fill=preds, height=cellsize, width=cellsize)) +
+  facet_wrap(~modelRef, ncol=2) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  scale_size_area(name='Corrected Count', breaks=c(1, 5, 10, 50), labels=c('10', '50', '100', '500')) +
+  scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
+  geom_point(data=filter(plotcountdata, response>0), 
+             aes(x.pos, y.pos, size=response/10), alpha=1/4, shape=1) + 
+  geom_point(data=filter(plotcountdata, response==0), 
+             aes(x.pos, y.pos, size=0.05), alpha=1/4, shape='.') +
+  theme(legend.text=element_text(size=10),
+        plot.title = element_text(size=14, face="bold"),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=12,face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  ggtitle(speciesname) +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000))
+dev.off()
+
+# surveys<-unique(allpredgrids$SurvID)
+# for(p in 1:length(surveys)){
+#   splot <- ggplot() + geom_tile(data=filter(allpredgrids, MGsurvMGcells!="10", SurvID==surveys[p]), aes(x=x.pos, y=y.pos, fill=preds, height=cellsize, width=cellsize)) + 
+#     theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)') +
+#     geom_polygon(aes(long, lat, group=id), fill='grey', data=coast_km)+ 
+#     scale_fill_distiller(palette = "Spectral",name="Estimated Count") + 
+#     scale_size_area(name='Corrected Count', breaks=c(1, 5, 10, 50), labels=c('10', '50', '100', '500')) +
+#     geom_point(data=filter(countdata, SurvID == surveys[p], response>0), aes(x.pos, y.pos, size=(response/10)*2), alpha=1/2, shape=1)+
+#     geom_point(aes(coords.x1, coords.x2), data=data.frame(coordinates(Anholt_km)), shape=2, colour='coral', size=0.2) +
+#     geom_polygon(aes(long, lat, group=id), fill=NA, data=OWFp_km, colour='mediumvioletred', size=1)+
+#     theme(legend.text=element_text(size=10),
+#           axis.text=element_text(size=12),
+#           axis.title=element_text(size=12,face="bold")) +
+#     ggtitle(paste(surveys[p]))
+#   
+#   png(file=paste(outfile, surveys[p],'-spatial.png', sep=''), height=600, width=600)
+#   print(splot)
+#   dev.off()
+# }							
+
+### CV plots
+
+png(file=paste(outfile, 'spatial-cv.png', sep=''), height=700, width=900)
+ggplot() + 
+  geom_tile(data= filter(allpredgrids, plotid %in% c("All4", "All5", "44", "55")), aes(x=x.pos, y=y.pos, fill=cv, height=cellsize, width=cellsize)) +
+  facet_wrap(~modelRef, ncol=2) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  scale_size_area(name='Corrected Count', breaks=c(1, 5, 10, 50), labels=c('10', '50', '100', '500')) +
+  scale_fill_gradient(name='Coefficient of\nVariation',low = 'white', high='red') + 
+  geom_point(data=filter(plotcountdata, response>0), aes(x.pos, y.pos, size=response/10), alpha=1/4, shape=1) +
+  theme(legend.text=element_text(size=10),
+        plot.title = element_text(size=14, face="bold"),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=12,face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  ggtitle(speciesname) +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000))
+dev.off()
+
+
+thresh <- allpredgrids %>% pull(preds) %>% quantile(., prob=c(0.25))
+
+# allpredgrids$cvcut<-ifelse(allpredgrids$cv>1, 1, allpredgrids$cv)
+# 
+png(file=paste(outfile, 'spatial-cvcut.png', sep=''), height=700, width=900)
+ggplot() + 
+  geom_tile(data= filter(allpredgrids, preds>thresh, plotid %in% c("All4", "All5", "44", "55")),
+            aes(x=x.pos, y=y.pos, fill=cv, height=cellsize, width=cellsize)) +
+  facet_wrap(~modelRef, ncol=3) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  scale_size_area(name='Corrected Count', breaks=c(0.1, 0.2, 0.5, 1, 5, 10), labels=c('1', '2', '5', '10', '50', '100')) +
+  scale_fill_gradient(name='Coefficient of\nVariation',low = 'white', high='red') + 
+  geom_point(data=filter(plotcountdata, response>0), aes(x.pos, y.pos, size=response/10), alpha=1/4, shape=1) +
+  theme(legend.text=element_text(size=10),
+        plot.title = element_text(size=14, face="bold"),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=12,face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  ggtitle(speciesname) +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000))
+dev.off()
+
+#' --------------------------------------------------------------
+# 7. CV score checking  ----------------------------------
+#' --------------------------------------------------------------
+
+`M-4-bestmodel` <- readRDS(paste0(outfile, "-4-bestmodel.rds"))
+`M-5-bestmodel` <- readRDS(paste0(outfile, "-5-bestmodel.rds"))
+`All-bestmodel` <- readRDS(paste0(outfile, "-All-bestmodel.rds"))
+
+cv.m4 <- cv.gamMRSea(data=`M-4-bestmodel`$data, `M-4-bestmodel`, K=5)$delta[2]
+cv.m5 <- cv.gamMRSea(data=`M-5-bestmodel`$data, `M-5-bestmodel`, K=5)$delta[2]
+cv.all <- cv.gamMRSea(data=`All-bestmodel`$data, `All-bestmodel`, K=5)$delta[2]
+
+m.sizes = table(`All-bestmodel`$data$month)
+cv.m4m5 <- (cv.m4*m.sizes[1] + cv.m5*m.sizes[2])/sum(m.sizes)
+
+`M-4-modeltable` <- readRDS(paste0(outfile, "-4-modeltable.rds"))
+`M-5-modeltable` <- readRDS(paste0(outfile, "-5-modeltable.rds"))
+`All-modeltable` <- readRDS(paste0(outfile, "-All-modeltable.rds"))
+
+OverallCVtable <- bind_rows(`M-4-modeltable` %>% 
+                              slice(1) %>% 
+                              mutate(Name = "Month 4"),
+                            `M-5-modeltable` %>% 
+                              slice(1) %>%
+                              mutate(Name = "Month 5"),
+                            `All-modeltable` %>%
+                              slice(1) %>%
+                              mutate(Name = "Combined")) %>%
+  relocate(Name, .before = Model) %>%
+  bind_rows(tibble(Name = "Month 4 and 5 blend",
+                   Model = "-", 
+                   `Number of parameters` = sum(.$`Number of parameters`[1:2]),
+                   `Dispersion parameter` = NA,
+                   `CV score` = cv.m4m5))
+
+saveRDS(OverallCVtable, file=paste0(outfileS, "OverallCVtable.rds"))
+
+if(cv.all < cv.m4m5){
+  best = c("All4", "All5")
+  fig.h = 700
+  fig.w = 900
+}else{
+  best = c("44", "55")
+  fig.h = 600
+  fig.w = 1200
+}
+
+png(file=paste(outfile, 'spatial_bestoverall.png', sep=''), height=fig.h, width=fig.w)
+ggplot() + 
+  geom_tile(data= filter(allpredgrids, plotid %in% best),  
+            aes(x=x.pos, y=y.pos, fill=preds, height=cellsize, width=cellsize)) +
+  facet_wrap(~modelRef, ncol=2) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  scale_size_area(name='Corrected Count', breaks=c(1, 5, 10, 50), labels=c('10', '50', '100', '500')) +
+  scale_fill_distiller(palette = "Spectral",name="Estimated Count") +
+  geom_point(data=filter(plotcountdata, response>0, plotid %in% best), 
+             aes(x.pos, y.pos, size=response/10), alpha=1/4, shape=1) + 
+  geom_point(data=filter(plotcountdata, response==0, plotid%in% best), 
+             aes(x.pos, y.pos, size=0.05), alpha=1/4, shape='.') +
+  theme(legend.text=element_text(size=10),
+        plot.title = element_text(size=14, face="bold"),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=12,face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  ggtitle(speciesname) +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000))
+dev.off()
+
+
+
+png(file=paste(outfile, 'spatial-bestoverall-cv.png', sep=''), height=fig.h, width=fig.w)
+ggplot() + 
+  geom_tile(data= filter(allpredgrids, plotid %in% best), aes(x=x.pos, y=y.pos, fill=cv, height=cellsize, width=cellsize)) +
+  facet_wrap(~modelRef, ncol=2) +
+  theme_bw() + coord_equal() + xlab('Easting (km)') + ylab('Northing (km)')  + 
+  scale_size_area(name='Corrected Count', breaks=c(1, 5, 10, 50), labels=c('10', '50', '100', '500')) +
+  scale_fill_gradient(name='Coefficient of\nVariation',low = 'white', high='red') + 
+  geom_point(data=filter(plotcountdata, response>0, plotid %in% best), aes(x.pos, y.pos, size=response/10), alpha=1/4, shape=1) +
+  theme(legend.text=element_text(size=10),
+        plot.title = element_text(size=14, face="bold"),
+        axis.text=element_text(size=12),
+        axis.title=element_text(size=12,face="bold"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  ggtitle(speciesname) +
+  geom_path(data=studyarea.coord, aes(x=X/1000, y=Y/1000))
+dev.off()
+
+
+
+#' --------------------------------------------------------------
+# 8. Overall summaries  ----------------------------------
+#' --------------------------------------------------------------
+
+sinkname <- paste0(outfile, "-summary.txt")
+sink(file=sinkname)
+
+cat("\n\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+cat(" ~~~~~~ SUMMARIES ~~~~~~~~~~~~~\n")
+cat(" ~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+
+cat("\nSurveys per month\n")
+print(table(countdata$year, countdata$month))
+
+cat("\nSurveys per year month\n")
+print(table(countdata$year, countdata$yearmonth))
+
+
+cat("\nTotal Segments:\n")
+print(table(countdata$date))
+
+cat("\n Total Segments with sightings:\n")
+print(data.frame(filter(countdata, response>0) %>% 
+                   group_by(date) %>% 
+                   summarise(n=n(), totbirds=sum(response))))
+
+
+surveyests <- filter(allpredgrids,plotid %in% c("All4", "All5", "44", "55")) %>%
+  group_by(modelRef, month) %>% 
+  summarise(areakm = sum(area),
+            count=sum(preds), 
+            count.lower=sum(Lower2.5),  
+            count.upper=sum(Upper97.5),
+            density = count/sum(area),
+            density.lower=count.lower/sum(area),  
+            density.upper=count.upper/sum(area)) %>%
+  # mutate(date = factor(date, levels=unique(countdata$date))) %>%
+  arrange(modelRef)
+
+surveyests <- surveyests %>%
+  bind_rows(., filter(allpredgrids, modelRef == "All") %>%
+              summarise(modelRef = first(modelRef),
+                        month = 45,
+                        areakm = sum(area),
+                        count=sum(preds), 
+                        count.lower=sum(Lower2.5),  
+                        count.upper=sum(Upper97.5),
+                        density = count/sum(area),
+                        density.lower=count.lower/sum(area),  
+                        density.upper=count.upper/sum(area))
+  )
+
+
+cat("\n Population estimates per survey\n")
+print(data.frame(surveyests))
+
+cat("\n Overall CV table \n")
+print(data.frame(OverallCVtable))
+
+sink()
+
+surveyests<-data.frame(surveyests)
+surveyests[,3:6] <- round(surveyests[,3:6], digits=0)
+surveyests[,7:9] <- round(surveyests[,7:9], digits=1)
+surveyests$CIc <- paste0("(", surveyests$count.lower, ", ", surveyests$count.upper, ")")
+surveyests$CId <- paste0("(", surveyests$density.lower, ", ", surveyests$density.upper, ")")
+
+surveyeststable <- surveyests[,c(1,2,3,4,10, 7, 11)]
+names(surveyeststable) <- c("Model", "Month", "Area (km^2)" , "Estimated Count", "95% CI Count", "Estimated Density", "95% CI Density")
+
+write.csv(surveyeststable, file=paste0(outfile, "surveyests.csv"), row.names=FALSE)
+
+#' --------------------------------------------------------------
+# 9. store predictions  ----------------------------------
+#' --------------------------------------------------------------
+
+saveRDS(allpredgrids, file=paste0(outfile, 'allsurvey_predictions.rds'))
+
+predsforib <- allpredgrids %>% 
+  filter(plotid %in% best) %>% 
+  select(1:Depth, x.pos:cv) 
+write.csv(predsforib,file=paste0(outfile, "Preds_bestoverall.csv"), row.names=FALSE)
+# predsforib <- filter(allpredgrids, surveycells==1)
+# write.csv(predsforib,file=paste0(outfile, "Preds_surveys.csv"), row.names=FALSE)
+
+
+
+# # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# # plot survey estimates
+# # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# surveyinfo <- countdata %>% 
+#   group_by(year) %>%
+#   summarise(year=first(year), month=first(month), day=first(day(date)), date=first(date))
+# 
+# surveyests<-left_join(surveyests, surveyinfo)
+# 
+# estsplot <- ggplot(filter(surveyests)) + 
+#   geom_point(aes(date, count, colour=as.factor(year))) +
+#   geom_segment(aes(x=date, y=count.lower, xend=date, yend=count.upper, colour=as.factor(year))) +
+#   ylab("Estimated Count") + xlab("Date") + 
+#   theme_bw() + theme(axis.text.x = element_text(angle=45, vjust=0.5)) +
+#   scale_color_discrete(name="Year")+
+#   ggtitle(speciesname)+
+#   theme(legend.text=element_text(size=10),
+#         plot.title = element_text(size=14, face="bold"),
+#         axis.text=element_text(size=12),
+#         axis.title=element_text(size=12,face="bold"))
+# 
+# png(file=paste(outfile, 'surveyCount.png', sep=''), height=400, width=600)
+# print(estsplot)
+# dev.off()
+# 
+# 
+# densplot <- ggplot(filter(surveyests)) + 
+#   geom_point(aes(date, density, colour=as.factor(year))) +
+#   geom_segment(aes(x=date, y=density.lower, xend=date, yend=density.upper, colour=as.factor(year))) +
+#   ylab("Estimated Density") + xlab("Date") + 
+#   theme_bw() + theme(axis.text.x = element_text(angle=45, vjust=0.5)) +
+#   scale_color_discrete(name="Year") +
+#   ggtitle(speciesname) +
+#   theme(legend.text=element_text(size=10),
+#         plot.title = element_text(size=14, face="bold"),
+#         axis.text=element_text(size=12),
+#         axis.title=element_text(size=12,face="bold"))
+# 
+# png(file=paste(outfile, 'surveyDensity.png', sep=''), height=400, width=600)
+# print(densplot)
+# dev.off()
+# 
+# # ~~~~~~~~~~~~~~~~~~~~~~~~~
+# # ~~~~ Persistence all ~~~~~~~~
+# # ~~~~~~~~~~~~~~~~~~~~~~~~~
+# 
+# #require(rgdal)
+# #wf <- readOGR(dsn='Data/shapefiles', layer="Omoe")
+# #wf_km <- spTransform(wf, CRSobj = CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=km +no_defs"))
+# 
+# allpredgrids <- readRDS(paste0(outfile, "allsurvey_predictions.rds"))
+# 
+# #studyarea <- readOGR(dsn='Data/shapefiles', layer="EE_Study_AR_OnlyLand_Cleaned")
+# 
+# 
+# # surveypreds<-filter(allpredgrids, surveycells==1)
+# # 
+# # numsurv <- length(unique(allpredgrids$date))
+# # 
+# # indexkeep <- surveypreds %>% 
+# #   group_by(index) %>% 
+# #   summarise(n=n()) %>% 
+# #   filter(n==numsurv) %>% 
+# #   pull(index)
+# 
+# # MVpreds <- filter(surveypreds, index %in% indexkeep)
+# 
+# bootcols<-grep("X.", names(allpredgrids))[-1]
+# nboots <- length(bootcols)
+# boots<-allpredgrids[,bootcols]
+# 
+# 
+# meandens <- mean(allpredgrids$preds)
+# 
+# persistfun<-function(x, meandens){
+#   ifelse(x>meandens, 1, 0)
+# }
+# 
+# test <- apply(boots, 2, persistfun, meandens=meandens)
+# allpredgrids$persist <- apply(test, 1, sum)
+# 
+# persistdata<-tidyr::pivot_wider(data = allpredgrids, 
+#                                 id_cols = c(POINT_X, POINT_Y, area, cellsize,x.pos, y.pos), 
+#                                 names_from = date, 
+#                                 names_prefix = "Persist_", 
+#                                 values_from = persist) %>% 
+#   rowwise() %>% 
+#   mutate(Persistence= sum(c_across(starts_with("Persist_")))/(length(unique(allpredgrids$date)) * nboots))
+# 
+# persistplot <- ggplot() + 
+#   geom_tile(data=persistdata, aes(x=x.pos, y=y.pos,fill=Persistence, height=cellsize, width=cellsize))  + theme_bw() + xlab('Easting (Km)') + 
+#   ylab('Northing (Km)') + 
+#   coord_equal() + 
+#   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+#   geom_path(data=fortify(EI_owf), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+#   geom_polygon(data=fortify(energyisland), aes(x=long/1000, y=lat/1000, group=group), colour='lightgreen', fill=NA, linewidth=1) +
+#   #geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+#   #geom_polygon(aes(long, lat, group=id), fill=NA, data=wf_km, colour='mediumvioletred', size=1) +
+#   scale_fill_distiller(palette='Spectral', name='Persistence',limits = c(0,1)) +
+#   theme(legend.text=element_text(size=10),
+#         axis.text=element_text(size=12),
+#         axis.title=element_text(size=12,face="bold"),
+#         plot.title = element_text(size=12, face="bold")) +
+#   ggtitle(speciesname)
+# 
+# png(file=paste(outfile, 'persistence_all.png', sep=''), height=600, width=700)
+# print(persistplot)
+# dev.off()
+# 
+# saveRDS(persistdata,file=paste0(outfile, "persistencedata_all.rds"))
+# 
+# write.csv(persistdata,file=paste0(outfile, "persistencedata_all.csv"), row.names=FALSE)
+# 
+# 
+# # # # ~~~~~~~~~~~~~~~~~~~~~~~~~
+# # # # ~~~~ Persistence - MV ~~~~~~~~
+# # # # ~~~~~~~~~~~~~~~~~~~~~~~~~
+# # # 
+# # surveypreds<-filter(allpredgrids, surveycells==1)
+# # 
+# # MVpreds <- filter(surveypreds, SurveyID.x %in% c("OM_MV2008", "OM_M2012", "OM_MV2013", "OM_MV2016", "OM_M2018", "OM_MV2019"))
+# # 
+# # numsurv <- length(unique(MVpreds$SurveyID.x))
+# # 
+# # indexkeep <- MVpreds %>% 
+# #   group_by(index) %>% 
+# #   summarise(n=n()) %>% 
+# #   filter(n==numsurv) %>% 
+# #   pull(index)
+# # 
+# # #indexkeep <- MVpreds %>% group_by(index) %>% summarise(n=n()) %>% filter(n==6) %>% pull(index)
+# # 
+# # MVpreds <- filter(MVpreds, index %in% indexkeep)
+# # 
+# # bootcols<-grep("X.", names(MVpreds))[-1]
+# # nboots <- length(bootcols)
+# # boots<-MVpreds[,bootcols]
+# # 
+# # 
+# # meandens <- mean(MVpreds$preds)
+# # 
+# # persistfun<-function(x, meandens){
+# #   ifelse(x>meandens, 1, 0)
+# # }
+# # 
+# # test <- apply(boots, 2, persistfun, meandens=meandens)
+# # MVpreds$persist <- apply(test, 1, sum)
+# # 
+# # persistdata<-tidyr::pivot_wider(data = MVpreds,
+# #                                 id_cols = c(X_COORD, Y_COORD, area, cellsize,x.pos, y.pos),
+# #                                 names_from = SurveyID.x,
+# #                                 names_prefix = "Persist_",
+# #                                 values_from = persist) %>%
+# #   rowwise() %>%
+# #   mutate(Persistence= sum(c_across(starts_with("Persist_")))/(length(unique(MVpreds$SurveyID.x)) * nboots))
+# # 
+# # persistplot <- ggplot() +
+# #   geom_tile(data=persistdata, aes(x=x.pos, y=y.pos,fill=Persistence, height=cellsize, width=cellsize))  + theme_bw() + xlab('Easting (Km)') +
+# #   ylab('Northing (Km)') +
+# #   coord_equal() +
+# #   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+# #   geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+# #   geom_polygon(aes(long, lat, group=id), fill=NA, data=wf_km, colour='mediumvioletred', size=1) +
+# #   scale_fill_distiller(palette='Spectral', name='Persistence',limits = c(0,1)) +
+# #   theme(legend.text=element_text(size=10),
+# #         axis.text=element_text(size=12),
+# #         axis.title=element_text(size=12,face="bold"),
+# #         plot.title = element_text(size=12, face="bold")) +
+# #   ggtitle(speciesname)
+# # 
+# # png(file=paste(outfile, 'persistence_MV.png', sep=''), height=600, width=900)
+# # print(persistplot)
+# # dev.off()
+# # 
+# # saveRDS(persistdata,file=paste0(outfile, "persistencedata_MV.rds"))
+# # 
+# # write.csv(persistdata,file=paste0(outfile, "persistencedata_MV.csv"), row.names=FALSE)
+# # 
+# # 
+# # # # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# # # # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# # preds2021 <- filter(surveypreds, SurveyID.x %in% surveys[24:37])
+# # 
+# # indexkeep <- preds2021 %>%
+# #   group_by(index) %>%
+# #   summarise(n=n()) %>%
+# #   filter(n==length(unique(preds2021$SurveyID.x))) %>%
+# #   pull(index)
+# # 
+# # preds2021 <- filter(preds2021, index %in% indexkeep)
+# # 
+# # bootcols<-grep("X.", names(preds2021))[-1]
+# # nboots <- length(bootcols)
+# # boots<-preds2021[,bootcols]
+# # 
+# # 
+# # meandens <- mean(preds2021$preds)
+# # 
+# # persistfun<-function(x, meandens){
+# #   ifelse(x>meandens, 1, 0)
+# # }
+# # 
+# # test <- apply(boots, 2, persistfun, meandens=meandens)
+# # preds2021$persist <- apply(test, 1, sum)
+# # 
+# # persistdata<-tidyr::pivot_wider(data = preds2021,
+# #                                 id_cols = c(X_COORD, Y_COORD, area, cellsize,x.pos, y.pos),
+# #                                 names_from = SurveyID.x,
+# #                                 names_prefix = "Persist_",
+# #                                 values_from = persist) %>%
+# #   rowwise() %>%
+# #   mutate(Persistence= sum(c_across(starts_with("Persist_")))/(length(unique(preds2021$SurveyID.x)) * nboots))
+# # 
+# # persistplot <- ggplot() +
+# #   geom_tile(data=persistdata, aes(x=x.pos, y=y.pos,fill=Persistence, height=cellsize, width=cellsize))  + theme_bw() + xlab('Easting (Km)') +
+# #   ylab('Northing (Km)') +
+# #   coord_equal() +
+# #   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+# #   geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+# #   geom_polygon(aes(long, lat, group=id), fill=NA, data=wf_km, colour='mediumvioletred', size=1) +
+# #   scale_fill_distiller(palette='Spectral', name='Persistence',limits = c(0,1)) +
+# #   theme(legend.text=element_text(size=10),
+# #         axis.text=element_text(size=12),
+# #         axis.title=element_text(size=12,face="bold"),
+# #         plot.title = element_text(size=12, face="bold")) +
+# #   ggtitle(speciesname)
+# # 
+# # png(file=paste(outfile, 'persistence_2021.png', sep=''), height=600, width=900)
+# # print(persistplot)
+# # dev.off()
+# # 
+# # saveRDS(persistdata,file=paste0(outfile, "persistencedata_2021.rds"))
+# # 
+# # write.csv(persistdata,file=paste0(outfile, "persistencedata_2021.csv"), row.names=FALSE)
+# # 
+# # 
+# # save.image(file=paste(outfile, 'spatialWorkspace.RData', sep=''), compress = 'bzip2')
+# 
+# 
+# 
+# # # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# # # ~~~~~~~~ SCENARIOs ~~~~~~~~~~~
+# # # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# # setwd('C:\\Users\\lass\\University of St Andrews\\MLM_LSHjointwork - Documents\\research\\Aarhus - Ib\\European Energy WF')
+# # 
+# # species<-'longtails'
+# # speciesname<-'Long-tailed Ducks'
+# # 
+# # outfile<- paste('Results/', species, '/', species, sep='')
+# # #~~~~~~~~~~~~~~~~~
+# # require(rgdal)
+# # wf <- readOGR(dsn='Data/shapefiles', layer="Omoe")
+# # wf_km <- spTransform(wf, CRSobj = CRS("+proj=utm +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=km +no_defs"))
+# # 
+# # allpredgrids <- readRDS(paste0(outfile, "allsurvey_predictions.rds"))
+# # 
+# # library(dplyr)
+# # # # load dispersion parameters from excel spreadsheet
+# # # dispParams <- readxl::read_xlsx(path = "Results/ModelResults_bysurvey_allspecies.xlsx", sheet = "Scoter", skip = 1) %>% 
+# # #   rename(SurveyID.x = `...1`) %>%
+# # #   select(SurveyID.x, Dispersion) 
+# # # # join to data so that each survey has a dispersion param
+# # # allpredgrids <- left_join(allpredgrids, dispParams)
+# # 
+# # 
+# # studyarea <- readOGR(dsn='Data/shapefiles', layer="EE_Study_AR_OnlyLand_Cleaned")
+# # 
+# # # add distance from WF boundary
+# # library(rgeos)
+# # library(splancs)
+# # library(ggplot2)
+# # spts <- SpatialPoints(allpredgrids[,c("x.pos", "y.pos")])
+# # proj4string(spts) <- proj4string(wf_km)
+# # allpredgrids$dist2WF <- apply(gDistance(spts, wf_km, byid=TRUE), 2, min)
+# # 
+# # # identify points inside/outside WF
+# # wfpoints<- coordinates(wf_km@polygons[[1]]@Polygons[[1]])
+# # allpredgrids$inWF <- ifelse(inout(allpredgrids[,c("x.pos", "y.pos")], wfpoints), 1, 0)
+# # 
+# # # ~~~~~~~~~~~~~~~~~
+# # # ~~~ SCENARIO 1 ~~~~
+# # # ~~~~~~~~~~~~~~~~~
+# # buf <- 2
+# # decline <- 50
+# # 
+# # # make buffer on windfarm footprint
+# # OWFp_km_buf<- raster::buffer(wf_km, width=buf)
+# # eventsite <- fortify(filter(fortify(OWFp_km_buf), hole==FALSE))[,1:2]
+# # names(eventsite) <- c("x.pos", "y.pos")
+# # 
+# # allpredgrids$inWFfpbuf <- ifelse(inout(allpredgrids[,c("x.pos", "y.pos")], eventsite)==TRUE, 1, 0)
+# # 
+# # ggplot(filter(allpredgrids, SurveyID.x == "OM_MV2019")) + geom_point(aes(x.pos, y.pos, colour=inWF))
+# # ggplot(filter(allpredgrids, SurveyID.x == "OM_MV2019")) + geom_point(aes(x.pos, y.pos, colour=inWFfpbuf))
+# # 
+# # 
+# # # table of counts in wf area
+# # allpredgrids %>% 
+# #   group_by(inWF, SurveyID.x) %>% 
+# #   summarise(n=n(), 
+# #             Count = sum(preds), 
+# #             areakmsq = sum(area), 
+# #             density = Count/areakmsq)
+# # allpredgrids %>% 
+# #   group_by(inWFfpbuf, SurveyID.x) %>% 
+# #   summarise(n=n(), 
+# #             Count = sum(preds), 
+# #             areakmsq = sum(area), 
+# #             density = Count/areakmsq)
+# # 
+# # boots<-allpredgrids[, 24:523] 
+# # 
+# # allpredgrids %>% 
+# #   mutate(boot1 = boots[,1]) %>%
+# #   group_by(inWFfpbuf) %>% 
+# #   summarise(n=n(),
+# #             Count = sum(boot1), 
+# #             areakmsq = sum(area), 
+# #             density = Count/areakmsq)
+# # 
+# # # Implement scenario
+# # noneventcells <- ifelse(inout(allpredgrids[,c("x.pos", "y.pos")], eventsite, quiet=TRUE), 0, 1)
+# # nonaffect <- which(noneventcells==1)
+# # 
+# # beta0 = (100-decline)/100
+# # beta1 = (1-beta0)/(buf - 0)
+# # postboots = boots * NA
+# # #preboots = boots * NA
+# # nboots <- ncol(boots)
+# # 
+# # #set.seed(5)
+# # for(i in 1:nboots){
+# #   fitbefore = fitafter = boots[,i]
+# #   # impose change
+# #   fitafter[-nonaffect] <- fitbefore[-nonaffect] * (beta0 + (allpredgrids$dist2WF[-nonaffect] * beta1))
+# #   
+# #   postboots[,i] <- fitafter
+# #   
+# #   # sample from OD poisson
+# #   # postboots[,i] <- MRSea::rpois.od(length(fitafter), fitafter, d=allpredgrids$Dispersion)
+# #   # # store
+# #   # preboots[,i] <- MRSea::rpois.od(length(fitbefore), fitbefore, d=allpredgrids$Dispersion)
+# # }
+# # 
+# # 
+# # 
+# # # look at plot of first bootstrap
+# # plotdat<-rbind(data.frame(allpredgrids[,c("SurveyID.x", "surveycells", "x.pos", "y.pos", "area")], event="", preds=boots[,10]), 
+# #                data.frame(allpredgrids[,c("SurveyID.x", "surveycells", "x.pos", "y.pos", "area")], event="50% decline; 2km buffer", preds=postboots[,10]))
+# # 
+# # 
+# # cid <- "OM_MV2019"
+# # scenarioplot <- ggplot() + 
+# #   geom_tile(data=filter(plotdat, SurveyID.x==cid, surveycells==1), aes(x=x.pos, y=y.pos,fill=preds, height=sqrt(area), width=sqrt(area))) + theme_bw() + 
+# #   coord_equal() +
+# #   xlab('Easting (Km)') + 
+# #   ylab('Northing (Km)') + 
+# #   geom_path(data=fortify(studyarea), aes(x=long/1000, y=lat/1000, group=group), colour='black') +
+# #   geom_polygon(aes(long, lat, group=id), fill=NA, data=wf_km, colour='mediumvioletred', size=1) +
+# #   geom_polygon(aes(long, lat, group=id), fill=NA, data=filter(fortify(OWFp_km_buf), hole==FALSE), colour='mediumvioletred', size=0.5) +
+# #   theme(legend.text=element_text(size=10),
+# #         axis.text=element_text(size=12),
+# #         axis.title=element_text(size=12,face="bold")) +
+# #   facet_wrap(~event, ) +
+# #   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+# #   scale_fill_distiller(palette='Spectral', name='Count') +
+# #   ggtitle(paste0(speciesname, ": ", cid))
+# # 
+# # png(file=paste(outfile, 'scenarioplot50_2.png', sep=''), height=400, width=1000)
+# # print(scenarioplot)
+# # dev.off()
+# # 
+# # # ~~~~~~~~~~~~~~~~~~~~~
+# # # changes in proposed footprint
+# # # ~~~~~~~~~~~~~~~~~~~~~
+# # # expect change in footprint
+# # 
+# # names(postboots) <- gsub("X", "P", names(postboots))
+# # scenariodat <- data.frame(allpredgrids, postboots)
+# # 
+# # scenariotable <- scenariodat %>% filter(surveycells==1, inWFfpbuf==1) %>%
+# #   mutate(SurveyID.x = factor(SurveyID.x, levels = unique(allpredgrids$SurveyID.x))) %>%
+# #   group_by(SurveyID.x) %>%
+# #   summarise(area = sum(area),
+# #             across(.cols=X1:X500,.fns = sum),
+# #             across(.cols=P1:P500,.fns = sum)) %>%
+# #   group_by(SurveyID.x) %>%
+# #   summarise(area = area,
+# #             Median_Dens_before = median(c_across(cols = X1:X500)/area),
+# #             lowerD_before = quantile(c_across(cols = X1:X500)/area, probs = c(0.025)),
+# #             upperD_before = quantile(c_across(cols = X1:X500)/area, probs = c(0.975)),
+# #             Median_Dens_after = median(c_across(cols = P1:P500)/area),
+# #             lowerD_after = quantile(c_across(cols = P1:P500)/area, probs = c(0.025)),
+# #             upperD_after = quantile(c_across(cols = P1:P500)/area, probs = c(0.975)),
+# #             Change = (Median_Dens_after - Median_Dens_before)*area,
+# #             lower_change = quantile((c_across(cols = P1:P500) - c_across(cols = X1:X500)), 
+# #                                     probs = c(0.025)),
+# #             upper_change = quantile((c_across(cols = P1:P500) - c_across(cols = X1:X500)), 
+# #                                     probs = c(0.975))) %>%
+# #   mutate(area = round(area, digits=1),
+# #          across(Median_Dens_before:upperD_after, round, digits=2),
+# #          across(Change:upper_change, round, digits=0),
+# #          `95% CI Before` = paste0("(", lowerD_before, ", ", upperD_before, ")"),
+# #          `95% CI After` = paste0("(", lowerD_after, ", ", upperD_after, ")"),
+# #          `95% CI Change` = paste0("(", lower_change, ", ", upper_change, ")")) %>%
+# #   select(SurveyID.x, 
+# #          area,
+# #          Median_Dens_before,
+# #          `95% CI Before`,
+# #          Median_Dens_after,
+# #          `95% CI After`, 
+# #          Change,
+# #          `95% CI Change`) %>%
+# #   rename(Survey = SurveyID.x,
+# #          `Area (kmsq)` = area,
+# #          `Density Before` = Median_Dens_before,
+# #          `Density After` = Median_Dens_after,
+# #          `Estimated Impacted Birds` = Change
+# #   )
+# # 
+# # write.csv(scenariotable, file=paste0(outfile, "scenariotable50_2.csv"), row.names=FALSE)
+# # 

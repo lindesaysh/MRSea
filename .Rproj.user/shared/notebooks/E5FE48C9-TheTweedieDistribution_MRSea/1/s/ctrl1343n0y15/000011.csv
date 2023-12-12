@@ -1,0 +1,2 @@
+"0","# load data"
+"0","baselinedata <- filter(nysted.analysisdata, impact == 1, season == 1)"

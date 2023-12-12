@@ -1,0 +1,1 @@
+"0","kg <- getKnotgrid(baselinedata[, c(""x.pos"", ""y.pos"")], numKnots = 300, plot = FALSE)"

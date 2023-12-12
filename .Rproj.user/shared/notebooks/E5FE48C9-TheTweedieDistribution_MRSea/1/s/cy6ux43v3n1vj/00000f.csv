@@ -1,0 +1,732 @@
+"0","salsa2dOutput<-runSALSA2D(initialModel,"
+"0","                          salsa2dlist, "
+"0","                          d2k=distMats$dataDist,"
+"0","                          k2k=distMats$knotDist,"
+"0","                          basis = ""gaussian"", ##"
+"0","                          suppress.printout = TRUE)"
+"0",""
+"0",""
+"0",""
+"0",""
+"0",""
+"0",""
+"0","sink()"
+"0","sink()"
+"0",""
+"1","debug: "
+"1","minKnots <- splineParams[[1]]$minKnots
+"
+"1","debug: "
+"1","maxKnots <- splineParams[[1]]$maxKnots
+"
+"1","debug: "
+"1","gap <- splineParams[[1]]$gap
+"
+"1","debug: "
+"1","initDisp <- getDispersion(baseModel)
+"
+"1","debug: "
+"1","print(paste(""initialDispersion "", initDisp, sep = """"))
+"
+"1","[1]"
+"1"," ""initialDispersion 1"""
+"1","
+"
+"1","debug: "
+"1","if (isS4(baseModel)) {
+"
+"1","    attributes(baseModel@misc$formula)$.Environment <- environment()
+"
+"1","    data <- baseModel@data
+"
+"1","    baseModel@data <- data
+"
+"1","} else {
+"
+"1","    attributes(baseModel$formula)$.Environment <- environment()
+"
+"1","    data <- baseModel$data
+"
+"1","    baseModel <- update(baseModel, data = data)
+"
+"1","}
+"
+"1","debug: "
+"1","attributes(baseModel$formula)$.Environment <- environment()
+"
+"1","debug: "
+"1","data <- baseModel$data
+"
+"1","debug: "
+"1","baseModel <- update(baseModel, data = data)
+"
+"1","debug: "
+"1","output <- initialise.measures_2d(knotDist, maxIterations, gap, 
+"
+"1","    radii, dists, explData, startKnots, knotgrid, response, baseModel, 
+"
+"1","    radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, 
+"
+"1","    interactionTerm, data, knot.seed, initDisp, cv.opts, basis)
+"
+"1","[1]"
+"1"," ""******************************************************************************"""
+"1","
+"
+"1","[1]"
+"1"," ""Initialising..."""
+"1","
+"
+"1","[1]"
+"1"," ""******************************************************************************"""
+"1","
+"
+"1","[1]"
+"1"," ""Space-filling knots...."""
+"1","
+"
+"1","[1]"
+"1"," ""Initialising model..."""
+"1","
+"
+"1","[1]"
+"1"," ""Initial model fitted..."""
+"1","
+"
+"1","[1]"
+"1"," ""Fitting Initial Radii"""
+"1","
+"
+"1","[1]"
+"1"," ""initialising complete"""
+"1","
+"
+"1","debug: "
+"1","point <- output$point
+"
+"1","debug: "
+"1","knotPoint <- output$knotPoint
+"
+"1","debug: "
+"1","position <- output$position
+"
+"1","debug: "
+"1","aR <- output$aR
+"
+"1","debug: "
+"1","BIC <- output$BIC
+"
+"1","debug: "
+"1","track <- output$track
+"
+"1","debug: "
+"1","out.lm <- output$out.lm
+"
+"1","debug: "
+"1","invInd <- output$invInd
+"
+"1","debug: "
+"1","models <- (output$models)
+"
+"1","debug: "
+"1","radiusIndices <- output$radiusIndices
+"
+"1","debug: "
+"1","if (isS4(out.lm)) {
+"
+"1","    out.lm@splineParams[[1]]$knotPos <- aR
+"
+"1","    out.lm@splineParams[[1]]$radiusIndices <- radiusIndices
+"
+"1","    baseModel@splineParams <- out.lm@splineParams
+"
+"1","} else {
+"
+"1","    out.lm$splineParams[[1]]$knotPos <- aR
+"
+"1","    out.lm$splineParams[[1]]$radiusIndices <- radiusIndices
+"
+"1","    baseModel$splineParams <- out.lm$splineParams
+"
+"1","}
+"
+"1","debug: "
+"1","out.lm$splineParams[[1]]$knotPos <- aR
+"
+"1","debug: "
+"1","out.lm$splineParams[[1]]$radiusIndices <- radiusIndices
+"
+"1","debug: "
+"1","baseModel$splineParams <- out.lm$splineParams
+"
+"1","debug: "
+"1","if (plot == TRUE) {
+"
+"1","    plot(knotgrid[, 1:2], main = ""Initialise"")
+"
+"1","    points(knotgrid[aR, 1:2], pch = 20)
+"
+"1","}
+"
+"1","debug: "
+"1","naincoeffs <- length(which(is.na(summary(out.lm)$coef[, 3]))) > 
+"
+"1","    0
+"
+"1","debug: "
+"1","baddisp <- summary(out.lm)$dispersion > initDisp
+"
+"0","summary(out.lm)$dispersion"
+"1","[1]"
+"1"," 10.78645"
+"1","
+"
+"0","initDisp"
+"1","[1]"
+"1"," 1"
+"1","
+"
+"1","debug: "
+"1","if (baddisp | naincoeffs) {
+"
+"1","    output <- drop.step_2d_badfit(radii, invInd, dists, explData, 
+"
+"1","        response, knotgrid, maxIterations, fitnessMeasure, point, 
+"
+"1","        knotPoint, position, aR, BIC, track, out.lm, improveDrop, 
+"
+"1","        minKnots, tol, baseModel, radiusIndices, models, interactionTerm, 
+"
+"1","        data, initDisp, cv.opts, basis)
+"
+"1","    point <- output$point
+"
+"1","    knotPoint <- output$knotPoint
+"
+"1","    position <- output$position
+"
+"1","    aR <- output$aR
+"
+"1","    BIC <- output$BIC
+"
+"1","    models <- thinModels(output$models)
+"
+"1","    out.lm <- output$out.lm
+"
+"1","    radiusIndices <- output$radiusIndices
+"
+"1","    if (isS4(out.lm)) {
+"
+"1","        out.lm@splineParams[[1]]$knotPos <- aR
+"
+"1","        out.lm@splineParams[[1]]$radiusIndices <- radiusIndices
+"
+"1","        baseModel@splineParams <- out.lm@splineParams
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        out.lm$splineParams[[1]]$knotPos <- aR
+"
+"1","        out.lm$splineParams[[1]]$radiusIndices <- radiusIndices
+"
+"1","        baseModel$splineParams <- out.lm$splineParams
+"
+"1","    }
+"
+"1","    if (plot == TRUE) {
+"
+"1","        plot(knotgrid[, 1:2], main = ""Drop bad knots"")
+"
+"1","        points(knotgrid[aR, 1:2], pch = 20)
+"
+"1","    }
+"
+"1","}
+"
+"1","debug: "
+"1","output <- drop.step_2d_badfit(radii, invInd, dists, explData, 
+"
+"1","    response, knotgrid, maxIterations, fitnessMeasure, point, 
+"
+"1","    knotPoint, position, aR, BIC, track, out.lm, improveDrop, 
+"
+"1","    minKnots, tol, baseModel, radiusIndices, models, interactionTerm, 
+"
+"1","    data, initDisp, cv.opts, basis)
+"
+"0","debugonce(drop.step_2d_badfit)"
+"0",""
+"1","debugging in: "
+"1","drop.step_2d_badfit(radii, invInd, dists, explData, response, 
+"
+"1","    knotgrid, maxIterations, fitnessMeasure, point, knotPoint, 
+"
+"1","    position, aR, BIC, track, out.lm, improveDrop, minKnots, 
+"
+"1","    tol, baseModel, radiusIndices, models, interactionTerm, data, 
+"
+"1","    initDisp, cv.opts, basis)
+"
+"1","debug: "
+"1","{
+"
+"1","    if (isS4(baseModel)) {
+"
+"1","        attributes(baseModel@misc$formula)$.Environment <- environment()
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        attributes(baseModel$formula)$.Environment <- environment()
+"
+"1","    }
+"
+"1","    print(""******************************************************************************"")
+"
+"1","    print(""Finding suitable initialise..."")
+"
+"1","    print(""******************************************************************************"")
+"
+"1","    badfit <- 1
+"
+"1","    fuse <- 1
+"
+"1","    improvebadDrop <- 0
+"
+"1","    fitStat <- BIC[length(BIC)]
+"
+"1","    newRadii = radiusIndices
+"
+"1","    while (badfit) {
+"
+"1","        print(paste(""remove bad knot"", fuse))
+"
+"1","        fuse <- fuse + 1
+"
+"1","        badfit <- 0
+"
+"1","        print(fitStat)
+"
+"1","        if (length(aR) > minKnots) {
+"
+"1","            twoDcoeffid <- grep(""LRF."", names(coefficients(out.lm)))
+"
+"1","            badknots <- data.frame(knots = rep(aR, by = 2), abscoeffs = abs(coef(out.lm))[twoDcoeffid], 
+"
+"1","                ses = sqrt(diag(summary(out.lm)$cov.robust))[twoDcoeffid])
+"
+"1","            badknots$na.ses <- ifelse(is.na(badknots$ses), 1, 
+"
+"1","                0)
+"
+"1","            if (sum(badknots$na.ses) > 0) {
+"
+"1","                badknotid <- aR[which(badknots$na.ses == 1)[1]]
+"
+"1","            }
+"
+"1","            else {
+"
+"1","                badknots$dif <- badknots$abscoeffs - badknots$ses
+"
+"1","                i <- which(badknots$dif == min(badknots$dif))
+"
+"1","                badknotid <- which(aR == badknots[i, 1])
+"
+"1","            }
+"
+"1","            tempR <- aR
+"
+"1","            tempR <- tempR[-badknotid]
+"
+"1","            tempRadii = radiusIndices[-badknotid]
+"
+"1","            output <- fit.thinPlate_2d(fitnessMeasure, dists, 
+"
+"1","                tempR, radii, baseModel, tempRadii, models, fitStat, 
+"
+"1","                interactionTerm, data, initDisp, cv.opts, basis)
+"
+"1","            initModel <- output$currentModel
+"
+"1","            models <- output$models
+"
+"1","            initBIC <- output$fitStat
+"
+"1","            out <- choose.radii(initBIC, 1:length(tempRadii), 
+"
+"1","                tempRadii, radii, initModel, dists, tempR, baseModel, 
+"
+"1","                fitnessMeasure, response, models, interactionTerm, 
+"
+"1","                data, initDisp, cv.opts, basis)
+"
+"1","            tempRadii = out$radiusIndices
+"
+"1","            tempOut.lm = out$out.lm
+"
+"1","            models = out$models
+"
+"1","            tempMeasure <- out$BIC
+"
+"1","            print(paste(tempMeasure, fitStat, length(aR), badfit, 
+"
+"1","                improvebadDrop))
+"
+"1","            out.lm <- tempOut.lm
+"
+"1","            fitStat <- tempMeasure
+"
+"1","            print(""bad knot removed **********************************"")
+"
+"1","            newR <- tempR
+"
+"1","            newRadii = tempRadii
+"
+"1","            tempKnot <- badknotid
+"
+"1","            if (summary(tempOut.lm)$dispersion > initDisp) {
+"
+"1","                badfit <- 1
+"
+"1","                improvebadDrop <- 0
+"
+"1","            }
+"
+"1","            else {
+"
+"1","                badfit <- 0
+"
+"1","                improvebadDrop <- 1
+"
+"1","            }
+"
+"1","            aR <- newR
+"
+"1","            point <- c(point, knotPoint[tempKnot])
+"
+"1","            position[knotPoint[tempKnot]] <- length(point)
+"
+"1","            knotPoint <- knotPoint[-tempKnot]
+"
+"1","            radiusIndices <- newRadii
+"
+"1","        }
+"
+"1","    }
+"
+"1","    list(point = point, knotPoint = knotPoint, position = position, 
+"
+"1","        aR = aR, BIC = fitStat, track = track, out.lm = out.lm, 
+"
+"1","        improveDrop = improvebadDrop, radiusIndices = radiusIndices, 
+"
+"1","        models = models)
+"
+"1","}
+"
+"1","debug: "
+"1","if (isS4(baseModel)) {
+"
+"1","    attributes(baseModel@misc$formula)$.Environment <- environment()
+"
+"1","} else {
+"
+"1","    attributes(baseModel$formula)$.Environment <- environment()
+"
+"1","}
+"
+"1","debug: "
+"1","attributes(baseModel$formula)$.Environment <- environment()
+"
+"1","debug: "
+"1","print(""******************************************************************************"")
+"
+"1","[1]"
+"1"," ""******************************************************************************"""
+"1","
+"
+"1","debug: "
+"1","print(""Finding suitable initialise..."")
+"
+"1","[1]"
+"1"," ""Finding suitable initialise..."""
+"1","
+"
+"1","debug: "
+"1","print(""******************************************************************************"")
+"
+"1","[1]"
+"1"," ""******************************************************************************"""
+"1","
+"
+"1","debug: "
+"1","badfit <- 1
+"
+"1","debug: "
+"1","fuse <- 1
+"
+"1","debug: "
+"1","improvebadDrop <- 0
+"
+"1","debug: "
+"1","fitStat <- BIC[length(BIC)]
+"
+"1","debug: "
+"1","newRadii = radiusIndices
+"
+"1","debug: "
+"1","while (badfit) {
+"
+"1","    print(paste(""remove bad knot"", fuse))
+"
+"1","    fuse <- fuse + 1
+"
+"1","    badfit <- 0
+"
+"1","    print(fitStat)
+"
+"1","    if (length(aR) > minKnots) {
+"
+"1","        twoDcoeffid <- grep(""LRF."", names(coefficients(out.lm)))
+"
+"1","        badknots <- data.frame(knots = rep(aR, by = 2), abscoeffs = abs(coef(out.lm))[twoDcoeffid], 
+"
+"1","            ses = sqrt(diag(summary(out.lm)$cov.robust))[twoDcoeffid])
+"
+"1","        badknots$na.ses <- ifelse(is.na(badknots$ses), 1, 0)
+"
+"1","        if (sum(badknots$na.ses) > 0) {
+"
+"1","            badknotid <- aR[which(badknots$na.ses == 1)[1]]
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            badknots$dif <- badknots$abscoeffs - badknots$ses
+"
+"1","            i <- which(badknots$dif == min(badknots$dif))
+"
+"1","            badknotid <- which(aR == badknots[i, 1])
+"
+"1","        }
+"
+"1","        tempR <- aR
+"
+"1","        tempR <- tempR[-badknotid]
+"
+"1","        tempRadii = radiusIndices[-badknotid]
+"
+"1","        output <- fit.thinPlate_2d(fitnessMeasure, dists, tempR, 
+"
+"1","            radii, baseModel, tempRadii, models, fitStat, interactionTerm, 
+"
+"1","            data, initDisp, cv.opts, basis)
+"
+"1","        initModel <- output$currentModel
+"
+"1","        models <- output$models
+"
+"1","        initBIC <- output$fitStat
+"
+"1","        out <- choose.radii(initBIC, 1:length(tempRadii), tempRadii, 
+"
+"1","            radii, initModel, dists, tempR, baseModel, fitnessMeasure, 
+"
+"1","            response, models, interactionTerm, data, initDisp, 
+"
+"1","            cv.opts, basis)
+"
+"1","        tempRadii = out$radiusIndices
+"
+"1","        tempOut.lm = out$out.lm
+"
+"1","        models = out$models
+"
+"1","        tempMeasure <- out$BIC
+"
+"1","        print(paste(tempMeasure, fitStat, length(aR), badfit, 
+"
+"1","            improvebadDrop))
+"
+"1","        out.lm <- tempOut.lm
+"
+"1","        fitStat <- tempMeasure
+"
+"1","        print(""bad knot removed **********************************"")
+"
+"1","        newR <- tempR
+"
+"1","        newRadii = tempRadii
+"
+"1","        tempKnot <- badknotid
+"
+"1","        if (summary(tempOut.lm)$dispersion > initDisp) {
+"
+"1","            badfit <- 1
+"
+"1","            improvebadDrop <- 0
+"
+"1","        }
+"
+"1","        else {
+"
+"1","            badfit <- 0
+"
+"1","            improvebadDrop <- 1
+"
+"1","        }
+"
+"1","        aR <- newR
+"
+"1","        point <- c(point, knotPoint[tempKnot])
+"
+"1","        position[knotPoint[tempKnot]] <- length(point)
+"
+"1","        knotPoint <- knotPoint[-tempKnot]
+"
+"1","        radiusIndices <- newRadii
+"
+"1","    }
+"
+"1","}
+"
+"1","debug: "
+"1","print(paste(""remove bad knot"", fuse))
+"
+"1","[1]"
+"1"," ""remove bad knot 1"""
+"1","
+"
+"1","debug: "
+"1","fuse <- fuse + 1
+"
+"1","debug: "
+"1","badfit <- 0
+"
+"1","debug: "
+"1","print(fitStat)
+"
+"1","[1]"
+"1"," 2001.933"
+"1","
+"
+"1","debug: "
+"1","if (length(aR) > minKnots) {
+"
+"1","    twoDcoeffid <- grep(""LRF."", names(coefficients(out.lm)))
+"
+"1","    badknots <- data.frame(knots = rep(aR, by = 2), abscoeffs = abs(coef(out.lm))[twoDcoeffid], 
+"
+"1","        ses = sqrt(diag(summary(out.lm)$cov.robust))[twoDcoeffid])
+"
+"1","    badknots$na.ses <- ifelse(is.na(badknots$ses), 1, 0)
+"
+"1","    if (sum(badknots$na.ses) > 0) {
+"
+"1","        badknotid <- aR[which(badknots$na.ses == 1)[1]]
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        badknots$dif <- badknots$abscoeffs - badknots$ses
+"
+"1","        i <- which(badknots$dif == min(badknots$dif))
+"
+"1","        badknotid <- which(aR == badknots[i, 1])
+"
+"1","    }
+"
+"1","    tempR <- aR
+"
+"1","    tempR <- tempR[-badknotid]
+"
+"1","    tempRadii = radiusIndices[-badknotid]
+"
+"1","    output <- fit.thinPlate_2d(fitnessMeasure, dists, tempR, 
+"
+"1","        radii, baseModel, tempRadii, models, fitStat, interactionTerm, 
+"
+"1","        data, initDisp, cv.opts, basis)
+"
+"1","    initModel <- output$currentModel
+"
+"1","    models <- output$models
+"
+"1","    initBIC <- output$fitStat
+"
+"1","    out <- choose.radii(initBIC, 1:length(tempRadii), tempRadii, 
+"
+"1","        radii, initModel, dists, tempR, baseModel, fitnessMeasure, 
+"
+"1","        response, models, interactionTerm, data, initDisp, cv.opts, 
+"
+"1","        basis)
+"
+"1","    tempRadii = out$radiusIndices
+"
+"1","    tempOut.lm = out$out.lm
+"
+"1","    models = out$models
+"
+"1","    tempMeasure <- out$BIC
+"
+"1","    print(paste(tempMeasure, fitStat, length(aR), badfit, improvebadDrop))
+"
+"1","    out.lm <- tempOut.lm
+"
+"1","    fitStat <- tempMeasure
+"
+"1","    print(""bad knot removed **********************************"")
+"
+"1","    newR <- tempR
+"
+"1","    newRadii = tempRadii
+"
+"1","    tempKnot <- badknotid
+"
+"1","    if (summary(tempOut.lm)$dispersion > initDisp) {
+"
+"1","        badfit <- 1
+"
+"1","        improvebadDrop <- 0
+"
+"1","    }
+"
+"1","    else {
+"
+"1","        badfit <- 0
+"
+"1","        improvebadDrop <- 1
+"
+"1","    }
+"
+"1","    aR <- newR
+"
+"1","    point <- c(point, knotPoint[tempKnot])
+"
+"1","    position[knotPoint[tempKnot]] <- length(point)
+"
+"1","    knotPoint <- knotPoint[-tempKnot]
+"
+"1","    radiusIndices <- newRadii
+"
+"1","}
+"
+"1","debug: "
+"1","twoDcoeffid <- grep(""LRF."", names(coefficients(out.lm)))
+"
+"1","debug: "
+"1","badknots <- data.frame(knots = rep(aR, by = 2), abscoeffs = abs(coef(out.lm))[twoDcoeffid], 
+"
+"1","    ses = sqrt(diag(summary(out.lm)$cov.robust))[twoDcoeffid])
+"
+"1","debug: "
+"1","badknots$na.ses <- ifelse(is.na(badknots$ses), 1, 0)
+"
+"0","badknots"

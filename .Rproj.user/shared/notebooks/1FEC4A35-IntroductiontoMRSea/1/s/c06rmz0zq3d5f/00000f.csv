@@ -1,0 +1,3 @@
+"0","knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, "
+"0","                      eval=TRUE, cache=FALSE,"
+"0","                      comment = '#>', collapse=TRUE, dev='png')"

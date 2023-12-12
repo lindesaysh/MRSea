@@ -1,0 +1,3 @@
+"0","fit.robustse <- make.gamMRSea(fit,"
+"0","                              gamMRSea = TRUE,"
+"0","                              panelid = nysted.analysisdata$transect.id)"

@@ -1,0 +1,7 @@
+"0","# make parameter set for running salsa2d -->"
+"0"," salsa2dlist<-list(fitnessMeasure = 'BICtweedie', "
+"0","                   knotgrid = myknots,"
+"0","                   startKnots = length(startknotlocs), ##"
+"0","                   minKnots=4,  "
+"0","                   maxKnots=100, "
+"0","                   gap=0) "

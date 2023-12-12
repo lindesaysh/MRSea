@@ -1,0 +1,8 @@
+"0","require(ggplot2)"
+"0","ggplot() +"
+"0","  geom_point(data=mydata, aes(x.pos, y.pos)) +"
+"0","  geom_point(data=myknots, aes(x.pos, y.pos), colour='red') +"
+"0","  facet_wrap(~impact, nrow=2) +"
+"0","  theme_bw() + xlab('Easting (Km)') + ylab('Northing (Km)') +"
+"0","    coord_equal()"
+"0",""

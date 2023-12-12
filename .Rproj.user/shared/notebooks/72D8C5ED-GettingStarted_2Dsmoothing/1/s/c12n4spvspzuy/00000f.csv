@@ -1,0 +1,8 @@
+"0","preddist<-makeDists(cbind(preddata$x.pos, preddata$y.pos),"
+"0","                 knotgrid, knotmat=FALSE)$dataDist"
+"0",""
+"0",""
+"0","# make predictions on response scale"
+"0","preds<-predict(newdata = preddata,"
+"0","               g2k = preddist,"
+"0","               object = salsa2dOutput$bestModel)"

@@ -1,0 +1,4 @@
+"0","data(ns.data.re)"
+"0","vpdata <- filter(ns.data.re, impact==0) %>%"
+"0","  mutate(response = birds)"
+"0","head(vpdata)"

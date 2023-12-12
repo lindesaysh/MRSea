@@ -1,0 +1,2 @@
+"0","initialModel <- glm(response ~ 1 + as.factor(season) + offset(log(area)), family = ""quasipoisson"", "
+"0","                    data = nysted.analysisdata)"

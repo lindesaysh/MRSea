@@ -1,0 +1,4 @@
+"0","set.seed(123)"
+"0","knotgrid<- getKnotgrid(coordData = cbind(wfdata$x.pos, wfdata$y.pos),"
+"0","                       numKnots = 300,"
+"0","                       plot = TRUE)"

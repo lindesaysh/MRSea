@@ -1,0 +1,3 @@
+"0","# make distance matrices for datatoknots and knottoknots"
+"0","distMats <- makeDists(cbind(wfdata$x.pos, wfdata$y.pos), knotgrid)"
+"0",""

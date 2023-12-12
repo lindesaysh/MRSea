@@ -1,0 +1,3 @@
+"0","myknots <- selectFctrKnots(mydata[, c(""x.pos"", ""y.pos"", ""impact"")], "
+"0","                           nk=150,"
+"0","                           s.eed=543)"

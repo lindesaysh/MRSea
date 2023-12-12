@@ -1,0 +1,2 @@
+"0","ggplot() + geom_point(data=wfdata, aes(x=depth, y=response), alpha=1/5) +"
+"0","  xlab(""Sea Depth (m)"") + ylab(""Number of Birds"")"

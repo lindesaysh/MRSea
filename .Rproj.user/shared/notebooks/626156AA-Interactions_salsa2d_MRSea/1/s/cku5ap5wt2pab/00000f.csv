@@ -1,0 +1,1 @@
+"0","mydata$blockid <- paste(mydata$transect.id, mydata$season, mydata$impact,sep = """")"

@@ -1,0 +1,7 @@
+"0","# make parameter set for running salsa2D"
+"0","salsa2dlist<-list(fitnessMeasure = 'AICtweedie', "
+"0","                  knotgrid = na.omit(kg),"
+"0","                  startKnots=10, "
+"0","                  minKnots=2, "
+"0","                  maxKnots=20, "
+"0","                  gap=0)"

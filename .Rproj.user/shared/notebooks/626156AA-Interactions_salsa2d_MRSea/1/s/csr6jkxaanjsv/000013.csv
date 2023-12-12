@@ -1,0 +1,4 @@
+"0","salsa2dOutput<-runSALSA2D(model = initialModel, "
+"0","                          salsa2dlist = salsa2dlist,"
+"0","                          d2k=d2k,k2k=k2k,"
+"0","                          suppress.printout = TRUE)"

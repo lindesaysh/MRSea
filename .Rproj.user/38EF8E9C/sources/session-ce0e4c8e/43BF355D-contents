@@ -1,0 +1,229 @@
+---
+title: "Getting Started with MRSea: Two dimensional smoothing"
+author: "LAS Scott-Hayward"
+output: 
+  rmarkdown::html_vignette
+date: "`r Sys.Date()`"
+resource_files:
+  - images/MRSea_workflow.png
+bibliography: newref.bib
+vignette: >
+  %\VignetteIndexEntry{Getting Started with MRSea: Two dimensional smoothing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, 
+                      eval=TRUE, cache=FALSE,
+                      comment = '#>', collapse=TRUE, dev='png')
+```
+
+# Introduction
+
+The ```MRSea``` package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to many other studies as well. For example, these methods have been used for more general spatial distribution modelling and to analyse GPS tagging data for home ranges.
+
+The `MRSea` package primarily fits Generalised Additive Models (GAMs) using a spatially adaptive model selection framework for both one and two dimensional covariates using the functions `runSALSA1D` and `runSALSA2D`.  These functions implement the methods of implement the methods of @Walker2010, @ScottH2013 and @ScottH2022. In addition, options are available for a variety of different splines and the estimation of robust standard errors if residual correlation is present. 
+
+A class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object information regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given).
+
+In addition to the functions required to run the models (which we shall go through below) there are also a variety of associated functions for:
+
+  
+**Covariate Checking/Selection:**
+
+ - `summary.gamMRSea` (summary function for models)
+ - `runPartialPlots` (to plot 1D partial smooth relationships), 
+ - `anova.gamMRSea`  (for model selection; (ANOVA) for robust standard errors) and 
+
+**Diagnostics:**
+
+  - `runACF` (to assess residual correlation), 
+  - `runsTest` (to assess residual correlation)
+  - `plotMeanVar` (to assess the mean-variance relationship)
+  - `runDiagnostics` (plots of observed vs fitted and fitted vs scaled Pearsons residuals), 
+  - `timeInfluenceCheck`/`runInfluence` (assessing the influence of data on precision and predictions), 
+  - `plotCumRes` (plots of cumulative residuals)
+
+**Inference:**
+
+ - `do.bootstrap.cress.robust` (percentile based confidence intervals).
+ - `getDifferences` (identifying differences between two prediction surfaces)
+
+
+
+
+# Fitting a Simple 2D Model
+
+The data we shall use for this example is from a Danish offshore windfarm and is part of the MRSea package. The data are counts of birds collected along transects over a number of surveys and years. In this first example, we will use all of the data together and assess if there is a relationship between number of birds and sea depth. 
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+library(MRSea)
+library(ggplot2)
+```
+
+```{r}
+# load the data
+data("nysted.analysisdata")
+wfdata <- filter(nysted.analysisdata, impact==0, season==1)
+# load the prediction grid
+data("nysted.predictdata")
+preddata <- filter(nysted.predictdata, impact==0, season==1)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+ggplot(wfdata) + geom_tile(aes(x=x.pos, y=y.pos, fill=response, height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw()
+```
+
+
+## Fitting a 2D smooth
+
+Set up the initial model with  the offset term (if required) and specify the parameters required. Here we add an offset to be the size of the segment associated with the bird counts.  In reality, our bird counts are over a particular area so we have counts per unit area.
+
+```{r message=FALSE}
+initialModel <- glm(response ~ 1 + offset(log(area)), family = "quasipoisson", 
+                    data = wfdata)
+```
+
+
+First up we must create a grid of knots that will be used as candidate knot locations.  The locations are a subset of the data locations and are space-filled to have good coverage across the two-dimensional space.  
+
+Depending on the size of your data set this could take while and be slightly different every time you run it so I suggest using a seed and perhaps saving the knotgrid as a file.
+
+```{r knotgrid, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, fig.cap="Plot showing the candidate knot locations in red and the raw data locations in black."}
+set.seed(123)
+knotgrid<- getKnotgrid(coordData = cbind(wfdata$x.pos, wfdata$y.pos),
+                       numKnots = 300,
+                       plot = TRUE)
+```
+
+
+
+The `makeDists` function creates two matrices. One for the distances between each data point and knot point (`dataDist`) and one for the distances between each knot point and all other knot points (`knotDist`).
+
+```{r}
+distMats <- makeDists(cbind(wfdata$x.pos, wfdata$y.pos), knotgrid)
+```
+
+
+Next we specify the parameters needed to run the SALSA2D algorithm which will select the number and location of knots for the smooth of x and y coordinates. Distance matrices (data to knots and knot to knots), a fit statistic and min, max and start knots.
+
+The fitness measure can be one of several options (AIC, BIC, QAIC, QBIC, CV). Here we use QBIC as we have a quasi model and information criterion fitting is faster than cross-validation. 
+
+- `knotgrid` is the grid of candidate knot locations we created.
+- `startKnots` specifies the number of knots the SALSA2D algorithm uses to initialise the process. The starting number depends a bit on the size/heterogeneity of the surface.  I'd suggest starting with 10 knots to get a feel for the outputs. 
+- `minKnots` specifies the minimum number of knots to be selected. This must be the same or smaller than `startKnots`
+- `maxKnots` specifies the maximum number of knots to be selected. This must be the same or larger than `startKnots`.
+- `gap` specifies the minimum gap between knots.  Usually this is fine to be set at zero but occasionally there can be estimation problems and so a gap can be set (in the units of the covariate).
+
+```{r }
+# make parameter set for running salsa2d
+salsa2dlist<-list(fitnessMeasure = 'QBIC',
+                  knotgrid = knotgrid,
+                  startKnots=10,
+                  minKnots=4,
+                  maxKnots=15,
+                  gap=0)
+```
+
+
+11. Run SALSA2D to find the appropriate number and location of knots for the 2D smooth term of `x.pos` and `y.pos`. The model inputted to the SALSA2D algorithm is the initial model.  If you have a model with univariate smooth terms, you can put in the output best model from the SALSA1D algorithm in this step.The default basis function is the `gaussian` but you can also use the `exponential` by specifying the `basis` parameter. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE, results='hide'}
+salsa2dOutput<-runSALSA2D(model = initialModel,
+                          salsa2dlist = salsa2dlist,
+                          d2k=distMats$dataDist,
+                          k2k=distMats$knotDist,
+                          suppress.printout = TRUE)
+```
+
+
+Note that `suppress.printout` will not print the progress of `runSALSA2D` into your workspace but will save the output to a log file (*salsa2d.log*) in your working directory. You may find it helpful to not suppress the print out to begin with so you can see what is happening. 
+
+Use the built in summary function (`summary.gamMRSea`) to look at the summary of the model.  Note that robust standard errors are given alongside the raw standard errors and information regarding panels is at the bottom of the output. If each data point is a panel, then independence is assumed and the two standard error columns will be identical. 
+
+## Model Summary 
+
+The object `salsa2dOutput` has two components:
+
+- `bestModel`: the final model
+- `fitStat`: The fitness measure of the best model using the fitness measure specified. 
+
+```{r eval=TRUE}
+summary(salsa2dOutput$bestModel)
+```
+
+You can find the number of knots chosen for a variable by querying the spline parameters list in the model object.The two dimensional smooth is always in the first element of the spline parameters list. In this case, `r length(salsa2dOutput$bestModel$splineParams[[1]]$knotPos)` knots have been selected. 
+
+```{r eval=TRUE}
+# How many knots were chosen for depth?
+salsa2dOutput$bestModel$splineParams[[1]]$knotPos
+```
+
+## Fitted surface
+
+```{r message=FALSE, warning=FALSE}
+ggplot(wfdata) + geom_tile(aes(x=x.pos, y=y.pos, fill=fitted(salsa2dOutput$bestModel), height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw()
+```
+
+
+## Making predictions
+
+To make predictions, we need to calculate the distances between each prediction point and each knot point.  We can use the `makeDists` function again but this time we don't need the knot to knot matrix and therefore specify `knotmat = FALSE`.
+
+```{r }
+preddist<-makeDists(cbind(preddata$x.pos, preddata$y.pos),
+                 knotgrid, knotmat=FALSE)$dataDist
+
+
+# make predictions on response scale
+preds<-predict(newdata = preddata,
+               g2k = preddist,
+               object = salsa2dOutput$bestModel)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+ggplot(preddata) + geom_tile(aes(x=x.pos, y=y.pos, fill=preds, height=sqrt(area), width=sqrt(area))) +
+  scale_fill_distiller(palette = "Spectral",name="No. Birds") +
+  xlab("Easting (km)") + ylab("Northing (km)") + theme_bw()
+```
+
+## Interaction terms:
+
+The simplest way to specify an interaction term is to add this to the `salsa2dlist` object. 
+
+
+```{r eval=FALSE}
+salsa2dlist<-list(fitnessMeasure = 'QBIC', 
+                  knotgrid = knotgrid,
+                  startKnots=10, 
+                  minKnots=4, 
+                  maxKnots=15, 
+                  gap=0, 
+                  interactionTerm="as.factor(impact)")
+```
+
+There is an example of this in use in the [case study vignette](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3).  The limitation to this method is that the knot locations in the different levels (e.g. before and after impact) are in the same locations and only the coefficients are permitted to change. This may not always be a sensible option especially if the spatial range of the different factor levels varies.  In this case, there is an alternative which allows the locations to differ.  An example of this is in the [interactions vignette](https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea_v1.3).
+
+
+# Further information:
+
+For information on:
+
+1. [Other types of 2D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea)
+2. [Model Diagnostics](https://lindesaysh.github.io/MRSea/article/ModelDiagnostics_MRSea)
+3. [Distance Sampling](https://lindesaysh.github.io/MRSea/article/DistanceSampling)
+4. Distance sampling, simple interactions, `gamMRSea` model diagnostics, inference via bootstrapping and using robust standard errors to deal with residual correlation see the [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea).
+5. More complex [interactions](https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea).
+6. Using non Euclidean distances to measure the similarity between points. For example, using geodesic distances to represent "as the fish swims" rather than "as the crow flies".  This takes into account distances around exclusion areas such as coastlines or lakes. See [here]((https://lindesaysh.github.io/MRSea/article/Geodesic_2dsmoothing_MRSea))
+
+
+# References

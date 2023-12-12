@@ -1,0 +1,7 @@
+"0","salsa2dOutput2donly<-runSALSA2D(model = initialModel,"
+"0","                                salsa2dlist = salsa2dlist,"
+"0","                                d2k = d2k,"
+"0","                                k2k = k2k,"
+"0","                                initialise=FALSE,  "
+"0","                                initialKnPos = startknotlocs, "
+"0","                                suppress.printout = TRUE)"

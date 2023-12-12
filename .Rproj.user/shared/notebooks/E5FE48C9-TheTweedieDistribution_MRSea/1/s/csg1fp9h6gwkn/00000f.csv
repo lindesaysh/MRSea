@@ -1,0 +1,2 @@
+"0","# make distance matrices for datatoknots and knottoknots"
+"0","distMats<-makeDists(baselinedata[, c(""x.pos"", ""y.pos"")], kg)"

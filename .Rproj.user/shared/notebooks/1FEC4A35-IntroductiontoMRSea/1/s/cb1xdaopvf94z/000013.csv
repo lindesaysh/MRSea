@@ -1,0 +1,2 @@
+"0","data(""nysted.analysisdata"")"
+"0","fit <- glm(response ~ season + depth, family=""quasipoisson"", data = nysted.analysisdata)"

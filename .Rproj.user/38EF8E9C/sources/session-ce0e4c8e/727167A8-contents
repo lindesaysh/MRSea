@@ -1,0 +1,22 @@
+varlist = c("Depth", "DistCoast")
+salsa1dlist <- list(fitnessMeasure = "BICtweedie",
+                    minKnots_1d = c(1,1),
+                    maxKnots_1d = c(3,3),
+                    startKnots_1d = c(1,1),
+                    degree = c(2,2),
+                    gaps = c(0,0),
+                    splines = c("bs", "bs"))
+
+salsa1dOutput.bs <- runSALSA1D(initialModel = initialModel,
+                               salsa1dlist = salsa1dlist,
+                               varlist = varlist,
+                               factorlist = c("YearMonth"),
+                               predictionData = nysted.predictdata,
+                               datain = count.data,
+                               panelid = count.data$TransectID,
+                               removal = TRUE,
+                               suppress.printout = TRUE)
+
+  
+                    
+                                                        

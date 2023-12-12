@@ -1,0 +1,5 @@
+"0","# load the data"
+"0","data(""nysted.analysisdata"")"
+"0","wfdata <- filter(nysted.analysisdata, impact==0, season==1)"
+"0","# load the prediction grid"
+"0","data(""nysted.predictdata"")"

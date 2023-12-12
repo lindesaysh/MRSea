@@ -1,0 +1,415 @@
+{
+    "sources": [
+        {
+            "URL": "http://CRAN.R-project.org/package=mrds",
+            "author": [
+                {
+                    "family": "Laake",
+                    "given": "Jeff"
+                },
+                {
+                    "family": "Borchers",
+                    "given": "David"
+                },
+                {
+                    "family": "Thomas",
+                    "given": "Len"
+                },
+                {
+                    "family": "Miller",
+                    "given": "David"
+                },
+                {
+                    "family": "Bishop",
+                    "given": "Jon"
+                }
+            ],
+            "id": "mrds",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "note": "R package version 2.1.6",
+            "title": "Mrds: Mark-recapture distance sampling (mrds)",
+            "title-short": "Mrds",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Hojsgaard",
+                    "given": "Soren"
+                },
+                {
+                    "family": "Halekoh",
+                    "given": "Ulrich"
+                },
+                {
+                    "family": "Yan",
+                    "given": "Jun"
+                }
+            ],
+            "container-title": "Journal of Statistical Software",
+            "id": "geepack1",
+            "issued": {
+                "date-parts": [
+                    [
+                        2006
+                    ]
+                ]
+            },
+            "page": "1-11",
+            "title": "The r package geepack for generalized estimating equations",
+            "type": "article-journal",
+            "volume": "15/2"
+        },
+        {
+            "author": [
+                {
+                    "family": "Yan",
+                    "given": "Jun"
+                },
+                {
+                    "family": "Fine",
+                    "given": "Jason P."
+                }
+            ],
+            "container-title": "Statistics in Medicine",
+            "id": "geepack2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2004
+                    ]
+                ]
+            },
+            "page": "859-880",
+            "title": "Estimating equations for association structures",
+            "type": "article-journal",
+            "volume": "23"
+        },
+        {
+            "author": [
+                {
+                    "family": "Yan",
+                    "given": "Jun"
+                }
+            ],
+            "container-title": "R-News",
+            "id": "geepack3",
+            "issued": {
+                "date-parts": [
+                    [
+                        2002
+                    ]
+                ]
+            },
+            "page": "12-14",
+            "title": "Geepack: Yet another package for generalized estimating equations",
+            "title-short": "Geepack",
+            "type": "article-journal",
+            "volume": "2/3"
+        },
+        {
+            "URL": "http://CRAN.R-project.org/package=fields",
+            "author": [
+                {
+                    "family": "Nychka",
+                    "given": "Douglas"
+                },
+                {
+                    "family": "Furrer",
+                    "given": "Reinhard"
+                },
+                {
+                    "family": "Sain",
+                    "given": "Stephan"
+                }
+            ],
+            "id": "fields",
+            "issued": {
+                "date-parts": [
+                    [
+                        2014
+                    ]
+                ]
+            },
+            "note": "R package version 7.1",
+            "title": "Fields: Tools for spatial data",
+            "title-short": "Fields",
+            "type": "book"
+        },
+        {
+            "URL": "http://socserv.socsci.mcmaster.ca/jfox/Books/Companion",
+            "author": [
+                {
+                    "family": "Fox",
+                    "given": "John"
+                },
+                {
+                    "family": "Weisberg",
+                    "given": "Sanford"
+                }
+            ],
+            "edition": "Second",
+            "id": "car",
+            "issued": {
+                "date-parts": [
+                    [
+                        2011
+                    ]
+                ]
+            },
+            "publisher": "Sage",
+            "publisher-place": "Thousand Oaks CA",
+            "title": "An R companion to applied regression",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Scott-Hayward",
+                    "given": "L. A. S."
+                },
+                {
+                    "family": "Oedekoven",
+                    "given": "C. S."
+                },
+                {
+                    "family": "Mackenzie",
+                    "given": "M. L."
+                },
+                {
+                    "family": "Walker",
+                    "given": "C. G."
+                },
+                {
+                    "family": "Rexstad",
+                    "given": "E."
+                }
+            ],
+            "id": "ScottH2013a",
+            "issued": {
+                "date-parts": [
+                    [
+                        2013
+                    ]
+                ]
+            },
+            "publisher": "University of St Andrews",
+            "title": "User guide for the MRSea package v0.1.2: Statistical modelling of bird and cetacean distributions in offshore renewables development areas. University of st. Andrews contract for marine scotland; SB9 (CR/2012/05).",
+            "title-short": "User guide for the MRSea package v0.1.2",
+            "type": "report"
+        },
+        {
+            "author": [
+                {
+                    "family": "Mackenzie",
+                    "given": "M. L"
+                },
+                {
+                    "family": "Scott-Hayward",
+                    "given": "L. A. S."
+                },
+                {
+                    "literal": "C. S."
+                },
+                {
+                    "literal": "Oedekoven"
+                },
+                {
+                    "literal": "H."
+                },
+                {
+                    "literal": "Skov"
+                },
+                {
+                    "literal": "E."
+                },
+                {
+                    "literal": "Humphreys"
+                },
+                {
+                    "family": "Rexstad",
+                    "given": "E."
+                }
+            ],
+            "id": "Mac2013",
+            "issued": {
+                "date-parts": [
+                    [
+                        2013
+                    ]
+                ]
+            },
+            "publisher": "University of St Andrews",
+            "title": "Statistical modelling of seabird and cetacean data: Guidance document. University of st. Andrews contract for marine scotland; SB9 (CR/2012/05)",
+            "title-short": "Statistical modelling of seabird and cetacean data",
+            "type": "report"
+        },
+        {
+            "DOI": "10.1080/10618600.2012.762920",
+            "author": [
+                {
+                    "family": "Scott-Hayward",
+                    "given": "L. A. S."
+                },
+                {
+                    "family": "Mackenzie",
+                    "given": "M. L."
+                },
+                {
+                    "family": "Donovan",
+                    "given": "C. R."
+                },
+                {
+                    "family": "Walker",
+                    "given": "C. G."
+                },
+                {
+                    "family": "Ashe",
+                    "given": "E."
+                }
+            ],
+            "container-title": "Journal of Computational and Graphical Statistics",
+            "id": "ScottH2013",
+            "issued": {
+                "date-parts": [
+                    [
+                        2013
+                    ]
+                ]
+            },
+            "title": "Complex region spatial smoother (CReSS)",
+            "type": "article-journal"
+        },
+        {
+            "author": [
+                {
+                    "family": "Fox",
+                    "given": "John"
+                },
+                {
+                    "family": "Weisberg",
+                    "given": "Sanford"
+                }
+            ],
+            "edition": "2^{nd}",
+            "id": "Fox2011",
+            "issued": {
+                "date-parts": [
+                    [
+                        2002
+                    ]
+                ]
+            },
+            "publisher": "Sage",
+            "title": "An r companion to applied regression",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Hardin",
+                    "given": "J. W."
+                },
+                {
+                    "family": "Hilbe",
+                    "given": "J. M."
+                }
+            ],
+            "id": "Hardin2002",
+            "issued": {
+                "date-parts": [
+                    [
+                        2002
+                    ]
+                ]
+            },
+            "publisher": "Chapman & Hall/CRC",
+            "title": "Generalized estimating equations",
+            "type": "book"
+        },
+        {
+            "author": [
+                {
+                    "family": "Walker",
+                    "given": "C. G."
+                },
+                {
+                    "family": "Mackenzie",
+                    "given": "M. L."
+                },
+                {
+                    "family": "Donovan",
+                    "given": "C. R."
+                },
+                {
+                    "family": "O’Sullivan",
+                    "given": "M. J."
+                }
+            ],
+            "container-title": "Journal of Statistical Computation and Simulation",
+            "id": "Walker2010",
+            "issue": "2",
+            "issued": {
+                "date-parts": [
+                    [
+                        2010
+                    ]
+                ]
+            },
+            "page": "179-191",
+            "title": "SALSA - a spatially adaptive local smoothing algorithm",
+            "type": "article-journal",
+            "volume": "81"
+        },
+        {
+            "DOI": "10.48550/arXiv.2202.07977",
+            "author": [
+                {
+                    "family": "Scott-Hayward",
+                    "given": "L. A. S."
+                },
+                {
+                    "family": "Mackenzie",
+                    "given": "M. L."
+                },
+                {
+                    "family": "Walker",
+                    "given": "C. G."
+                },
+                {
+                    "family": "Shatumbu",
+                    "given": "G."
+                },
+                {
+                    "family": "Kilian",
+                    "given": "W."
+                },
+                {
+                    "dropping-particle": "du",
+                    "family": "Preez",
+                    "given": "P."
+                }
+            ],
+            "container-title": "arXiv e-prints",
+            "id": "ScottH2022",
+            "issued": {
+                "date-parts": [
+                    [
+                        2022
+                    ]
+                ]
+            },
+            "page": "arXiv:2202.07977",
+            "title": "Automated surface feature selection using SALSA2D: An illustration using elephant mortality data in etosha national park",
+            "title-short": "Automated surface feature selection using SALSA2D",
+            "type": "article-journal"
+        }
+    ],
+    "project_biblios": []
+}

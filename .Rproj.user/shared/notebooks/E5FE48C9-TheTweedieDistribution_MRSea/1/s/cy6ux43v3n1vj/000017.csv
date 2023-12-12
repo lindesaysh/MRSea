@@ -1,0 +1,17 @@
+"0",""
+"1","debug: "
+"1","if (sum(badknots$na.ses) > 0) {
+"
+"1","    badknotid <- aR[which(badknots$na.ses == 1)[1]]
+"
+"1","} else {
+"
+"1","    badknots$dif <- badknots$abscoeffs - badknots$ses
+"
+"1","    i <- which(badknots$dif == min(badknots$dif))
+"
+"1","    badknotid <- which(aR == badknots[i, 1])
+"
+"1","}
+"
+"0","badknots"

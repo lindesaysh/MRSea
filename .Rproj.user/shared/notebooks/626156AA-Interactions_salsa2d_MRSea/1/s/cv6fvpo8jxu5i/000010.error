@@ -1,0 +1,1 @@
+{"frames":[{"func":"makeDists(datacoords = mydata[, c(\"x.pos\", \"y.pos\", \"impact\")], \n    knotcoords = myknots, knotmat = TRUE)","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error in dim * (kcontr) : non-numeric argument to binary operator\n"}

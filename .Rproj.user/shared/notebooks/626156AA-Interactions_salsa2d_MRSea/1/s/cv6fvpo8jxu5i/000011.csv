@@ -1,0 +1,49 @@
+"0","dim(kcontr)"
+"1","[1]"
+"1"," 300"
+"1","   2"
+"1","
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#332: "
+"1","kcontr.m <- kcontr %*% t(kcontr)
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#334: "
+"1","kcontr.inf <- ifelse(kcontr.m == 0, Inf, kcontr.m)
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#335: "
+"1","diag(kcontr.inf) <- 0
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#337: "
+"1","knotDist <- knotDist + kcontr.inf
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#340: "
+"1","dcontr <- model.matrix(~-1 + datacoords.factor)
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#341: "
+"1","dkcontr <- dcontr %*% t(kcontr)
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#342: "
+"1","dkcontr.inf <- ifelse(dkcontr == 0, Inf, dkcontr)
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#345: "
+"1","d2k <- d2k + dkcontr.inf
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#350: "
+"1","if (knotmat == T) {
+"
+"1","    return(list(dataDist = d2k, knotDist = knotDist))
+"
+"1","} else {
+"
+"1","    return(list(dataDist = d2k))
+"
+"1","}
+"
+"1","debug at C:/Users/lindesay/Documents/GitHub/MRSea/R/functions.R#351: "
+"1","return(list(dataDist = d2k, knotDist = knotDist))
+"
+"1","exiting from: "
+"1","makeDists(datacoords = mydata[, c(""x.pos"", ""y.pos"", ""impact"")], 
+"
+"1","    knotcoords = myknots, knotmat = TRUE)
+"

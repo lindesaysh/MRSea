@@ -1,0 +1,87 @@
+---
+title: "MRSea: Marine Renewables Strategic Environmental Assessment"
+author: "Lindesay Scott-Hayward"
+date: "2023-08-30"
+output: html_document
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, 
+                      eval=TRUE, cache=FALSE,
+                      comment = '#>', collapse=TRUE, dev='png')
+```
+
+# Introduction
+
+`MRSea` stands for Marine Renewables Strategic Environmental Assessment. and the package was developed for analysing data that was collected for assessing potential impacts of renewable developments on marine wildlife, although the methods are applicable to any studies where you wish to fit uni or bivariate smooths. 
+
+The package enables the fitting of spatially adaptive regression splines using two Spatially Adaptive Local Smoothing Algorithms (SALSA): 
+
+- Generalised additive model framework using exponential family distributions (e.g. Gaussian, Poisson, Binomial, Gamma) and the Tweedie distribution. 
+- Univariate smoothing using B-splines, Natural cubic splines or cyclic cubic splines
+- Bivariate smoothing using Gaussian or exponential radial basis functions
+- Euclidean or geodesic distance metric for similarity between 2D points (distance component of the radial basis functions)
+- Direct estimation of robust standard errors in the case of residual correlation
+- Additionally there are development versions for point process and multinomial responses
+
+For additional information regarding the methods see the [Publications Page](http://lindesaysh.github.io/MRSea/articles/web/Publications.html)
+
+
+The main modelling functions are `runSALSA1D` and `runSALSA2D`, which implement the methods for univariate and then bivariate smoothing and these produce models of the class `gamMRSea`.
+
+<!-- The major update to this package (from version 0 to version 1) is that a class of model `gamMRSea` is created when running either SALSA 1D or 2D. This retains within the model object information regarding fitting, such as the `splineParam` object and the panel structure (if present).  The use of the `summary` function on these models returns both raw and robust standard errors, with the *p*-values from the models hypothesis test using the robust standard errors.  The robust standard errors are obtained using the panel structure given (independence is one panel per data point and is the default if no structure is given). -->
+
+Other functions include diagnostics (to assess residual correlation: `runACF`, smooth relationships: `runPartialPlots` and model selection (ANOVA) for robust standard errors: `anova.gamMRSea`) and inference (`do.bootstrap.cress`). 
+
+
+![alt text](images/MRSea_workflow.png)
+Example of the modelling process using `MRSea`.  Packages with functions to run certain parts are given in oval boxes.  To complete the modelling process, other packages may be used at certain stages.  These are coded light blue, whilst `MRSea` functions are in red.  
+
+# Examples and tutorials on the MRSea Website
+
+For information on using the package see [here](https://lindesaysh.github.io/MRSea/articles/website_examples.html) for a list of examples and tutorials.
+
+```{r echo=FALSE}
+knitr::include_url("https://lindesaysh.github.io/MRSea/articles/website_examples.html")
+```
+
+
+# Translating from `glm` to `gamMRSea`
+
+## Making any `glm` model into an `gamMRSea` object
+
+This can be done using the `make.gamMRSea` function.  Here we use the `fullmodel` which is a `glm` model with `family='poisson'`
+
+```{r eval=TRUE}
+library(MRSea)
+data("nysted.analysisdata")
+fit <- glm(response ~ season + depth, family="quasipoisson", data = nysted.analysisdata)
+```
+
+
+```{r}
+fullModel.gamMRSea <- make.gamMRSea(fit,
+                                    gamMRSea = TRUE)
+
+```
+
+```{r eval=TRUE}
+summary(fullModel.gamMRSea)
+```
+Note that there is an extra column for robust standard errors but that they are the same as the raw ones.  No panel structure has been specified and this is shown at the bottom of the output `Max Panel Size = 1`.
+
+## Adding a panel structure to a model
+
+Additionally, if you choose to fit the SALSA or GLM models without a panel structure, the `make.gamMRSea` function can be used to add a panel structure afterwards. Note that now in the summary output, the robust standard error column is different to the raw standard errors as they have been adjusted for any correlation seen in the panels.  The output shows that the maximum panel size is now 54 and there are 208 panels. 
+
+```{r, eval=TRUE}
+fit.robustse <- make.gamMRSea(fit,
+                              gamMRSea = TRUE,
+                              panelid = nysted.analysisdata$transect.id)
+```
+
+
+```{r}
+summary(fit.robustse)
+```
+

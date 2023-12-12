@@ -1,0 +1,8 @@
+"0","runPartialPlots(model = salsa1dOutput$bestModel, data = wfdata, "
+"0","                varlist = 'depth', "
+"0","                showKnots = TRUE, type='response', "
+"0","                includeB0 = FALSE)"
+"1","[1]"
+"1"," ""Making partial plots"""
+"1","
+"

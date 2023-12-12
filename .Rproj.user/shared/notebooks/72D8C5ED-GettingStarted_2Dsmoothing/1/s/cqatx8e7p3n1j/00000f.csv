@@ -1,0 +1,12 @@
+"0","# How many knots were chosen for depth?
+salsa2dOutput$bestModel$splineParams[[1]]$knotPos
+"
+"1","[1]"
+"1","  54"
+"1"," 136"
+"1"," 275"
+"1"," 111"
+"1"," 299"
+"1"," 102"
+"1","
+"

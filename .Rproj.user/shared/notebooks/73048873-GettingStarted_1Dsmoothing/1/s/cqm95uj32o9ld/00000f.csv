@@ -1,0 +1,6 @@
+"0","salsa1dOutput <- runSALSA1D(initialModel = initialModel, "
+"0","                            salsa1dlist = salsa1dlist,"
+"0","                            varlist = c(""depth""),"
+"0","                            predictionData = nysted.predictdata, "
+"0","                            datain = wfdata,"
+"0","                            suppress.printout = TRUE)"

@@ -1,0 +1,7 @@
+{
+    "installOptions": {
+        "installFromRepository": true,
+        "libraryPath": "C:/Users/lindesay/Documents/RLibs",
+        "installDependencies": true
+    }
+}

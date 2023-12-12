@@ -1,0 +1,3 @@
+"0","initialModel <- glm(response ~ 1 + offset(log(area)), "
+"0","                    family = ""quasipoisson"", "
+"0","                    data = wfdata)"

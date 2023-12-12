@@ -1,0 +1,16 @@
+getRadiiSequence(method = "variogram",
+                       numberofradii = 10, 
+                       xydata = count.data[, c("x.pos", "y.pos")],
+                       response =  log(count.data$Count + 1), 
+                       basis="gaussian", 
+                       showplots=TRUE,
+                       distMatrix = d2k)
+
+
+getRadiiSequence(method = "original",
+                       numberofradii = 10,
+                       basis="gaussian", 
+                       showplots=TRUE,
+                      distMatrix = d2k)
+
+

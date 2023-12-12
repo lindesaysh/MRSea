@@ -1,0 +1,3 @@
+"0","# make prediction distance matrix. "
+"0","preddata <- filter(nysted.predictdata, impact == 0, season == 1)"
+"0","p2k <-makeDists(preddata[, c(""x.pos"", ""y.pos"")], kg, knotmat = FALSE)$dataDist"

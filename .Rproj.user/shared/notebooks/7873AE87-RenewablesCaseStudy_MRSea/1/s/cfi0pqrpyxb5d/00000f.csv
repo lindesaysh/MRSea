@@ -1,0 +1,8 @@
+"0","ptheme + "
+"0","  geom_point(data = surveyests, aes(YearMonth, density, colour=as.factor(year))) +"
+"0","  geom_segment(data = surveyests, aes(x=YearMonth, y=density.lower, xend=YearMonth, yend=density.upper, colour=as.factor(year))) +"
+"0","  ylab(""Estimated Density"") + xlab(""Date"") + "
+"0","  theme(axis.text.x = element_text(angle=45, vjust=0.5)) +"
+"0","  scale_color_discrete(name=""Year"") + coord_cartesian()"
+"2","Error: object 'ptheme' not found
+"

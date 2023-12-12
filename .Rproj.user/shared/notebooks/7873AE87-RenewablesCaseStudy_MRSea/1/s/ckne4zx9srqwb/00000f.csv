@@ -1,0 +1,12 @@
+"0","par(mfrow=c(2,2))"
+"0","runPartialPlots(model = finalmod, data = count.data,"
+"0","                factorlist.in = c('YearMonth'),"
+"0","                varlist.in = 'Depth', showKnots = T,"
+"0","                includeB0 = TRUE)"
+"1","[1]"
+"1"," ""Making partial plots"""
+"1","
+"
+"2","Error in array(x, c(length(x), 1L), if (!is.null(names(x))) list(names(x),  : 
+  'data' must be of a vector type, was 'NULL'
+"

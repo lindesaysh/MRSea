@@ -1,0 +1,15 @@
+"0",""
+"1","debug: "
+"1","badknots$dif <- badknots$abscoeffs - badknots$ses
+"
+"0","badknotid"
+"2","Error: object 'badknotid' not found
+"
+"2","In addition: "
+"2","Warning message:
+"
+"2","In get(object, envir = currentEnv, inherits = TRUE) :"
+"2","
+ "
+"2"," restarting interrupted promise evaluation
+"

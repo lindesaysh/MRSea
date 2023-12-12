@@ -1,0 +1,6 @@
+"0","library(statmod)"
+"0","glm(y ~ x, data=data, "
+"0","    family=tweedie(var.power = 1.1, link.power=0))"
+"2","Error in model.frame.default(formula = y ~ x, data = data, drop.unused.levels = TRUE) : 
+  'data' must be a data.frame, environment, or list
+"

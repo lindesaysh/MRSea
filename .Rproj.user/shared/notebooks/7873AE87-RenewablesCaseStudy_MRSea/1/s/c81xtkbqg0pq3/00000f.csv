@@ -1,0 +1,1 @@
+"0","chosenknots <- myknots[salsa2dOutput2donly$bestModel$splineParams[[1]]$knotPos,]"
