@@ -1,0 +1,22 @@
+pandoc: 3.1.1
+pkgdown: 2.0.7.9000
+pkgdown_sha: c354aa7e5ea1f9936692494c28c89e5bdd31fc68
+articles:
+  GettingStarted_1Dsmoothing: GettingStarted_1Dsmoothing.html
+  GettingStarted_2Dsmoothing: GettingStarted_2Dsmoothing.html
+  DistanceSampling: web/DistanceSampling.html
+  FittingDifferentSplines_MRSea: web/FittingDifferentSplines_MRSea.html
+  Geodesic_2dsmoothing_MRSea: web/Geodesic_2dsmoothing_MRSea.html
+  Interactions_salsa2d_MRSea: web/Interactions_salsa2d_MRSea.html
+  IntroductiontoMRSea: web/IntroductiontoMRSea.html
+  ModelDiagnostics_MRSea: web/ModelDiagnostics_MRSea.html
+  Publications: web/Publications.html
+  RenewablesCaseStudy_MRSea: web/RenewablesCaseStudy_MRSea.html
+  TheTweedieDistribution_MRSea: web/TheTweedieDistribution_MRSea.html
+  UserRadiiChoice_MRSea: web/UserRadiiChoice_MRSea.html
+  website_examples: website_examples.html
+last_built: 2023-12-12T12:35Z
+urls:
+  reference: http://lindesaysh.github.io/MRSea/reference
+  article: http://lindesaysh.github.io/MRSea/articles
+

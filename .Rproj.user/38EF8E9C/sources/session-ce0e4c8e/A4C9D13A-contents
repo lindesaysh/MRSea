@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream:.Rproj.user/38EF8E9C/sources/session-ce0e4c8e/A4C9D13A-contents
 .Rproj.user
 .Rhistory
 .RData
@@ -8,3 +9,15 @@ vignettes/web/salsa2d.log
 vignettes/salsa2d.log
 myNAMESPACE
 salsa1d.log
+=======
+.Rproj.user
+.Rhistory
+.RData
+vignettes/salsa1d.log
+vignettes/salsa2d.log
+vignettes/web/salsa1d.log
+vignettes/web/salsa2d.log
+vignettes/salsa2d.log
+myNAMESPACE
+salsa1d.log
+>>>>>>> Stashed changes:.gitignore
