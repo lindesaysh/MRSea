@@ -99,7 +99,7 @@
 <ul><li><p>SALSA 1D:</p></li>
 <li>
 <p>SALSA 2D:</p>
-<ul><li>The dispersion parameter estimate using <code>getDisperson</code> function was incorrectly specified as 1. This affected the dropping of “bad” knots in the initialise step resulting in more knots being dropped than should have been. This did not affect knots being subsequently added in the exchange step. The correct calculation is now included in the <code>getDispersion</code> function.</li>
+<ul><li>The dispersion parameter estimate using <code>getDisperson</code> function was incorrectly specified as 1 for the Tweedie distribution. This affected the dropping of “bad” knots in the initialise step resulting in more knots being dropped than should have been. This did not affect knots being subsequently added in the exchange step. The correct calculation is now included in the <code>getDispersion</code> function.</li>
 <li>When using <code>initialise = FALSE</code> and specifying initial knot locations via <code>initialKnPos</code> code has been added to snap the initial locations to the nearest candidate knot locations in the knot grid. Previously it was assumed these initial locations were a subset of the candidate set. Now any locations may be used.</li>
 <li>When using an odd number of radii and with <code>chooseradii = FALSE</code> there may sometimes have been a mismatch from the output of SALSA2D and the output given from <code>runSALSA2D</code>.</li>
 </ul></li>
