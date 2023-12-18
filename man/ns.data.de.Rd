@@ -8,7 +8,7 @@
 A data frame with 27798 rows and 12 variables
 }
 \description{
-A simulated dataset containing the observed counts, the effort data and other variables of 
+A simulated dataset containing the observed counts, the effort data and other variables of
 grid data. The variables are as follows:
 }
 \details{
@@ -21,10 +21,10 @@ grid data. The variables are as follows:
 \item \code{GridCode} identifier for the different grids that were surveyed
 \item \code{Year} Year of the survey
 \item \code{DavOfMonth} Day of the survey
-\item \code{MonthOfYear} Month of the survey 
+\item \code{MonthOfYear} Month of the survey
 \item \code{impact} numerical indicator for before (0) and after (1) impact
 \item \code{birds} observed number of birds
-\item \code{cellid} identifier for the individual records 
+\item \code{cellid} identifier for the individual records
 }
 }
 \keyword{datasets}

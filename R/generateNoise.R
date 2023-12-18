@@ -47,6 +47,9 @@ generateNoise<-function(n, response, family, gamma.variance, ...){
       shape1=1+mode*ra1
       simData[,i]<-rgamma(n = length(response), rate=ra1, shape=shape1)
     }
+    if(family=="tweedie"){
+      simData[,i]<-rtweedie(n = length(response), mu = response, ...)
+    }
   }
   return(simData)
 }

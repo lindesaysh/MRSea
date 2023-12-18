@@ -11,10 +11,10 @@
 #' 
 #' @return
 #' A list is returned consisting of
-#' \item{mediandiff}{Vector of the median difference for each grid cell}
-#' \item{lowerci}{Vector of the lower 2.5\% difference for each grid cell}
-#' \item{upperci}{Vector of the upper 97.5\% difference for each grid cell}
-#' \item{significanceMarker}{Vector of significance.  0: not significant, 1: significant and positive, -1: significant and negative}
+#' `mediandiff`: Vector of the median difference for each grid cell
+#' `lowerci`: Vector of the lower 2.5\% difference for each grid cell
+#' `upperci`: Vector of the upper 97.5\% difference for each grid cell
+#' `significanceMarker`: Vector of significance.  0: not significant, 1: significant and positive, -1: significant and negative
 #' 
 #' @examples 
 #'  \dontrun{
@@ -54,6 +54,12 @@ getDifferences<-function(beforePreds, afterPreds, quants=c(.025,.975)){
   return(list(mediandiff=mediandiff, lowerci=difcis[,1], upperci=difcis[,2],significanceMarker=marker))
 }
 
+
+
+#' Contains function for getDifferences
+#' 
+#' 
+#' @noRd
 
 contains<-function(x){
   if(x[1]<=0 & x[2]>=0){z<-0}else{z<-1}

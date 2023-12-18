@@ -43,6 +43,9 @@ runPartialPlots<-function(model, data, factorlist.in=NULL, varlist.in=NULL, show
   require(splines)
   require(Matrix)
   
+  # ensure runs ok if tibble provided
+  data <- data.frame(data)
+
  splineParams <- model$splineParams
  
  # setClass("vglmMRSea", contains=c("vglm"), slots=c(varshortnames="character", panels="ANY", splineParams="list", data="data.frame", cvfolds="numeric", interactionterm="ANY")) -> vglmMRSea

@@ -8,7 +8,7 @@
 A data frame with 37928 rows and 8 variables
 }
 \description{
-A simulated dataset containing the true number of birds, the effort data and other variables of 
+A simulated dataset containing the true number of birds, the effort data and other variables of
 prediction grid data. The variables are as follows:
 }
 \details{

@@ -78,7 +78,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     }else{
       numNeeded = nrow(initialKnots)
       knots2<-rbind(initialKnots, knotgrid)
-      posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
+      #posKnots<-which(duplicated(knots2)[(nrow(initialKnots)+1):nrow(knots2)]==T)
+      # find the nearest knots to the initial locations and remove duplicates
+      kd <- as.matrix(dist(knots2))[(nrow(initialKnots) +1) : nrow(knots2), 1:nrow(initialKnots)]
+      posKnots <- unique(as.vector(apply(kd,2 ,function(x) which(x == min(x)))))
     }
     
   } # end of ifelse statement related to initialise  = T/F
@@ -98,7 +101,12 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   # print(c('knots: ',knotPoint))
   aR <- knotPoint
   # print(c('actual knots: ',invInd[aR]))
-  radiusIndices <-rep((1:length(radii))[ceiling(length(radii)/2)],length(aR))
+  if(length(radii)>1){
+    radiusIndices <-rep((1:length(radii))[(length(radii)/2)],length(aR))  
+  }else{
+    radiusIndices <-rep(1,length(aR))
+  }
+  
   
   if (isS4(baseModel)) {
     baseModel@splineParams[[1]]$knotPos<-aR
@@ -181,12 +189,17 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }
   
   if(fitnessMeasure=="cv.gamMRSea"){
-      set.seed(cv.opts$cv.gamMRSea.seed)
-      fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
-      #fitStat<-Inf
-    }
-
+      fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost, s.eed = cv.opts$cv.gamMRSea.seed)$delta[2]
+  }
   
+  if(fitnessMeasure=="AICtweedie"){
+    fitStat<-tweedie::AICtweedie(baseModel)
+  }
+  
+  if(fitnessMeasure=="BICtweedie"){
+    fitStat<-tweedie::AICtweedie(baseModel, k=log(nrow(baseModel$data)))
+  }
+
  
   #cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){

@@ -4,7 +4,13 @@
 \alias{plotCumRes}
 \title{Calculate cumulative residuals and plot.}
 \usage{
-plotCumRes(model, varlist, label = "", save = FALSE)
+plotCumRes(
+  model,
+  varlist = NULL,
+  label = "",
+  save = FALSE,
+  variableonly = FALSE
+)
 }
 \arguments{
 \item{model}{Fitted model object (glm or gam)}

@@ -15,9 +15,9 @@ makeDists(
 )
 }
 \arguments{
-\item{datacoords}{Coordinates of the data locations}
+\item{datacoords}{Coordinates of the data locations. If a design matrix interaction is required, add a third column containing the factor level.}
 
-\item{knotcoords}{Coordinates of the legal knot locations}
+\item{knotcoords}{Coordinates of the legal knot locations. If a design matrix interaction is required, add a third column containing the factor level for each knot location.}
 
 \item{knotmat}{(\code{default=TRUE}). Should a matrix of knot-knot distances be created}
 
@@ -30,10 +30,14 @@ makeDists(
 \item{grid.dim}{This is a vector of length two which specifies the dimesions of the grid used to create the transition matrix (default \code{c(100, 100)}.  If the transition matrix shows that boundaries are being ignored, the grid dimensions will need to increase. However, increasing the grid, whilst improving accuracy, also increases computational time.}
 }
 \description{
-This function makes two Euclidean distance matrices.  One for the distances between all spatial observations and all spatial knot locations.  The other, if specified, is the distances between knot locations.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+This function makes two Euclidean distance matrices.  One for the distances between all spatial observations and all spatial knot locations.  The other, if specified, is the distances between knot locations. It is experimental owing to the addition of the creation of infinity-block distance matrices. The original functionality is unchanged.
 }
 \details{
 The data-knot matrix is used in the CReSS basis and the knot-knot matrix is used in SALSA to determine where a nearest knot to `move' should be.
+
+If three columns are provided for \code{datacoords} and \code{knotcoords} the matrix returned has infinity for distances between knots and data associated with differing factor levels.
 }
 \examples{
 # load data
@@ -43,4 +47,13 @@ data(knotgrid.ns)
  
 # make distance matrices for datatoknots and knottoknots
 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
+
+# ~~~~~~~~~~~~~~~~~~
+# Example with block-infinity distance matrix
+data(nysted.analysisdata)
+myknots <- selectFctrKnots(nysted.analysisdata[,c('x.pos', 'y.pos', 'impact')], nk=150)
+
+dists <- makeDists(datacoords = nysted.analysisdata[,c('x.pos', 'y.pos', 'impact')], 
+                   knotcoords = myknots, 
+                   knotmat = TRUE)
 }

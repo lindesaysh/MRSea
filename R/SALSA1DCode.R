@@ -7,7 +7,7 @@
 #' @param maxKnots maximum number of knots to fit
 #' @param startKnots number of equally spaced knots to start with (between minKnots and maxKnots)
 #' @param gap minimum gap between knots (in unit of measurement of \code{explanatory})
-#' @param fitnessMeasure (default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QICb (Quasi-Likelihood Information Criterion with log(n) penalty)
+#' @param fitnessMeasure (default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QBIC (Quasi-Likelihood Information Criterion with log(n) penalty), k-fold cross-validation (\code{cv.gamMRSea}), AICtweedie, BICtweedie.
 #' @param maxIterations exchange/improve heuristic will terminate after \code{maxIterations} if still running
 #' @param initialise (default = TRUE). Logical stating whether or not to start with equally spaced knots (TRUE) or user specified locations (FALSE)
 #' @param initialKnots If \code{initialise=FALSE} then the start locations for the knots are specified in \code{initialKnots}
@@ -49,10 +49,9 @@
 # fitnessMeasure=="BIC" uses BIC       
 # fitnessMeasure=="QAIC" uses QAIC       
 # fitnessMeasure=="QAICc" uses QAICc
-# fitnessMeasure== "CV.offset" uses CV with an offset - no blocking
-# fitnessMeasure== "CV.glm" uses CV with no offset included
-# fitnessMeasure== "CV" uses CV with an offset with blocking structure
-#
+# fitnessMeasure== "cv.gamMRSea"
+# fitnessMeasure== "AICtweedie"
+# fitnessMeasure== "BICtweedie"
 # maxIterations:   exchange/improve heuristic will terminate after maxIterations if still running
 # varWinHW:        used for determining heteroscedastic weights
 # computeWt:       whether to use weights for heteroscedasticity - default is No
@@ -97,8 +96,10 @@
   
 
 ####deal with multiple unordered x-values
-knotSites <- cbind(sort(explanatory), rep(1, length(explanatory)))
+knotSites <- data.frame(explanatory, x1 = as.numeric(explanatory), x2=rep(1, length(explanatory)))
+knotSites <- dplyr::arrange(knotSites, explanatory) %>% data.frame
 knotSites <- knotSites[which(duplicated(knotSites)==F),]
+
 
 # remove knots sites within gap of boundary
 if(gap>0){
@@ -109,13 +110,18 @@ if(gap>0){
 if (nrow(knotSites) > maxSites) {
  if(nrow(knotSites)>800){
    knotSites <- knotSites[sample(1:nrow(knotSites), 800),]
-   knotSites = sort(cover.design(knotSites, nd=maxSites)$design[,1])
+   kSites = cover.design(knotSites[,c("x1", "x2")], nd=maxSites)$best.id
  }else{
-   knotSites = sort(cover.design(knotSites, nd=maxSites)$design[,1]) 
+   kSites = cover.design(knotSites[,c("x1", "x2")], nd=maxSites)$best.id 
  }
+   kSites <- sort(kSites)
   # LSH updated 19/2/15 so that the candidate knot locations may only be at data locations.
   #quantile(knotSites,probs=seq(0,1,length=maxSites),na.rm=TRUE,names=FALSE)
+}else{
+  kSites <- 1:nrow(knotSites)
 }
+
+knotSites <- knotSites[kSites, c("explanatory")]
 #print(knotSites)
 
 # remove locations for knots if they are also boundary knots????
@@ -814,13 +820,15 @@ getCV_type2<- function(folds, baseModel){
    # b-spline
   if(spl == 'bs'){
     #print("fitting model...")
-    bspl<-paste("bs(explanatory, degree=", degree, ",Boundary.knots=c(",bd[1], ",", bd[2],"), knots= c(", sep="")
-    if (length(aR)>1) {
-        for (i in 1:(length(aR)-1)) {
-             bspl<- paste(bspl, aR[i], ",", sep="")
-        }
-    }
-    bspl<-paste(bspl, aR[length(aR)], ")",")",sep="")
+    # bspl<-paste("bs(explanatory, degree=", degree, ",Boundary.knots=c(",bd[1], ",", bd[2],"), knots= c(", sep="")
+    # if (length(aR)>1) {
+    #     for (i in 1:(length(aR)-1)) {
+    #          bspl<- paste(bspl, aR[i], ",", sep="")
+    #     }
+    # }
+    # bspl<-paste(bspl, aR[length(aR)], ")",")",sep="")
+    
+    bspl <- paste0("bs(explanatory, degree=degree, Boundary.knots=bd, knots= aR)")
 
     if(is.null(interactionTerm)){  
       test<-paste("update(baseModel, .  ~ . + ",bspl,")", sep="")

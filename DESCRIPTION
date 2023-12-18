@@ -11,9 +11,9 @@ Description: Examines animal survey data for signs of changes in animal
     exponential and use Euclidean or Geodesic (or other user specified) distances. Non-parametric
     bootstrapping is available to estimate uncertainty and if residual correlation is present, robust standard
     errors maybe used (given a panel structure). Several model assessment
-    tools are also available. .
-Version: 0.2
-Date: 2023-03-22
+    tools are also available.
+Version: 0.3
+Date: 2023-12-19
 Authors@R: c(
     person("Lindesay", "Scott-Hayward", email = "lass@st-and.ac.uk",
             role = c("aut", "cre", "cph"),
@@ -38,9 +38,11 @@ Imports:
     splines (>= 3.1.1),
     fields,
     dplyr,
-    methods
+    methods,
+    ggplot2,
+    lifecycle,
+    stringr
 Suggests:
-    ggplot2 (>= 1.0.0),
     MuMIn,
     mrds,
     knitr,
@@ -49,7 +51,11 @@ Suggests:
     splancs,
     raster,
     gdistance,
-    RColorBrewer
+    RColorBrewer,
+    tidyr,
+    tweedie,
+    statmod,
+    boot
 License: GPL-3
 LazyData: true
 Note: Scott-Hayward LAS, Oedekoven CS, Mackenzie ML and CG Walker
@@ -62,3 +68,4 @@ RoxygenNote: 7.2.3
 Encoding: UTF-8
 VignetteBuilder: knitr
 BuildVignettes: true
+Roxygen: list(markdown = TRUE)

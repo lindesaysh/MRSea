@@ -128,10 +128,11 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   family<-initialModel$family$family
   link<-initialModel$family$link
   data<-initialModel$data
+  if(!is.data.frame(data)){
+    data <- data.frame(data)
+    cat("\n model data converted from tibble to data frame\n")
+  }
   if(sum(abs(dim(data)-dim(datain)))>0) stop('Data dimensions do not match the data in initialModel')
-  
-  attributes(initialModel$formula)$.Environment<-environment()
-
   
   if(fam=='other'){
     if(is.null(data$response)) stop('data does not contain response column')  
@@ -140,6 +141,18 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(is.null(data$failures)) stop('data does not contain failures column')
   }
   
+   if(initialModel$family$family == "Tweedie"){
+     p <- get("p", environment(initialModel$family$variance))
+     link.power <- get("link.power", environment(initialModel$family$variance))
+     if(p == 0) stop("Tweedie power parameter set to 0, please use Gaussian distribution instead")
+     if(p == 1) stop("Tweedie power parameter set to 1, please use Quasi-Poisson distribution instead")
+     if(p == 2) stop("Tweedie power parameter set to 2, please use Gamma distribution instead")
+     # edit model call to include the number for p
+     tex = paste("update(initialModel, . ~ . , family = tweedie(var.power=", p, ", link.power = ", link.power,"))")
+     initialModel = eval(parse(text = tex))
+   }
+  
+  attributes(initialModel$formula)$.Environment<-environment()
   
   # check parameters in salsa1dlist are same length as varlist
   if(length(varlist)!=length(salsa1dlist$minKnots_1d)) stop('salsa1dlist$minKnots_1d not same length as varlist')
@@ -223,7 +236,21 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   if(fam=='BinProp'){
     baseModel <- eval(parse(text=paste("gamMRSea(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
   }else{
-    baseModel <- eval(parse(text=paste("gamMRSea(response ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+    if(family=="Tweedie"){
+      baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
+                                           paste(formula(initialModel)[3], sep = ""), "+", 
+                                           paste(terms1D, collapse = "+"), ", family =", 
+                                           paste0(initialModel$call[grep("tweedie", initialModel$call)]),
+                                           ", data = data)", sep = "")))  
+    }else{
+      baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
+                                           paste(formula(initialModel)[3], sep = ""), "+", 
+                                           paste(terms1D, collapse = "+"), 
+                                           ", family =", family,
+                                           "(link=", link,
+                                           "), data = data)", sep = "")))
+    }
+    
   }
   
   if(!is.null(initialModel$cvfolds)){
@@ -233,9 +260,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   
   if(removal==TRUE){
-    set.seed(seed.in)
+    #set.seed(seed.in)
     basecoef<-length(coef(baseModel))
-    cv_initial <- cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+    cv_initial <- cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2]
   }else{
     cv_initial=NULL
   }
@@ -248,6 +275,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     }
     splineParams<<-splineParams
     dispersion_Model<-update(baseModel, .~.)
+    dispersion_Model$varshortnames <- varlist
     salsa1dlist$fitnessMeasure<-c(salsa1dlist$fitnessMeasure, summary(dispersion_Model)$dispersion)
     
     # return the splineParams object back to the original
@@ -303,16 +331,16 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
         response<-data$response    
       }
     }
-    bd <- as.numeric(splineParams[[varID[(i-1)]]]$bd)   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
+    bd <- splineParams[[varID[(i-1)]]]$bd   # i is the location of covar in varid +1 (2d has 1st entry in spline params)
     gap <- (salsa1dlist$gaps[(i-1)])
     term<- terms1D[[(i-1)]]
     interactionTerm<-NULL  #(salsa1dlist$interactionTerm[(i-1)])
     baseModel <- eval(parse(text=paste("update(baseModel, .~. -", term, ")", sep="")))
     
     if(removal==TRUE){
-      set.seed(seed.in)
+      #set.seed(seed.in)
       base_wo_coeff<-length(coef(baseModel))
-      cv_without<-cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2] 
+      cv_without<-cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2] 
       fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat  
     }
     
@@ -349,8 +377,8 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(removal=='TRUE'){
     cat('Fitting Linear Model...')
     tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
-    set.seed(seed.in)
-    cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost)$delta[2]
+    #set.seed(seed.in)
+    cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2]
     
     cvid<-which(c(cv_initial, cv_with, cv_without, cv_linear)==min(na.omit(c(cv_initial, cv_with, cv_without, cv_linear))))
     
@@ -433,12 +461,17 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   counter<-1
   origfamily<-initialModel$family$family
   
-  outModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(origfamily), "(link=", substitute(link),"))",  sep='')))
+  if(origfamily == "Tweedie"){
+    outModel<-eval(parse(text=paste("update(baseModel, .~., family =", paste0(initialModel$call[grep("tweedie", initialModel$call)]),")",  sep='')))
+  }else{
+    outModel<-eval(parse(text=paste("update(baseModel, .~., family=",substitute(origfamily), "(link=", substitute(link),"))",  sep='')))
+  }
+  
   eval(parse(text=paste(substitute(datain),"<-data", sep="" )))
   #  for(i in 2:(length(varlist)+1)){
   #if(varlist[varID[(i-1)]-1]%in%varlist_cyclicSplines){
   # outTerms[[counter]]<-paste("as.matrix(data.frame(gam(response ~ s(", varlist[varID[(i-1)]-1], ", bs='cc', k=(length(splineParams[[", varID[(i-1)], "]]$knots) +2)), knots = list(",varlist[varID[(i-1)]-1], "=c(splineParams[[",varID[(i-1)], "]]$bd[1], splineParams[[", varID[(i-1)], "]]$knots, splineParams[[",varID[(i-1)], "]]$bd[2])), data=",substitute(datain),", fit=F)$X[,-1]))", sep="")  
-  outModel<-eval(parse(text=paste("update(outModel, ~ ., data=", substitute(datain),")", sep="")))
+  outModel<-eval(parse(text=paste("update(outModel, ~ ., data=", substitute(datain),", splineParams=splineParams)", sep="")))
   #    counter<-counter+1
   #   }
   class(outModel)<-c('gamMRSea', class(outModel))

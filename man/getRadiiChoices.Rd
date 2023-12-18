@@ -12,12 +12,15 @@ getRadiiChoices(numberofradii = 10, distMatrix, basis, rvin = NULL)
 \item{distMatrix}{Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances. Euclidean distances created using \code{\link{makeDists}}.}
 
 \item{basis}{character stating whether a 'gaussian' or 'exponential' basis is being used.}
+
+\item{rvin}{Two parameter vector stating the minimum and maximum range of r for a gaussian basis.}
 }
 \value{
 This function returns a vector containing a sequence of range parameters.
 }
 \description{
-Function for obtaining a sequence of range parameters for the CReSS smoother
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}}
+\code{getRadiiChoices()} has been superseded in favour of \code{getRadiiSequence()}
 }
 \details{
 The range parameter determines the range of the influence of each knot.  Small numbers indicate local influence and large ones, global influence.
@@ -33,10 +36,10 @@ data(knotgrid.ns)
 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns))
 
 # choose sequence of radii
-r_seq<-getRadiiChoices(8, distMats$dataDist)
+r_seq<-getRadiiChoices(8, distMats$dataDist, basis="gaussian")
 
 }
 \references{
-Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. 
+Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013.
 DOI: 10.1080/10618600.2012.762920
 }

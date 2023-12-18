@@ -35,6 +35,10 @@
 #' @export
 
 create.bootstrap.data<-function(dis.data,resample = "transect.id",rename = "segment.id", stratum=NULL){
+  if(is_tibble(dis.data)){
+    dis.data <- data.frame(dis.data)
+    cat("\n dis.data converted from tibble to data frame\n")
+  }
 if(is.null(stratum)==T){
   unique.resamples<-unique(dis.data[,resample])
   resamples.no<-length(unique.resamples)   

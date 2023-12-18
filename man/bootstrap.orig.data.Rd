@@ -19,7 +19,7 @@ bootstrap.orig.data(orig.data, resample, new.resamples, resamples.no)
 Returns bootstrapped data. Internal function called by function \code{create.bootstrap.data}.
 }
 \description{
-This function extracts the records corresponding to each resample from the original 
+This function extracts the records corresponding to each resample from the original
 distance data and pastes them together in a new data frame which is returned.
 }
 \examples{

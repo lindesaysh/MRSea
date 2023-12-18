@@ -25,7 +25,7 @@ makesplineParams(
 This function makes a list object containing all of the information to fit splines to continuous data.
 }
 \details{
-The information is stored in list slots \code{[[2]]} and onward (slot \code{[[1]]} is reserved for a spatial term). Specifically: 
+The information is stored in list slots \code{[[2]]} and onward (slot \code{[[1]]} is reserved for a spatial term). Specifically:
 
 \code{covar}. Name of covariate.
 
@@ -36,7 +36,6 @@ The information is stored in list slots \code{[[2]]} and onward (slot \code{[[1]
 \code{bd}. This specifies the boundary knots.  If \code{predictionData} is \code{NULL} then this is the range of the covariate data.  Otherwise, the boundary knots are the maximum combined range of the data and prediction data.
 
 \code{degree}. The degree of a B-spline. This function retuns 2 by default.
-
 
 See \code{\link{runSALSA2D}} for details on the spatial slot (\code{[[1]]})
 }

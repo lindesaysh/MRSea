@@ -6,7 +6,7 @@
 #' @param model Fitted model object (glm or gam)
 #' @param store (\code{default=FALSE}). Logical stating whether a list of the matrix of correlations is stored (output from \code{acffunc}.)
 #' @param save (\code{default=FALSE}). Logical stating whether plot should be saved into working directory.
-#' @param suppress.printout (\code{default=FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.
+#' @param suppress.printout (\code{default=TRUE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.
 #' @param  maxlag (\code{default=NULL}). Numeric entry to allow the restriction of the maximum lag on the plots.  If \code{NULL} then the length of the longest panel is used as the maximum plotted lag. 
 #' 
 #' @return
@@ -28,17 +28,28 @@
 #' 
 #' runACF(ns.data.re$blockid, model, suppress.printout=TRUE)
 #' 
+#' # storing the output and then plotting
+#' acfoutput <- runACF(ns.data.re$blockid, model, suppress.printout=TRUE, store=TRUE)
+#' plotacf(acfoutput$acfmat)
+#' 
 #' @author LAS Scott-Hayward, University of St Andrews
 #' 
 #' @export
 #' 
 
-runACF<-function(block, model, store=FALSE, save=F, suppress.printout=FALSE, maxlag=NULL){
+runACF<-function(block, model, store=FALSE, save=F, suppress.printout=TRUE, maxlag=NULL, printplot=TRUE){
   acf_result<-acffunc(block, model, suppress.printout)
-  if(save==T){png('acfPlot.png', height=500, width=600)}
-  plotacf(acf_result$acfmat, maxlag)
-  if(save==T){dev.off()}
-  if(store==TRUE){return(acf_result)}
+  if(save==T){
+    png('acfPlot.png', height=500, width=600)
+    plotacf(acf_result$acfmat, maxlag)
+    dev.off()
+  }else{
+    if(store==TRUE){
+      return(acf_result)
+    }else{
+      plotacf(acf_result$acfmat, maxlag)
+    }
+  }
 }
 
 
@@ -47,9 +58,9 @@ runACF<-function(block, model, store=FALSE, save=F, suppress.printout=FALSE, max
 #' 
 #' @param block Vector of blocks that identify data points that are correlated
 #' @param model Fitted model object (glm or gam)
-#' @param suppress.printout (Default: \code{FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.
+#' @param suppress.printout (Default: \code{TRUE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.
 #' 
-acffunc<-function(block, model, suppress.printout=FALSE){
+acffunc<-function(block, model, suppress.printout=TRUE){
   blocktab<-table(block)
   acfmat<-matrix(NA, length(unique(block)), max(blocktab))
   
@@ -87,15 +98,34 @@ acffunc<-function(block, model, suppress.printout=FALSE){
 #' @param  maxlag (\code{default=NULL}). Numeric entry to allow the restriction of the maximum lag on the plots.  If \code{NULL} then the length of the longest panel is used as the maximum plotted lag.
 #'  
 plotacf<-function(acfmat, maxlag=NULL){
+  
+  suppressWarnings(library(dplyr, quietly = TRUE))
+  
   if(is.null(maxlag)){
-    xlims = c(0,ncol(acfmat))
-  }else{
-    xlims = c(0,maxlag)
+    maxlag = ncol(acfmat)
   }
-  plot(0:(length(na.omit(acfmat[1,]))-1), na.omit(acfmat[1,]), xlim=xlims, ylim=c(-1,1), type='l', col='grey', xlab='Lag', ylab='Auto correlation', cex.lab=1.3, cex.axis=1.3)
-  abline(h=0)
-  for(i in 2:nrow(acfmat)){
-    lines(0:(length(na.omit(acfmat[i,]))-1), na.omit(acfmat[i,]), col='grey')  
-  }
-  lines(0:(ncol(acfmat)-1), apply(acfmat, 2, mean, na.rm=T), col='red', lwd=2)
+  acfdat <- as_tibble(data.frame(t(acfmat))) %>% 
+    mutate(Meancor = apply(acfmat, 2, mean, na.rm=T),
+           Lag = row_number()-1) %>% 
+    tidyr::pivot_longer(names_to = "blocks", values_to = "correlation", cols = -c(Lag)) %>%
+    arrange(blocks, Lag)
+  
+  t <- round(filter(acfdat, Lag==1, blocks!="Meancor") %>% 
+    summarise(min=min(correlation), max=max(correlation)),2)
+  tmean = round(filter(acfdat, Lag==1, blocks=="Meancor")$correlation,2)
+  
+  suppressWarnings({
+  p <- ggplot() +
+    geom_line(data = filter(acfdat, blocks != "Meancor", Lag <= maxlag), 
+              aes(x = Lag, y = correlation, group=blocks), 
+              colour = "grey", linewidth = 1) +
+    theme_bw() + 
+    ylab("Auto correlation") +
+    geom_hline(aes(yintercept=0)) + 
+    geom_line(data = filter(acfdat, blocks == "Meancor", Lag <= maxlag), 
+              aes(x = Lag, y = correlation, group=blocks), 
+              colour = "red3", linewidth = 1) +
+    ggtitle(paste0("Lag 1: min = ", t[1], ", mean = ", tmean, ", max = ", t[2]))
+  print(p)
+  })
 }

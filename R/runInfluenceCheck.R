@@ -31,36 +31,63 @@ timeInfluenceCheck<-function (model, id) {
   if (length(which(search() == "package:mgcv")) > 0) {
     detach("package:mgcv")
   }
-  require(mgcv)
-  inflStore <- matrix(0, nrow = length(unique(idUse)), ncol = (length(coef(model)) + 
-                                                                 2))
-  timeForOne <- system.time(for (i in unique(idUse)) {
-    rowsToDel <- which(id == i)
-    pos <- which(i == idUse)
-    newData <- dat[-rowsToDel, ]
-    
-    presPred <- as.matrix(model.matrix(model)[rowsToDel, ]) %*% inflStore[pos, 1:length(coef(model))]
-    inflStore[pos, ncol(inflStore)] <- sum((response[rowsToDel] - family(model)$linkinv(presPred))^2)
-    model.det <- det(summary(model)$cov.scaled)
-    
-    if ("splineParams" %in% names(model)) {
-      orig.dist<-model$splineParams[[1]]$dist
-      model$splineParams[[1]]$dist<- model$splineParams[[1]]$dist[-rowsToDel,]
-    }
-    
-    options(warn = -1)
-    newMod <- update(model, . ~ ., data = newData)
-    if("panels" %in% names(newMod)){
-      newMod$panels<-newMod$panels[-rowsToDel]
-    }
-    
-    inflStore[pos, 1:length(coef(newMod))] <- newMod$coefficients
-    inflStore[pos, (ncol(inflStore) - 1)] <- det(summary(newMod)$cov.scaled)/model.det
+  suppressMessages({
+    library(mgcv, quietly = TRUE)
   })
+  
+  inflStore <- matrix(0, nrow = length(unique(id)), ncol = (length(coef(model)) + 2))
+  timeForOne <- system.time(for (i in unique(idUse)) {
+    #find rows to delete
+    rowsToDel<- which(id==i)
+    pos<- which(i==unique(id))
+    newData<- dat[-rowsToDel,]
+    
+    # make assessment on original model
+    nb<- as.matrix(model.matrix(model)[c(1),])
+    nc<- as.matrix(inflStore[pos,1:length(coef(model))])
+    
+    if(length(pos==1)){
+      presPred <- t(nb)%*%nc
+    }else{
+      presPred <- nb%*%nc  
+    }
+    
+    inflStore[pos,ncol(inflStore)]<-sum((response[rowsToDel]-c(family(model)$linkinv(presPred)))**2)
+    
+    if(class(model)[1]=='gamMRSea'){
+      model.det<-det(summary(model)$cov.robust)
+    }else{
+      model.det<-det(summary(model)$cov.scaled)
+    }
+    
+    # update model for reduced data size (includes data and distance matrix)
+    newMod<-model
+    if ("splineParams" %in% names(model)) {
+      newMod$splineParams[[1]]$dist<- newMod$splineParams[[1]]$dist[-rowsToDel,]
+      splineParams = newMod$splineParams
+    }
+    
+    if(class(model)[1]=='gamMRSea'){
+      newpanel<-id[-rowsToDel]
+      if(is.factor(newpanel)){
+        newpanel<-droplevels(newpanel)
+      }
+      newMod<-update(newMod, .~. ,data=newData, panels=newpanel, splineParams = splineParams)
+      newmod.det<-det(summary(newMod)$cov.robust)
+    }else{
+      newMod<-update(newMod, .~. ,data=newData)
+      newmod.det<-det(summary(newMod)$cov.scaled)
+    }
+    
+    # make assessment on new model
+    inflStore[pos,(1:length(coef(newMod)))]<-newMod$coefficients
+    inflStore[pos,(ncol(inflStore)-1)]<-newmod.det/model.det
+  })
+  
   print(paste("Calculating the influence measures will take approximately ", 
-              round(timeForOne[3] * length(unique(id))/60, 0), " minutes", 
+              round((timeForOne[3]) * length(unique(id))/60), " minutes", 
               sep = ""))
-  options(warn = 0)
+  
 }
 
 

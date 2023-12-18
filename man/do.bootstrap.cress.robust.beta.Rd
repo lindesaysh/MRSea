@@ -41,12 +41,14 @@ A new column with new ids will automatically be created for the column listed in
 The function returns a matrix of bootstrap predictions. The number of rows is equal to the number of rows in predictionGrid.  The number of columns is equal to \code{B}.  The matrix may be very large and so is stored directly into the working directory as a workspace object: '"name"predictionboot.RObj'.  The object inside is called \code{bootPreds}.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 This fuction performs a specified number of bootstrapping iterations using CReSS/SALSA for fitting the count model. See below for details.
 }
 \details{
 The following steps are performed for each iteration:
-
-- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
-
-- predictions are made to the prediction data using the resampled coefficients
+\itemize{
+\item coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
+\item predictions are made to the prediction data using the resampled coefficients
+}
 }

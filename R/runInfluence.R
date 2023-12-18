@@ -12,7 +12,7 @@
 #' Two plots one each for COVRATIO and PRESS statistics, giving the influence of each block on precision of the parameter estimates and the sensitivity of model predictions.
 #' List object:
 #' \item{influenceData}{List of \code{blocks}, COVRATIO statistics and PRESS statistics used for making the plot of PRESS and COVRATIO statistics.}
-#' \item{influencePoints}{Row id of blocks in \code{influenceData} that lie outside the 95\% quantile of COVRATIO statistics and above the 95\% quantile of PRESS statistics.}
+#' \item{influencePoints}{Row id of blocks in \code{influenceData} that lie outside the 95% quantile of COVRATIO statistics and above the 95% quantile of PRESS statistics.}
 #' 
 #' @examples 
 #' # load data
@@ -97,7 +97,7 @@ runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
     newMod<-model
     if ("splineParams" %in% names(model)) {
       newMod$splineParams[[1]]$dist<- newMod$splineParams[[1]]$dist[-rowsToDel,]
-      splineParams<<-model$splineParams
+      splineParams = newMod$splineParams
     }
     
     if(class(model)[1]=='gamMRSea'){
@@ -105,7 +105,7 @@ runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
       if(is.factor(newpanel)){
         newpanel<-droplevels(newpanel)
       }
-      newMod<-update(newMod, .~. ,data=newData, panels=newpanel)
+      newMod<-update(newMod, .~. ,data=newData, panels=newpanel, splineParams = splineParams)
       newmod.det<-det(summary(newMod)$cov.robust)
     }else{
       newMod<-update(newMod, .~. ,data=newData)
@@ -118,8 +118,11 @@ runInfluence<-function(model, id=NULL, save=FALSE, dots=FALSE){
     counter<-counter+1
     
   }
-  
-  numericblock<-as.numeric(unique(id))
+  if(class(id) == "character"){
+    numericblock<-as.numeric(as.factor(unique(id)))
+  }else{
+    numericblock<-as.numeric(unique(id))
+  }
   
   if(save==T){png("InfluenceMeasures_covratio.png", height=600, width=600)}else{devAskNewPage(ask=TRUE)}
   a<-inflStore[,(ncol(inflStore)-1)]

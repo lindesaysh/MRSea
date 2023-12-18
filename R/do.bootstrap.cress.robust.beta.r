@@ -1,5 +1,8 @@
 #' Bootstrapping function without model selection for a model of class 'gamMRSea' and beta family
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'  
 #' This fuction performs a specified number of bootstrapping iterations using CReSS/SALSA for fitting the count model. See below for details.
 #'
 #' @param predictionGrid The prediction grid data

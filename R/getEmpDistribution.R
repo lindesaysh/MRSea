@@ -4,9 +4,9 @@
 #' @param simData A matrix, where each column is a set of data simulated under independence, with rows the same length as the data used for the model.
 #' @param model a glm or gamMRSea model object
 #' @param data data set used to fit the model.
-#' @param plot logical flag. If TRUE, a plot is made showing the 5\% critical values for the empirical distribution vs the N(0,1) distribution. Default is 'FALSE'
-#' @param returnDist logical flag.  Do you want the distribution of test statistics returned ('TRUE') or just the 5\% critical values ('FALSE')
-#' @param dots (Default: \code{TRUE}. Logical stating whether to show a printout of block numebers to assess progress. 'TRUE' will print dots into the workspace. 
+#' @param plot logical flag. If TRUE, a plot is made showing the 5% critical values for the empirical distribution vs the N(0,1) distribution. Default is `FALSE`
+#' @param returnDist logical flag.  Do you want the distribution of test statistics returned (`TRUE`) or just the 5% critical values (`FALSE`)
+#' @param dots (Default: \code{TRUE}. Logical stating whether to show a printout of block numbers to assess progress. `TRUE` will print dots into the workspace. 
 #' 
 #'
 #' @examples 
@@ -31,7 +31,12 @@ for(i in 1:n.sim){
 
   splineParams = model$splineParams
   data$response=simData[,i]
-  sim_glm<- update(model, response ~ ., data=data)
+  if(is.null(splineParams)){
+    sim_glm<- update(model, response ~ ., data=data)
+  }else{
+    sim_glm<- update(model, response ~ ., data=data, splineParams=splineParams)   
+  }
+ 
   runs<-runsTest(residuals(sim_glm, type='pearson'))
   runsstatH0[i]<-runs$statistic
   # if(imp.beta.coverage){

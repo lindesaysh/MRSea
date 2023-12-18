@@ -37,7 +37,7 @@ do.bootstrap.cress(
 
 \item{resample}{Specifies the resampling unit for bootstrapping, default is \code{transect.id}. Must match a column name in \code{dis.data} exactly}
 
-\item{rename}{A vector of column names for which a new column needs to be created for the bootstrapped data. This defaults to \code{segment.id} for line transects (which is required for \code{create.bootcount.data}), others might be added. 
+\item{rename}{A vector of column names for which a new column needs to be created for the bootstrapped data. This defaults to \code{segment.id} for line transects (which is required for \code{create.bootcount.data}), others might be added.
 A new column with new ids will automatically be created for the column listed in \code{resample}. In case of nearshore data, this argument is ignored.}
 
 \item{stratum}{The column name in \code{orig.data} that identifies the different strata. The default \code{NULL} returns un-stratified bootstrap data. In case of nearshore data, this argument is ignored.}
@@ -58,27 +58,24 @@ A new column with new ids will automatically be created for the column listed in
 The function returns a matrix of bootstrap predictions. The number of rows is equal to the number of rows in predict.data.  The number of columns is equal to \code{B}.  The matrix may be very large and so is stored directly into the working directory as a workspace object: '"name"predictionboot.RObj'.  The object inside is called \code{bootPreds}.
 }
 \description{
-This fuction performs a specified number of bootstrapping iterations using CReSS/SALSA for fitting the 
+This fuction performs a specified number of bootstrapping iterations using CReSS/SALSA for fitting the
 second stage count model. See below for details.
 }
 \details{
-In case of distance sampling data, the following steps are performed for each iteration: 
-
-- the original data is bootstrapped
-
-- a detection function is fitted to the bootstrapped data
-
-- a count model is fitted to the bootstrapped data
-
-- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from count model
-
-- predictions are made to the prediction data using the resampled coefficients 
+In case of distance sampling data, the following steps are performed for each iteration:
+\itemize{
+\item the original data is bootstrapped
+\item a detection function is fitted to the bootstrapped data
+\item a count model is fitted to the bootstrapped data
+\item coefficients are resampled from a multivariate normal distribution defined by MLE and COV from count model
+\item predictions are made to the prediction data using the resampled coefficients
+}
 
 In case of count data, the following steps are performed for each iteration:
-
-- coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
-
-- predictions are made to the prediction data using the resampled coefficients
+\itemize{
+\item coefficients are resampled from a multivariate normal distribution defined by MLE and COV from the best fitting count model
+\item predictions are made to the prediction data using the resampled coefficients
+}
 }
 \examples{
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

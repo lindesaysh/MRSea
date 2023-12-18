@@ -1,3 +1,118 @@
+# MRSea 1.5.001
+
+
+## Notes
+* SALSA1D: 
+
+ 
+* SALSA2D:
+  
+ 
+
+* Vignettes:
+  
+ 
+  
+* Other: 
+
+  
+## Bug Fixes
+
+* SALSA 1D:
+
+* SALSA 2D:
+  
+
+* Other:
+
+
+
+
+# MRSea 1.5
+
+
+## Notes
+* SALSA1D: 
+
+  - update function to allow the inclusion of a variable that is a `Date` class.
+  
+* SALSA2D:
+  
+  - the `getRadiiChoices` and `getRadiiChoices.vario` functions have been superseded and merged into one function: `getRadiiSequence()`.
+  - functions have been added to help create a factor based knot grid (`selectFctrKnots`) and get an associated infinity-block distance matrix (updates to the `makeDists` function).  There is also a function to select space-filled starting knots for each factor level (`selectFctrStartk`)
+
+* Vignettes:
+  
+  - Introduction to MRSea: added section on using `make.gamMRSea`
+  - Interactions: edited to use the new functions for factor based knots.
+  - Renewables Case Study: vignette re-instated and completely updated for all new functions. 
+  
+  
+* Other: 
+
+  - The seed used for CV score calculation is appended as an attribute to the output of cv.gamMRSea. Additionally it is also an optional input parameter. 
+  - The seed used for generating the CV folds (`getCVids`) is now appended as an attribute fo the returned vector of folds. 
+  - the method for shortening the coefficient names in the summary output has been updated to be more efficient and to work in more situations. 
+  
+## Bug Fixes
+
+* SALSA 1D:
+
+* SALSA 2D:
+
+  - The dispersion parameter estimate using `getDisperson` function was incorrectly specified as 1 for the Tweedie distribution.  This affected the dropping of "bad" knots in the initialise step resulting in more knots being dropped than should have been. This did not affect knots being subsequently added in the exchange step. The correct calculation is now included in the `getDispersion` function.
+  - When using `initialise = FALSE` and specifying initial knot locations via `initialKnPos` code has been added to snap the initial locations to the nearest candidate knot locations in the knot grid. Previously it was assumed these initial locations were a subset of the candidate set. Now any locations may be used. 
+  - When using an odd number of radii and with `chooseradii = FALSE` there may sometimes have been a mismatch from the output of SALSA2D and the output given from `runSALSA2D`. The default is an even number so mostly this will not have been an issue. 
+  
+
+* Other:
+
+  - When using the Tweedie distribution, the power parameter is not stored in the model call and so issues arise when using a stored model object where this parameter is no longer available.  The parameter is stored within the model but updates have been made to `runSALSA1D` and `runSALSA2D` to ensure that the variance power and variance link are specified as numbers in the model call. 
+  - The CV score was unchanged when changing K.  This occurred owing to the folds stored within the model object.  If `K` specified in `cv.gamMRSea` is different to that in the model object new folds are now created with a warning message.  The folds in the model object remain unchanged. Note that there is now an error message if the number of folds specified exceeds the number of unique panels. 
+  - bug in the variance calculation for the gamma distribution in the `plotMeanVar` function. Additionally, the legend mismatched the data.
+  - bug in the `runInfluence` and `timeInfluenceCheck`.  It worked fine for models without a 2D smooth but a specification error caused issues for models with one. Fixed and working as it should now. 
+  
+
+
+# MRSea 1.4
+
+
+## Notes
+* SALSA1D: 
+
+  - Tweedie distribution and associated information criterion added (`AICtweedie` and `BICtweedie`)
+  
+* SALSA2D:
+
+  - Tweedie distribution and associated information criterion added (`AICtweedie` and `BICtweedie`)
+
+* Vignettes:
+
+  - Added a vignette for using the Tweedie distribution in gamMRSea models
+  - Added a vignette for model diagnostics with general modelling information and MRSea specific functions
+  - Added a vignette for user specification of the range of radii choices using a variogram
+  - Added a vignette for a brief introduction to distance sampling using the `mrds` package
+  - Added an introduction to MRSea vignette.
+  - The case study vignette has been removed for updating and will return soon. 
+  
+  
+* Other: 
+
+  - Mean variance plot function added. This allows the user to assess the suitability of the mean-variance distributional assumption for a number of distributions (Gaussian, Poisson, Quasi-Poisson, Gamma and Tweedie)
+  - Minor edits to all diagnostic functions (ACF, influence measures, diagnostic plots, cumulative residuals)
+  
+## Bug Fixes
+
+* SALSA 1D:
+
+* SALSA 2D:
+
+* Other:
+
+  - ensure data is a `data.frame` (not `tibble`) in `create.bootstrap.data` and `plotCumRes` functions
+  - minor bug fixes to diagnostic functions when no spline parameter object present in model
+
+
 # MRSea 1.3.3
 
 

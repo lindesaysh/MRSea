@@ -14,11 +14,6 @@ vignette: >
 ---
 
 
-<!-- **Please reference this document as:** -->
-<!-- Scott-Hayward, L.A.S., Mackenzie, M.L. and Walker, C.G. (2021). Vignette for the MRSea Package v1.3: Statistical Modelling of bird and cetacean distributions in offshore renewables development areas. Centre for Research into Ecological and Environmental Modelling, University of St Andrews. -->
-
-<!-- ******* -->
-
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(fig=TRUE, warning=FALSE, message=FALSE, 
                       eval=TRUE, cache=FALSE,
@@ -46,6 +41,7 @@ In addition to the functions required to run the models (which we shall go throu
 
   - `runACF` (to assess residual correlation), 
   - `runsTest` (to assess residual correlation)
+  - `plotMeanVar` (to assess the mean-variance relationship)
   - `runDiagnostics` (plots of observed vs fitted and fitted vs scaled Pearsons residuals), 
   - `timeInfluenceCheck`/`runInfluence` (assessing the influence of data on precision and predictions), 
   - `plotCumRes` (plots of cumulative residuals)
@@ -222,10 +218,12 @@ There is an example of this in use in the [case study vignette](https://lindesay
 
 For information on:
 
-1. [Other types of 2D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea_v1.3)
-2. Distance sampling, simple interactions, `gamMRSea` model diagnostics, inference via bootstrapping and using robust standard errors to deal with residual correlation see the [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3).
-2. More complex [interactions](https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea_v1.3).
-3. Using non Euclidean distances to measure the similarity between points. For example, using geodesic distances to represent "as the fish swims" rather than "as the crow flies".  This takes into account distances around exclusion areas such as coastlines or lakes. See [here]((https://lindesaysh.github.io/MRSea/article/Geodesic_2dsmoothing_MRSea_v1.3))
+1. [Other types of 2D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea)
+2. [Model Diagnostics](https://lindesaysh.github.io/MRSea/article/ModelDiagnostics_MRSea)
+3. [Distance Sampling](https://lindesaysh.github.io/MRSea/article/DistanceSampling)
+4. Marine Renewables baseline characterisataion [Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea).
+5. More complex [interactions](https://lindesaysh.github.io/MRSea/article/Interactions_salsa2d_MRSea).
+6. Using non Euclidean distances to measure the similarity between points. For example, using geodesic distances to represent "as the fish swims" rather than "as the crow flies".  This takes into account distances around exclusion areas such as coastlines or lakes. See [here]((https://lindesaysh.github.io/MRSea/article/Geodesic_2dsmoothing_MRSea))
 
 
 # References

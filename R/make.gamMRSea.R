@@ -40,7 +40,9 @@ make.gamMRSea<-function(model, panelid=NULL, splineParams=NULL, varshortnames=NU
 
   if(gamMRSea){
     newmodel$call[[1]]<-quote(gamMRSea)
-    newmodel$call$splineParams<-quote(splineParams)
+    if(!is.null(splineParams)){
+      newmodel$call$splineParams<-quote(splineParams)
+    }
   }
 
   return(newmodel)

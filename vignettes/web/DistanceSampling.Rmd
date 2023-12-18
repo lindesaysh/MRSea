@@ -1,0 +1,125 @@
+---
+title: "Distance Sampling"
+author: "Lindesay Scott-Hayward"
+date: "2023-08-29"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, comment='#>', 
+                      message=FALSE, eval=TRUE,
+                      collapse=TRUE, dev='png')
+```
+
+# (Very) Brief Introduction to Distance Sampling using the `mrds` library
+
+```{r eval=TRUE, echo=FALSE}
+# load workpace
+require(ggplot2)
+require(RColorBrewer)
+require(splines)
+require(fields)
+```
+
+1. Load data and fit detection function (Distance Sampling)
+
+This first step uses the `mrds` `R` package to fit a detection function model.  More information on using this package can be found in its help files and also the [Distance Sampling web pages](http://distancesampling.org/)
+
+Here we fit a simple half normal detection function with no covariates and one with season as a covariate that may affect detectability of the animals. 
+
+```{r message=FALSE}
+library(mrds)
+```
+
+```{r}
+# we will use the dataset with a known re-distribution of animals
+data(dis.data.re, package = "MRSea")
+dis.data<-dis.data.re
+```
+
+For the `MRSea` functions that we will use to generate the adjusted counts per segment it is best that the data for analysis are already segmented and including all the zero segments.  Each row is either a zero segment (with object and distance set to `NA`) or a detection with a segment label (there may be more than one detection per segment). The columns in our data are as follows:
+
+- `transect.id` Identifier for the individual visits to the transects
+- `transect.label` Labels for transects
+- `season` Numerical indicator for the four different seasons
+- `impact` Numerical indicator for before (0) and after (1) impact
+- `segment.id` Identifier for individual visits to the segment
+-` segment.label` Label for segments
+- `length` Length of segment in km
+- `x.pos` spatial location in the horizontal axis in UTMs
+- `y.pos` spatial location in the vertical axis in UTMs
+- `depth` Depth in m
+- `object` Id for detected object
+- `distance` Perpendicular distance from the line
+
+Additional observation level covariates may be present such as glare, sea state or observer
+
+```{r}
+head(dis.data)
+```
+
+The detection data has information in the object and distance columns relating to the sightings.
+
+```{r}
+library(dplyr)
+filter(dis.data, !is.na(distance)) %>% head
+```
+
+
+
+Simple detection function model with no covariates
+
+```{r}
+result <- ddf(dsmodel=~mcds(key="hn", formula=~1),
+              data = dis.data, method="ds", 
+              meta.data=list(width=250))
+```
+
+```{r eval=TRUE}
+summary(result)
+```
+
+Detection function model with one covariate, season.
+
+```{r}
+result.season <- ddf(dsmodel=~mcds(key="hn", formula=~season),
+              data = dis.data, method="ds", 
+              meta.data=list(width=250))
+```
+
+```{r eval=TRUE}
+summary(result.season)
+```
+- Visualising the detection functions by season
+
+```{r eval=TRUE}
+par(mfrow=c(2,2))
+plot(result.season, subset = season==1)
+plot(result.season, subset = season==2)
+plot(result.season, subset = season==3)
+plot(result.season, subset = season==4)
+```
+```{r}
+BIC(result)
+BIC(result.season)
+```
+- The BIC output shows that the simple no covariate detection function model is preferred. 
+
+2. Adjust sightings for detectability 
+
+First the adjusted counts for each detection are estimated using the `create.NHAT` function from the `MRSea` package.  The adjustment is the number of observed individuals divided by their probability of detection. Additionally, the `area` (in km) column is also created using the segment length and truncation distance. 
+
+```{r dist, results='hide', warning=FALSE, message=FALSE}
+library(MRSea)
+dis.data <- create.NHAT(dis.data,result)
+```
+
+Then the `create.count.data` function is used to collapse the data down into one row per segment.  The estimated counts are summed within each segment and the distance related variables removed (distance, size, object). 
+
+If availability information is present, then these adjustments may also be made here. 
+
+```{r}
+count.data <- create.count.data(dis.data)
+```
+
+These count data are now ready for analysis using the main `MRSea` functions. Specifically, spatially adaptive smoothing in one and two dimensions. 

@@ -9,8 +9,9 @@ runACF(
   model,
   store = FALSE,
   save = F,
-  suppress.printout = FALSE,
-  maxlag = NULL
+  suppress.printout = TRUE,
+  maxlag = NULL,
+  printplot = TRUE
 )
 }
 \arguments{
@@ -22,7 +23,7 @@ runACF(
 
 \item{save}{(\code{default=FALSE}). Logical stating whether plot should be saved into working directory.}
 
-\item{suppress.printout}{(\code{default=FALSE}. Logical stating whether to show a printout of block numbers to assess progress. `FALSE` will show printout.}
+\item{suppress.printout}{(\code{default=TRUE}. Logical stating whether to show a printout of block numbers to assess progress. \code{FALSE} will show printout.}
 
 \item{maxlag}{(\code{default=NULL}). Numeric entry to allow the restriction of the maximum lag on the plots.  If \code{NULL} then the length of the longest panel is used as the maximum plotted lag.}
 }
@@ -46,6 +47,10 @@ ns.data.re$blockid<-paste(ns.data.re$GridCode, ns.data.re$Year, ns.data.re$Month
 ns.data.re$blockid<-as.factor(ns.data.re$blockid)
 
 runACF(ns.data.re$blockid, model, suppress.printout=TRUE)
+
+# storing the output and then plotting
+acfoutput <- runACF(ns.data.re$blockid, model, suppress.printout=TRUE, store=TRUE)
+plotacf(acfoutput$acfmat)
 
 }
 \author{

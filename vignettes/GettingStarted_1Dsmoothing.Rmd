@@ -258,7 +258,7 @@ To include a two dimensional smooth, e.g. a smooth of coordinate space, see the 
 
 ## Model selection
 
-Fitting the models as described above will always return the non-factor covariates as smooth terms regardless of whether this is sensible or not. There is an optional parameter in `runSALSA1D` which allows selection for each smooth term (smooth, linear or removed) using, by default, 10-fold cross-validation (regardless of fitness measure chosen). To implement this, set the paramater `removal` to be `TRUE`.
+Fitting the models as described above will always return the non-factor covariates as smooth terms regardless of whether this is sensible or not. There is an optional parameter in `runSALSA1D` which allows selection for each smooth term (smooth, linear or removed) using, by default, 10-fold cross-validation (regardless of fitness measure chosen). To implement this, set the parameter `removal` to be `TRUE`.
 
 Using the same model above with some more covariates added:
 
@@ -311,14 +311,12 @@ What about the factor variable? Factor variable selection is not currently inclu
 ```{r}
 fit_rmfloodeb <- update(salsa1dOutput.multi.rm$bestModel, . ~ . - floodebb)
 
-set.seed(123)
 cv.gamMRSea(modelobject = salsa1dOutput.multi.rm$bestModel, 
             data = vpdata, 
-            K = 10)$delta[2]
-set.seed(123)
+            K = 10, s.eed = 123)$delta[2]
 cv.gamMRSea(modelobject = fit_rmfloodeb, 
             data = vpdata, 
-            K = 10)$delta[2]
+            K = 10, s.eed = 123)$delta[2]
 
 ```
 
@@ -337,9 +335,10 @@ By specifying `anova` it is using the `anova.gamMRSea` function (as the class of
 
 For information on:
 
-1. [Other types of 1D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea_v1.3)
+1. [Other types of 1D spline](https://lindesaysh.github.io/MRSea/article/FittingDifferentSplines_MRSea)
 2. [Two dimensional smoothing](https://lindesaysh.github.io/MRSea/article/GettingStarted_2Dsmoothing)
-3. [Full Case Study](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea_v1.3) including information on distance sampling, `gamMRSea` model diagnostics and using robust standard errors to deal with residual correlation. 
-
+3. [Model Diagnostics](https://lindesaysh.github.io/MRSea/article/ModelDiagnostics_MRSea)
+4. [Distance Sampling](https://lindesaysh.github.io/MRSea/article/DistanceSampling)
+5. [Case Study for Marine Renewables](https://lindesaysh.github.io/MRSea/article/RenewablesCaseStudy_MRSea)
 
 # References

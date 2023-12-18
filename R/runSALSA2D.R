@@ -111,14 +111,29 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     data<-model$model
   }
 
-  attributes(model$formula)$.Environment<-environment()
-
+  if(!is.data.frame(data)){
+    data <- data.frame(data)
+    cat("\n Model data converted from tibble to data frame\n")
+  }
+  
   if(class(model)[1]!='gamMRSea'){model<-make.gamMRSea(model, gamMRSea=TRUE)}
 
   # check for response variable
   if(is.null(data$response)) stop('data does not contain response column')
 
+  if(model$family$family == "Tweedie"){
+    p <- get("p", environment(model$family$variance))
+    link.power <- get("link.power", environment(model$family$variance))
+    if(p == 0) stop("Tweedie power parameter set to 0, please use Gaussian distribution instead")
+    if(p == 1) stop("Tweedie power parameter set to 1, please use Quasi-Poisson distribution instead")
+    if(p == 2) stop("Tweedie power parameter set to 2, please use Gamma distribution instead")
+    # edit model call to include the number for p
+    tex = paste("update(model, . ~ . , family = tweedie(var.power=", p, ", link.power = ", link.power,"))")
+    model = eval(parse(text = tex))
+  }
 
+  attributes(model$formula)$.Environment<-environment()
+  
   # check for duplicates in knotgrid
   if(length(which(duplicated(salsa2dlist$knotgrid)==T))>0) stop ('knotgrid has duplicated locations in it. Please remove.')
 
@@ -140,7 +155,10 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   #gridResp<-salsa2dlist$knotgrid[,1]
   
   if(is.null(salsa2dlist$r_seq)){
-    r_seq<-getRadiiChoices(numberofradii = 10, distMatrix = d2k, basis)
+    r_seq<-getRadiiSequence(method = "original", 
+                            numberofradii = 10, 
+                            distMatrix = d2k, 
+                            basis)
   }else{
     r_seq <- salsa2dlist$r_seq
   }
@@ -319,7 +337,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   baseModel$interactionterm<-interactionTerm
 
    eval(parse(text=paste(substitute(dataname),"<-data", sep="" )))
-  baseModel<-eval(parse(text=paste("update(baseModel, .~., data=", substitute(dataname),")", sep="")))
+  baseModel<-eval(parse(text=paste("update(baseModel, .~., data=", substitute(dataname),", splineParams = splineParams)", sep="")))
 
   attributes(baseModel$formula)$.Environment<-globalenv()
   #save.image(paste("salsa2D_k", splineParams[[1]]$startKnots, ".RData", sep=''))

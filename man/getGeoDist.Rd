@@ -19,7 +19,7 @@ getGeoDist(xygrid, polys, datalocations = NULL, plot.transition = TRUE)
 Function to calculate geodesic distances
 }
 \details{
-Using the raster, spancs and gdistance packages to calculate the geodesic distance between pairs of points. The polygons define the areas that an animal/object cannot be. E.g. Land if the animal is a marine mammal. 
+Using the raster, spancs and gdistance packages to calculate the geodesic distance between pairs of points. The polygons define the areas that an animal/object cannot be. E.g. Land if the animal is a marine mammal.
 
 The object returned is a matrix of distances between pairs of points and the x,y coordinates of each pair of points.
 }

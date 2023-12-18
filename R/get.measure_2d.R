@@ -6,7 +6,7 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   if (isS4(out.lm)) {
     attributes(out.lm@misc$formula)$.Environment<-environment()
   } else {
-    attributes(out.lm$formula)$.Environment<-environment()
+    attributes(out.lm$formula)$.Environment<-environment()  
   }
   
   tempMeasure <- measures[1]
@@ -106,8 +106,7 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
       set.seed(cv.opts$cv.gamMRSea.seed)
       fitStat <- cv.gamMRSea(data, out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
     } else {
-      set.seed(cv.opts$cv.gamMRSea.seed)
-      fitStat <- cv.gamMRSea(data, out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
+     fitStat <- cv.gamMRSea(data, out.lm, K=cv.opts$K, cost=cv.opts$cost, s.eed = cv.opts$cv.gamMRSea.seed)$delta[2]
     }
   }
   
@@ -138,6 +137,7 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     }
   }
   
+
   # calculate accuracy for vglm based multinomial
   if(fitnessMeasure=="mn.accuracy"){ 
     if (isS4(out.lm)) {
@@ -145,6 +145,15 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     } else {
       stop('Fitness measure only supported for multinomial with vglm')
     }
+  }
+
+  if(fitnessMeasure=="AICtweedie"){
+    fitStat<-tweedie::AICtweedie(out.lm)
+  }
+  
+  if(fitnessMeasure=="BICtweedie"){
+    fitStat<-tweedie::AICtweedie(out.lm, k=log(nrow(out.lm$data)))
+
   }
   
   # cat("Evaluating new fit: ", fitStat, "\n")

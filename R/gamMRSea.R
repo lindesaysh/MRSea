@@ -92,7 +92,7 @@ gamMRSea<-function (formula, family = gaussian, data, weights, subset,
   if (!y)
     fit$y <- NULL
   
-  varshortnames<-names(data)
+  varshortnames<-unlist(sapply(splineParams,"[[","covar"))
   
   fit <- c(fit, list(call = call, formula = formula, terms = mt,
                      data = data, offset = offset, control = control, method = method, contrasts = attr(X, "contrasts"), xlevels = .getXlevels(mt, mf), splineParams=splineParams, varshortnames=varshortnames))
