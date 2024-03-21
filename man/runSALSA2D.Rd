@@ -18,7 +18,8 @@ runSALSA2D(
   basis = "gaussian",
   initialise = TRUE,
   initialKnots = NULL,
-  initialKnPos = NULL
+  initialKnPos = NULL,
+  no.log = TRUE
 )
 }
 \arguments{

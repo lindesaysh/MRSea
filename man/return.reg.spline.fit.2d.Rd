@@ -18,7 +18,6 @@ return.reg.spline.fit.2d(
   initialaR = NULL,
   interactionTerm = NULL,
   knot.seed = 10,
-  suppress.printout = FALSE,
   plot = FALSE,
   cv.opts,
   basis
