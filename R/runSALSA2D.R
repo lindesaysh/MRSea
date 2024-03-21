@@ -326,7 +326,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   baseModel<-make.gamMRSea(baseModel, gamMRSea=TRUE)
   
-  if(suppress.printout & no.log = FALSE){
+  if(suppress.printout & no.log == FALSE){
     sink()
   }
 
