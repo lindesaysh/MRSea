@@ -146,10 +146,10 @@ plotMeanVar<-function(model, cut.bins = 20, save=FALSE, label = NULL, print=TRUE
       geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution, linetype=Distribution), linewidth=1) +
       scale_colour_manual("Distribution",
                           values=c("firebrick3", "darkgrey"),
-                          labels=c("1:1 line", "Gaussian")) +
+                          labels=c("Gaussian", "1:1 line")) +
       scale_linetype_manual("Distribution", 
-                            values = c(2,1),
-                            labels=c("1:1 line", "Gaussian"))
+                            values = c(1,2),
+                            labels=c("Gaussian", "1:1 line"))
   }
   
   # if(model$family[[1]] == "binomial"){
