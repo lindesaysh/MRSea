@@ -73,7 +73,7 @@ do.bootstrap.cress.robust<-function(model.obj, predictionGrid, splineParams=NULL
       if(robust==T){
         vbeta<-summary(model.obj)$cov.robust
         samplecoeff<-NULL
-        try(samplecoeff<- as.numeric(rmvnorm(1,est,vbeta, method='svd')))
+        suppressWarnings(try(samplecoeff<- as.numeric(rmvnorm(1,est,vbeta, method='svd'))))
         if(is.null(samplecoeff)){
           vbeta<-as.matrix(nearPD(as.matrix(summary(model.obj)$cov.robust))$mat)
           samplecoeff<- as.numeric(rmvnorm(1,est,vbeta, method='svd'))
@@ -82,7 +82,7 @@ do.bootstrap.cress.robust<-function(model.obj, predictionGrid, splineParams=NULL
       else{
         vbeta<-summary(model.obj)$cov.scaled
         samplecoeff<-NULL
-        try(samplecoeff<- as.numeric(rmvnorm(1,est,vbeta, method='svd')))
+        suppressWarnings(try(samplecoeff<- as.numeric(rmvnorm(1,est,vbeta, method='svd'))))
         if(is.null(samplecoeff)){
           vbeta<-as.matrix(nearPD(as.matrix(summary(model.obj)$cov.scaled))$mat)
           samplecoeff<- as.numeric(rmvnorm(1,est,vbeta, method='svd'))
