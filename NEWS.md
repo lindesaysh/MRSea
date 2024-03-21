@@ -4,6 +4,8 @@
 ## Notes
 * SALSA1D: 
 
+- addition of parameter (`logfile`) to remove dependence on log file sink if `suppress.printout = TRUE`. Default is set to `FALSE` so if `suppress.printout = TRUE` then no log file is produced unless `logfile = TRUE`
+
  
 * SALSA2D:
   
@@ -15,6 +17,8 @@
   
 * Other: 
 
+- `plotmeanVar`: the labelling for the Gaussian and Gamma alternative lines has been changed from "Poisson" to "1:1 line". 
+- warning suppression has been added to `do.boostrap.cress.robust`.  There is already a try catch for "svd" warnings with an alternative used so not necessary to see the warnings. 
   
 ## Bug Fixes
 
@@ -25,7 +29,7 @@
 
 * Other:
 
-
+- `plotMeanVar` line labelling was the wrong way round for the Gaussian case. This has been remedied. 
 
 
 # MRSea 1.5
