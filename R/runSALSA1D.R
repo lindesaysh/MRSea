@@ -12,6 +12,7 @@
 #' @param removal (Default: \code{FALSE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth. If \code{TRUE} then cross-validation is used to make model selection choices. The folds are specified by a column in the dataset called \code{foldid}.
 #' @param panelid Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
 #' @param suppress.printout (Default: \code{FALSE}. Logical stating whether to show the analysis printout.
+#' @param logfile (Default: \code{FALSE}). Logical stating whether to store a log file of the analysis printout.
 #' 
 #' @details
 #' There must be columns called \code{response} (response variable) and \code{foldid} (for cross-validation calculation) in the data used in the initial model to be fitted. If the data is proportion, then there should be two columns called \code{successess} and \code{failures}.
@@ -98,7 +99,7 @@
 #' 
 #' @export
 #' 
-runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=FALSE, panelid=NULL, suppress.printout=FALSE, no.log = TRUE){
+runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=FALSE, panelid=NULL, suppress.printout=FALSE, logfile = FALSE){
   
   require(splines)
   require(fields)
@@ -296,7 +297,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ loop through 1D covar ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if(suppress.printout & no.log == FALSE){
+  if(suppress.printout & logfile){
     sink(file='salsa1d.log')
   }
   
@@ -332,8 +333,11 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(salsa1dlist$splines[(i-1)] == "ns"){spl="ns"}
     
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
+    
+    printout <- ifelse(suppress.printout == TRUE & logfile == FALSE, F, T)
+    
     sttime<- proc.time()[3]
-    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, cv.opts=salsa1dlist$cv.opts, splineParams = splineParams)
+    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, cv.opts=salsa1dlist$cv.opts, splineParams = splineParams, printout)
     
     timings[(i-1)]<- proc.time()[3] - sttime
     
@@ -468,7 +472,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   outModel<-make.gamMRSea(outModel, gamMRSea=TRUE)
   
-  if(suppress.printout & no.log == FALSE){
+  if(suppress.printout & logfile){
     sink()
   }
   
