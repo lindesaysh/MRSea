@@ -8,7 +8,7 @@
 #'
 
 
-"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, initialaR=NULL, interactionTerm=NULL, knot.seed=10, suppress.printout=FALSE, plot=FALSE, cv.opts, basis){
+"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, initialaR=NULL, interactionTerm=NULL, knot.seed=10, plot=FALSE, cv.opts, basis){
   
 
   #Where am I?
@@ -55,11 +55,7 @@
   #                 interactionTerm - allows interaction between space and another term "ns(Year, knots =
   # splineParams[[6]][[2]])", for example.  If this is NULL, no interaction is done
   
-  # 
-  # if(suppress.printout){
-  #   sink(file='salsa2d.log')
-  # }
-  # 
+
   # split out spline parameter object into its pieces
   knotDist <- splineParams[[1]]$knotDist
   radii <- splineParams[[1]]$radii
@@ -247,10 +243,6 @@
   ####print("here fin")
   print("And we're done...")
 
-  # if(suppress.printout){
-  #   sink()
-  # }
-  # 
   
   gc(verbose=FALSE)
   

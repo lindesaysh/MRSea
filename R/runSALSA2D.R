@@ -98,7 +98,7 @@
 #' @export
 #'
 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian',initialise=TRUE, initialKnots=NULL, initialKnPos=NULL){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian',initialise=TRUE, initialKnots=NULL, initialKnPos=NULL, no.log = TRUE){
   
   if(class(model)[1]=='glm'){
     data<-model$data
@@ -233,7 +233,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ 2D SALSA RUN ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if(suppress.printout){
+  if(suppress.printout & no.log == FALSE){
     sink(file='salsa2d.log')
   }
 
@@ -326,7 +326,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   baseModel<-make.gamMRSea(baseModel, gamMRSea=TRUE)
   
-  if(suppress.printout){
+  if(suppress.printout & no.log = FALSE){
     sink()
   }
 

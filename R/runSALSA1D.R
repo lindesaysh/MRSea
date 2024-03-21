@@ -98,7 +98,7 @@
 #' 
 #' @export
 #' 
-runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=FALSE, panelid=NULL, suppress.printout=FALSE){
+runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=FALSE, panelid=NULL, suppress.printout=FALSE, no.log = TRUE){
   
   require(splines)
   require(fields)
@@ -296,7 +296,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ loop through 1D covar ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if(suppress.printout){
+  if(suppress.printout & no.log == FALSE){
     sink(file='salsa1d.log')
   }
   
@@ -333,7 +333,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
     sttime<- proc.time()[3]
-    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, cv.opts=salsa1dlist$cv.opts, splineParams = splineParams)
+    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, cv.opts=salsa1dlist$cv.opts, splineParams = splineParams)
     
     timings[(i-1)]<- proc.time()[3] - sttime
     
@@ -468,7 +468,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   outModel<-make.gamMRSea(outModel, gamMRSea=TRUE)
   
-  if(suppress.printout){
+  if(suppress.printout & no.log == FALSE){
     sink()
   }
   
