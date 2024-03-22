@@ -1,7 +1,4 @@
-get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,radiusIndices, initDisp, cv.opts){
-  #print("ooooooooooooooooooooooooooooooooooooooo")
-  #print("Getting measure...")
-  #print("ooooooooooooooooooooooooooooooooooooooo")
+get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,radiusIndices, initDisp, cv.opts, printout){
   
   if (isS4(out.lm)) {
     attributes(out.lm@misc$formula)$.Environment<-environment()
@@ -74,18 +71,6 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   }
   
   if(fitnessMeasure=="cv.offset"){
-    #     if(dim(model.matrix(out.lm))[2]==1){
-    #       data2<- data.frame(response=response)
-    #       textForEval<- "tempCVFit<-glm(response~1, data=data2, family=family(out.lm))" 
-    #     }
-    #     if(dim(model.matrix(out.lm))[2]>1){
-    #       data2<- data.frame(response=response, model.matrix(out.lm)[,2:length(coefficients(out.lm))], offset = exp(baseModel$offset))
-    #       names(data2)<- c("response", paste("V", 1:(length(coefficients(out.lm))-1), sep=""), "offset")
-    #       textForEval<- paste("tempCVFit<-glm(round(response) ~ ", paste("V", 1:(length(coefficients(out.lm))-1), sep="", collapse="+"), ", family=family(out.lm), data=data2, offset = log(offset))")
-    #     }
-    #     eval(parse(text=textForEval))  
-    #     require(boot)
-    #fitStat<-cv.glm(data2,tempCVFit, K=5)$delta[2]
     if (isS4(out.lm)) {
       stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
     } else {
@@ -147,19 +132,12 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   # cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
     fitStat<- tempMeasure + 10000000
-    cat("Change Fit due to fitStat=NA: ", fitStat, "\n")
+    if(printout){
+      cat("Change Fit due to fitStat=NA: ", fitStat, "\n")
+    }
   }
   if(getDispersion(out.lm)>initDisp){
     fitStat<- fitStat + 10000000
-    #cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
   }
-  #if(length(which(is.na(out.lm$coefficients)))>0){
-  #  fitStat<- tempMeasure + 1000
-  #  cat("Change Fit due to NA coefficients: ", fitStat, "\n")
-  #}
-  
-  #print("ooooooooooooooooooooooooooooooooooooooo")
-  #print("Got measure...")
-  #print("ooooooooooooooooooooooooooooooooooooooo")
   list(tempMeasure=tempMeasure,fitStat=fitStat)
 }

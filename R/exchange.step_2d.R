@@ -7,15 +7,16 @@
 #'
 
 ################################################################################################################
-"exchange.step_2d" <- function(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis){
+"exchange.step_2d" <- function(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx, maxKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout){
 
   #attributes(baseModel$formula)$.Environment<-environment()
 
   # Loop - fuse used to ensure algorithm terminates
-  print("******************************************************************************")
-  print("Exchanging...")
-  print("******************************************************************************")
-  # cat('Current Fit in: ', BIC, '\n')
+  if(printout){
+    print("******************************************************************************")
+    print("Exchanging...")
+    print("******************************************************************************")
+  }
   fuse <- 0
   improve <- 1
 
@@ -38,8 +39,6 @@
       aRresidchunk<-aR[which(knotgrid[aR,nm]==residchunk)]
       legPos1<-position[which(knotgrid[,nm]==residchunk)]
       legPos<-legPos1
-      #legPos2<-position[which(apply(knotDist[point[legPos1],aRresidchunk],1,min)>=gap)]
-      #legPos<-legPos1[legPos2]
       index<-knotchunkid[which.min(abs(new[,1])+abs(new[,2]))]
     }else{
       new<-scale(knotgrid[point,1:2],center=c(explData[indexdat[1],1],explData[indexdat[1],2]))
@@ -59,7 +58,7 @@
       if (!(any(knotDist[point[index[1]],aR]<gap))) {
         output <- move.knot_2D(radii,dists,explData,index,fitnessMeasure,BIC,aR,point,
                                response,knotgrid,out.lm,improve,improveEx, track,
-                               maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
+                               maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
 
         improve <- output$improve
         improveEx <- output$improveEx
@@ -91,7 +90,9 @@
         ####track<- rbind(track,cbind("exchange",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
       }
     }else {
-      print("no legal knot positions available")
+      if(printout){
+        print("no legal knot positions available")
+      }
     }
   }
   # cat('Current Fit out: ', BIC, '\n')

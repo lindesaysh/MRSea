@@ -4,7 +4,7 @@
 #' 
 
 choose.radii <- function(currentFit,indices,radiusIndices,radii,out.lm,dists,
-                         aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis) {
+                         aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, printout) {
   #print("+++++++++++++++++++++++++++")
   #print("Fitting Radii")
   #print("+++++++++++++++++++++++++++")

@@ -16,7 +16,7 @@
 #' @param initialise (Defauls: \code{FALSE}). Logical stating whether to allow the \code{runSALSA2D} function to find some starting knot locations.  If \code{FALSE}, one of \code{initialKnots} or \code{initialKnPos} must be specified.
 #' @param initialKnots c x 2 dataframe or matrix specifying the coordinates of the starting locations of knots. c is the number of initial knots (should match what is specified in \code{SALSA2dlist})
 #' @param initialKnPos vector of length c denoting the rows of the \code{knotgrid} to use as the initial starting locations of knots. 
-#' 
+#' @param logfile (Default: \code{FALSE}). Logical stating whether to store a log file of the analysis printout.
 #' 
 #' @references Scott-Hayward, L.; M. Mackenzie, C.Donovan, C.Walker and E.Ashe.  Complex Region Spatial Smoother (CReSS). Journal of computational and Graphical Statistics. 2013. doi: 10.1080/10618600.2012.762920
 #'
@@ -98,7 +98,7 @@
 #' @export
 #'
 
-runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian',initialise=TRUE, initialKnots=NULL, initialKnPos=NULL, no.log = TRUE){
+runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=FALSE, panels=NULL, suppress.printout=FALSE, tol=0, plot=FALSE, basis='gaussian',initialise=TRUE, initialKnots=NULL, initialKnPos=NULL, logfile = FALSE){
   
   if(class(model)[1]=='glm'){
     data<-model$data
@@ -191,6 +191,8 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     maxIterations<-salsa2dlist$max.iter  
   }
   
+  printout <- ifelse(suppress.printout == TRUE & logfile == FALSE, F, T)
+  
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~ SET UP ~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -233,7 +235,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ 2D SALSA RUN ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if(suppress.printout & no.log == FALSE){
+  if(suppress.printout & logfile){
     sink(file='salsa2d.log')
   }
 
@@ -241,7 +243,16 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   baseModel<- baseModel1D
 
   
-  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots, winHalfWidth,fitnessMeasure=salsa2dlist$fitnessMeasure, maxIterations=maxIterations, tol=tol, baseModel=baseModel, radiusIndices=NULL, initialise=initialise,  initialKnots=initialKnots, initialaR=initialKnPos, interactionTerm=interactionTerm, knot.seed=10,suppress.printout, plot=plot, cv.opts = salsa2dlist$cv.opts, basis)
+  output<-return.reg.spline.fit.2d(splineParams, startKnots=salsa2dlist$startKnots,
+                                   winHalfWidth,
+                                   fitnessMeasure = salsa2dlist$fitnessMeasure,
+                                   maxIterations = maxIterations, tol = tol, 
+                                   baseModel = baseModel,
+                                   radiusIndices = NULL, initialise = initialise,  
+                                   initialKnots = initialKnots, initialaR = initialKnPos,
+                                   interactionTerm = interactionTerm, knot.seed = 10,
+                                   plot=plot, cv.opts = salsa2dlist$cv.opts, 
+                                   basis=basis, printout = printout)
 
   baseModel<- output$out.lm
 
@@ -286,7 +297,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
       radiusIndices<- rep(1, length(output$aR))
     }
     initDisp<-getDispersion(baseModel)
-    output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis)
+    output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis=basis, printout=printout)
 
 
     splineParams[[1]]$radii= radii
@@ -326,7 +337,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   baseModel<-make.gamMRSea(baseModel, gamMRSea=TRUE)
   
-  if(suppress.printout & no.log == FALSE){
+  if(suppress.printout & logfile){
     sink()
   }
 
