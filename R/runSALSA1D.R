@@ -358,8 +358,10 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     models<<-output$models
     knotSites<<-output$knotSites
     
-    if(removal=='TRUE'){
-    cat('Fitting Linear Model...')
+    if(removal==TRUE){
+      if(printout){
+        cat('Fitting Linear Model...')    
+      }
     tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
     #set.seed(seed.in)
     cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2]
@@ -371,7 +373,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       cvid<-cvid[which(modelcoeffs[cvid]==min(modelcoeffs[cvid]))]
     }
     
-    cat('Choosing smooth vs linear model...')
+    if(printout){
+      cat('Choosing smooth vs linear model...')
+    }
     if(cvid==1){
       # initial model is best - keep term but with original knots
       fitStat = fitStat
