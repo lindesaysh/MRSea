@@ -208,12 +208,16 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   if(is.na(fitStat)){
     # fitStat <- fitStat + 10000000
     fitStat <- 10000000
-    cat("Change Fit due to NA: ", fitStat, "\n")
+    if(printout){
+      cat("Change Fit due to NA: ", fitStat, "\n")  
+    }
   }
   
   if(getDispersion(baseModel)>initDisp){
     fitStat<- tempMeasure + 10000000
-    cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
+    if(printout){
+      cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
+    }
   }
 
   output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)

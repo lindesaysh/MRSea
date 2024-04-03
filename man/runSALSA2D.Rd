@@ -19,7 +19,7 @@ runSALSA2D(
   initialise = TRUE,
   initialKnots = NULL,
   initialKnPos = NULL,
-  no.log = TRUE
+  logfile = FALSE
 )
 }
 \arguments{
@@ -50,6 +50,8 @@ runSALSA2D(
 \item{initialKnots}{c x 2 dataframe or matrix specifying the coordinates of the starting locations of knots. c is the number of initial knots (should match what is specified in \code{SALSA2dlist})}
 
 \item{initialKnPos}{vector of length c denoting the rows of the \code{knotgrid} to use as the initial starting locations of knots.}
+
+\item{logfile}{(Default: \code{FALSE}). Logical stating whether to store a log file of the analysis printout.}
 }
 \value{
 This function returns the best model \code{bestModel} and the fitness statistic for this model \code{fitStat}

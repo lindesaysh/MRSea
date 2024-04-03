@@ -20,7 +20,8 @@ return.reg.spline.fit.2d(
   knot.seed = 10,
   plot = FALSE,
   cv.opts,
-  basis
+  basis,
+  printout
 )
 }
 \description{
