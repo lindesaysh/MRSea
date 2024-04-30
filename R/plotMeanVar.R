@@ -77,10 +77,10 @@ plotMeanVar<-function(model, cut.bins = 20, save=FALSE, label = NULL, print=TRUE
       geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution, linetype=Distribution), linewidth=1) +
       scale_colour_manual("Distribution", 
                           values=c("darkgrey", "firebrick3"),
-                          labels=c("Poisson", "QuasiPoisson")) +
+                          labels=c("1:1", "QuasiPoisson")) +
       scale_linetype_manual("Distribution", 
                             values = c(2,1),
-                            labels=c("Poisson", "QuasiPoisson"))
+                            labels=c("1:1", "QuasiPoisson"))
     }
   
   if(model$family[[1]] == "Tweedie"){
@@ -101,10 +101,10 @@ plotMeanVar<-function(model, cut.bins = 20, save=FALSE, label = NULL, print=TRUE
       geom_line(data=pdat, aes(x=mu, y=EstVariance, group=Distribution, colour=Distribution, linetype=Distribution), linewidth=1) +
       scale_colour_manual("Distribution",
                           values=c("darkgrey", "firebrick3", "deepskyblue2"),
-                          labels=c("Poisson", "QuasiPoisson", "Tweedie"))+
+                          labels=c("1:1", "QuasiPoisson", "Tweedie"))+
       scale_linetype_manual("Distribution", 
                             values = c(2,1,3),
-                            labels=c("Poisson", "QuasiPoisson", "Tweedie"))
+                            labels=c("1:1", "QuasiPoisson", "Tweedie"))
   }
   
   if(model$family[[1]] == "Gamma"){
