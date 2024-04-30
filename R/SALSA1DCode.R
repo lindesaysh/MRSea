@@ -95,9 +95,11 @@ knotSites <- knotSites[which(duplicated(knotSites)==F),]
 
 if (nrow(knotSites) > maxSites) {
  if(nrow(knotSites)>800){
+   set.seed(454545)
    knotSites <- knotSites[sample(1:nrow(knotSites), 800),]
    kSites = cover.design(knotSites[,c("x1", "x2")], nd=maxSites)$best.id
  }else{
+   set.seed(454545)
    kSites = cover.design(knotSites[,c("x1", "x2")], nd=maxSites)$best.id 
  }
    kSites <- sort(kSites)
