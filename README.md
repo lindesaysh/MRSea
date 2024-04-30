@@ -3,7 +3,7 @@
 
 # MRSea
 
-The latest stable version is **1.5** (10/12/2023)
+The latest stable version is **1.6** (30/04/2024)
 
 The latest development version is on the development branch.
 
