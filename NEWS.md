@@ -1,24 +1,25 @@
-# MRSea 1.5.001
-
+# MRSea 1.6
 
 ## Notes
 * SALSA1D: 
 
 - addition of parameter (`logfile`) to remove dependence on log file sink if `suppress.printout = TRUE`. Default is set to `FALSE` so if `suppress.printout = TRUE` then no log file is produced unless `logfile = TRUE`
-
+- seed added to initialisation of candidate knotsites. The selection of knotsites is only stochastic if you have more than 800 unique values for a variable. With the seed set this allows repeatability of analyses. 
  
 * SALSA2D:
-  
+
+- addition of parameter (`logfile`) to remove dependence on log file sink if `suppress.printout = TRUE`. Default is set to `FALSE` so if `suppress.printout = TRUE` then no log file is produced unless `logfile = TRUE`
  
 
 * Vignettes:
-  
- 
-  
+
+- updates to the images
+
 * Other: 
 
 - `plotmeanVar`: the labelling for the Gaussian and Gamma alternative lines has been changed from "Poisson" to "1:1 line". 
 - warning suppression has been added to `do.boostrap.cress.robust`.  There is already a try catch for "svd" warnings with an alternative used so not necessary to see the warnings. 
+
   
 ## Bug Fixes
 
@@ -30,6 +31,7 @@
 * Other:
 
 - `plotMeanVar` line labelling was the wrong way round for the Gaussian case. This has been remedied. 
+- `cv.gamMRSea` occasional error relating to not finding CV0.  Code edited so that if there is an issue with CV calculation, `inf` is returned rather than an error. 
 
 
 # MRSea 1.5
