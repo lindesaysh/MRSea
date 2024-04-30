@@ -15,7 +15,8 @@ runSALSA1D(
   datain,
   removal = FALSE,
   panelid = NULL,
-  suppress.printout = FALSE
+  suppress.printout = FALSE,
+  logfile = FALSE
 )
 }
 \arguments{
@@ -38,6 +39,8 @@ runSALSA1D(
 \item{panelid}{Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.}
 
 \item{suppress.printout}{(Default: \code{FALSE}. Logical stating whether to show the analysis printout.}
+
+\item{logfile}{(Default: \code{FALSE}). Logical stating whether to store a log file of the analysis printout.}
 }
 \value{
 A list object is returned containing 4 elements:
@@ -113,11 +116,11 @@ salsa1dlist<-list(fitnessMeasure = 'QBIC',
                   gaps=c(0))
 
 # run SALSA
-salsa1dOutput<-runSALSA1D(initialModel, 
-                          salsa1dlist, 
-                          varlist=varlist,
-                          ns.predict.data.re, 
-                          datain=ns.data.re)
+salsa1dOutput<-runSALSA1D(initialModel = initialModel,
+                         salsa1dlist = salsa1dlist,
+                         varlist = varlist,
+                         predictionData = ns.predict.data.re,
+                         datain = ns.data.re)
 
 }
 \references{

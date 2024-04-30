@@ -30,7 +30,8 @@ drop.step_2d(
   data,
   initDisp,
   cv.opts,
-  basis
+  basis,
+  printout
 )
 }
 \description{

@@ -12,6 +12,7 @@
 #' @param removal (Default: \code{FALSE}). Logical stating whether a selection procedure should be done to choose smooth, linear or removal of covariates.  If \code{FALSE} all covariates are returned and smooth. If \code{TRUE} then cross-validation is used to make model selection choices. The folds are specified by a column in the dataset called \code{foldid}.
 #' @param panelid Vector denoting the panel identifier for each data point (if robust standard errors are to be calculated). Defaults to data order index if not given.
 #' @param suppress.printout (Default: \code{FALSE}. Logical stating whether to show the analysis printout.
+#' @param logfile (Default: \code{FALSE}). Logical stating whether to store a log file of the analysis printout.
 #' 
 #' @details
 #' There must be columns called \code{response} (response variable) and \code{foldid} (for cross-validation calculation) in the data used in the initial model to be fitted. If the data is proportion, then there should be two columns called \code{successess} and \code{failures}.
@@ -88,17 +89,17 @@
 #'                   gaps=c(0))
 #' 
 #' # run SALSA
-#' salsa1dOutput<-runSALSA1D(initialModel, 
-#'                           salsa1dlist, 
-#'                           varlist=varlist,
-#'                           ns.predict.data.re, 
-#'                           datain=ns.data.re)
+#' salsa1dOutput<-runSALSA1D(initialModel = initialModel,
+#'                          salsa1dlist = salsa1dlist,
+#'                          varlist = varlist,
+#'                          predictionData = ns.predict.data.re,
+#'                          datain = ns.data.re)
 #' 
 #' @author Lindesay Scott-Hayward, University of St Andrews; Cameron Walker, Department of Engineering Science, University of Auckland.
 #' 
 #' @export
 #' 
-runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=FALSE, panelid=NULL, suppress.printout=FALSE){
+runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predictionData=NULL, varlist_cyclicSplines=NULL, splineParams=NULL, datain, removal=FALSE, panelid=NULL, suppress.printout=FALSE, logfile = FALSE){
   
   require(splines)
   require(fields)
@@ -183,6 +184,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     }
   }
   
+  printout <- ifelse(suppress.printout == TRUE & logfile == FALSE, F, T)
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   if(is.null(splineParams)){
@@ -285,7 +287,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   # baseModel$splineParams <- splineParams
   # 
   initDisp<-getDispersion(baseModel)
-  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
+  fitStat<-get.measure(salsa1dlist$fitnessMeasure,'NA',baseModel, initDisp, salsa1dlist$cv.opts, printout)$fitStat
   
   # # temporary fix
   # baseModel$splineParams <- NULL
@@ -296,7 +298,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~ loop through 1D covar ~~~~~~~~~~~~~~~~~~~~~~~
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  if(suppress.printout){
+  if(suppress.printout & logfile){
     sink(file='salsa1d.log')
   }
   
@@ -322,7 +324,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       #set.seed(seed.in)
       base_wo_coeff<-length(coef(baseModel))
       cv_without<-cv.gamMRSea(data, baseModel, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2] 
-      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat  
+      fitStat_without<-get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts, printout)$fitStat  
     }
     
     if(length(grep(varlist[(i-1)], baseModel$formula))>0){stop(paste('Multiple instances of covariate in model. Remove ',splineParams[[varID[(i-1)]]]$covar , ' before proceeding', sep=''))}
@@ -332,8 +334,11 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     if(salsa1dlist$splines[(i-1)] == "ns"){spl="ns"}
     
     if(spl == "cc"){salsa1dlist$minKnots_1d[(i-1)] <- 3; salsa1dlist$startKnots_1d[(i-1)]<-3}
+    
+ 
+    
     sttime<- proc.time()[3]
-    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, suppress.printout=suppress.printout, cv.opts=salsa1dlist$cv.opts, splineParams = splineParams)
+    output <- return.reg.spline.fit(response,explanatory,splineParams[[varID[(i-1)]]]$degree,salsa1dlist$minKnots_1d[(i-1)],salsa1dlist$maxKnots_1d[(i-1)],salsa1dlist$startKnots_1d[(i-1)], gap, winHalfWidth, salsa1dlist$fitnessMeasure, maxIterations=100, baseModel=baseModel, bd=bd, spl=spl, interactionTerm=interactionTerm, cv.opts=salsa1dlist$cv.opts, splineParams = splineParams, printout=printout)
     
     timings[(i-1)]<- proc.time()[3] - sttime
     
@@ -353,8 +358,10 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     models<<-output$models
     knotSites<<-output$knotSites
     
-    if(removal=='TRUE'){
-    cat('Fitting Linear Model...')
+    if(removal==TRUE){
+      if(printout){
+        cat('Fitting Linear Model...')    
+      }
     tempModel_lin<- eval(parse(text=paste("update(baseModel, . ~. +",varlist[(i-1)] , ")", sep="")))
     #set.seed(seed.in)
     cv_linear<- cv.gamMRSea(data=data, tempModel_lin, K=salsa1dlist$cv.opts$K, cost=salsa1dlist$cv.opts$cost, s.eed = seed.in)$delta[2]
@@ -366,7 +373,9 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
       cvid<-cvid[which(modelcoeffs[cvid]==min(modelcoeffs[cvid]))]
     }
     
-    cat('Choosing smooth vs linear model...')
+    if(printout){
+      cat('Choosing smooth vs linear model...')
+    }
     if(cvid==1){
       # initial model is best - keep term but with original knots
       fitStat = fitStat
@@ -401,7 +410,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
         # model with parameter linear is best
         splineParams[[varID[(i-1)]]]$knots<- 'NA'
         baseModel<-update(tempModel_lin, .~.)
-        fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts)$fitStat
+        fitStat = get.measure(salsa1dlist$fitnessMeasure,'NA', baseModel, initDisp, salsa1dlist$cv.opts, printout)$fitStat
         cv_initial<-cv_linear
         varkeepid<-c(varkeepid, i)
         kept='YES - linear'
@@ -468,7 +477,7 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   
   outModel<-make.gamMRSea(outModel, gamMRSea=TRUE)
   
-  if(suppress.printout){
+  if(suppress.printout & logfile){
     sink()
   }
   

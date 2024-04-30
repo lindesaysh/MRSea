@@ -8,7 +8,13 @@
 #'
 
 
-"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,fitnessMeasure="BIC", maxIterations=10, tol=0, baseModel=NULL, radiusIndices=NULL, initialise=TRUE, initialKnots=NULL, initialaR=NULL, interactionTerm=NULL, knot.seed=10, suppress.printout=FALSE, plot=FALSE, cv.opts, basis){
+"return.reg.spline.fit.2d" <- function(splineParams, startKnots, winHalfWidth,
+                                       fitnessMeasure="BIC", maxIterations=10, 
+                                       tol=0, baseModel=NULL, radiusIndices=NULL, 
+                                       initialise=TRUE, initialKnots=NULL, 
+                                       initialaR=NULL, interactionTerm=NULL, knot.seed=10, 
+                                       plot=FALSE, cv.opts, basis,
+                                       printout){
   
 
   #Where am I?
@@ -55,11 +61,7 @@
   #                 interactionTerm - allows interaction between space and another term "ns(Year, knots =
   # splineParams[[6]][[2]])", for example.  If this is NULL, no interaction is done
   
-  # 
-  # if(suppress.printout){
-  #   sink(file='salsa2d.log')
-  # }
-  # 
+
   # split out spline parameter object into its pieces
   knotDist <- splineParams[[1]]$knotDist
   radii <- splineParams[[1]]$radii
@@ -75,7 +77,9 @@
 
   # LSH 12/3/15 added dispersion parameter calc
   initDisp<-getDispersion(baseModel)
-  print(paste('initialDispersion ', initDisp, sep=''))
+  if(printout){
+    print(paste('initialDispersion ', initDisp, sep=''))  
+  }
 
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -92,7 +96,7 @@
   #if (isS4(baseModel)) {
   #  output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
   #} else {
-    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
+    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis, printout)
   #}
   
   point <- output$point
@@ -125,7 +129,7 @@
   baddisp <- summary(out.lm)$dispersion>initDisp 
   
   if (baddisp | naincoeffs) {
-    output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
+    output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
     ####print("here e")
     point <- output$point
     knotPoint <- output$knotPoint
@@ -160,9 +164,8 @@
     improveNudge <- 0
     improveDrop <- 0
     ####################################exchange step#############################
-    ####track <- rbind(track,cbind("exchanging",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
-    output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
-    #  ####print("here e")
+    output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
+
 
     point <- output$point
     knotPoint <- output$knotPoint
@@ -188,7 +191,7 @@
     ######################################improve step############################
     ####track <- rbind(track,cbind("improving",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
     ####print("here im")
-    output <- improve.step_2d(gap,knotDist,radii,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
+    output <- improve.step_2d(gap,knotDist,radii,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
     ####print("here im")
     point <- output$point
     knotPoint <- output$knotPoint
@@ -214,7 +217,7 @@
 
     ###################################drop step#################################
     if (length(aR) > minKnots) {
-      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis)
+      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
       ####print("here e")
       point <- output$point
       knotPoint <- output$knotPoint
@@ -227,7 +230,9 @@
       radiusIndices <- output$radiusIndices
       improveDrop <- output$improveDrop
       
-      print("e")
+      if(printout){
+        print("e")
+      }
 
       if (isS4(out.lm)) {
         out.lm@splineParams[[1]]$knotPos<-aR
@@ -245,12 +250,9 @@
   ####################################write to file###############################
   ####track <- rbind(track,cbind("writing",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
   ####print("here fin")
-  print("And we're done...")
-
-  # if(suppress.printout){
-  #   sink()
-  # }
-  # 
+  if(printout){
+    print("And we're done...")
+  }
   
   gc(verbose=FALSE)
   

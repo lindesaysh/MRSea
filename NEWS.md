@@ -1,3 +1,38 @@
+# MRSea 1.6
+
+## Notes
+* SALSA1D: 
+
+- addition of parameter (`logfile`) to remove dependence on log file sink if `suppress.printout = TRUE`. Default is set to `FALSE` so if `suppress.printout = TRUE` then no log file is produced unless `logfile = TRUE`
+- seed added to initialisation of candidate knotsites. The selection of knotsites is only stochastic if you have more than 800 unique values for a variable. With the seed set this allows repeatability of analyses. 
+ 
+* SALSA2D:
+
+- addition of parameter (`logfile`) to remove dependence on log file sink if `suppress.printout = TRUE`. Default is set to `FALSE` so if `suppress.printout = TRUE` then no log file is produced unless `logfile = TRUE`
+ 
+
+* Vignettes:
+
+- updates to the images
+
+* Other: 
+
+- `plotmeanVar`: the labelling for the Gaussian and Gamma alternative lines has been changed from "Poisson" to "1:1 line". 
+- warning suppression has been added to `do.boostrap.cress.robust`.  There is already a try catch for "svd" warnings with an alternative used so not necessary to see the warnings. 
+
+  
+## Bug Fixes
+
+* SALSA 1D:
+
+* SALSA 2D:
+  
+
+* Other:
+
+- `plotMeanVar` line labelling was the wrong way round for the Gaussian case. This has been remedied. 
+- `cv.gamMRSea` occasional error relating to not finding CV0.  Code edited so that if there is an issue with CV calculation, `inf` is returned rather than an error. 
+
 
 # MRSea 1.5
 
@@ -31,9 +66,9 @@
 
 * SALSA 2D:
 
-  - The dispersion parameter estimate using `getDisperson` function was incorrectly specified as 1.  This affected the dropping of "bad" knots in the initialise step resulting in more knots being dropped than should have been. This did not affect knots being subsequently added in the exchange step. The correct calculation is now included in the `getDispersion` function.
+  - The dispersion parameter estimate using `getDisperson` function was incorrectly specified as 1 for the Tweedie distribution.  This affected the dropping of "bad" knots in the initialise step resulting in more knots being dropped than should have been. This did not affect knots being subsequently added in the exchange step. The correct calculation is now included in the `getDispersion` function.
   - When using `initialise = FALSE` and specifying initial knot locations via `initialKnPos` code has been added to snap the initial locations to the nearest candidate knot locations in the knot grid. Previously it was assumed these initial locations were a subset of the candidate set. Now any locations may be used. 
-  - When using an odd number of radii and with `chooseradii = FALSE` there may sometimes have been a mismatch from the output of SALSA2D and the output given from `runSALSA2D`. 
+  - When using an odd number of radii and with `chooseradii = FALSE` there may sometimes have been a mismatch from the output of SALSA2D and the output given from `runSALSA2D`. The default is an even number so mostly this will not have been an issue. 
   
 
 * Other:

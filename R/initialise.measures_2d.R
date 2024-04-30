@@ -1,12 +1,14 @@
-initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis){
+initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis, printout){
   
     attributes(baseModel$formula)$.Environment<-environment()
     baseModel<-update(baseModel, data=data)
     splineParams<-baseModel$splineParams
-    
-  print("******************************************************************************")
-  print("Initialising...")
-  print("******************************************************************************")
+  
+  if(printout){
+    print("******************************************************************************")
+    print("Initialising...")
+    print("******************************************************************************")
+  }
   #greedy pick from the 1st grid point
   fuse=0
   
@@ -22,8 +24,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     require(fields)
     numNeeded = startKnots
     
-    print("Space-filling knots....")
-    set.seed(knot.seed)
+    if(printout){
+        print("Space-filling knots....")
+    }
+      set.seed(knot.seed)
 
     #   if(ncol(knotgrid)>2){
     #     duppointid<-c()
@@ -67,7 +71,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     options('warn'=0)
     
     if (dim(initialKnots)[1]<numNeeded) {
-      print("WARNING: less knots positioned than desired")
+        warning("WARNING: less knots positioned than desired")
     }
     
     baseModel$splineParams[[1]]$initialKnots <- initialKnots
@@ -117,10 +121,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     baseModel$splineParams[[1]]$radiusIndices<-radiusIndices
     baseModel$splineParams[[1]]$radii<-radii
   }
-  # baseModel$splineParams[[1]]$mapInd<-mapInd
-  # baseModel$splineParams[[1]]$invInd<-invInd
   
-  print("Initialising model...")
+  if(printout){
+    print("Initialising model...")
+  }
   models = vector("list",0)
   
   if(fitnessMeasure=="AIC"){
@@ -204,18 +208,24 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   if(is.na(fitStat)){
     # fitStat <- fitStat + 10000000
     fitStat <- 10000000
-    cat("Change Fit due to NA: ", fitStat, "\n")
+    if(printout){
+      cat("Change Fit due to NA: ", fitStat, "\n")  
+    }
   }
   
   if(getDispersion(baseModel)>initDisp){
     fitStat<- tempMeasure + 10000000
-    cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
+    if(printout){
+      cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
+    }
   }
 
   output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
   out.lm<-output$currentModel
   models<-output$models
-  print("Initial model fitted...")
+  if(printout){
+    print("Initial model fitted...")
+  }
   point <- (1:nrow(knotgrid))[-posKnots]
   
   position<- cbind()
@@ -230,15 +240,18 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   measures = 0
   
   BIC<-output$fitStat
-  
-  print("Fitting Initial Radii")
-  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
+  if(printout){
+    print("Fitting Initial Radii")  
+  }
+  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
   BIC=out$BIC
   radiusIndices=out$radiusIndices
   out.lm=out$out.lm
   models = out$models
   
-  print("initialising complete")
+  if(printout){
+    print("initialising complete")
+  }
   
   list(point=point,knotPoint=knotPoint,position=position,aR=aR,BIC=BIC,track=track,out.lm=out.lm, radiusIndices=radiusIndices,models=models)
   
