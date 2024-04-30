@@ -76,7 +76,7 @@ data("nysted.predictdata")
 ```
 
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4}
 ggplot() + geom_point(data=wfdata, aes(x=depth, y=response), alpha=1/5) +
   xlab("Sea Depth (m)") + ylab("Number of Birds")
 ```
@@ -159,7 +159,7 @@ runPartialPlots(model = salsa1dOutput$bestModel, data = wfdata,
 
 or the response scale
 
-```{r}
+```{r eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4, message=FALSE}
 runPartialPlots(model = salsa1dOutput$bestModel, data = wfdata, 
                 varlist = 'depth', 
                 showKnots = TRUE, type='response', 

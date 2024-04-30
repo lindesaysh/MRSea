@@ -74,7 +74,7 @@ preddata <- filter(nysted.predictdata, impact==0, season==1)
 ```
 
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4}
 ggplot(wfdata) + geom_tile(aes(x=x.pos, y=y.pos, fill=response, height=sqrt(area), width=sqrt(area))) +
   scale_fill_distiller(palette = "Spectral",name="No. Birds") +
   xlab("Easting (km)") + ylab("Northing (km)") + theme_bw()
@@ -95,7 +95,7 @@ First up we must create a grid of knots that will be used as candidate knot loca
 
 Depending on the size of your data set this could take while and be slightly different every time you run it so I suggest using a seed and perhaps saving the knotgrid as a file.
 
-```{r knotgrid, fig=TRUE, fig.align='center', fig.width=9, fig.height=6, fig.cap="Plot showing the candidate knot locations in red and the raw data locations in black."}
+```{r knotgrid, fig=TRUE, fig.align='center', fig.width=6, fig.height=4, fig.cap="Plot showing the candidate knot locations in red and the raw data locations in black."}
 set.seed(123)
 knotgrid<- getKnotgrid(coordData = cbind(wfdata$x.pos, wfdata$y.pos),
                        numKnots = 300,
@@ -167,7 +167,7 @@ salsa2dOutput$bestModel$splineParams[[1]]$knotPos
 
 ## Fitted surface
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4}
 ggplot(wfdata) + geom_tile(aes(x=x.pos, y=y.pos, fill=fitted(salsa2dOutput$bestModel), height=sqrt(area), width=sqrt(area))) +
   scale_fill_distiller(palette = "Spectral",name="No. Birds") +
   xlab("Easting (km)") + ylab("Northing (km)") + theme_bw()
@@ -190,7 +190,7 @@ preds<-predict(newdata = preddata,
 ```
 
 
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, eval=TRUE, fig=TRUE, fig.align='center', fig.width=6, fig.height=4}
 ggplot(preddata) + geom_tile(aes(x=x.pos, y=y.pos, fill=preds, height=sqrt(area), width=sqrt(area))) +
   scale_fill_distiller(palette = "Spectral",name="No. Birds") +
   xlab("Easting (km)") + ylab("Northing (km)") + theme_bw()
