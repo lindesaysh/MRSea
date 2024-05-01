@@ -3,7 +3,9 @@ url: http://lindesaysh.github.io/MRSea/
 template:
   bootstrap: 5
   bootswatch: cerulean
-
+  ganalytics: G-H10ZB5KXN8
+  params:
+      google_site_verification: dUtyCOSNh9HYALyeXliAlT0ZBt-A4tor8kaiLgS3DRc
 navbar:
   components:
     articles:
