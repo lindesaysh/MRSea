@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Getting Started with MRSea: One dimensional smoothing">
 <meta property="og:description" content="MRSea">
+<meta name="google-site-verification" content="dUtyCOSNh9HYALyeXliAlT0ZBt-A4tor8kaiLgS3DRc">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -26,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">MRSea</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +93,7 @@
                         <h4 data-toc-skip class="author">LAS
 Scott-Hayward</h4>
             
-            <h4 data-toc-skip class="date">2023-12-12</h4>
+            <h4 data-toc-skip class="date">2024-05-08</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/lindesaysh/MRSea/blob/HEAD/vignettes/GettingStarted_1Dsmoothing.Rmd" class="external-link"><code>vignettes/GettingStarted_1Dsmoothing.Rmd</code></a></small>
       <div class="d-none name"><code>GettingStarted_1Dsmoothing.Rmd</code></div>
@@ -189,7 +190,7 @@ is a relationship between number of birds and sea depth.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>data<span class="op">=</span><span class="va">wfdata</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x<span class="op">=</span><span class="va">depth</span>, y<span class="op">=</span><span class="va">response</span><span class="op">)</span>, alpha<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">xlab</a></span><span class="op">(</span><span class="st">"Sea Depth (m)"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ylab</a></span><span class="op">(</span><span class="st">"Number of Birds"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="GettingStarted_1Dsmoothing_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
+<p><img src="GettingStarted_1Dsmoothing_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;"></p>
 <div class="section level3">
 <h3 id="fitting-a-1d-smooth">Fitting a 1D smooth<a class="anchor" aria-label="anchor" href="#fitting-a-1d-smooth"></a>
 </h3>
@@ -292,23 +293,25 @@ model (same as input if no model selection)</li>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Deviance Residuals: </span></span>
 <span><span class="co">#&gt;     Min       1Q   Median       3Q      Max  </span></span>
-<span><span class="co">#&gt; -2.4139  -1.4614  -0.4606  -0.1030  13.5758  </span></span>
+<span><span class="co">#&gt; -2.3787  -1.5354  -0.3498  -0.1554  13.4894  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Coefficients:</span></span>
-<span><span class="co">#&gt;             Estimate Std. Error Robust S.E. t value Pr(&gt;|t|)</span></span>
-<span><span class="co">#&gt; (Intercept)   -9.012      9.602       9.602  -0.938    0.348</span></span>
-<span><span class="co">#&gt; s(depth)1      8.492     10.967      10.967   0.774    0.439</span></span>
-<span><span class="co">#&gt; s(depth)2     12.392      9.227       9.227   1.343    0.180</span></span>
-<span><span class="co">#&gt; s(depth)3      7.366     10.193      10.193   0.723    0.470</span></span>
+<span><span class="co">#&gt;             Estimate Std. Error Robust S.E. t value Pr(&gt;|t|)   </span></span>
+<span><span class="co">#&gt; (Intercept)  -0.6883     2.2148      2.2148  -0.311  0.75602   </span></span>
+<span><span class="co">#&gt; s(depth)1    -5.3049     2.6998      2.6998  -1.965  0.04966 * </span></span>
+<span><span class="co">#&gt; s(depth)2     6.0088     2.1481      2.1481   2.797  0.00524 **</span></span>
+<span><span class="co">#&gt; s(depth)3    -0.4154     2.3382      2.3382  -0.178  0.85904   </span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; (Dispersion parameter for quasipoisson family taken to be 43.40843)</span></span>
+<span><span class="co">#&gt; (Dispersion parameter for quasipoisson family taken to be 6.276455)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     Null deviance: 4987.6  on 1153  degrees of freedom</span></span>
-<span><span class="co">#&gt; Residual deviance: 3519.2  on 1150  degrees of freedom</span></span>
+<span><span class="co">#&gt; Residual deviance: 3482.4  on 1150  degrees of freedom</span></span>
 <span><span class="co">#&gt; AIC:  NA</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Max Panel Size = 1 (independence assumed); Number of panels = 1154</span></span>
-<span><span class="co">#&gt; Number of Fisher Scoring iterations: 7</span></span></code></pre></div>
+<span><span class="co">#&gt; Number of Fisher Scoring iterations: 6</span></span></code></pre></div>
 <p>You can find the number of knots chosen for a variable by looking at
 the <code>modelFits1D</code> output within <code>salsa1dOutput</code> or
 by querying the spline parameters list in the model object. In this
@@ -316,7 +319,7 @@ case, one knot has been selected.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># How many knots were chosen for depth?</span></span>
 <span><span class="va">salsa1dOutput</span><span class="op">$</span><span class="va">bestModel</span><span class="op">$</span><span class="va">splineParams</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">knots</span></span>
-<span><span class="co">#&gt; [1] -8.454</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] -13.426</span></span></code></pre></div>
 <p>Assessing model fit using a partial plot. These can be on the link
 scale:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -334,7 +337,7 @@ scale:</p>
 <span>                showKnots <span class="op">=</span> <span class="cn">TRUE</span>, type<span class="op">=</span><span class="st">'response'</span>, </span>
 <span>                includeB0 <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "Making partial plots"</span></span></code></pre></div>
-<p><img src="GettingStarted_1Dsmoothing_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+<p><img src="GettingStarted_1Dsmoothing_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="adding-a-factor-variable">Adding a factor variable<a class="anchor" aria-label="anchor" href="#adding-a-factor-variable"></a>
