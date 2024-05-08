@@ -1,3 +1,28 @@
+# MRSea 1.6.00.00 (devo)
+
+## Notes
+* SALSA1D: 
+
+
+* SALSA2D:
+
+
+* Vignettes:
+
+* Other: 
+
+  
+## Bug Fixes
+
+* SALSA 1D:
+
+* SALSA 2D:
+  
+
+* Other:
+
+
+
 # MRSea 1.6
 
 ## Notes
