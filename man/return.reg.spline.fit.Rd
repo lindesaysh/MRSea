@@ -21,9 +21,9 @@ return.reg.spline.fit(
   bd,
   spl,
   interactionTerm = interactionTerm,
-  suppress.printout = FALSE,
   cv.opts,
-  splineParams
+  splineParams,
+  printout
 )
 }
 \arguments{
@@ -59,9 +59,11 @@ return.reg.spline.fit(
 
 \item{interactionTerm}{character stating the variable to use as an interaction}
 
-\item{suppress.printout}{\code{default=FALSE}. If TRUE, progress is printed into the workspace. If FALSE, a .log file is created in the working directory.}
-
 \item{cv.opts}{A list object containing options for \code{cv.gamMRSea}.}
+
+\item{printout}{A logical stating whether analysis information is printed in the workspace or into a logfile (TRUE) or not at all (FALSE)}
+
+\item{suppress.printout}{\code{default=FALSE}. If TRUE, progress is printed into the workspace. If FALSE, a .log file is created in the working directory.}
 }
 \description{
 Code for adaptively spacing knots for a given covariate.

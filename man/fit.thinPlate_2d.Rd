@@ -17,7 +17,8 @@ fit.thinPlate_2d(
   data,
   initDisp,
   cv.opts,
-  basis = "gaussian"
+  basis = "gaussian",
+  printout
 )
 }
 \description{

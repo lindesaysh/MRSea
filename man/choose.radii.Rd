@@ -20,7 +20,8 @@ choose.radii(
   data,
   initDisp,
   cv.opts,
-  basis
+  basis,
+  printout
 )
 }
 \description{

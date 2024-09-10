@@ -3,7 +3,20 @@ url: http://lindesaysh.github.io/MRSea/
 template:
   bootstrap: 5
   bootswatch: cerulean
-
+  ganalytics: G-H10ZB5KXN8
+  params:
+      google_site_verification: dUtyCOSNh9HYALyeXliAlT0ZBt-A4tor8kaiLgS3DRc
+  includes:
+    in_header: |
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-H10ZB5KXN8"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          
+          gtag('config', 'G-H10ZB5KXN8');
+        </script>
 navbar:
   components:
     articles:

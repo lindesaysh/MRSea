@@ -1,6 +1,4 @@
-"drop.step_2d_badfit" <- function(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,
-                           point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol=0,baseModel,radiusIndices,models, 
-						   interactionTerm, data, initDisp, cv.opts, basis) {
+"drop.step_2d_badfit" <- function(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout) {
 
   
   if (isS4(baseModel)){
@@ -8,11 +6,11 @@
   } else {
     attributes(baseModel$formula)$.Environment<-environment()
   }
-  
-  print("******************************************************************************")
-  print("Finding suitable initialise...")
-  print("******************************************************************************")
-  # cat('Current Fit in: ', BIC, '\n')
+  if(printout){
+    print("******************************************************************************")
+    print("Finding suitable initialise...")
+    print("******************************************************************************")
+  }
   badfit <- 1
   fuse<-1
   improvebadDrop<-0
@@ -20,7 +18,9 @@
   newRadii = radiusIndices
   
   while (badfit) {
-    print(paste("remove bad knot", fuse))
+    if(printout){
+      print(paste("remove bad knot", fuse))
+    }
     fuse <- fuse + 1
     badfit <- 0
     print(fitStat)
@@ -28,7 +28,6 @@
       if (length(aR) > minKnots) {
         
         twoDcoeffid <- grep("LRF.", names(coefficients(out.lm)))
-        #length(twoDcoeffid)/length(aR)
         
         badknots<-data.frame(knots=rep(aR, by=2), 
                              abscoeffs = abs(coef(out.lm))[twoDcoeffid], 
@@ -51,22 +50,19 @@
         initModel<-output$currentModel
         models<-output$models
         initBIC<-output$fitStat
-        #get.measure_2d(fitnessMeasure,BIC,initModel, data,  dists, tempR,radii, tempRadii, initDisp)$fitStat
-        out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis)
+
+        out<-choose.radii(initBIC,1:length(tempRadii),tempRadii,radii,initModel,dists,tempR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
         tempRadii=out$radiusIndices
         tempOut.lm=out$out.lm
         models=out$models
-        #output<-get.measure_2d(fitnessMeasure,fitStat,tempOut.lm, data,  dists, tempR,radii,tempRadii, initDisp)
-        #fitStat<-output$tempMeasure
         tempMeasure<-out$BIC
         print(paste(tempMeasure, fitStat, length(aR), badfit, improvebadDrop))
         
           out.lm <- tempOut.lm
           fitStat<-tempMeasure
-          print("bad knot removed **********************************")
-          ####print(length(as.vector(coefficients(out.lm))))
-          ####print(tempR)
-          #print(fitStat)
+          if(printout){
+            print("bad knot removed **********************************")
+          }
           newR <- tempR
           newRadii = tempRadii
           tempKnot <- badknotid

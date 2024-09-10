@@ -8,15 +8,17 @@
 
 ####################################################################################################################
 
-"improve.step_2d" <- function(gap,knotDist,radii,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis){
+"improve.step_2d" <- function(gap,knotDist,radii,dists,explData,num,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol=0,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout){
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
   } else {
     attributes(baseModel$formula)$.Environment<-environment()
   }
-  print("Improving...")
-  print("******************************************************************************")
-  # cat('Current Fit in: ', BIC, '\n')
+  if(printout){
+    print("Improving...")
+    print("******************************************************************************")
+  }
+    # cat('Current Fit in: ', BIC, '\n')
   improve <- 1
   fuse <- 0
   newRadii = radiusIndices
@@ -59,8 +61,10 @@
           if (tempMeasure + tol < fitStat) {
             out.lm <- tempOut.lm
             fitStat<-tempMeasure
-            print("improve *************************************")
-            #print(fitStat)
+            if(printout){
+              print("improve *************************************")
+            }
+            
             newR <- tempR
             newRadii = tempRadii
             tempKnot <- i
@@ -89,6 +93,7 @@
     #   aR<-newR
     #   BIC <- fitStat
     # }                
+
   }
   list(point=point,knotPoint=knotPoint,position=position,aR=aR,BIC=BIC,track=track,out.lm=out.lm,improveNudge=improveNudge,
        radiusIndices=newRadii,models=models)

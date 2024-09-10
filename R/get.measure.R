@@ -1,4 +1,4 @@
-"get.measure" <- function(fitnessMeasure,measures,out.lm, initDisp, cv.opts){
+"get.measure" <- function(fitnessMeasure,measures,out.lm, initDisp, cv.opts, printout){
   
   if (isS4(out.lm)){
     attributes(out.lm@misc$formula)$.Environment<-environment()
@@ -163,7 +163,9 @@
   #cat("Evaluating new fit: ", fitStat, "\n")
   if(is.na(fitStat)){
     fitStat <- tempMeasure + 1000
-    cat("Change Fit due to NA: ", fitStat, "\n")
+    if(printout){
+      cat("Change Fit due to NA: ", fitStat, "\n")  
+    }
   }
   
   if(getDispersion(out.lm)>initDisp){
