@@ -2,8 +2,34 @@
 % Please edit documentation in R/MRSea-package.r
 \docType{package}
 \name{MRSea}
+\alias{MRSeaPP}
+\alias{MRSeaPP-package}
 \alias{MRSea}
 \title{MRSea}
 \description{
 Examines animal survey data for signs of changes in animal abundance and distribution following marine renewables development. The functions of this package can be used to analyse many types of data including segmented line transect data and nearshore vantage point data.  The package fits Generalised Additive Models (GAMs) to one and two dimensional splines/bases utilising a spatially adaptive framework for knot number and location. In one dimension, B-splines, cyclic cubics and natural cubics are available and in two dimensions, the radial bases can be Gaussian or exponential and use Euclidean or Geodesic (or other user specified) distances. Non-parametric bootstrapping is available to estimate uncertainty and if residual correlation is present, robust standard errors maybe used (given a panel structure). Several model assessment tools are also available.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{http://creem2.st-and.ac.uk/software.aspx}
+  \item \url{http://lindesaysh.github.io/MRSea/}
+  \item Report bugs at \url{https://github.com/lindesaysh/MRSea/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Lindesay Scott-Hayward \email{lass@st-and.ac.uk} (Lindesay Scott-Hayward wrote the original main code and continues to develop and maintain code) [copyright holder]
+
+Authors:
+\itemize{
+  \item Cameron Walker \email{cameron.walker@auckland.ac.nz} (Cameron Walker wrote the original SALSA functions) [copyright holder]
+  \item Monique Mackenzie (Monique Mackenzie wrote SALSA code and provides testing, bugfixes and new ideas) [copyright holder]
+}
+
+Other contributors:
+\itemize{
+  \item Cornelia Oedekoven (Cornelia Oedekoven wrote code for distance sampling) [contributor]
+}
+
 }

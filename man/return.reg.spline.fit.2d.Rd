@@ -28,5 +28,5 @@ return.reg.spline.fit.2d(
 Wrapper function for running SALSA2D
 }
 \author{
-Cameron Walker, Department of Enginering Science, University of Auckland.
+Cameron Walker, Department of Engineering Science, University of Auckland.
 }

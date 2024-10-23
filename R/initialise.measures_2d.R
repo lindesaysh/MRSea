@@ -222,6 +222,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     if(printout){
       cat("Change Fit due to large dispersion: ",getDispersion(out.lm), ', init: ', initDisp, "\n")
     }
+    }
   }
 
   output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
