@@ -21,7 +21,7 @@
     # give new moved knot the mean radius
     tempRadii[i] = ceiling(length(radii)/2)
 
-    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
+    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, printout)
     initModel = output$currentModel
     models = output$models
     initBIC = output$fitStat
@@ -57,7 +57,7 @@
       tempR<-c(aR,point[index[i]])  
       tempRadii = c(radiusIndices,(1:length(radii))[ceiling(length(radii)/2)])
 
-    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
+    output = fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, printout)
     initModel = output$currentModel
     models = output$models
     initBIC = output$fitStat

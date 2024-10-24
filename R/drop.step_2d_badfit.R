@@ -46,7 +46,7 @@
         tempR <- aR
         tempR <- tempR[-badknotid]
         tempRadii = radiusIndices[-badknotid]
-        output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
+        output<-fit.thinPlate_2d(fitnessMeasure, dists,tempR,radii,baseModel,tempRadii,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, printout)
         initModel<-output$currentModel
         models<-output$models
         initBIC<-output$fitStat

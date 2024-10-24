@@ -225,7 +225,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     }
   }
 
-  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
+  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis, printout)
   out.lm<-output$currentModel
   models<-output$models
   if(printout){
