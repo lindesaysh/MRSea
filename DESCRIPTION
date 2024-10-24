@@ -11,7 +11,7 @@ Description: Examines animal survey data for signs of changes in animal
     exponential and use Euclidean or Geodesic (or other user specified) distances. Non-parametric
     bootstrapping is available to estimate uncertainty and if residual correlation is present, robust standard
     errors maybe used (given a panel structure). Several model assessmenttools are also available.
-Version: 0.4.3
+Version: 0.4.4
 Date: 2024-09-10
 Authors@R: c(
     person("Lindesay", "Scott-Hayward", email = "lass@st-and.ac.uk",
