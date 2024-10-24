@@ -306,7 +306,7 @@ nearestknot = as.vector(apply(test, 1, which.min))
   while ( (improve) & (fuse < maxIterations) ) {
     fuse <- fuse + 1
     improve <- 0
-    output <- locate.max.res(point,position,gap,response,explanatory, bd, winHalfWidth,out.lm,knotPoint,aR,wts, knotSites, spl, nearestknot, printout)
+    output <- locate.max.res(point,position,gap,response,explanatory, bd, winHalfWidth,out.lm,knotPoint,aR,wts, knotSites, spl, nearestknot, printout, splineParams)
 
     index <- output$index
     #if (length(index)>1) browser()
@@ -352,7 +352,7 @@ nearestknot = as.vector(apply(test, 1, which.min))
 
 ###################################################################################################################
 
-"locate.max.res" <- function(point,position,gap,response,explanatory, bd,winHalfWidth,out.lm,knotPoint,aR,wts,knotSites, spl, nearestknot, printout){
+"locate.max.res" <- function(point,position,gap,response,explanatory, bd,winHalfWidth,out.lm,knotPoint,aR,wts,knotSites, spl, nearestknot, printout, splineParams){
   
   if(printout){
   print("Locating maximum residual......")
