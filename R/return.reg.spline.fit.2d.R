@@ -14,7 +14,7 @@
                                        tol=0, baseModel=NULL, radiusIndices=NULL, 
                                        initialise=TRUE, initialKnots=NULL, 
                                        initialaR=NULL, interactionTerm=NULL, knot.seed=10, 
-                                       plot=FALSE, cv.opts, basis,
+                                       plot=FALSE, fit.opts, basis,
                                        printout){
 
 
@@ -100,9 +100,9 @@
   ###########################initialisation######################################
 
   #if (isS4(baseModel)) {
-  #  output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis)
+  #  output <- initialise.measures_2d.mn(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, fit.opts,basis)
   #} else {
-    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts,basis, printout)
+    output <- initialise.measures_2d(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel, radiusIndices, initialise, initialKnots,initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, fit.opts,basis, printout)
   #}
   
   point <- output$point
@@ -136,7 +136,7 @@
   baddisp <- summary(out.lm)$dispersion>initDisp 
   
   if (baddisp | naincoeffs) {
-    output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
+    output <- drop.step_2d_badfit(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, fit.opts, basis, printout)
     ####print("here e")
     point <- output$point
     knotPoint <- output$knotPoint
@@ -174,7 +174,7 @@
     
     ###################################drop step#################################
     if (length(aR) > minKnots) {
-      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
+      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, fit.opts, basis, printout)
       ####print("here e")
       point <- output$point
       knotPoint <- output$knotPoint
@@ -200,7 +200,7 @@
     }
     
     ####################################exchange step#############################
-    output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
+    output <- exchange.step_2d(gap,knotDist,radii,dists,explData,response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveEx,maxKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, fit.opts, basis, printout)
 
 
     point <- output$point
@@ -227,7 +227,7 @@
     ######################################improve step############################
     ####track <- rbind(track,cbind("improving",t(aR),BIC[length(BIC)],adjRsq[length(adjRsq)],GCV[length(GCV)]))
     ####print("here im")
-    output <- improve.step_2d(gap,knotDist,radii,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
+    output <- improve.step_2d(gap,knotDist,radii,dists,explData, length(aR),response,knotgrid,maxIterations,fitnessMeasure, point,knotPoint,position,aR,BIC,track,out.lm,improveNudge,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, fit.opts, basis, printout)
     ####print("here im")
     point <- output$point
     knotPoint <- output$knotPoint
@@ -253,7 +253,7 @@
 
     ###################################drop step#################################
     if (length(aR) > minKnots) {
-      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
+      output <- drop.step_2d(radii,invInd,dists,explData,response,knotgrid,maxIterations,fitnessMeasure,point,knotPoint,position,aR,BIC,track,out.lm,improveDrop,minKnots,tol,baseModel,radiusIndices,models, interactionTerm, data, initDisp, fit.opts, basis, printout)
       ####print("here e")
       point <- output$point
       knotPoint <- output$knotPoint
@@ -293,7 +293,7 @@
   
   gc(verbose=FALSE)
   
-    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,models=models,actualKnotIndices=aR,improve=overallImprove, seed.in=cv.opts$cv.gamMRSea.seed, initDisp = initDisp))
+    return(list(outputFS=c(length(aR),BIC[length(BIC)],aR),aR=aR,track=track, radiusIndices = radiusIndices, out.lm=out.lm,models=models,actualKnotIndices=aR,improve=overallImprove, seed.in=fit.opts$cv.gamMRSea.seed, initDisp = initDisp))
   
 
 }

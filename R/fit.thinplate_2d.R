@@ -5,7 +5,7 @@
 #'
 
 
-"fit.thinPlate_2d" <- function(fitnessMeasure, dists,aR,radii,baseModel,radiusIndices,models, currentFit, interactionTerm, data, initDisp, cv.opts, basis='gaussian', printout) {
+"fit.thinPlate_2d" <- function(fitnessMeasure, dists,aR,radii,baseModel,radiusIndices,models, currentFit, interactionTerm, data, initDisp, fit.opts, basis='gaussian', printout) {
 
   if (isS4(baseModel)){
     attributes(baseModel@misc$formula)$.Environment<-environment()
@@ -44,7 +44,7 @@
     currentModel<-eval(parse(text=test))
   }
 
-  tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, cv.opts, printout)$fitStat
+  tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, fit.opts, printout)$fitStat
 
     # if(tempFit <= (currentFit+10)){
   #   models[[length(models)+1]] = list(aR,radiusIndices, radii, tempFit)

@@ -1,4 +1,4 @@
-"get.measure" <- function(fitnessMeasure,measures,out.lm, initDisp, cv.opts, printout){
+"get.measure" <- function(fitnessMeasure,measures,out.lm, initDisp, fit.opts, printout){
   
   if (isS4(out.lm)){
     attributes(out.lm@misc$formula)$.Environment<-environment()
@@ -27,7 +27,7 @@
     fitStat <- AICc(out.lm)}
   
   if(fitnessMeasure=="BIC"){       
-    fitStat <- BIC(out.lm)}
+    fitStat <- AIC(out.lm, k=log(fit.opts$N))}
   
   if(fitnessMeasure=="QAIC"){ 
     # all models converted to non quasi for fitting so no need for quasi part. 
@@ -53,10 +53,10 @@
           fitStat <- QAIC(out.lm, chat = initDisp, k=log(nrow(out.lm$data)))
         }
       if(out.lm$family[1]=='quasibinomial'){
-        fitStat <- QAIC(update(out.lm, .~.,family=binomial), chat = initDisp, k=log(nrow(out.lm$data)))
+        fitStat <- QAIC(update(out.lm, .~.,family=binomial), chat = initDisp, k=log(fit.opts$N))
       }
         if(out.lm$family[1]=='binomial'){
-          fitStat <- QAIC(out.lm, chat = initDisp, k=log(nrow(out.lm$data)))
+          fitStat <- QAIC(out.lm, chat = initDisp, k=log(fit.opts$N))
         }
 
   }
@@ -142,11 +142,11 @@
     #   }
     #   eval(parse(text=textForEval))  
     #   require(boot)
-    #   set.seed(cv.opts$cv.gamMRSea.seed)
-    #   fitStat<-cv.glm(data2,tempCVFit, K=cv.opts$K, cost=cv.opts$cost)$delta[2] 
+    #   set.seed(fit.opts$cv.gamMRSea.seed)
+    #   fitStat<-cv.glm(data2,tempCVFit, K=fit.opts$K, cost=fit.opts$cost)$delta[2] 
     # }else{
 
-      fitStat<-cv.gamMRSea(data,out.lm, K=cv.opts$K, cost=cv.opts$cost, s.eed = cv.opts$cv.gamMRSea.seed)$delta[2]
+      fitStat<-cv.gamMRSea(data,out.lm, K=fit.opts$K, cost=fit.opts$cost, s.eed = fit.opts$cv.gamMRSea.seed)$delta[2]
 
     #}
   }
@@ -157,7 +157,7 @@
   }
   
   if(fitnessMeasure=="BICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm, k=log(nrow(out.lm$data)))
+    fitStat<-tweedie::AICtweedie(out.lm, k=log(fit.opts$N))
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")

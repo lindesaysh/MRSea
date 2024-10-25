@@ -26,7 +26,7 @@
 #'
 #'The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} function.
 #'
-#'    \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, cv.gamMRSea (use cv.opts in salsa2dlist to specify seed, folds, cost function (Defaults: \code{cv.opts=list(cv.gamMRSea.seed=357, K=10, cost=function(y, yhat) mean((y - yhat)^2))})
+#'    \code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, QAIC, QBIC, AICtweedie, BICtweedie, cv.gamMRSea (use fit.opts in salsa2dlist to specify seed, folds, cost function (Defaults: \code{fit.opts=list(cv.gamMRSea.seed=357, K=10, cost=function(y, yhat) mean((y - yhat)^2))}) or N for the BIC penalty (Default: \code{fit.opts$N = nrow(data)}))
 #'
 #'    \code{knotgrid}. A set of 'k' knot locations (k x 2 matrix or dataframe of coordinates).  May be made using \code{\link{getKnotgrid}}.
 #'
@@ -38,7 +38,7 @@
 #'
 #'    \code{gap}. The minimum gap between knots (in unit of measurement of coordinates).
 #'    \code{interactionTerm}. Specifies which term in \code{baseModel} the spatial smooth will interact with.  If \code{NULL} no interaction term is fitted.
-#'    \code{cv.opts} Used if \code{fitnessMeasure = cv.gamMRSea}.  See above for specification.
+#'    \code{fit.opts} Used if \code{fitnessMeasure = cv.gamMRSea}.  See above for specification.
 #'
 #'
 #' @return
@@ -180,16 +180,26 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
 
   interactionTerm<-salsa2dlist$interactionTerm
   
-  if(is.null(salsa2dlist$cv.opts$cv.gamMRSea.seed)){salsa2dlist$cv.opts$cv.gamMRSea.seed<-357}
-  seed.in<-salsa2dlist$cv.opts$cv.gamMRSea.seed
+  # allow backwards compatability for using cv.opts to specify cv options
+  if(!is.null(salsa2dlist$cv.opts)){
+    listr::list_rename(salsa2dlist, fit.opts = "cv.opts")
+  }
   
-  if(is.null(salsa2dlist$cv.opts$K)){salsa2dlist$cv.opts$K<-10}
-  if(is.null(salsa2dlist$cv.opts$cost)){salsa2dlist$cv.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
+  # if no cv options specified then put in defaults
+  if(is.null(salsa2dlist$fit.opts$cv.gamMRSea.seed)){salsa2dlist$fit.opts$cv.gamMRSea.seed<-357}
+  seed.in<-salsa2dlist$fit.opts$cv.gamMRSea.seed
+  if(is.null(salsa2dlist$fit.opts$K)){salsa2dlist$fit.opts$K<-10}
+  if(is.null(salsa2dlist$fit.opts$cost)){salsa2dlist$fit.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
+  
+  # default N in fit.opts
+  if(is.null(salsa1dlist$fit.opts$N)){
+    salsa1dlist$fit.opts$N <- nrow(data)
+  }
   
   if(!is.null(panels)){
     if(length(unique(panels))!=nrow(data)){
     if(is.null(model$cvfolds)){
-      model$cvfolds<-getCVids(data, folds=salsa2dlist$cv.opts$K, block=panels, seed=seed.in)  
+      model$cvfolds<-getCVids(data, folds=salsa2dlist$fit.opts$K, block=panels, seed=seed.in)  
     }}
   }
   
@@ -262,7 +272,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
                                    radiusIndices = NULL, initialise = initialise,  
                                    initialKnots = initialKnots, initialaR = initialKnPos,
                                    interactionTerm = interactionTerm, knot.seed = 10,
-                                   plot=plot, cv.opts = salsa2dlist$cv.opts, 
+                                   plot=plot, fit.opts = salsa2dlist$fit.opts, 
                                    basis=basis, printout = printout)
 
   baseModel<- output$out.lm
@@ -317,7 +327,7 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
     }else{
       initDisp<-getDispersion(baseModel)
     }
-    output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, cv.opts=salsa2dlist$cv.opts, basis=basis, printout=printout)
+    output_radii<- initialise.measures_2d(k2k, maxIterations=maxIterations, salsa2dlist$gap, radii, d2k, explData, splineParams[[1]]$startKnots, knotgrid, splineParams[[1]]$response, baseModel, radiusIndices=radiusIndices, initialise=F, initialKnots=salsa2dlist$knotgrid[output$aR,], initialaR=output$aR, fitnessMeasure=salsa2dlist$fitnessMeasure, interactionTerm=interactionTerm, data=data, knot.seed=10, initDisp, fit.opts=salsa2dlist$fit.opts, basis=basis, printout=printout)
 
 
     splineParams[[1]]$radii= radii

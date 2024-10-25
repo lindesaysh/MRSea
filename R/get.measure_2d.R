@@ -1,4 +1,4 @@
-get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,radiusIndices, initDisp, cv.opts, printout){
+get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,radiusIndices, initDisp, fit.opts, printout){
   
   if (isS4(out.lm)) {
     attributes(out.lm@misc$formula)$.Environment<-environment()
@@ -15,8 +15,8 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
     fitStat <- AICc(out.lm)
   }
   
-  if(fitnessMeasure=="BIC"){       
-    fitStat <- BIC(out.lm)
+  if(fitnessMeasure=="BIC"){
+      fitStat <- AIC(out.lm, k=log(fit.opts$N))
   }
   
   if (fitnessMeasure == "newCrit") {
@@ -62,10 +62,10 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
       stop('Fitness measure not supported for multinomial.  Please use AIC, AICc or BIC')
     } else {
       if(out.lm$family[1]=='quasipoisson'){
-        fitStat <- MuMIn::QAIC(update(out.lm,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(out.lm$data)))
+        fitStat <- MuMIn::QAIC(update(out.lm,  round(response) ~ ., family=poisson), chat = initDisp, k=log(fit.opts$N))
       }
       if(out.lm$family[1]=='quasibinomial'){
-        fitStat <- MuMIn::QAIC(update(out.lm, family=binomial), chat = initDisp,k=log(nrow(out.lm$data)))
+        fitStat <- MuMIn::QAIC(update(out.lm, family=binomial), chat = initDisp, k=log(fit.opts$N))
       }
     }
   }
@@ -88,10 +88,10 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   
   if(fitnessMeasure=="cv.gamMRSea"){
     if (isS4(out.lm)) {
-      set.seed(cv.opts$cv.gamMRSea.seed)
-      fitStat <- cv.gamMRSea(data, out.lm, K=cv.opts$K, cost=cv.opts$cost)$delta[2]
+      set.seed(fit.opts$cv.gamMRSea.seed)
+      fitStat <- cv.gamMRSea(data, out.lm, K=fit.opts$K, cost=fit.opts$cost)$delta[2]
     } else {
-     fitStat <- cv.gamMRSea(data, out.lm, K=cv.opts$K, cost=cv.opts$cost, s.eed = cv.opts$cv.gamMRSea.seed)$delta[2]
+     fitStat <- cv.gamMRSea(data, out.lm, K=fit.opts$K, cost=fit.opts$cost, s.eed = fit.opts$cv.gamMRSea.seed)$delta[2]
     }
   }
   
@@ -137,8 +137,7 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   }
   
   if(fitnessMeasure=="BICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm, k=log(nrow(out.lm$data)))
-
+    fitStat<-tweedie::AICtweedie(out.lm, k=log(fit.opts$N))
   }
   
   # cat("Evaluating new fit: ", fitStat, "\n")
