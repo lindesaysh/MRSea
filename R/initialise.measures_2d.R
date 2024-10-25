@@ -1,5 +1,7 @@
-initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, cv.opts, basis, printout){
-  
+
+initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explData,startKnots, knotgrid, response, baseModel,radiusIndices, initialise, initialKnots, initialaR, fitnessMeasure, interactionTerm, data, knot.seed, initDisp, fit.opts, basis, printout){
+
+
     attributes(baseModel$formula)$.Environment<-environment()
     baseModel<-update(baseModel, data=data)
     splineParams<-baseModel$splineParams
@@ -134,7 +136,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     fitStat <- AICc(baseModel)}
   
   if(fitnessMeasure=="BIC"){
-    fitStat <- BIC(baseModel)}
+    fitStat <- AIC(baseModel, k=log(fit.opts$N))}
 
   if (fitnessMeasure == "newCrit") {
       fitStat <- mean((residuals(baseModel)/(1-influence(baseModel)$h))**2)
@@ -160,10 +162,10 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   
   if(fitnessMeasure=="QBIC"){
       if(baseModel$family[1]=='quasipoisson'){
-        fitStat <- MuMIn::QAIC(update(baseModel,  round(response) ~ ., family=poisson), chat = initDisp, k=log(nrow(baseModel$data)))
+        fitStat <- MuMIn::QAIC(update(baseModel,  round(response) ~ ., family=poisson), chat = initDisp, k=log(fit.opts$N))
       }
       if(baseModel$family[1]=='quasibinomial'){
-        fitStat <- MuMIn::QAIC(update(baseModel, family=binomial), chat = initDisp,k=log(nrow(baseModel$data)))
+        fitStat <- MuMIn::QAIC(update(baseModel, family=binomial), chat = initDisp,k=log(fit.opts$N))
     }
   }
   
@@ -193,7 +195,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }
   
   if(fitnessMeasure=="cv.gamMRSea"){
-      fitStat<-cv.gamMRSea(data, baseModel, K=cv.opts$K, cost=cv.opts$cost, s.eed = cv.opts$cv.gamMRSea.seed)$delta[2]
+      fitStat<-cv.gamMRSea(data, baseModel, K=fit.opts$K, cost=fit.opts$cost, s.eed = fit.opts$cv.gamMRSea.seed)$delta[2]
   }
   
   if(fitnessMeasure=="AICtweedie"){
@@ -201,7 +203,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   }
   
   if(fitnessMeasure=="BICtweedie"){
-    fitStat<-tweedie::AICtweedie(baseModel, k=log(nrow(baseModel$data)))
+    fitStat<-tweedie::AICtweedie(baseModel, k=log(fit.opts$N))
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")
@@ -220,7 +222,9 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
     }
   }
 
-  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, cv.opts, basis)
+
+  output = fit.thinPlate_2d(fitnessMeasure, dists,aR,radii, baseModel,radiusIndices,models, fitStat, interactionTerm, data, initDisp, fit.opts, basis, printout)
+
   out.lm<-output$currentModel
   models<-output$models
   if(printout){
@@ -243,7 +247,7 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
   if(printout){
     print("Fitting Initial Radii")  
   }
-  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, cv.opts, basis, printout)
+  out<-choose.radii(BIC,1:length(radiusIndices),radiusIndices,radii,out.lm,dists,aR,baseModel,fitnessMeasure,response,models, interactionTerm, data, initDisp, fit.opts, basis, printout)
   BIC=out$BIC
   radiusIndices=out$radiusIndices
   out.lm=out$out.lm
