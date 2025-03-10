@@ -1,10 +1,10 @@
 #' Function to generate noisy data
 #'
-#' The function generates a random sample from poisson, overdispersed poisson, binomial and zero inflated binomial samples.
+#' The function generates a random sample from Gaussian, poisson, overdispersed poisson, binomial, zero inflated binomial, Gamma and Tweedie samples.
 #'
 #' @param n number of simulations to generate
 #' @param response vector of 'true' means to genereate from
-#' @param family one of \code{poisson}, \code{binomial} or \code{zibinomial}
+#' @param family one of \code{gaussian}, \code{poisson}, \code{binomial}, \code{zibinomial}, \code{gamma} or \code{tweedie}
 #' @param gamma.variance variance parameter for \code{gamma} distribution.
 #' @param ... Other parameters required for the family specified
 #'
