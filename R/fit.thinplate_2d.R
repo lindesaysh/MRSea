@@ -38,13 +38,18 @@
 
   if(is.null(interactionTerm)){
     test<-paste("update(baseModel, .  ~ . + ",bspl, ")",sep="")
-    currentModel<-eval(parse(text=test))
+    currentModel<-try(eval(parse(text=test)))
   }else{
     test<-paste("update(baseModel, .  ~  . + ",bspl, "*",interactionTerm, ")", sep="")
-    currentModel<-eval(parse(text=test))
+    currentModel<-try(eval(parse(text=test)))
   }
 
-  tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, cv.opts, printout)$fitStat
+  if(inherits(salsa2dOutput, "try-error")){
+    tempFit <- Inf
+  }else{
+    tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, cv.opts, printout)$fitStat
+    
+  }
   # if(tempFit <= (currentFit+10)){
   #   models[[length(models)+1]] = list(aR,radiusIndices, radii, tempFit)
   # }
