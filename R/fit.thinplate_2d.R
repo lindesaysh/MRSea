@@ -47,7 +47,7 @@
   if(inherits(salsa2dOutput, "try-error")){
     tempFit <- Inf
   }else{
-    tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, cv.opts, printout)$fitStat
+    tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, fit.opts, printout)$fitStat
     
   }
   # if(tempFit <= (currentFit+10)){
