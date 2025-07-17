@@ -269,8 +269,7 @@ if(length(which(knotSites==bd[2]))>0){
 ######################################################################################################################
 
 "exchange.step" <- function(degree, gap, response,explanatory,maxIterations,fitnessMeasure,point,knotPoint,position,aR,
-  measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, fit.opts,
-                            splineParams, , printout){
+  measures,out.lm,improveEx,maxKnots,winHalfWidth,wts, baseModel,knotSites,models, bd, spl, interactionTerm, initDisp, fit.opts, splineParams, printout){
 
   
   if (isS4(baseModel)){
