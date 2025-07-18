@@ -44,7 +44,7 @@
     currentModel<-try(eval(parse(text=test)))
   }
 
-  if(inherits(salsa2dOutput, "try-error")){
+  if(inherits(currentModel, "try-error")){
     tempFit <- Inf
   }else{
     tempFit <- get.measure_2d(fitnessMeasure, currentFit, currentModel,data, dists,aR,radii,radiusIndices, initDisp, fit.opts, printout)$fitStat
