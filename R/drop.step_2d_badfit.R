@@ -58,7 +58,7 @@
         tempOut.lm=out$out.lm
         models=out$models
         tempMeasure<-out$BIC
-        print(paste(tempMeasure, fitStat, length(aR), badfit, improvebadDrop))
+        #print(paste(tempMeasure, fitStat, length(aR), badfit, improvebadDrop))
         
           out.lm <- tempOut.lm
           fitStat<-tempMeasure
