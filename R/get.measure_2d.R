@@ -124,11 +124,11 @@ get.measure_2d<- function(fitnessMeasure,measures,out.lm, data, dists,aR,radii,r
   }
   
   if(fitnessMeasure=="AICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm)
+    fitStat<-tweedie::AICtweedie(out.lm, k=initDisp)
   }
   
   if(fitnessMeasure=="BICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm, k=log(fit.opts$N))
+    fitStat<-tweedie::AICtweedie(out.lm, k=log(fit.opts$N), k=initDisp)
   }
   
   # cat("Evaluating new fit: ", fitStat, "\n")
