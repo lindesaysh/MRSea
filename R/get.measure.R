@@ -152,11 +152,11 @@
   
   
   if(fitnessMeasure=="AICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm, k=initDisp)
+    fitStat<-tweedie::AICtweedie(out.lm, dispersion=initDisp)
   }
   
   if(fitnessMeasure=="BICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm, k=log(fit.opts$N), k=initDisp)
+    fitStat<-tweedie::AICtweedie(out.lm, k=log(fit.opts$N), dispersion=initDisp)
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")
