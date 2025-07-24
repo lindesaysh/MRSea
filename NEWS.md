@@ -1,11 +1,11 @@
-# MRSea 1.6.00.00 (devo)
+# MRSea 1.6.00.02 (devo)
 
 ## Notes
 * SALSA1D: 
-
+- allowed BIC measures to have user specified $N$.  Useful in situations where quadrature points/pseudoabsences are used in modelling.
 
 * SALSA2D:
-
+- allowed BIC measures to have user specified $N$.  Useful in situations where quadrature points/pseudoabsences are used in modelling.
 
 * Vignettes:
 
@@ -16,8 +16,11 @@
 
 * SALSA 1D:
 
+- updated tweedie fitness measures to include dispersion parameter
+
 * SALSA 2D:
-  
+
+- updated tweedie fitness measures to include dispersion parameter  
 
 * Other:
 
