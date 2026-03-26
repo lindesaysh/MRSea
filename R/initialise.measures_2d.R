@@ -198,12 +198,12 @@ initialise.measures_2d<- function(knotDist,maxIterations,gap,radii,dists,explDat
       fitStat<-cv.gamMRSea(data, baseModel, K=fit.opts$K, cost=fit.opts$cost, s.eed = fit.opts$cv.gamMRSea.seed)$delta[2]
   }
   
-  if(fitnessMeasure=="AICtweedie"){
-    fitStat<-tweedie::AICtweedie(baseModel, dispersion = initDisp)
+  if(fitnessMeasure=="tweedie_AIC" | fitnessMeasure=="AICtweedie"){
+    fitStat<-tweedie::tweedie_AIC(baseModel, dispersion = initDisp)
   }
   
-  if(fitnessMeasure=="BICtweedie"){
-    fitStat<-tweedie::AICtweedie(baseModel, k=log(fit.opts$N), dispersion=initDisp)
+  if(fitnessMeasure=="tweedie_BIC" | fitnessMeasure=="BICtweedie"){
+    fitStat<-tweedie::tweedie_AIC(baseModel, k=log(fit.opts$N), dispersion=initDisp)
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")

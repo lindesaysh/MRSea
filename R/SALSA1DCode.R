@@ -7,7 +7,7 @@
 #' @param maxKnots maximum number of knots to fit
 #' @param startKnots number of equally spaced knots to start with (between minKnots and maxKnots)
 #' @param gap minimum gap between knots (in unit of measurement of \code{explanatory})
-#' @param fitnessMeasure (default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QBIC (Quasi-Likelihood Information Criterion with log(n) penalty), k-fold cross-validation (\code{cv.gamMRSea}), AICtweedie, BICtweedie.
+#' @param fitnessMeasure (default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QBIC (Quasi-Likelihood Information Criterion with log(n) penalty), k-fold cross-validation (\code{cv.gamMRSea}), tweedie_AIC, tweedie_BIC
 #' @param maxIterations exchange/improve heuristic will terminate after \code{maxIterations} if still running
 #' @param initialise (default = TRUE). Logical stating whether or not to start with equally spaced knots (TRUE) or user specified locations (FALSE)
 #' @param initialKnots If \code{initialise=FALSE} then the start locations for the knots are specified in \code{initialKnots}
@@ -47,8 +47,8 @@
 # fitnessMeasure=="QAIC" uses QAIC       
 # fitnessMeasure=="QAICc" uses QAICc
 # fitnessMeasure== "cv.gamMRSea"
-# fitnessMeasure== "AICtweedie"
-# fitnessMeasure== "BICtweedie"
+# fitnessMeasure== "tweedie_AIC"
+# fitnessMeasure== "tweedie_BIC"
 # maxIterations:   exchange/improve heuristic will terminate after maxIterations if still running
 # varWinHW:        used for determining heteroscedastic weights
 # computeWt:       whether to use weights for heteroscedasticity - default is No

@@ -151,12 +151,12 @@
   }
   
   
-  if(fitnessMeasure=="AICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm, dispersion=initDisp)
+  if(fitnessMeasure=="AICtweedie" | fitnessMeasure=="tweedie_AIC"){ 
+    fitStat<-tweedie::tweedie_AIC(out.lm, dispersion=initDisp)
   }
   
-  if(fitnessMeasure=="BICtweedie"){
-    fitStat<-tweedie::AICtweedie(out.lm, k=log(fit.opts$N), dispersion=initDisp)
+  if(fitnessMeasure=="BICtweedie" | fitnessMeasure=="tweedie_BIC"){
+    fitStat<-tweedie::tweedie_AIC(out.lm, k=log(fit.opts$N), dispersion=initDisp)
   }
   
   #cat("Evaluating new fit: ", fitStat, "\n")
