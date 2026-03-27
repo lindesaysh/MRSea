@@ -70,6 +70,8 @@ data(ns.data.re)
 
 Two additional libraries are required for model fitting and selection. `statmod` provides the model family `tweedie()` and the `tweedie` package contains an appropriate AIC.
 
+Package versions used here are - `statmod` Version `r sessionInfo()$otherPkgs$statmod$Version` and `tweedie` Version `r sessionInfo()$otherPkgs$tweedie$Version`
+
 ```{r}
 library(statmod)
 library(tweedie)
@@ -89,18 +91,21 @@ fit_qp<- glm(birds ~ 1, family=quasipoisson(link="log"),data=ns.data.re)
 summary(fit_qp)
 ```
 
-Note that the two model outputs are identical. In reality though we need to find out what value of $\xi$ is best for our data.  For this we can use the `tweedie.profile` function from the `tweedie` library. 
+Note that the two model outputs are identical. In reality though we need to find out what value of $\xi$ is best for our data.  For this we can use the `tweedie_profile` function from the `tweedie` library. 
 
 Note: this function can take a long time to run. 
 
 ```{r}
-profout <- tweedie.profile(birds ~ 1, 
+profout <- tweedie_profile(birds ~ 1, 
                            data=ns.data.re,
-                           xi.vec = seq(1.01, 1.99, by=0.05), do.plot=TRUE)
+                           xi.vec = seq(1.01, 1.99, by=0.1), 
+                           do.plot=TRUE,
+                           do.smooth = FALSE,
+                           do.ci = FALSE)
 ```
 
 ```{r}
-profout2 <- tweedie.profile(birds ~ MonthOfYear + x.pos + y.pos + Year, 
+profout2 <- tweedie_profile(birds ~ MonthOfYear + x.pos + y.pos + Year, 
                            data=ns.data.re,
                            xi.vec = seq(1.01, 1.99, by=0.05), do.plot=TRUE)
 ```
@@ -125,11 +130,11 @@ Set up the initial model with the Tweedie distribution parameterised with the lo
 initialModel<- glm(response ~ 1, family=tweedie(var.power=profout2$xi.max, link.power = 0),data=ns.data.re)
 ```
 
-Remember to specify a Tweedie specific fitness measure of either `AICtweedie` or `BICtweedie`.
+Remember to specify a Tweedie specific fitness measure of either `tweedie_AIC` or `tweedie_BIC`.
 
 ```{r}
 # set some input information for SALSA
-salsa1dlist<-list(fitnessMeasure = 'AICtweedie', 
+salsa1dlist<-list(fitnessMeasure = 'tweedie_BIC', 
                   minKnots_1d = c(1), 
                   maxKnots_1d = c(3), 
                   startKnots_1d = c(1), 
@@ -205,7 +210,7 @@ baselinedata <- filter(nysted.analysisdata, impact == 1, season == 1)
 ```
 
 ```{r}
-profout <- tweedie.profile(response ~ x.pos + y.pos + depth, 
+profout <- tweedie_profile(response ~ x.pos + y.pos + depth, 
                            data=baselinedata,
                            xi.vec = seq(1.01, 1.99, by=0.05), do.plot=TRUE)
 ```
