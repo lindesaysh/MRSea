@@ -31,7 +31,6 @@ output: html_document
 
 ### 2D SALSA Algorithm: 
 
-- Scott-Hayward, L.A.S., Mackenzie, M.L., Walker, C.G., Shatumbu, G., Kilian, J.W., du Preez, P., 2023. Automated surface feature selection using SALSA2D; An illustration using elephant mortality data in Etosha National Park. [
-https://doi.org/10.48550/arXiv.2202.07977](https://arxiv.org/pdf/2202.07977.pdf)
+- Scott-Hayward, L, Mackenzie, M, C Walker, G Shatumbu, W Kilian, P du Preez, M Hauptfleisch and C Cloete (2025). Assessing the distribution pattern of elephant (Loxodonta Africana) carcasses in Etosha National Park and implications for management. Namibian Journal of Environment, 10, pp.1-12.
 
 - Scott-Hayward, L.A.S. (2013) PhD Thesis: Novel Applications for Species Distribution Mapping Including Spatial Models in Complex Regions. Chapter 5: Spatially Adaptive Models for Complex Topographies. [Online here](https://core.ac.uk/download/pdf/19767108.pdf)
