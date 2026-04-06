@@ -1,16 +1,19 @@
-# MRSea 1.6.00.02 (devo)
+# MRSea 1.6.00.03 (devo)
 
 ## Notes
 * SALSA1D: 
+
 - allowed BIC measures to have user specified $N$.  Useful in situations where quadrature points/pseudoabsences are used in modelling.
 
 * SALSA2D:
+
 - allowed BIC measures to have user specified $N$.  Useful in situations where quadrature points/pseudoabsences are used in modelling.
 
 * Vignettes:
 
 * Other: 
 
+- General update to change the fitness measure AICtweedie to tweedie_AIC (and for BIC) to be consistent with changes in the tweedie package.  This is a minor change and the original specification may still be used. The tweedie vignette has been changed to use the new specification for tweedie fitness measures. 
   
 ## Bug Fixes
 
