@@ -19,7 +19,7 @@ choose.radii(
   interactionTerm,
   data,
   initDisp,
-  cv.opts,
+  fit.opts,
   basis,
   printout
 )

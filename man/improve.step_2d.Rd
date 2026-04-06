@@ -30,7 +30,7 @@ improve.step_2d(
   interactionTerm,
   data,
   initDisp,
-  cv.opts,
+  fit.opts,
   basis,
   printout
 )

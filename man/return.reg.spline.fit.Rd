@@ -21,7 +21,7 @@ return.reg.spline.fit(
   bd,
   spl,
   interactionTerm = interactionTerm,
-  cv.opts,
+  fit.opts,
   splineParams,
   printout
 )
@@ -43,7 +43,7 @@ return.reg.spline.fit(
 
 \item{winHalfWidth}{Half-width of window used to calculate region with biggest average residual magnitude}
 
-\item{fitnessMeasure}{(default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QBIC (Quasi-Likelihood Information Criterion with log(n) penalty), k-fold cross-validation (\code{cv.gamMRSea}), AICtweedie, BICtweedie.}
+\item{fitnessMeasure}{(default=BIC). Measure used to evaluate the fit. Other options are AIC, AICc, BIC, QAIC, QAICc, QBIC (Quasi-Likelihood Information Criterion with log(n) penalty), k-fold cross-validation (\code{cv.gamMRSea}), tweedie_AIC, tweedie_BIC}
 
 \item{maxIterations}{exchange/improve heuristic will terminate after \code{maxIterations} if still running}
 
@@ -59,7 +59,7 @@ return.reg.spline.fit(
 
 \item{interactionTerm}{character stating the variable to use as an interaction}
 
-\item{cv.opts}{A list object containing options for \code{cv.gamMRSea}.}
+\item{fit.opts}{A list object containing options for \code{cv.gamMRSea}.}
 
 \item{printout}{A logical stating whether analysis information is printed in the workspace or into a logfile (TRUE) or not at all (FALSE)}
 

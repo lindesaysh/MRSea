@@ -75,7 +75,7 @@ This function fits a spatially adaptive two dimensional smooth of spatial coordi
 \details{
 The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} function.
 
-\code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, cv.gamMRSea (use cv.opts in salsa2dlist to specify seed, folds, cost function (Defaults: \code{cv.opts=list(cv.gamMRSea.seed=357, K=10, cost=function(y, yhat) mean((y - yhat)^2))})
+\code{fitnessMeasure}. The criterion for selecting the `best' model.  Available options: AIC, AIC_c, BIC, QIC_b, QAIC, QBIC, tweedie_AIC, tweedie_BIC, cv.gamMRSea (use fit.opts in salsa2dlist to specify seed, folds, cost function (Defaults: \code{fit.opts=list(cv.gamMRSea.seed=357, K=10, cost=function(y, yhat) mean((y - yhat)^2))}) or N for the BIC penalty (Default: \code{fit.opts$N = nrow(data)}))
 
 \code{knotgrid}. A set of 'k' knot locations (k x 2 matrix or dataframe of coordinates).  May be made using \code{\link{getKnotgrid}}.
 
@@ -87,7 +87,7 @@ The object \code{salsa2dlist} contains parameters for the \code{runSALSA2D} func
 
 \code{gap}. The minimum gap between knots (in unit of measurement of coordinates).
 \code{interactionTerm}. Specifies which term in \code{baseModel} the spatial smooth will interact with.  If \code{NULL} no interaction term is fitted.
-\code{cv.opts} Used if \code{fitnessMeasure = cv.gamMRSea}.  See above for specification.
+\code{fit.opts} Used if \code{fitnessMeasure = cv.gamMRSea}.  See above for specification.
 }
 \examples{
 # load data

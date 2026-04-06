@@ -16,7 +16,7 @@ fit.thinPlate_2d(
   interactionTerm,
   data,
   initDisp,
-  cv.opts,
+  fit.opts,
   basis = "gaussian",
   printout
 )

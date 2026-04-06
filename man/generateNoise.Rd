@@ -11,14 +11,14 @@ generateNoise(n, response, family, gamma.variance, ...)
 
 \item{response}{vector of 'true' means to genereate from}
 
-\item{family}{one of \code{poisson}, \code{binomial} or \code{zibinomial}}
+\item{family}{one of \code{gaussian}, \code{poisson}, \code{binomial}, \code{zibinomial}, \code{gamma} or \code{tweedie}}
 
 \item{gamma.variance}{variance parameter for \code{gamma} distribution.}
 
 \item{...}{Other parameters required for the family specified}
 }
 \description{
-The function generates a random sample from poisson, overdispersed poisson, binomial and zero inflated binomial samples.
+The function generates a random sample from Gaussian, poisson, overdispersed poisson, binomial, zero inflated binomial, Gamma and Tweedie samples.
 }
 \details{
 An additional parameter for the Poisson distribution is the dispersion parameter, specified by d=

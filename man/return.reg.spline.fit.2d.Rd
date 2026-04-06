@@ -19,7 +19,7 @@ return.reg.spline.fit.2d(
   interactionTerm = NULL,
   knot.seed = 10,
   plot = FALSE,
-  cv.opts,
+  fit.opts,
   basis,
   printout
 )
