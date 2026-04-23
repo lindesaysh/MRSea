@@ -192,8 +192,8 @@ runSALSA2D<-function(model, salsa2dlist, d2k, k2k, splineParams=NULL, chooserad=
   if(is.null(salsa2dlist$fit.opts$cost)){salsa2dlist$fit.opts$cost<-function(y, yhat) mean((y - yhat)^2)}
   
   # default N in fit.opts
-  if(is.null(salsa1dlist$fit.opts$N)){
-    salsa1dlist$fit.opts$N <- nrow(data)
+  if(is.null(salsa2dlist$fit.opts$N)){
+    salsa2dlist$fit.opts$N <- nrow(data)
   }
   
   if(!is.null(panels)){
