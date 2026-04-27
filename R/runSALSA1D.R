@@ -235,25 +235,53 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   # initial model is all variables in varlist with knots at locations in splineParams and NO 2D smooth
   require(mgcv)
-  if(fam=='BinProp'){
-    baseModel <- eval(parse(text=paste("gamMRSea(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
-  }else{
-    if(family=="Tweedie"){
-      baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
-                                           paste(formula(initialModel)[3], sep = ""), "+", 
-                                           paste(terms1D, collapse = "+"), ", family =", 
-                                           paste0(initialModel$call[grep("tweedie", initialModel$call)]),
-                                           ", data = data)", sep = "")))  
-    }else{
-      baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
-                                           paste(formula(initialModel)[3], sep = ""), "+", 
-                                           paste(terms1D, collapse = "+"), 
-                                           ", family =", family,
-                                           "(link=", link,
-                                           "), data = data)", sep = "")))
-    }
-    
+  # if(fam=='BinProp'){
+  #   baseModel <- eval(parse(text=paste("gamMRSea(cbind(successes,failures) ~ ", paste(formula(initialModel)[3],sep=""), "+", paste(terms1D, collapse="+"),", family =", family,"(link=", link,"), data = data)", sep='')))
+  # }else{
+  #   if(family=="Tweedie"){
+  #     baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
+  #                                          paste(formula(initialModel)[3], sep = ""), "+", 
+  #                                          paste(terms1D, collapse = "+"), ", family =", 
+  #                                          paste0(initialModel$call[grep("tweedie", initialModel$call)]),
+  #                                          ", data = data)", sep = "")))  
+  #   }else{
+  #     baseModel <- eval(parse(text = paste("gamMRSea(response ~ ", 
+  #                                          paste(formula(initialModel)[3], sep = ""), "+", 
+  #                                          paste(terms1D, collapse = "+"), 
+  #                                          ", family =", family,
+  #                                          "(link=", link,
+  #                                          "), data = data)", sep = "")))
+  #   }
+  #   
+  # }
+  
+  # change 1D terms to be a language based list so that it can be added to the formula of the initial model
+  as_term_call <- function(x) {
+    if (is.language(x)) return(x)
+    if (is.character(x)) return(str2lang(x))
+    stop("terms1D must contain character strings or language objects")
   }
+  terms1D <- lapply(terms1D, as_term_call)
+  
+  # add the 1D terms to the formula of the initial model
+  cl <- initialModel$call
+  old_rhs <- formula(initialModel)[[3]]
+  
+  new_rhs <- Reduce(
+    function(x, y) call("+", x, y),
+    terms1D,
+    init = old_rhs
+  )
+  
+  cl$formula <- as.formula(
+    call("~", formula(initialModel)[[2]], new_rhs)
+  )
+  
+  # change to gamMRSea model
+  cl[[1]] <- quote(gamMRSea)
+  
+  # create baseModel
+  baseModel <- eval(cl, parent.frame())
   
   if(!is.null(initialModel$cvfolds)){
     baseModel$cvfolds <- initialModel$cvfolds
@@ -331,7 +359,12 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     gap <- (salsa1dlist$gaps[(i-1)])
     term<- terms1D[[(i-1)]]
     interactionTerm<-NULL  #(salsa1dlist$interactionTerm[(i-1)])
-    baseModel <- eval(parse(text=paste("update(baseModel, .~. -", term, ")", sep="")))
+    
+    #baseModel <- eval(parse(text=paste("update(baseModel, .~. -", term, ")", sep="")))
+    baseModel <- update(
+      baseModel,
+      as.formula(call("~", quote(.), call("-", quote(.), term)))
+    )
     
     if(removal==TRUE){
       #set.seed(seed.in)
@@ -362,7 +395,12 @@ runSALSA1D<-function(initialModel, salsa1dlist, varlist, factorlist=NULL, predic
     splineParams[[varID[(i-1)]]]$knots= sort(output$aR)
     #}
     # update best model to have new knot locations and covariate back in model
-    tempModel<- eval(parse(text=paste("update(baseModel, .~. +", term, ")", sep="")))
+    #tempModel<- eval(parse(text=paste("update(baseModel, .~. +", term, ")", sep="")))
+    tempModel <- update(
+      baseModel,
+      as.formula(call("~", quote(.), call("+", quote(.), term)))
+    )
+    
     # calculate a cv score here too
     if(removal==TRUE){
       set.seed(seed.in)
