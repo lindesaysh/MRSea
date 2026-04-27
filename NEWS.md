@@ -1,4 +1,4 @@
-# MRSea 1.6.00.03 (devo)
+# MRSea 1.6.00.04 (devo)
 
 ## Notes
 * SALSA1D: 
@@ -20,6 +20,7 @@
 * SALSA 1D:
 
 - updated tweedie fitness measures to include dispersion parameter
+- updated to ensure model weights propagate through runSALSA1D function and to allow any name for the weights.
 
 * SALSA 2D:
 
