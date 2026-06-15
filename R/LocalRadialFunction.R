@@ -2,7 +2,7 @@
 #' 
 #' This function calculates a local radial Gausiian basis matrix for use in \code{\link{runSALSA2D}}.
 #' 
-#' @param radiusIndices Vector of length startKnots identifying which radii (splineParams[[1]]$radii) will be used to initialise the model
+#' @param radiusIndices Vector of length startKnots identifying which radii (\code{splineParams[[1]]$radii}) will be used to initialise the model
 #' @param dists Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances.
 #' @param radii Sequence of range parameters for the CReSS basis from local (small) to global (large). Determines the range of the influence of each knot.
 #' @param aR Index of knot locations. The index contains numbers selected by SALSA from 1 to the number of legal knot locations \code{na.omit(knotgrid)}. Used to specify which columns of \code{dists} should be used to construct the basis matrix.

@@ -1,3 +1,11 @@
+#' Update function for gamMRSea model object
+#'
+#' @author Lindesay Scott-Hayward, University of St Andrews.
+#' @note Code adapted from \code{update.glm}
+#'
+#'
+#' @export
+#' 
 update.gamMRSea<-function (object, formula., ..., evaluate = TRUE, panels=NULL)
 {
   #rm('splineParams', envir = globalenv())

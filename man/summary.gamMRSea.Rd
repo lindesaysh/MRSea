@@ -60,5 +60,5 @@ summary(model)
 
 }
 \author{
-Lindesay Scott-Hayward, Univeristy of St Andrews.
+Lindesay Scott-Hayward, University of St Andrews.
 }

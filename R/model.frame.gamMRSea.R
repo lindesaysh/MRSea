@@ -1,3 +1,12 @@
+#' Calculation of model fram for gamMRSea model object
+#'
+#'
+#' @author Lindesay Scott-Hayward, University of St Andrews.
+#' @note Code adapted from \code{model.frame.glm}
+#'
+#'
+#' @export
+
 model.frame.gamMRSea<-function (formula, data = NULL, subset = NULL, na.action = na.fail,           drop.unused.levels = FALSE, xlev = NULL, splineParams=NULL, ...) 
 {
   

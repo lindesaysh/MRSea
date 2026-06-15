@@ -2,7 +2,7 @@
 #' 
 #' This function calculates a local radial exponential basis matrix for use in \code{\link{runSALSA2D}}.
 #' 
-#' @param radiusIndices Vector of length startKnots identifying which radii (splineParams[[1]]$radii) will be used to initialise the model
+#' @param radiusIndices Vector of length startKnots identifying which radii (\code{splineParams[[1]]$radii}) will be used to initialise the model
 #' @param dists Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances.
 #' @param radii Sequence of range parameters for the CReSS basis from local (small) to global (large). Determines the range of the influence of each knot.
 #' @param aR Index of knot locations. The index contains numbers selected by SALSA from 1 to the number of legal knot locations \code{na.omit(knotgrid)}. Used to specify which columns of \code{dists} should be used to construct the basis matrix.
@@ -21,15 +21,19 @@
 #' data(knotgrid.ns)
 #' 
 #' splineParams<-makesplineParams(data=ns.data.re, varlist=c('observationhour'))
-#' 
-#' #set some input info for SALSA
-#' ns.data.re$response<- ns.data.re$birds
-#' 
+#' #' 
 #' # make distance matrices for datatoknots and knottoknots
 #' distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns), knotmat=FALSE)
 #' 
 #' # choose sequence of radii
 #' r_seq<-getRadiiChoices(8, distMats$dataDist)
+#' 
+#' r_seq<-getRadiiSequence(method = "variogram",
+#'                         numberofradii = 8, 
+#'                         xydata = ns.data.re[,c("x.pos", "y.pos")], 
+#'                         response = log(ns.data.re$birds +1 ), 
+#'                         basis = "gaussian", 
+#'                         distMatrix = distMats$dataDist)
 #'
 #' # using the fourth radius and picking 5 knots
 #' basis<-LRF.e(radiusIndices=rep(4, 5), dists=distMats$dataDist, radii = r_seq, 

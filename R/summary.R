@@ -33,7 +33,7 @@
 #' correlation	(only if correlation is true.) The estimated correlations of the estimated coefficients.
 #' symbolic.cor	(only if correlation is true.) The value of the argument symbolic.cor.
 #'
-#' @author Lindesay Scott-Hayward, Univeristy of St Andrews.
+#' @author Lindesay Scott-Hayward, University of St Andrews.
 #' @note Code adapted from \code{summary.glm}
 #'
 #' @examples 
@@ -149,6 +149,19 @@ summary.gamMRSea<-function (object, dispersion = NULL, digits=7, varshortnames=N
 }
 
 
+
+
+
+
+#' Printing of gamMRSea model object
+#'
+#'
+#' @author Lindesay Scott-Hayward, University of St Andrews.
+#' @note Code adapted from \code{print.glm}
+#'
+#'
+#' @export
+
 print.gamMRSea<-function (x, digits = max(3L, getOption("digits") - 3L), ...)
 {
   cat("\nCall:  ", paste(deparse(x$call), sep = "\n", collapse = "\n"),
@@ -175,7 +188,15 @@ print.gamMRSea<-function (x, digits = max(3L, getOption("digits") - 3L), ...)
 }
 
 
-
+#' Printing of summary of gamMRSea model object
+#'
+#'
+#' @author Lindesay Scott-Hayward, University of St Andrews.
+#' @note Code adapted from \code{print.summary.glm}
+#'
+#'
+#' @export
+#' 
 print.summary.gamMRSea<-function (x, digits = max(3L, getOption("digits") - 3L), symbolic.cor = x$symbolic.cor,
           signif.stars = getOption("show.signif.stars"), ...)
 {
@@ -248,7 +269,13 @@ print.summary.gamMRSea<-function (x, digits = max(3L, getOption("digits") - 3L),
   invisible(x)
 }
 
-
+#' qr.lm
+#'
+#' @author Lindesay Scott-Hayward, University of St Andrews.
+#' @note Code adapted from \code{qr.gl}
+#'
+#'
+#' @export
 qr.lm<-function (x, ...)
 {
   if (is.null(r <- x$qr))

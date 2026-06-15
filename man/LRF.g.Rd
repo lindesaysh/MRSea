@@ -7,7 +7,7 @@
 LRF.g(radiusIndices, dists, radii, aR)
 }
 \arguments{
-\item{radiusIndices}{Vector of length startKnots identifying which radii (splineParams[\link{1}]$radii) will be used to initialise the model}
+\item{radiusIndices}{Vector of length startKnots identifying which radii (\code{splineParams[[1]]$radii}) will be used to initialise the model}
 
 \item{dists}{Matrix of distances between data locations and knot locations (n x k). May be Euclidean or geodesic distances.}
 
@@ -33,14 +33,16 @@ data(knotgrid.ns)
 
 splineParams<-makesplineParams(data=ns.data.re, varlist=c('observationhour'))
 
-#set some input info for SALSA
-ns.data.re$response<- ns.data.re$birds
-
 # make distance matrices for datatoknots and knottoknots
 distMats<-makeDists(cbind(ns.data.re$x.pos, ns.data.re$y.pos), na.omit(knotgrid.ns), knotmat=FALSE)
 
 # choose sequence of radii
-r_seq<-getRadiiChoices(8, distMats$dataDist)
+r_seq<-getRadiiSequence(method = "variogram",
+                        numberofradii = 8, 
+                        xydata = ns.data.re[,c("x.pos", "y.pos")], 
+                        response = log(ns.data.re$birds +1 ), 
+                        basis = "gaussian", 
+                        distMatrix = distMats$dataDist)
 
 # using the fourth radius and picking 5 knots
 basis<-LRF.g(radiusIndices=rep(4, 5), dists=distMats$dataDist, radii = r_seq, 
